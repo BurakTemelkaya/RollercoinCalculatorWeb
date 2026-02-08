@@ -6,5 +6,5 @@ export default defineConfig({
   plugins: [react()],
   // GitHub Pages için base path ayarı
   // Eğer repository adınız "my-project" ise burayı '/my-project/' yapın.
-  base: '/rollercoin-calculator/',
+  base: '/RollercoinCalculatorWeb/',
 })
