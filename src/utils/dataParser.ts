@@ -1,5 +1,5 @@
 import { CoinData, GAME_TOKENS } from '../types';
-import { parseHashPower } from './powerParser';
+import { parseHashPower, formatHashPower } from './powerParser';
 
 /**
  * Parse league data from pasted text
@@ -57,6 +57,7 @@ export function parseLeagueData(text: string): CoinData[] {
                 code,
                 displayName,
                 leaguePower,
+                leaguePowerFormatted: formatHashPower(leaguePower),
                 isGameToken: GAME_TOKENS.includes(displayName),
             });
         }

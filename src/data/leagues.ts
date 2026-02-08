@@ -1,4 +1,4 @@
-import { CoinData, HashPower } from '../types';
+
 
 export interface LeagueInfo {
     id: string;

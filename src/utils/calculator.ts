@@ -1,5 +1,5 @@
 import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS, DEFAULT_BLOCK_REWARDS } from '../types';
-import { powerRatio, formatHashPower, toBaseUnit } from './powerParser';
+import { powerRatio, formatHashPower } from './powerParser';
 import { TFunction } from 'i18next';
 
 // Block time in minutes (Rollercoin standard)
