@@ -1,0 +1,57 @@
+{
+    "app": {
+        "title": "Rollercoin Hesaplayıcı",
+        "powerWithUnit": "Gücünüz: {{power}} {{unit}}/s",
+        "powerBadge": "Gücünüz",
+        "footerText": "Veriler manuel girişe dayanmaktadır. Güncel değerler için rollercoin.com adresini ziyaret edin.",
+        "footerLink": "Rollercoin Kazanç Hesaplayıcı - Web Versiyonu"
+    },
+    "tabs": {
+        "earnings": "Kazanç Hesaplayıcı",
+        "withdraw": "Çekim Sayacı"
+    },
+    "input": {
+        "title": "Veri Girişi & Ayarlar",
+        "userPower": "Kullanıcı Gücünüz",
+        "leagueSelect": "Lig Seçimi",
+        "auto": "Otomatik",
+        "leaguePowers": "Lig Güçleri",
+        "placeholder": "Örnek Format:\nRST\n104.91 Eh/s\n1.2345 RST\n...",
+        "calculate": "Şimdi Hesapla",
+        "loadedData": "✅ {{count}} coin verisi yüklendi",
+        "errors": {
+            "insufficientData": "Yeterli veri bulunamadı. Lütfen metin alanını doldurun.",
+            "parseError": "Veri ayrıştırılamadı. Formatı kontrol edin."
+        }
+    },
+    "table": {
+        "cryptoTitle": "Kripto Paralar",
+        "gameTokenTitle": "Oyun Tokenleri",
+        "noDataTitle": "Henüz veri yok",
+        "noDataDesc": "Yukarıdaki forma lig verilerini girip hesaplayın",
+        "headers": {
+            "coin": "Coin",
+            "leaguePower": "Lig Gücü",
+            "daily": "GÜNLÜK",
+            "weekly": "HAFTALIK",
+            "monthly": "AYLIK"
+        },
+        "best": "En İyi"
+    },
+    "withdraw": {
+        "title": "Çekim Süresi Hesaplayıcı",
+        "desc": "Her coin için mevcut bakiyenizi girin, kalan çekim süresini görün.",
+        "balanceLabel": "Mevcut Bakiye:",
+        "readyBadge": "✅ Çekilebilir",
+        "stats": {
+            "minWithdraw": "MİN ÇEKİM",
+            "minValue": "MİN DEĞER",
+            "remaining": "KALAN"
+        },
+        "readyNow": "Şimdi çekilebilir! ✨",
+        "days": "gün",
+        "months": "ay",
+        "years": "yıl",
+        "hours": "saat"
+    }
+}

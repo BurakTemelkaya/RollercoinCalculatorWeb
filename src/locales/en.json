@@ -1,0 +1,57 @@
+{
+    "app": {
+        "title": "Rollercoin Calculator",
+        "powerWithUnit": "Power: {{power}} {{unit}}/s",
+        "powerBadge": "Power",
+        "footerText": "Data is based on manual input. Visit rollercoin.com for current values.",
+        "footerLink": "Rollercoin Earnings Calculator - Web Version"
+    },
+    "tabs": {
+        "earnings": "Earnings Calculator",
+        "withdraw": "Withdrawal Timer"
+    },
+    "input": {
+        "title": "Data Input & Settings",
+        "userPower": "Your Power",
+        "leagueSelect": "League",
+        "auto": "Auto",
+        "leaguePowers": "League Powers",
+        "placeholder": "Example Format:\nRST\n104.91 Eh/s\n1.2345 RST\n...",
+        "calculate": "Calculate Now",
+        "loadedData": "✅ {{count}} coin data loaded",
+        "errors": {
+            "insufficientData": "Insufficient data. Please fill in the text area.",
+            "parseError": "Could not parse data. Check format."
+        }
+    },
+    "table": {
+        "cryptoTitle": "Cryptocurrencies",
+        "gameTokenTitle": "Game Tokens",
+        "noDataTitle": "No Data Yet",
+        "noDataDesc": "Fill in league data above and calculate",
+        "headers": {
+            "coin": "COIN",
+            "leaguePower": "LEAGUE POWER",
+            "daily": "DAILY",
+            "weekly": "WEEKLY",
+            "monthly": "MONTHLY"
+        },
+        "best": "Best"
+    },
+    "withdraw": {
+        "title": "Withdrawal Time Calculator",
+        "desc": "Enter your current balance for each coin to see remaining withdrawal time.",
+        "balanceLabel": "Current Balance:",
+        "readyBadge": "✅ Ready",
+        "stats": {
+            "minWithdraw": "MIN WITHDRAW",
+            "minValue": "MIN VALUE",
+            "remaining": "REMAINING"
+        },
+        "readyNow": "Ready to withdraw! ✨",
+        "days": "days",
+        "months": "months",
+        "years": "years",
+        "hours": "hours"
+    }
+}
