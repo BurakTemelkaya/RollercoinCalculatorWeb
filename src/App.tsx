@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 // ... existing imports ...
 
-import { CoinData, HashPower, EarningsResult, DEFAULT_BLOCK_REWARDS } from './types';
+import { CoinData, HashPower, EarningsResult } from './types';
 import { calculateAllEarnings } from './utils/calculator';
 import { formatHashPower } from './utils/powerParser';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
@@ -91,7 +91,7 @@ function App() {
   // League State
   const [league, setLeague] = useState<LeagueInfo>(LEAGUES[0]);
   const [isAutoLeague, setIsAutoLeague] = useState(true);
-  const [blockRewards, setBlockRewards] = useState<Record<string, number>>(DEFAULT_BLOCK_REWARDS);
+  const [blockRewards, setBlockRewards] = useState<Record<string, number>>({});
 
   // Load from localStorage on mount
   useEffect(() => {

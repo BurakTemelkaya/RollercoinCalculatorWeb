@@ -36,7 +36,8 @@
             "weekly": "HAFTALIK",
             "monthly": "AYLIK"
         },
-        "best": "En İyi"
+        "best": "En İyi",
+        "total": "TOPLAM"
     },
     "withdraw": {
         "title": "Çekim Süresi Hesaplayıcı",

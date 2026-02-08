@@ -154,6 +154,17 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         color: "#23292f",
         is_game_token: false,
         precision: 6
+    },
+    {
+        name: "ALGO",
+        code: "algo",
+        display_name: "ALGO",
+        balance_key: "ALGO_SMALL",
+        to_small: 1000000,
+        min_withdraw: 30,
+        color: "#CF2D4D",
+        is_game_token: false,
+        precision: 6
     }
 ];
 

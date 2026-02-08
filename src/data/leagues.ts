@@ -191,7 +191,62 @@ export const LEAGUES: LeagueInfo[] = [
             { name: "HMT", payout: 2430000000 },
         ]
     },
-    // Add simplified versions for others if needed, skipping to Diamond III just in case
+    {
+        id: "platinum-3",
+        name: "Platinum III",
+        minPower: 100000000000,
+        currencies: [
+            { name: "RLT", payout: 1480000 },
+            { name: "RST", payout: 91000000 },
+            { name: "SAT", payout: 146600 },
+            { name: "LTC_SMALL", payout: 730000 },
+            { name: "BNB_SMALL", payout: 12500000 },
+            { name: "MATIC_SMALL", payout: 82200000000 },
+            { name: "XRP_SMALL", payout: 610000 },
+            { name: "DOGE_SMALL", payout: 154500 },
+            { name: "ETH_SMALL", payout: 8500000 },
+            { name: "TRX_SMALL", payout: 164200000000 },
+            { name: "SOL_SMALL", payout: 42300000 },
+            { name: "ALGO_SMALL", payout: 8300000 },
+            { name: "HMT", payout: 2084000000 }
+        ]
+    },
+    {
+        id: "diamond-1",
+        name: "Diamond I",
+        minPower: 200000000000,
+        currencies: [
+            { name: "RST", payout: 81000000 },
+            { name: "SAT", payout: 142800 },
+            { name: "LTC_SMALL", payout: 1580000 },
+            { name: "BNB_SMALL", payout: 14400000 },
+            { name: "MATIC_SMALL", payout: 160400000000 },
+            { name: "XRP_SMALL", payout: 1020000 },
+            { name: "DOGE_SMALL", payout: 163300 },
+            { name: "ETH_SMALL", payout: 7900000 },
+            { name: "TRX_SMALL", payout: 50700000000 },
+            { name: "SOL_SMALL", payout: 12600000 },
+            { name: "ALGO_SMALL", payout: 18600000 }
+        ]
+    },
+    {
+        id: "diamond-2",
+        name: "Diamond II",
+        minPower: 400000000000,
+        currencies: [
+            { name: "RST", payout: 84000000 },
+            { name: "SAT", payout: 174600 },
+            { name: "LTC_SMALL", payout: 1920000 },
+            { name: "BNB_SMALL", payout: 20100000 },
+            { name: "MATIC_SMALL", payout: 195000000000 },
+            { name: "XRP_SMALL", payout: 1240000 },
+            { name: "DOGE_SMALL", payout: 198600 },
+            { name: "ETH_SMALL", payout: 9600000 },
+            { name: "TRX_SMALL", payout: 61700000000 },
+            { name: "SOL_SMALL", payout: 15300000 },
+            { name: "ALGO_SMALL", payout: 22600000 }
+        ]
+    },
     {
         id: "diamond-3",
         name: "Diamond III",

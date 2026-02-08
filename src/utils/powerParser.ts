@@ -172,13 +172,15 @@ export function parsePowerText(text: string): { coins: CoinData[], userPower: Ha
                     // Determine if game token
                     const isGameToken = ['RLT', 'RST', 'HMT'].includes(coinName);
 
-                    coins.push({
-                        code: coinName,
-                        displayName: coinName,
-                        leaguePower: { value: powerValue, unit },
-                        leaguePowerFormatted: `${powerValue} ${unit}/s`,
-                        isGameToken
-                    });
+                    if (coinName !== 'TOTAL' && coinName !== 'TOPLAM') {
+                        coins.push({
+                            code: coinName,
+                            displayName: coinName,
+                            leaguePower: { value: powerValue, unit },
+                            leaguePowerFormatted: `${powerValue} ${unit}/s`,
+                            isGameToken
+                        });
+                    }
                 }
             }
         }

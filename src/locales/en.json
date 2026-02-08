@@ -36,7 +36,8 @@
             "weekly": "WEEKLY",
             "monthly": "MONTHLY"
         },
-        "best": "Best"
+        "best": "Best",
+        "total": "TOTAL"
     },
     "withdraw": {
         "title": "Withdrawal Time Calculator",

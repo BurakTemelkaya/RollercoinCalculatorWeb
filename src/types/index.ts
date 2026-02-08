@@ -73,20 +73,5 @@ export const DEFAULT_MIN_WITHDRAW: Record<string, number> = {
 
 // Default block rewards per block (calculated from typical Rollercoin data)
 // These values are approximations - actual values change over time
-export const DEFAULT_BLOCK_REWARDS: Record<string, number> = {
-  'BTC': 0.0000177,
-  'ETH': 0.000612,
-  'SOL': 0.028,
-  'DOGE': 12.08,
-  'BNB': 0.00127,
-  'LTC': 0.0085,
-  'XRP': 0.522,
-  'TRX': 10.9,
-  'POL': 7.74,
-  'RLT': 3.34,
-  'RST': 204.4,
-  'HMT': 1533,
-};
-
 // Game tokens that don't have market prices
 export const GAME_TOKENS = ['RLT', 'RST', 'HMT'];

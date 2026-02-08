@@ -1,9 +1,9 @@
-import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS, DEFAULT_BLOCK_REWARDS } from '../types';
+import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS } from '../types';
 import { powerRatio, formatHashPower } from './powerParser';
 import { TFunction } from 'i18next';
 
-// Block time in minutes (Rollercoin standard)
-const BLOCK_TIME_MINUTES = 10;
+// Block time in minutes (9 minutes 56 seconds = 596 seconds)
+const BLOCK_TIME_MINUTES = 596 / 60;
 
 // Blocks per period
 const BLOCKS_PER_PERIOD: Record<Period, number> = {
@@ -31,7 +31,7 @@ export function calculateCoinEarnings(
     const { code, displayName, leaguePower, isGameToken: gameToken } = coin;
 
     // Get block reward (use user override or default)
-    const blockReward = blockRewards[displayName] ?? DEFAULT_BLOCK_REWARDS[displayName] ?? 0;
+    const blockReward = blockRewards[displayName] ?? 0;
 
     // Calculate power share ratio
     const share = powerRatio(userPower, leaguePower);
