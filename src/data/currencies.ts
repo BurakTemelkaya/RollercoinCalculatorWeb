@@ -161,7 +161,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         display_name: "ALGO",
         balance_key: "ALGO_SMALL",
         to_small: 1000000,
-        min_withdraw: 30,
+        min_withdraw: 30, // Keeping this for reference, though not used in timer
         color: "#CF2D4D",
         is_game_token: false,
         precision: 6

@@ -12,6 +12,7 @@ interface DataInputFormProps {
     isAutoLeague: boolean;
     onLeagueChange: (newLeagueId: string) => void;
     onToggleAutoLeague: () => void;
+    onShowNotification: (message: string, type: 'success' | 'error' | 'info') => void;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -21,7 +22,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     currentLeague,
     isAutoLeague,
     onLeagueChange,
-    onToggleAutoLeague
+    onToggleAutoLeague,
+    onShowNotification
 }) => {
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
@@ -32,19 +34,6 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
 
     const handleParse = () => {
-        // Basic validation logic
-        if (!inputText.trim() && (!powerValue || !currentCoins.length)) {
-            if (currentCoins.length > 0 && powerValue) {
-                const value = parseFloat(powerValue);
-                if (!isNaN(value) && value > 0) {
-                    const newPower: HashPower = { value, unit: powerUnit };
-                    onDataParsed(currentCoins, newPower);
-                    return;
-                }
-            }
-            return;
-        }
-
         try {
             let coins = currentCoins;
             let userPower = currentUserPower;
@@ -52,8 +41,12 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             // Parse text if provided
             if (inputText.trim()) {
                 const result = parsePowerText(inputText);
-                coins = result.coins;
-                userPower = result.userPower;
+                if (result.coins.length > 0) {
+                    coins = result.coins;
+                }
+                if (result.userPower) {
+                    userPower = result.userPower;
+                }
             }
 
             // Override user power if manually entered
@@ -68,15 +61,31 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 }
             }
 
-            if (coins.length > 0 && finalPower) {
-                onDataParsed(coins, finalPower);
-                setIsExpanded(false);
-            } else {
-                alert(t('input.errors.insufficientData'));
+            const hasCoins = coins.length > 0;
+            const hasPower = !!finalPower;
+
+            // Validation: Both or one missing
+            if (!hasCoins && !hasPower) {
+                onShowNotification(t('input.errors.missingBoth'), 'error');
+                return;
             }
+            if (!hasCoins) {
+                onShowNotification(t('input.errors.missingLeagueData'), 'error');
+                return;
+            }
+            if (!hasPower) {
+                onShowNotification(t('input.errors.missingUserPower'), 'error');
+                return;
+            }
+
+            // Success
+            onDataParsed(coins, finalPower!);
+            setIsExpanded(false);
+            onShowNotification(t('input.loadedData', { count: coins.length }), 'success');
+
         } catch (error) {
             console.error('Parse error:', error);
-            alert(t('input.errors.parseError'));
+            onShowNotification(t('input.errors.parseError'), 'error');
         }
     };
 

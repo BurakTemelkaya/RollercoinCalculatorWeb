@@ -21,7 +21,10 @@
         "loadedData": "✅ {{count}} coin verisi yüklendi",
         "errors": {
             "insufficientData": "Yeterli veri bulunamadı. Lütfen metin alanını doldurun.",
-            "parseError": "Veri ayrıştırılamadı. Formatı kontrol edin."
+            "parseError": "Veri ayrıştırılamadı. Formatı kontrol edin.",
+            "missingBoth": "Kullanıcı gücü ve lig bilgileri eksik! Lütfen ikisini de giriniz.",
+            "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
+            "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!"
         }
     },
     "table": {

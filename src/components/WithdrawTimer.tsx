@@ -34,8 +34,8 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     const [editingCoin, setEditingCoin] = useState<string | null>(null);
     const [tempValue, setTempValue] = useState<string>('');
 
-    // Filter only crypto coins (not game tokens)
-    const cryptoCoins = earnings.filter(e => !e.isGameToken);
+    // Filter only crypto coins (not game tokens) and exclude ALGO
+    const cryptoCoins = earnings.filter(e => !e.isGameToken && e.displayName !== 'ALGO');
 
     if (cryptoCoins.length === 0) {
         return null;

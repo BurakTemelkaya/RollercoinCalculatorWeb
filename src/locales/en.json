@@ -21,7 +21,10 @@
         "loadedData": "✅ {{count}} coin data loaded",
         "errors": {
             "insufficientData": "Insufficient data. Please fill in the text area.",
-            "parseError": "Could not parse data. Check format."
+            "parseError": "Could not parse data. Check format.",
+            "missingBoth": "User power and league data are missing!",
+            "missingUserPower": "User power is required!",
+            "missingLeagueData": "League data is required!"
         }
     },
     "table": {

@@ -74,9 +74,18 @@ async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
 
 type Tab = 'calculator' | 'withdraw';
 
+import Notification from './components/Notification';
+
 function App() {
   const { t, i18n } = useTranslation();
   const [coins, setCoins] = useState<CoinData[]>([]);
+
+  // Notification state
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setNotification({ message, type });
+  };
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -213,6 +222,17 @@ function App() {
 
   return (
     <div className="app">
+      {/* Notification */}
+      {notification && (
+        <div className="notification-container">
+          <Notification
+            message={notification.message}
+            type={notification.type}
+            onClose={() => setNotification(null)}
+          />
+        </div>
+      )}
+
       {/* Header */}
       <header className="header">
         <div className="header-content">
@@ -255,6 +275,7 @@ function App() {
           isAutoLeague={isAutoLeague}
           onLeagueChange={handleLeagueChange}
           onToggleAutoLeague={toggleAutoLeague}
+          onShowNotification={showNotification}
         />
 
         {/* Tabs */}
