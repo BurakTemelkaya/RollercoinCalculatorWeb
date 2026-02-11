@@ -1239,7 +1239,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-top: 24px;
+  margin-top: 20px;
   width: 100%;
 }
 
@@ -1496,6 +1496,7 @@ body {
 /* Fetch Button Enhancements */
 .fetch-button {
   gap: 10px;
+  margin-top: 16px;
 }
 
 .fetch-icon {

@@ -7,7 +7,7 @@ import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
 
 const API_CACHE_KEY = 'rollercoin_web_api_last_fetch';
-const CACHE_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_COOLDOWN_MS = 30 * 1000; // 30 seconds
 
 interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower) => void;
