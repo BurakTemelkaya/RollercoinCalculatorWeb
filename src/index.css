@@ -1416,3 +1416,113 @@ body {
   color: var(--border-color);
   font-size: 12px;
 }
+
+/* Data Source Toggle Cards */
+.data-source-cards {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.data-source-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--text-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.data-source-card:hover {
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.05);
+  transform: translateY(-1px);
+}
+
+.data-source-card.active {
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.08));
+  color: var(--text-primary);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+}
+
+.data-source-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.data-source-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.data-source-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.data-source-card.active .data-source-label {
+  color: var(--accent-primary);
+}
+
+.data-source-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.data-source-badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+/* Fetch Button Enhancements */
+.fetch-button {
+  gap: 10px;
+}
+
+.fetch-icon {
+  font-size: 16px;
+}
+
+.cooldown-icon {
+  font-size: 16px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .data-source-cards {
+    flex-direction: column;
+  }
+}

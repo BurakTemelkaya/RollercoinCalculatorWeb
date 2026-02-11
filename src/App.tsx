@@ -7,6 +7,8 @@ import { calculateAllEarnings } from './utils/calculator';
 import { formatHashPower } from './utils/powerParser';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
 import { LEAGUES, LeagueInfo } from './data/leagues';
+import { ApiLeagueData } from './types/api';
+import { convertApiLeagueToCoinData } from './services/leagueApi';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
 import WithdrawTimer from './components/WithdrawTimer';
@@ -20,6 +22,7 @@ const STORAGE_KEYS = {
   ACTIVE_TAB: 'rollercoin_web_active_tab',
   LEAGUE_ID: 'rollercoin_web_league_id',
   AUTO_LEAGUE: 'rollercoin_web_auto_league',
+  API_LEAGUES: 'rollercoin_web_api_leagues',
 };
 
 // Fetch prices from Binance API
@@ -102,6 +105,10 @@ function App() {
   const [isAutoLeague, setIsAutoLeague] = useState(true);
   const [blockRewards, setBlockRewards] = useState<Record<string, number>>({});
 
+  // API State
+  const [apiLeagues, setApiLeagues] = useState<LeagueInfo[] | null>(null);
+  const [rawApiData, setRawApiData] = useState<ApiLeagueData[] | null>(null);
+
   // Load from localStorage on mount
   useEffect(() => {
     try {
@@ -111,11 +118,15 @@ function App() {
       const savedTab = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
       const savedLeagueId = localStorage.getItem(STORAGE_KEYS.LEAGUE_ID);
       const savedAutoLeague = localStorage.getItem(STORAGE_KEYS.AUTO_LEAGUE);
+      const savedApiLeagues = localStorage.getItem(STORAGE_KEYS.API_LEAGUES);
 
       if (savedCoins) setCoins(JSON.parse(savedCoins));
       if (savedPower) setUserPower(JSON.parse(savedPower));
       if (savedBalances) setBalances(JSON.parse(savedBalances));
       if (savedTab === 'calculator' || savedTab === 'withdraw') setActiveTab(savedTab);
+      if (savedApiLeagues) setApiLeagues(JSON.parse(savedApiLeagues));
+      const savedRawApiData = localStorage.getItem('rollercoin_web_raw_api_data');
+      if (savedRawApiData) setRawApiData(JSON.parse(savedRawApiData));
 
       if (savedAutoLeague !== null) {
         setIsAutoLeague(savedAutoLeague === 'true');
@@ -123,7 +134,9 @@ function App() {
 
       // If manual league was saved, restore it
       if (savedLeagueId && savedAutoLeague === 'false') {
-        const foundLeague = LEAGUES.find(l => l.id === savedLeagueId);
+        // Try to find in API leagues first, then fall back to LEAGUES
+        const savedLeaguesSource = savedApiLeagues ? JSON.parse(savedApiLeagues) : LEAGUES;
+        const foundLeague = savedLeaguesSource.find((l: LeagueInfo) => l.id === savedLeagueId);
         if (foundLeague) setLeague(foundLeague);
       }
     } catch (e) {
@@ -147,12 +160,26 @@ function App() {
   // Auto-detect league when userPower changes
   useEffect(() => {
     if (userPower && isAutoLeague) {
-      const detectedLeague = getLeagueByPower(userPower);
+      // Use API leagues if available, otherwise default LEAGUES
+      const detectedLeague = getLeagueByPower(userPower, apiLeagues || undefined);
       if (detectedLeague.id !== league.id) {
         setLeague(detectedLeague);
       }
     }
-  }, [userPower, isAutoLeague, league.id]); // Added league.id to dependencies to prevent infinite loop if league is not updated
+  }, [userPower, isAutoLeague, league.id, apiLeagues]);
+
+  // Regenerate CoinData when league changes and we have raw API data
+  useEffect(() => {
+    if (rawApiData && rawApiData.length > 0) {
+      const matchingApiLeague = rawApiData.find(l => l.id === league.id);
+      if (matchingApiLeague) {
+        const newCoins = convertApiLeagueToCoinData(matchingApiLeague);
+        if (newCoins.length > 0) {
+          setCoins(newCoins);
+        }
+      }
+    }
+  }, [league, rawApiData]);
 
   // Update block rewards when league changes
   useEffect(() => {
@@ -204,7 +231,9 @@ function App() {
   };
 
   const handleLeagueChange = (newLeagueId: string) => {
-    const foundLeague = LEAGUES.find(l => l.id === newLeagueId);
+    // Use API leagues if available, otherwise fall back to default LEAGUES
+    const leaguesSource = apiLeagues || LEAGUES;
+    const foundLeague = leaguesSource.find(l => l.id === newLeagueId);
     if (foundLeague) {
       setLeague(foundLeague);
       setIsAutoLeague(false); // Disable auto-detect if manually changed
@@ -216,7 +245,30 @@ function App() {
     setIsAutoLeague(newVal);
     // If turning on auto, trigger detection
     if (newVal && userPower) {
-      setLeague(getLeagueByPower(userPower));
+      setLeague(getLeagueByPower(userPower, apiLeagues || undefined));
+    }
+  };
+
+  const handleApiLeaguesLoaded = (leagues: LeagueInfo[], rawData: ApiLeagueData[]) => {
+    setApiLeagues(leagues);
+    setRawApiData(rawData);
+    // Save to localStorage
+    localStorage.setItem(STORAGE_KEYS.API_LEAGUES, JSON.stringify(leagues));
+    localStorage.setItem('rollercoin_web_raw_api_data', JSON.stringify(rawData));
+
+    // Auto-detect league from API leagues based on user power
+    if (userPower && isAutoLeague) {
+      const detectedLeague = getLeagueByPower(userPower, leagues);
+      setLeague(detectedLeague);
+    } else {
+      // Try to find current league in API data by name
+      const matchedLeague = leagues.find(l => l.name === league.name);
+      if (matchedLeague) {
+        setLeague(matchedLeague);
+      } else {
+        // Default to first API league
+        setLeague(leagues[0]);
+      }
     }
   };
 
@@ -276,6 +328,8 @@ function App() {
           onLeagueChange={handleLeagueChange}
           onToggleAutoLeague={toggleAutoLeague}
           onShowNotification={showNotification}
+          onApiLeaguesLoaded={handleApiLeaguesLoaded}
+          apiLeagues={apiLeagues}
         />
 
         {/* Tabs */}

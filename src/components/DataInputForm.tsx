@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { CoinData, HashPower, PowerUnit } from '../types';
 import { parsePowerText } from '../utils/powerParser';
 import { LEAGUES, LeagueInfo } from '../data/leagues';
+import { fetchLeaguesFromApi } from '../services/leagueApi';
+import { ApiLeagueData } from '../types/api';
+
+const API_CACHE_KEY = 'rollercoin_web_api_last_fetch';
+const CACHE_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
 interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower) => void;
@@ -13,6 +18,8 @@ interface DataInputFormProps {
     onLeagueChange: (newLeagueId: string) => void;
     onToggleAutoLeague: () => void;
     onShowNotification: (message: string, type: 'success' | 'error' | 'info') => void;
+    onApiLeaguesLoaded?: (leagues: LeagueInfo[], rawData: ApiLeagueData[]) => void;
+    apiLeagues?: LeagueInfo[] | null;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -23,15 +30,106 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     isAutoLeague,
     onLeagueChange,
     onToggleAutoLeague,
-    onShowNotification
+    onShowNotification,
+    onApiLeaguesLoaded,
+    apiLeagues
 }) => {
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
     const [isExpanded, setIsExpanded] = useState(true);
 
+    // Data source mode: 'manual' or 'api'
+    const [dataSource, setDataSource] = useState<'manual' | 'api'>('manual');
+    const [isLoadingApi, setIsLoadingApi] = useState(false);
+
     // Manual power input state
     const [powerValue, setPowerValue] = useState<string>('');
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
+
+    // Storage key for data source mode
+    const DATA_SOURCE_KEY = 'rollercoin_web_data_source';
+
+    // Load saved data source preference
+    useEffect(() => {
+        const saved = localStorage.getItem(DATA_SOURCE_KEY);
+        if (saved === 'api' || saved === 'manual') {
+            setDataSource(saved);
+        }
+    }, []);
+
+    // Save data source preference
+    useEffect(() => {
+        localStorage.setItem(DATA_SOURCE_KEY, dataSource);
+    }, [dataSource]);
+
+    // Cache state
+    const [lastFetchTime, setLastFetchTime] = useState<number | null>(() => {
+        const saved = localStorage.getItem(API_CACHE_KEY);
+        return saved ? parseInt(saved, 10) : null;
+    });
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
+
+    // Cooldown timer
+    useEffect(() => {
+        if (!lastFetchTime) return;
+
+        const updateCooldown = () => {
+            const elapsed = Date.now() - lastFetchTime;
+            const remaining = Math.max(0, CACHE_COOLDOWN_MS - elapsed);
+            setCooldownRemaining(remaining);
+        };
+
+        updateCooldown();
+        const interval = setInterval(updateCooldown, 1000);
+        return () => clearInterval(interval);
+    }, [lastFetchTime]);
+
+    const canFetch = cooldownRemaining === 0;
+
+    // Handle fetch from API
+    const handleFetchFromApi = async () => {
+        if (!canFetch) {
+            const remainSec = Math.ceil(cooldownRemaining / 1000);
+            onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
+            return;
+        }
+
+        setIsLoadingApi(true);
+        try {
+            // Fetch raw API data to get totalPower per currency
+            const rawApiData = await fetchLeaguesFromApi();
+
+            // Convert to internal league format for league selector
+            const apiLeagues = rawApiData.map(l => ({
+                id: l.id,
+                name: l.title,
+                minPower: l.minPower,
+                currencies: l.currencies.map(c => ({
+                    name: c.name,
+                    payout: c.payoutAmount,
+                })),
+            }));
+
+            // Pass both converted leagues AND raw data to parent
+            if (onApiLeaguesLoaded) {
+                onApiLeaguesLoaded(apiLeagues, rawApiData);
+            }
+
+            // Update cache timestamp
+            const now = Date.now();
+            setLastFetchTime(now);
+            localStorage.setItem(API_CACHE_KEY, String(now));
+
+            onShowNotification(t('input.apiSuccess'), 'success');
+            setIsExpanded(false);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            onShowNotification(t('input.apiError', { error: errorMessage }), 'error');
+            console.error('API fetch error:', error);
+        } finally {
+            setIsLoadingApi(false);
+        }
+    };
 
     const handleParse = () => {
         try {
@@ -136,6 +234,35 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             {isExpanded && (
                 <div className="input-content">
 
+                    {/* Data Source Toggle Cards */}
+                    <div className="data-source-cards">
+                        <button
+                            className={`data-source-card ${dataSource === 'manual' ? 'active' : ''}`}
+                            onClick={() => setDataSource('manual')}
+                        >
+                            <span className="data-source-icon">✏️</span>
+                            <div className="data-source-info">
+                                <span className="data-source-label">{t('input.manualLabel')}</span>
+                                <span className="data-source-desc">{t('input.manualDesc')}</span>
+                            </div>
+                        </button>
+                        <button
+                            className={`data-source-card ${dataSource === 'api' ? 'active' : ''}`}
+                            onClick={() => setDataSource('api')}
+                        >
+                            <span className="data-source-icon">☁️</span>
+                            <div className="data-source-info">
+                                <span className="data-source-label">{t('input.serverLabel')}</span>
+                                <span className="data-source-desc">{t('input.serverDesc')}</span>
+                            </div>
+                            {lastFetchTime && dataSource === 'api' && (
+                                <span className="data-source-badge">
+                                    {t('input.lastFetched', { time: new Date(lastFetchTime).toLocaleTimeString() })}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
                     <div className="compact-row">
                         {/* User Power Input */}
                         <div className="input-group compact-group">
@@ -169,7 +296,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                     disabled={isAutoLeague}
                                     className="league-select flex-grow-select"
                                 >
-                                    {LEAGUES.map(l => (
+                                    {(apiLeagues && apiLeagues.length > 0 ? apiLeagues : LEAGUES).map(l => (
                                         <option key={l.id} value={l.id}>{l.name}</option>
                                     ))}
                                 </select>
@@ -186,33 +313,54 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                         </div>
                     </div>
 
-                    <div className="input-group full-width">
-                        <label>{t('input.leaguePowers')}</label>
-                        <textarea
-                            className="data-textarea"
-                            value={inputText}
-                            onChange={(e) => setInputText(e.target.value)}
-                            placeholder={t('input.placeholder')}
-                            rows={6}
-                        />
-                    </div>
+                    {/* League Powers Input - Only in Manual Mode */}
+                    {dataSource === 'manual' ? (
+                        <div className="input-group full-width">
+                            <label>{t('input.leaguePowers')}</label>
+                            <textarea
+                                className="data-textarea"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                placeholder={t('input.placeholder')}
+                                rows={6}
+                            />
+                        </div>
+                    ) : (
+                        <div className="input-group full-width">
+                            <button
+                                className="primary-button wide-button fetch-button"
+                                onClick={handleFetchFromApi}
+                                disabled={isLoadingApi || !canFetch}
+                            >
+                                {isLoadingApi
+                                    ? <><span className="spinner"></span> {t('input.fetching')}</>
+                                    : !canFetch
+                                        ? <><span className="cooldown-icon">⏳</span> {t('input.apiCooldownBtn', { seconds: Math.ceil(cooldownRemaining / 1000) })}</>
+                                        : <><span className="fetch-icon">🔄</span> {t('input.fetchFromApi')}</>
+                                }
+                            </button>
+                        </div>
+                    )}
 
-                    <div className="action-row-centered">
-                        <button
-                            className="primary-button wide-button"
-                            onClick={handleParse}
-                        >
-                            {t('input.calculate')}
-                        </button>
+                    {/* Calculate Button - Only in Manual Mode */}
+                    {dataSource === 'manual' && (
+                        <div className="action-row-centered">
+                            <button
+                                className="primary-button wide-button"
+                                onClick={handleParse}
+                            >
+                                {t('input.calculate')}
+                            </button>
 
-                        {currentCoins.length > 0 && (
-                            <div className="status-overlay">
-                                <span className="status-text success">
-                                    {t('input.loadedData', { count: currentCoins.length })}
-                                </span>
-                            </div>
-                        )}
-                    </div>
+                            {currentCoins.length > 0 && (
+                                <div className="status-overlay">
+                                    <span className="status-text success">
+                                        {t('input.loadedData', { count: currentCoins.length })}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

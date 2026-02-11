@@ -18,14 +18,17 @@ const PAYOUT_SCALES_FALLBACK: Record<string, number> = {
 
 /**
  * Get the appropriate league based on user's power
+ * @param power - User's hash power
+ * @param customLeagues - Optional custom leagues to search (e.g. from API)
  */
-export function getLeagueByPower(power: HashPower | null): LeagueInfo {
-    if (!power) return LEAGUES[0];
+export function getLeagueByPower(power: HashPower | null, customLeagues?: LeagueInfo[]): LeagueInfo {
+    const leaguesList = customLeagues || LEAGUES;
+    if (!power) return leaguesList[0];
 
     const powerInGh = toBaseUnit(power) / 1e9; // Convert to Gh/s
 
     // Create a copy and sort by minPower descending
-    const sortedLeagues = [...LEAGUES].sort((a, b) => b.minPower - a.minPower);
+    const sortedLeagues = [...leaguesList].sort((a, b) => b.minPower - a.minPower);
 
     for (const league of sortedLeagues) {
         if (powerInGh >= league.minPower) {
@@ -33,7 +36,7 @@ export function getLeagueByPower(power: HashPower | null): LeagueInfo {
         }
     }
 
-    return LEAGUES[0]; // Default to Bronze I
+    return leaguesList[0]; // Default to first league
 }
 
 /**
