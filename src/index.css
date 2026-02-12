@@ -1075,11 +1075,55 @@ body {
 }
 
 
+/* Data Input Section Card */
+.data-input-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.data-input-section:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+  gap: 16px;
+}
+
+.section-header:hover {
+  background: var(--bg-card-hover);
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.input-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
 /* Refined Layout Styles */
 .header-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .header-arrow {
@@ -1384,37 +1428,84 @@ body {
 .lang-switcher {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--bg-tertiary);
-  padding: 6px 14px;
-  border-radius: var(--radius-md);
+  gap: 4px;
+  background: var(--bg-primary);
+  padding: 4px;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
 }
 
 .lang-btn {
-  background: none;
+  background: transparent;
   border: none;
   color: var(--text-muted);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  padding: 0;
-  transition: all 0.2s;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  transition: all 0.25s ease;
+  letter-spacing: 0.5px;
+  position: relative;
 }
 
 .lang-btn:hover {
   color: var(--text-primary);
+  background: var(--bg-tertiary);
 }
 
 .lang-btn.active {
-  color: var(--accent-primary);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  color: white;
+  background: var(--accent-gradient);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
 }
 
 .lang-divider {
-  color: var(--border-color);
+  display: none;
+}
+
+/* Collapsed Summary - inline in header */
+.collapsed-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.summary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.summary-chip .chip-icon {
+  font-size: 12px;
+}
+
+.summary-chip .chip-value {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.summary-chip.success .chip-value {
+  color: var(--success);
+}
+
+@media (max-width: 600px) {
+  .collapsed-summary {
+    display: none;
+  }
 }
 
 /* Data Source Toggle Cards */

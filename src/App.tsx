@@ -94,6 +94,22 @@ function App() {
     i18n.changeLanguage(lng);
   };
 
+  // Dynamic SEO: update title, lang, and meta description on language change
+  useEffect(() => {
+    document.title = t('seo.title');
+    document.documentElement.lang = i18n.language;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', t('seo.description'));
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', t('seo.title'));
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', t('seo.description'));
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) twitterTitle.setAttribute('content', t('seo.title'));
+    const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDesc) twitterDesc.setAttribute('content', t('seo.description'));
+  }, [i18n.language, t]);
+
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
   const [balances, setBalances] = useState<Record<string, number>>({});
@@ -300,7 +316,6 @@ function App() {
                 onClick={() => changeLanguage('tr')}
                 className={`lang-btn ${i18n.language === 'tr' ? 'active' : ''}`}
               >TR</button>
-              <div className="lang-divider">|</div>
               <button
                 onClick={() => changeLanguage('en')}
                 className={`lang-btn ${i18n.language === 'en' ? 'active' : ''}`}

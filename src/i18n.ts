@@ -22,7 +22,7 @@ i18n
             escapeValue: false, // not needed for react as it escapes by default
         },
         detection: {
-            order: ['queryString', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+            order: ['localStorage', 'cookie', 'navigator', 'queryString', 'htmlTag', 'path', 'subdomain'],
             caches: ['localStorage', 'cookie'],
         },
     });

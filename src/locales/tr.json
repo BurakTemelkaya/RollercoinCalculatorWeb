@@ -1,4 +1,8 @@
 {
+    "seo": {
+        "title": "Rollercoin Hesaplayıcı | Kazanç ve Çekim Hesaplayıcı",
+        "description": "Ücretsiz Rollercoin kazanç hesaplayıcı. Günlük, haftalık ve aylık kripto madencilik kazançlarınızı hesaplayın. BTC, ETH, DOGE, SOL ve daha fazlası."
+    },
     "app": {
         "title": "Rollercoin Hesaplayıcı",
         "powerWithUnit": "Gücünüz: {{power}} {{unit}}/s",
