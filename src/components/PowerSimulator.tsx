@@ -73,7 +73,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const minersRawGh = fetchedUser.userPowerResponseDto.miners || 0;
             const racksRawGh = fetchedUser.userPowerResponseDto.racks || 0;
 
-            const baseForBonusGh = minersRawGh + racksRawGh;
+            const baseForBonusGh = minersRawGh; // Fix: Racks shouldn't be in the denominator for bonus % calculation.
             const bonusPowerRawGh = fetchedUser.userPowerResponseDto.bonus || 0;
 
             let calculatedBonus = 0;

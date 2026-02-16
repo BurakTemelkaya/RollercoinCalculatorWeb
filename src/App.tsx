@@ -177,11 +177,12 @@ function App() {
 
         if (foundLeague) {
           setLeague(foundLeague);
-          setIsAutoLeague(false); // Disable auto-detect since we set it from API
+          // setIsAutoLeague(false); // Disable auto-detect since we set it from API -> KEEP AUTO ENABLED AS REQUESTED
         }
       }
 
       showNotification(t('input.userFetched', { name: data.userProfileResponseDto.name }), 'success');
+
 
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -263,9 +264,34 @@ function App() {
   useEffect(() => {
     if (userPower && isAutoLeague) {
       let powerForLeague = userPower;
+      // Priority 1: Use specific league ID from User Profile if available
+      // This is the definitive "Authoritative" source
+      if (fetchedUser?.userProfileResponseDto?.league_Id) {
+        const apiLeagueId = fetchedUser.userProfileResponseDto.league_Id;
+        const leaguesSource = apiLeagues || LEAGUES;
 
-      // If we have fetched user data, use max_Power for league detection as requested.
-      // This is the definitive source for their current rank.
+        let foundLeague = leaguesSource.find(l => l.id === apiLeagueId);
+        if (!foundLeague) {
+          foundLeague = leaguesSource.find(l => String(l.id) === String(apiLeagueId));
+        }
+
+        if (foundLeague) {
+          if (foundLeague.id !== league.id) {
+            setLeague(foundLeague);
+            // DO NOT disable auto-league. This IS the auto-detection result.
+          }
+          return; // Skip power-based calculation
+        } else if (!apiLeagues) {
+          // CRITICAL FIX:
+          // If we have a user with a League ID (e.g. "18"), but NO API Leagues yet (apiLeagues is null),
+          // foundLeague will be undefined because "18" isn't in static LEAGUES.
+          // DO NOT fall through to Priority 2/3 (Power-based calc), because that will incorrectly set league to e.g. "Diamond 1" (static ID).
+          // Instead, do nothing and wait for apiLeagues to load.
+          return;
+        }
+      }
+
+      // Priority 2: Use Max Power logic if API User is fetched but no league ID (fallback)
       if (fetchedUser && fetchedUser.userPowerResponseDto.max_Power) {
         // API gives values in Gh. Convert to Hashes (* 1e9).
         const maxPowerRaw = fetchedUser.userPowerResponseDto.max_Power * 1e9;
@@ -294,7 +320,7 @@ function App() {
   // Regenerate CoinData when league changes and we have raw API data
   useEffect(() => {
     if (rawApiData && rawApiData.length > 0) {
-      const matchingApiLeague = rawApiData.find(l => l.id === league.id);
+      const matchingApiLeague = rawApiData.find(l => String(l.id) === String(league.id));
       if (matchingApiLeague) {
         const newCoins = convertApiLeagueToCoinData(matchingApiLeague);
         if (newCoins.length > 0) {
@@ -378,22 +404,10 @@ function App() {
     // Save to localStorage
     localStorage.setItem(STORAGE_KEYS.API_LEAGUES, JSON.stringify(leagues));
     localStorage.setItem('rollercoin_web_raw_api_data', JSON.stringify(rawData));
-
-    // Auto-detect league from API leagues based on user power
-    if (userPower && isAutoLeague) {
-      const detectedLeague = getLeagueByPower(userPower, leagues);
-      setLeague(detectedLeague);
-    } else {
-      // Try to find current league in API data by name
-      const matchedLeague = leagues.find(l => l.name === league.name);
-      if (matchedLeague) {
-        setLeague(matchedLeague);
-      } else {
-        // Default to first API league
-        setLeague(leagues[0]);
-      }
-    }
   };
+
+  // Sync League Logic Merged into main Auto-Detect Effect above.
+  // Previous separate useEffect removed to prevent conflicts and auto-league disabling.
 
   const handleSaveDurations = (newDurations: Record<string, number>) => {
     setBlockDurations(newDurations);

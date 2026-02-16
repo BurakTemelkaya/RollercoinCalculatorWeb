@@ -7,6 +7,8 @@ import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
 import { getLeagueImage } from '../data/leagueImages';
 import './DataInputForm.css';
+import * as Select from '@radix-ui/react-select';
+import classNames from 'classnames';
 
 const API_CACHE_KEY = 'rollercoin_web_api_last_fetch';
 const CACHE_COOLDOWN_MS = 30 * 1000; // 30 seconds
@@ -42,6 +44,15 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
     const [isExpanded, setIsExpanded] = useState(true);
+    const prevCoinsLengthRef = useRef(currentCoins.length);
+
+    // Auto-collapse when coins are populated
+    useEffect(() => {
+        if (currentCoins.length > 0 && prevCoinsLengthRef.current === 0) {
+            setIsExpanded(false);
+        }
+        prevCoinsLengthRef.current = currentCoins.length;
+    }, [currentCoins.length]);
 
     const [dataSource, setDataSource] = useState<'manual' | 'api'>('manual');
     const [isLoadingApi, setIsLoadingApi] = useState(false);
@@ -53,22 +64,13 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const [powerValue, setPowerValue] = useState<string>('');
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
 
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+
 
     const DATA_SOURCE_KEY = 'rollercoin_web_data_source';
 
     useEffect(() => {
         const saved = localStorage.getItem(DATA_SOURCE_KEY);
         if (saved === 'api' || saved === 'manual') setDataSource(saved);
-
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     useEffect(() => {
@@ -178,14 +180,19 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
     useEffect(() => {
+        // If we are in API mode, power updates come from the API/User fetch,
+        // so we don't need to manually trigger a re-parse which might use stale coins.
+        if (dataSource === 'api') return;
+
         if (!powerValue) return;
         const val = parseFloat(powerValue);
         if (isNaN(val) || val <= 0) return;
+
         const timeoutId = setTimeout(() => {
             onDataParsed(currentCoins, { value: val, unit: powerUnit });
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [powerValue, powerUnit]);
+    }, [powerValue, powerUnit, dataSource, currentCoins, onDataParsed]);
 
     const handleFetchUser = async () => {
         if (!userName.trim() || !onFetchUser) return;
@@ -322,8 +329,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                 } else {
                                                     await aP;
                                                 }
-                                                // Optional: setIsExpanded(false); 
-                                                // Removed setIsExpanded(false) to keep it minimal and let user see results
+                                                // setIsExpanded(false); // Moved to useEffect to wait for data
                                             }}
                                             disabled={isFetchingUserLocal || isLoadingApi || (fetchMode === 'username' && !userName.trim()) || (fetchMode === 'power' && !canFetch)}
                                             title={t('input.fetchFromApi')}
@@ -345,23 +351,38 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                             <div className="input-group">
                                 <label>{t('input.leagueSelect')}</label>
-                                <div className="custom-dropdown-container" ref={dropdownRef}>
-                                    <div className={`custom-dropdown-trigger ${isAutoLeague ? 'disabled' : ''}`} onClick={() => !isAutoLeague && setIsDropdownOpen(!isDropdownOpen)}>
-                                        <img src={getLeagueImage(currentLeague.id)} alt="" className="league-icon-dropdown" />
-                                        <span>{currentLeague.name}</span>
-                                        <span className="dropdown-arrow">▼</span>
-                                    </div>
-                                    {isDropdownOpen && (
-                                        <div className="custom-dropdown-list">
-                                            {leaguesList.map(l => (
-                                                <div key={l.id} className={`custom-dropdown-item ${l.id === currentLeague.id ? 'active' : ''}`} onClick={() => { onLeagueChange(l.id); setIsDropdownOpen(false); }}>
-                                                    <img src={getLeagueImage(l.id)} alt="" />
-                                                    <span>{l.name}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                <Select.Root
+                                    value={currentLeague.id}
+                                    onValueChange={onLeagueChange}
+                                    disabled={isAutoLeague}
+                                >
+                                    <Select.Trigger className={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })}>
+                                        <Select.Value>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <img src={getLeagueImage(currentLeague.id)} alt="" className="league-icon-dropdown" />
+                                                <span>{currentLeague.name}</span>
+                                            </div>
+                                        </Select.Value>
+                                        <Select.Icon className="dropdown-arrow">
+                                            ▼
+                                        </Select.Icon>
+                                    </Select.Trigger>
+
+                                    <Select.Portal>
+                                        <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5}>
+                                            <Select.Viewport>
+                                                {leaguesList.map(l => (
+                                                    <Select.Item key={l.id} value={l.id} className={classNames("custom-dropdown-item", { active: l.id === currentLeague.id })}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                            <img src={getLeagueImage(l.id)} alt="" style={{ width: 20, height: 20 }} />
+                                                            <Select.ItemText>{l.name}</Select.ItemText>
+                                                        </div>
+                                                    </Select.Item>
+                                                ))}
+                                            </Select.Viewport>
+                                        </Select.Content>
+                                    </Select.Portal>
+                                </Select.Root>
                             </div>
 
                             <div className="input-group">
@@ -385,7 +406,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
