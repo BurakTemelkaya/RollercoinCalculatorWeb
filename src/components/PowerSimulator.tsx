@@ -71,8 +71,9 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     useEffect(() => {
         if (fetchedUser) {
             const minersRawGh = fetchedUser.userPowerResponseDto.miners || 0;
+            const gamesRawGh = fetchedUser.userPowerResponseDto.games || 0;
 
-            const baseForBonusGh = minersRawGh; // Fix: Racks shouldn't be in the denominator for bonus % calculation.
+            const baseForBonusGh = minersRawGh + gamesRawGh; // Fix: Base for Bonus includes Miners + Games.
             const bonusPowerRawGh = fetchedUser.userPowerResponseDto.bonus || 0;
 
             let calculatedBonus = 0;
@@ -101,7 +102,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                 setStatRackUnit(racksScaled.unit);
             }
 
-            const gamesRawGh = fetchedUser.userPowerResponseDto.games || 0;
+            // gamesRawGh already declared above
             const tempRawGh = fetchedUser.userPowerResponseDto.temp || 0;
 
             const gamesHashes = gamesRawGh * 1e9;
