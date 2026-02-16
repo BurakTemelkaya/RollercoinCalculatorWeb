@@ -161,8 +161,12 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         // But the data shows Racks need boost. We will boost Racks. 
         // We will keep Games/Temp flat for now as they are small/temporary. (Or putting games inside if user insists, but Racks is the key fix).
 
-        let currentTotalMinersPowerH = (currentMinerBaseH + rackH) * (1 + currentBonusVal / 100);
-        let currentTotalPowerH = currentTotalMinersPowerH + gamesH + tempH;
+        // Fix: Bonus only applies to Miners according to user data verification.
+        // Previous: (Miners + Racks) * Bonus -> ~243 Eh (Wrong, User has 200 Eh)
+        // New: (Miners * Bonus) + Racks -> ~200 Eh (Correct)
+
+        let currentTotalMinersPowerH = currentMinerBaseH * (1 + currentBonusVal / 100);
+        let currentTotalPowerH = currentTotalMinersPowerH + rackH + gamesH + tempH;
 
         let addedMinersBaseH = 0;
         let addedMinersBonusVal = 0;
@@ -181,14 +185,17 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const totalAddedBonusVal = addedMinersBonusVal + previewBonusVal;
 
         // Calculate New State
-        const newBaseMinersH = currentMinerBaseH + rackH + totalAddedBaseH; // Racks included in base
         const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
 
-        // New Projected Total
-        let newTotalMinersPowerH = newBaseMinersH * (1 + (newTotalBonusPercent / 100));
+        // Apply new bonus to (Base Miners + Added Miners)
+        const newBaseMinersOnlyH = currentMinerBaseH + totalAddedBaseH;
 
-        // Add flat flat sources back
-        let newTotalPowerH = newTotalMinersPowerH + gamesH + tempH;
+        // New Projected Total
+        // Racks are NOT included in the multiplier here based on verification above.
+        let newTotalMinersPowerH = newBaseMinersOnlyH * (1 + (newTotalBonusPercent / 100));
+
+        // Add flat sources back (Racks, Games, Temp)
+        let newTotalPowerH = newTotalMinersPowerH + rackH + gamesH + tempH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;
