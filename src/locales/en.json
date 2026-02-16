@@ -12,11 +12,13 @@
     },
     "tabs": {
         "earnings": "Earnings Calculator",
-        "withdraw": "Withdrawal Timer"
+        "withdraw": "Withdrawal Timer",
+        "simulator": "Power Simulator"
     },
     "input": {
         "title": "Data Input & Settings",
         "userPower": "Your Power",
+        "userFetched": "✅ Data for '{{name}}' fetched successfully",
         "leagueSelect": "League",
         "auto": "Auto",
         "fetchFromApi": "Fetch Data",
@@ -39,8 +41,16 @@
             "parseError": "Could not parse data. Check format.",
             "missingBoth": "User power and league data are missing!",
             "missingUserPower": "User power is required!",
-            "missingLeagueData": "League data is required!"
-        }
+            "missingLeagueData": "League power data is required!"
+        },
+        "usernamePlaceholder": "Enter username (Optional)...",
+        "enterUsername": "Username (Optional)",
+        "fetchButton": "Refresh",
+        "fetchAction": "Fetch",
+        "fetchMode": "Input Method",
+        "byUsername": "Username",
+        "byPower": "User Power",
+        "fetchingByPower": "Use the power value entered above"
     },
     "table": {
         "cryptoTitle": "Cryptocurrencies",
@@ -55,7 +65,8 @@
             "monthly": "MONTHLY"
         },
         "best": "Best",
-        "total": "TOTAL"
+        "total": "TOTAL",
+        "settingsTooltip": "Customize block durations (seconds)"
     },
     "withdraw": {
         "title": "Withdrawal Time Calculator",
@@ -72,5 +83,38 @@
         "months": "months",
         "years": "years",
         "hours": "hours"
+    },
+    "simulator": {
+        "title": "Power Simulator",
+        "desc": "Calculate how adding a new miner affects your total power and league.",
+        "currentStats": "Current Stats",
+        "minersPower": "Miners Power",
+        "rackPower": "Rack Power (Flat/Bonus)",
+        "totalBonus": "Total Bonus",
+        "gamesPower": "Games Power (Optional)",
+        "tempPower": "Temporary Power (Optional)",
+        "includeGames": "Include Games/Temp",
+        "addMiner": "Add New Miner",
+        "minerPower": "Miner Power",
+        "minerBonus": "Miner Bonus",
+        "newTotal": "Projected Total",
+        "moveUp": "Move up",
+        "addedMinersList": "Added Miners",
+        "add": "Add",
+        "remove": "Remove",
+        "minerName": "Miner Name (Optional)",
+        "enterUsername": "Enter username...",
+        "fetch": "Fetch",
+        "currentPower": "Current Power",
+        "byUsername": "Username",
+        "byPower": "Manual Input",
+        "usingCurrentStats": "Use the current stats entered below",
+        "noChange": "No change"
+    },
+    "settings": {
+        "title": "Settings",
+        "blockDurationDesc": "Customize block durations (seconds). Default ~600s (10 min).",
+        "save": "Save",
+        "cancel": "Cancel"
     }
 }

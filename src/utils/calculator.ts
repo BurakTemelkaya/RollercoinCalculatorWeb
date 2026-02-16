@@ -2,16 +2,27 @@ import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS } from '../typ
 import { powerRatio, formatHashPower } from './powerParser';
 import { TFunction } from 'i18next';
 
-// Block time in minutes (9 minutes 56 seconds = 596 seconds)
-const BLOCK_TIME_MINUTES = 596 / 60;
+// Default block time in minutes (9 minutes 56 seconds = 596 seconds)
+const DEFAULT_BLOCK_TIME_SECONDS = 596;
 
-// Blocks per period
-const BLOCKS_PER_PERIOD: Record<Period, number> = {
-    hourly: 60 / BLOCK_TIME_MINUTES,           // 6 blocks
-    daily: (60 / BLOCK_TIME_MINUTES) * 24,     // 144 blocks
-    weekly: (60 / BLOCK_TIME_MINUTES) * 24 * 7, // 1008 blocks
-    monthly: (60 / BLOCK_TIME_MINUTES) * 24 * 30, // 4320 blocks
-};
+/**
+ * Calculate blocks per period based on duration
+ */
+export function getBlocksPerPeriod(period: Period, blockDurationSeconds: number = DEFAULT_BLOCK_TIME_SECONDS): number {
+    const blockTimeMinutes = blockDurationSeconds / 60;
+    // Protect against zero division
+    if (blockTimeMinutes <= 0) return 0;
+
+    const hourly = 60 / blockTimeMinutes;
+
+    switch (period) {
+        case 'hourly': return hourly;
+        case 'daily': hourly * 24; // Implicit fallthrough fix below
+            return hourly * 24;
+        case 'weekly': return hourly * 24 * 7;
+        case 'monthly': return hourly * 24 * 30;
+    }
+}
 
 /**
  * Check if a currency is a game token
@@ -26,7 +37,8 @@ export function isGameToken(currency: string): boolean {
 export function calculateCoinEarnings(
     coin: CoinData,
     userPower: HashPower,
-    blockRewards: Record<string, number>
+    blockRewards: Record<string, number>,
+    blockDurationSeconds: number = DEFAULT_BLOCK_TIME_SECONDS
 ): EarningsResult {
     const { code, displayName, leaguePower, isGameToken: gameToken } = coin;
 
@@ -42,10 +54,10 @@ export function calculateCoinEarnings(
     // Calculate earnings for each period
     const earnings = {
         perBlock: rewardPerBlock,
-        hourly: rewardPerBlock * BLOCKS_PER_PERIOD.hourly,
-        daily: rewardPerBlock * BLOCKS_PER_PERIOD.daily,
-        weekly: rewardPerBlock * BLOCKS_PER_PERIOD.weekly,
-        monthly: rewardPerBlock * BLOCKS_PER_PERIOD.monthly,
+        hourly: rewardPerBlock * getBlocksPerPeriod('hourly', blockDurationSeconds),
+        daily: rewardPerBlock * getBlocksPerPeriod('daily', blockDurationSeconds),
+        weekly: rewardPerBlock * getBlocksPerPeriod('weekly', blockDurationSeconds),
+        monthly: rewardPerBlock * getBlocksPerPeriod('monthly', blockDurationSeconds),
     };
 
     return {
@@ -65,9 +77,18 @@ export function calculateCoinEarnings(
 export function calculateAllEarnings(
     coins: CoinData[],
     userPower: HashPower,
-    blockRewards: Record<string, number>
+    blockRewards: Record<string, number>,
+    customBlockDurations: Record<string, number> = {}
 ): EarningsResult[] {
-    return coins.map(coin => calculateCoinEarnings(coin, userPower, blockRewards));
+    return coins.map(coin => {
+        // Look up by symbol (e.g. BTC, ETH)
+        // Duration is 596 if not found
+        const duration = customBlockDurations[coin.displayName]
+            || customBlockDurations[coin.code]
+            || DEFAULT_BLOCK_TIME_SECONDS;
+
+        return calculateCoinEarnings(coin, userPower, blockRewards, duration);
+    });
 }
 
 /**
@@ -103,6 +124,30 @@ export function formatCryptoAmount(amount: number, _currency?: string): string {
     } catch {
         return amount.toFixed(2);
     }
+}
+
+/**
+ * Format USD amount
+ */
+/**
+ * Format USD amount
+ */
+export function formatUSD(amount: number): string {
+    if (amount === null || amount === undefined || !Number.isFinite(amount) || Number.isNaN(amount)) {
+        return '$0.00';
+    }
+
+    // User requested "100.51" format.
+    // If amount is very small (less than 1 cent), we can show it as < $0.01 or just 0.00 depending on interpretation.
+    // "en fazla 1 cent altını göstermemize gerek yok" -> We don't need to show below 1 cent.
+    // So simple standard currency format (2 decimals) should suffice.
+
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
 }
 
 /**

@@ -12,14 +12,16 @@
     },
     "tabs": {
         "earnings": "Kazanç Hesaplayıcı",
-        "withdraw": "Çekim Sayacı"
+        "withdraw": "Çekim Sayacı",
+        "simulator": "Güç Simülatörü"
     },
     "input": {
         "title": "Veri Girişi & Ayarlar",
         "userPower": "Kullanıcı Gücünüz",
+        "userFetched": "✅ '{{name}}' kullanıcısının verileri başarıyla çekildi",
         "leagueSelect": "Lig Seçimi",
         "auto": "Otomatik",
-        "fetchFromApi": "Verileri Getir",
+        "fetchFromApi": "Verileri Yenile",
         "fetching": "Yükleniyor...",
         "manualLabel": "Elle Giriş",
         "manualDesc": "Oyundan lig verilerini yapıştırın",
@@ -40,7 +42,15 @@
             "missingBoth": "Kullanıcı gücü ve lig bilgileri eksik! Lütfen ikisini de giriniz.",
             "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
             "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!"
-        }
+        },
+        "usernamePlaceholder": "Kullanıcı adı girin",
+        "enterUsername": "Kullanıcı Adı",
+        "fetchButton": "Yenile",
+        "fetchAction": "Getir",
+        "fetchMode": "Giriş Yöntemi",
+        "byUsername": "Kullanıcı Adı",
+        "byPower": "Kullanıcı Gücü",
+        "fetchingByPower": "Üstteki gücü kullanarak verileri çek"
     },
     "table": {
         "cryptoTitle": "Kripto Paralar",
@@ -55,7 +65,8 @@
             "monthly": "AYLIK"
         },
         "best": "En İyi",
-        "total": "TOPLAM"
+        "total": "TOPLAM",
+        "settingsTooltip": "Blok sürelerini (saniye) özelleştirin"
     },
     "withdraw": {
         "title": "Çekim Süresi Hesaplayıcı",
@@ -72,5 +83,38 @@
         "months": "ay",
         "years": "yıl",
         "hours": "saat"
+    },
+    "simulator": {
+        "title": "Güç Simülatörü",
+        "desc": "Yeni bir madenci eklemenin toplam gücünüzü ve liginizi nasıl etkileyeceğini hesaplayın.",
+        "currentStats": "Mevcut İstatistikler",
+        "minersPower": "Madenci Gücü",
+        "rackPower": "Raf Gücü (Bonus)",
+        "totalBonus": "Toplam Bonus",
+        "gamesPower": "Oyun Gücü (Opsiyonel)",
+        "tempPower": "Geçici Güç (Opsiyonel)",
+        "includeGames": "Oyun / Geçici Dahil Et",
+        "addMiner": "Yeni Madenci Ekle",
+        "minerPower": "Madenci Gücü",
+        "minerBonus": "Madenci Bonusu",
+        "newTotal": "Tahmini Toplam",
+        "moveUp": "Yukarı taşı",
+        "addedMinersList": "Eklenen Madenciler",
+        "add": "Ekle",
+        "remove": "Kaldır",
+        "minerName": "Madenci Adı (Opsiyonel)",
+        "enterUsername": "Kullanıcı adı girin...",
+        "fetch": "Getir",
+        "currentPower": "Mevcut Güç",
+        "byUsername": "Kullanıcı Adı",
+        "byPower": "Elle Giriş",
+        "usingCurrentStats": "Alttaki mevcut istatistikleri kullan",
+        "noChange": "Değişiklik yok"
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "blockDurationDesc": "Blok sürelerini (saniye) özelleştirin. Varsayılan ~600 saniye (10 dk).",
+        "save": "Kaydet",
+        "cancel": "İptal"
     }
 }

@@ -31,10 +31,34 @@ function getLeagueEndpoint(): string {
 /**
  * Gets full API URL for leagues endpoint
  */
-export function getApiUrl(endpointKey: 'leagues'): string {
-  if (endpointKey === 'leagues') {
-    return `${getApiBaseUrl()}${getLeagueEndpoint()}`;
-  }
+/**
+ * Gets the user endpoint from environment variables
+ */
+function getUserEndpoint(): string {
+  return import.meta.env.VITE_API_USER_ENDPOINT || '/api/RollercoinUser';
+}
 
-  throw new Error(`Unknown endpoint: ${endpointKey}`);
+/**
+ * Gets full API URL for specific endpoints
+ */
+export function getApiUrl(endpointKey: 'leagues' | 'user'): string {
+  const baseUrl = getApiBaseUrl();
+
+  switch (endpointKey) {
+    case 'leagues':
+      return `${baseUrl}${getLeagueEndpoint()}`;
+    case 'user':
+      return `${baseUrl}${getUserEndpoint()}`;
+    default:
+      throw new Error(`Unknown endpoint: ${endpointKey}`);
+  }
+}
+
+/**
+ * Helper to build custom API URLs
+ */
+export function buildApiUrl(path: string): string {
+  const baseUrl = getApiBaseUrl();
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${cleanPath}`;
 }

@@ -1,4 +1,4 @@
-import { HashPower, PowerUnit } from '../types';
+import { HashPower, PowerUnit, CoinData } from '../types';
 
 // Hash power unit multipliers (each unit is 1000x the previous)
 const UNIT_MULTIPLIERS: Record<PowerUnit, number> = {
@@ -117,6 +117,13 @@ export function autoScalePower(baseValue: number): HashPower {
 }
 
 /**
+ * Helper to get just the unit from a base value (for input selects)
+ */
+export function parsePowerUnit(baseValue: number): PowerUnit {
+    return autoScalePower(baseValue).unit;
+}
+
+/**
  * Calculate power ratio (user / league)
  */
 export function powerRatio(userPower: HashPower, leaguePower: HashPower): number {
@@ -128,15 +135,14 @@ export function powerRatio(userPower: HashPower, leaguePower: HashPower): number
     return userBase / leagueBase;
 }
 
-import { CoinData } from '../types';
+
 
 /**
  * Parse full text input pasted from Rollercoin site
- * Expected format blocks:
  * Coin Name
- * Coin Symbol
- * Network Power (e.g. 1.458 Zh/s)
- */
+    * Coin Symbol
+        * Network Power(e.g. 1.458 Zh / s)
+            */
 export function parsePowerText(text: string): { coins: CoinData[], userPower: HashPower | null } {
     const lines = text.split('\n').map(line => line.trim()).filter(line => line);
     const coins: CoinData[] = [];

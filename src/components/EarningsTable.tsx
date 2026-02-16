@@ -1,25 +1,21 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { EarningsResult } from '../types';
-import { formatCryptoAmount } from '../utils/calculator';
+import { formatCryptoAmount, formatUSD } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 
 interface EarningsTableProps {
     earnings: EarningsResult[];
     prices: Record<string, number>;
+    onOpenSettings: () => void;
 }
 
-// Format dollar value
-function formatUSD(amount: number): string {
-    if (!Number.isFinite(amount) || amount === 0) return '-';
-    if (amount < 0.01) return `$${amount.toFixed(4)}`;
-    if (amount < 1) return `$${amount.toFixed(3)}`;
-    return `$${amount.toFixed(2)}`;
-}
+// ...
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
     earnings,
     prices,
+    onOpenSettings
 }) => {
     const { t } = useTranslation();
 
@@ -95,18 +91,29 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             </div>
         );
     }
-
     return (
         <div className="earnings-tables">
             {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
                 <div className="table-section">
-                    <h3 className="section-title">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-                        </svg>
-                        {t('table.cryptoTitle')}
-                    </h3>
+                    <div className="section-header-row">
+                        <h3 className="section-title">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                            </svg>
+                            {t('table.cryptoTitle')}
+                        </h3>
+                        <button
+                            className="settings-icon-btn"
+                            onClick={onOpenSettings}
+                            title={t('table.settingsTooltip')}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
                     <div className="table-container">
                         <table className="earnings-table wide-table">
                             <thead>
