@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import trFlag from './assets/flags/tr.svg';
+import gbFlag from './assets/flags/gb.svg';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -448,11 +450,17 @@ function App() {
               <button
                 onClick={() => changeLanguage('tr')}
                 className={`lang-btn ${i18n.language === 'tr' ? 'active' : ''}`}
-              >TR</button>
+              >
+                <img src={trFlag} alt="TR" className="flag-icon" />
+                <span className="lang-text">Türkçe</span>
+              </button>
               <button
                 onClick={() => changeLanguage('en')}
                 className={`lang-btn ${i18n.language === 'en' ? 'active' : ''}`}
-              >EN</button>
+              >
+                <img src={gbFlag} alt="GB" className="flag-icon" />
+                <span className="lang-text">English</span>
+              </button>
             </div>
             {userPower && (
               <div className="user-power-badge">

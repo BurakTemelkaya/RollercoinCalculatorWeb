@@ -40,6 +40,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     onApiLeaguesLoaded,
     apiLeagues,
     onFetchUser,
+    isFetchingUser,
 }) => {
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
@@ -181,8 +182,12 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
     useEffect(() => {
         // If we are in API mode, power updates come from the API/User fetch,
-        // so we don't need to manually trigger a re-parse which might use stale coins.
-        if (dataSource === 'api') return;
+        // but we still need to update when user manually changes power
+        if (dataSource === 'api' && fetchMode === 'username') {
+            // In username mode, power comes from API, so don't trigger on manual change
+            // But if user switches to power mode and changes manually, we should update
+            return;
+        }
 
         if (!powerValue) return;
         const val = parseFloat(powerValue);
@@ -192,13 +197,22 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             onDataParsed(currentCoins, { value: val, unit: powerUnit });
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [powerValue, powerUnit, dataSource, currentCoins, onDataParsed]);
+    }, [powerValue, powerUnit, dataSource, fetchMode, currentCoins, onDataParsed]);
 
     const handleFetchUser = async () => {
         if (!userName.trim() || !onFetchUser) return;
+        if (!canFetch) {
+            const remainSec = Math.ceil(cooldownRemaining / 1000);
+            onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
+            return;
+        }
         setIsFetchingUserLocal(true);
         try {
             await onFetchUser(userName.trim());
+            // Update cooldown after successful fetch
+            const now = Date.now();
+            setLastFetchTime(now);
+            localStorage.setItem(API_CACHE_KEY, String(now));
         } catch (error) {
             onShowNotification(t('input.errors.parseError'), 'error');
         } finally {
@@ -322,6 +336,11 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                         <button
                                             className="fetch-btn"
                                             onClick={async () => {
+                                                if (!canFetch) {
+                                                    const remainSec = Math.ceil(cooldownRemaining / 1000);
+                                                    onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
+                                                    return;
+                                                }
                                                 const aP = handleFetchFromApi();
                                                 if (fetchMode === 'username' && userName.trim()) {
                                                     const uP = handleFetchUser();
@@ -331,10 +350,10 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                 }
                                                 // setIsExpanded(false); // Moved to useEffect to wait for data
                                             }}
-                                            disabled={isFetchingUserLocal || isLoadingApi || (fetchMode === 'username' && !userName.trim()) || (fetchMode === 'power' && !canFetch)}
+                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && (!userName.trim() || !canFetch)) || (fetchMode === 'power' && !canFetch)}
                                             title={t('input.fetchFromApi')}
                                         >
-                                            {isFetchingUserLocal || isLoadingApi ? (
+                                            {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
                                                 <span className="spinner small"></span>
                                             ) : !canFetch && dataSource === 'api' && lastFetchTime ? (
                                                 <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>

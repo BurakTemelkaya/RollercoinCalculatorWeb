@@ -1501,6 +1501,21 @@ body {
   transition: all 0.25s ease;
   letter-spacing: 0.5px;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-btn .flag-icon {
+  width: 20px;
+  height: 14px;
+  display: inline-block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.lang-btn .lang-text {
+  white-space: nowrap;
 }
 
 .lang-btn:hover {
