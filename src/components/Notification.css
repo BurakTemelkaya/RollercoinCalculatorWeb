@@ -18,8 +18,13 @@
     border-radius: 8px;
     min-width: 300px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    animation: slideIn 0.3s ease-out;
+    animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     border-left: 4px solid transparent;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.notification-toast.slide-out {
+    animation: slideOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .notification-toast.success {
@@ -58,6 +63,7 @@
     padding: 0;
     margin-left: 12px;
     line-height: 1;
+    transition: color 0.2s;
 }
 
 .notification-close:hover {
@@ -66,11 +72,24 @@
 
 @keyframes slideIn {
     from {
-        transform: translateX(100%);
+        transform: translateX(110%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(110%);
+        opacity: 0;
     }
 }

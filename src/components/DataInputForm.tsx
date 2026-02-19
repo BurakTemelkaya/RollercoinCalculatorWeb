@@ -55,7 +55,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         prevCoinsLengthRef.current = currentCoins.length;
     }, [currentCoins.length]);
 
-    const [dataSource, setDataSource] = useState<'manual' | 'api'>('manual');
+    const [dataSource, setDataSource] = useState<'manual' | 'api'>('api');
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
     const [userName, setUserName] = useState('');
@@ -65,18 +65,25 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const [powerValue, setPowerValue] = useState<string>('');
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
 
-
-
     const DATA_SOURCE_KEY = 'rollercoin_web_data_source';
+    const USERNAME_KEY = 'rollercoin_web_username';
 
     useEffect(() => {
         const saved = localStorage.getItem(DATA_SOURCE_KEY);
         if (saved === 'api' || saved === 'manual') setDataSource(saved);
+        const savedUsername = localStorage.getItem(USERNAME_KEY);
+        if (savedUsername) setUserName(savedUsername);
     }, []);
 
     useEffect(() => {
         localStorage.setItem(DATA_SOURCE_KEY, dataSource);
     }, [dataSource]);
+
+    useEffect(() => {
+        if (userName) {
+            localStorage.setItem(USERNAME_KEY, userName);
+        }
+    }, [userName]);
 
     const [lastFetchTime, setLastFetchTime] = useState<number | null>(() => {
         const saved = localStorage.getItem(API_CACHE_KEY);
@@ -233,14 +240,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 {!isExpanded && currentCoins.length > 0 && (
                     <div className="collapsed-summary">
                         {currentUserPower && (
-                            <div className="summary-chip">
+                            <div className="summary-chip power">
                                 <span className="chip-icon">⚡</span>
                                 <span className="chip-value">
                                     {currentUserPower.value.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currentUserPower.unit}/s
                                 </span>
                             </div>
                         )}
-                        <div className="summary-chip">
+                        <div className="summary-chip league">
                             <span className="chip-value">
                                 <img src={getLeagueImage(currentLeague.id)} className="league-icon-summary" alt="" />
                                 {currentLeague.name}

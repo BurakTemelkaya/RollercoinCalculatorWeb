@@ -34,7 +34,9 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     const { t } = useTranslation();
 
     // User API State
-    const [userName, setUserName] = useState('');
+    const [userName, setUserName] = useState(() => {
+        return localStorage.getItem('rollercoin_web_username') || '';
+    });
     const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
 
     // Current Stats Inputs
@@ -65,6 +67,8 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         isLeagueChange: boolean;
         powerIncrease: HashPower;
         currentTotalPower: HashPower;
+        currentLeaguePower: HashPower;
+        newLeaguePower: HashPower;
     } | null>(null);
 
     // Sync from fetchedUser prop
@@ -153,20 +157,25 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const tempVal = parseFloat(statTempPower) || 0;
         const tempH = toBaseUnit({ value: tempVal, unit: statTempUnit });
 
-        // Calculate Current Total based on Inputs (Forward Calculation)
-        // Total = ((MinerBase + RackBase) * (1 + Bonus%)) + Games + Temp
-        // Analysis shows Rack Power (45Ph) needs to be boosted by Bonus (923%) to match Profile Total (14.7Eh vs 14.3Eh).
+        // === Official Rollercoin Formula (from FAQ & Blog) ===
+        // Total Power = (Games + Miners) * (1 + CollectionBonus%) + RackBonus + TempPower
+        //
+        // Collection Bonus applies to: ✅ Miners, ✅ Games
+        // Collection Bonus does NOT apply to: ❌ Rack Bonus, ❌ Temp Power
+        //
+        // === League Determination ===
+        // League-qualifying power (affects league): Miners * (1 + Bonus%) + RackBonus
+        // Non-league power (does NOT affect league): Games, Temp Power
+        // Games & Temp power inflate your total but don't help you advance leagues.
 
-        // Note: User snippet previously had games inside bonus and racks outside. 
-        // But the data shows Racks need boost. We will boost Racks. 
-        // We will keep Games/Temp flat for now as they are small/temporary. (Or putting games inside if user insists, but Racks is the key fix).
+        // --- Current State ---
+        // League Power = Miners * (1 + Bonus%) + Racks
+        const currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH;
 
-        // Fix: Bonus only applies to Miners according to user data verification.
-        // Previous: (Miners + Racks) * Bonus -> ~243 Eh (Wrong, User has 200 Eh)
-        // New: (Miners * Bonus) + Racks -> ~200 Eh (Correct)
-
-        let currentTotalMinersPowerH = currentMinerBaseH * (1 + currentBonusVal / 100);
-        let currentTotalPowerH = currentTotalMinersPowerH + rackH + gamesH + tempH;
+        // Total Power = (Games + Miners) * (1 + Bonus%) + Racks + Temp
+        const bonusBase = currentMinerBaseH + gamesH;
+        let currentBoostedPowerH = bonusBase * (1 + currentBonusVal / 100);
+        let currentTotalPowerH = currentBoostedPowerH + rackH + tempH;
 
         let addedMinersBaseH = 0;
         let addedMinersBonusVal = 0;
@@ -184,31 +193,26 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const totalAddedBaseH = addedMinersBaseH + previewMinerH;
         const totalAddedBonusVal = addedMinersBonusVal + previewBonusVal;
 
-        // Calculate New State
+        // --- New State ---
         const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
+        const newAllMinersH = currentMinerBaseH + totalAddedBaseH;
 
-        // Apply new bonus to (Base Miners + Added Miners)
-        const newBaseMinersOnlyH = currentMinerBaseH + totalAddedBaseH;
+        // New League Power = (AllMiners) * (1 + NewBonus%) + Racks
+        const newLeaguePowerH = newAllMinersH * (1 + newTotalBonusPercent / 100) + rackH;
 
-        // New Projected Total
-        // Racks are NOT included in the multiplier here based on verification above.
-        let newTotalMinersPowerH = newBaseMinersOnlyH * (1 + (newTotalBonusPercent / 100));
-
-        // Add flat sources back (Racks, Games, Temp)
-        let newTotalPowerH = newTotalMinersPowerH + rackH + gamesH + tempH;
+        // New Total Power = (Games + AllMiners) * (1 + NewBonus%) + Racks + Temp
+        const newBonusBaseH = newAllMinersH + gamesH;
+        let newBoostedPowerH = newBonusBaseH * (1 + (newTotalBonusPercent / 100));
+        let newTotalPowerH = newBoostedPowerH + rackH + tempH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;
         const powerIncrease = autoScalePower(powerDiff);
 
-        // League Calculation usually considers TOTAL power
-        let powerForLeagueCheck = newTotalPowerH;
-
-        // Current League Check
-        let currentPowerForLeague = currentTotalPowerH;
-
-        const calculatedCurrentLeague = getLeagueByPower(autoScalePower(currentPowerForLeague), apiLeagues || LEAGUES);
-        const newLeague = getLeagueByPower(autoScalePower(powerForLeagueCheck), apiLeagues || LEAGUES);
+        // League determination uses ONLY league-qualifying power (Miners + Bonus + Racks)
+        // Games and Temp power do NOT affect league!
+        const calculatedCurrentLeague = getLeagueByPower(autoScalePower(currentLeaguePowerH), apiLeagues || LEAGUES);
+        const newLeague = getLeagueByPower(autoScalePower(newLeaguePowerH), apiLeagues || LEAGUES);
         const isLeagueChange = newLeague.id !== calculatedCurrentLeague.id;
 
         if (totalAddedBaseH > 0 || totalAddedBonusVal > 0) {
@@ -219,7 +223,9 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                 currentLeague: calculatedCurrentLeague,
                 isLeagueChange,
                 powerIncrease,
-                currentTotalPower: autoScalePower(currentTotalPowerH)
+                currentTotalPower: autoScalePower(currentTotalPowerH),
+                currentLeaguePower: autoScalePower(currentLeaguePowerH),
+                newLeaguePower: autoScalePower(newLeaguePowerH),
             });
         } else {
             setSimulationResult(null);
@@ -352,7 +358,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div className="responsive-input-row">
                                 <div className="input-group compact" style={{ flex: 1 }}>
                                     <label>{t('simulator.gamesPower')}</label>
                                     <div className="power-input-row">
@@ -421,25 +427,25 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             </div>
                         </div>
 
-                        <div className="input-group compact" style={{ flex: 1 }}>
+                        <div className="input-group compact">
                             <label>{t('simulator.minerBonus')} (%)</label>
-                            <input
-                                type="number"
-                                value={newMinerBonus}
-                                onChange={e => setNewMinerBonus(e.target.value)}
-                                placeholder="0"
-                                className="power-value-input"
-                            />
+                            <div className="bonus-add-row">
+                                <input
+                                    type="number"
+                                    value={newMinerBonus}
+                                    onChange={e => setNewMinerBonus(e.target.value)}
+                                    placeholder="0"
+                                    className="power-value-input"
+                                />
+                                <button
+                                    className="btn-primary add-miner-btn"
+                                    onClick={handleAddMiner}
+                                    disabled={!newMinerPower}
+                                >
+                                    {t('simulator.add')}
+                                </button>
+                            </div>
                         </div>
-
-                        <button
-                            className="btn-primary"
-                            onClick={handleAddMiner}
-                            disabled={!newMinerPower}
-                            style={{ height: '42px', flex: '0 0 100px' }}
-                        >
-                            {t('simulator.add')}
-                        </button>
                     </div>
 
                     {addedMiners.length > 0 && (
@@ -466,6 +472,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                 {simulationResult && (
                     <div className="simulation-results">
                         <div className="results-inner">
+                            {/* Total Power Row */}
                             <div className="result-row">
                                 <div className="result-item">
                                     <span className="label">{t('simulator.currentPower')}</span>
@@ -476,6 +483,24 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                     <span className="label">{t('simulator.newTotal')}</span>
                                     <span className="value primary">{formatHashPower(simulationResult.newTotalPower)}</span>
                                     <span className="sub-value success">+{formatHashPower(simulationResult.powerIncrease)}</span>
+                                </div>
+                            </div>
+
+                            {/* League Power Breakdown */}
+                            <div className="league-power-breakdown">
+                                <div className="league-power-row">
+                                    <div className="league-power-item">
+                                        <span className="league-power-label">🏆 {t('simulator.leaguePower')}</span>
+                                        <span className="league-power-value">{formatHashPower(simulationResult.currentLeaguePower)}</span>
+                                    </div>
+                                    <div className="transition-arrow small">➜</div>
+                                    <div className="league-power-item">
+                                        <span className="league-power-value accent">{formatHashPower(simulationResult.newLeaguePower)}</span>
+                                    </div>
+                                </div>
+                                <div className="league-power-note">
+                                    <span className="note-icon">ℹ️</span>
+                                    <span>{t('simulator.leaguePowerNote')}</span>
                                 </div>
                             </div>
 

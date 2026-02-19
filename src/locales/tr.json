@@ -109,7 +109,9 @@
         "byUsername": "Kullanıcı Adı",
         "byPower": "Elle Giriş",
         "usingCurrentStats": "Alttaki mevcut istatistikleri kullan",
-        "noChange": "Değişiklik yok"
+        "noChange": "Değişiklik yok",
+        "leaguePower": "Lig Gücü",
+        "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir."
     },
     "settings": {
         "title": "Ayarlar",

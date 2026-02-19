@@ -43,8 +43,8 @@
             "missingUserPower": "User power is required!",
             "missingLeagueData": "League power data is required!"
         },
-        "usernamePlaceholder": "Enter username (Optional)...",
-        "enterUsername": "Username (Optional)",
+        "usernamePlaceholder": "Enter username",
+        "enterUsername": "Username",
         "fetchButton": "Refresh",
         "fetchAction": "Fetch",
         "fetchMode": "Input Method",
@@ -109,7 +109,9 @@
         "byUsername": "Username",
         "byPower": "Manual Input",
         "usingCurrentStats": "Use the current stats entered below",
-        "noChange": "No change"
+        "noChange": "No change",
+        "leaguePower": "League Power",
+        "leaguePowerNote": "Games and Temp power increase your total but do NOT affect your league. League is determined only by Miners + Bonus + Rack power."
     },
     "settings": {
         "title": "Settings",

@@ -53,7 +53,6 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             className="coin-icon-img"
                         />
                         <span className="coin-symbol">{earning.displayName}</span>
-                        {isBest && <span className="best-badge">{t('table.best')}</span>}
                     </div>
                 </td>
                 <td className="league-power">

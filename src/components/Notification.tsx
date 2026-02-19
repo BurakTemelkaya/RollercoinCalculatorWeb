@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Notification.css';
 
 interface NotificationProps {
@@ -14,23 +14,34 @@ const Notification: React.FC<NotificationProps> = ({
     onClose,
     duration = 3000
 }) => {
+    const [isExiting, setIsExiting] = useState(false);
+
+    const handleClose = () => {
+        if (isExiting) return;
+        setIsExiting(true);
+        // Wait for animation to finish (800ms)
+        setTimeout(() => {
+            onClose();
+        }, 800);
+    };
+
     useEffect(() => {
         const timer = setTimeout(() => {
-            onClose();
+            handleClose();
         }, duration);
 
         return () => clearTimeout(timer);
-    }, [duration, onClose]);
+    }, [duration]);
 
     return (
-        <div className={`notification-toast ${type}`}>
+        <div className={`notification-toast ${type} ${isExiting ? 'slide-out' : ''}`}>
             <div className="notification-icon">
                 {type === 'error' && '⚠️'}
                 {type === 'success' && '✅'}
                 {type === 'info' && 'ℹ️'}
             </div>
             <div className="notification-message">{message}</div>
-            <button className="notification-close" onClick={onClose}>×</button>
+            <button className="notification-close" onClick={handleClose}>×</button>
         </div>
     );
 };

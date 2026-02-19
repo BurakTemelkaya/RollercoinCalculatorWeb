@@ -17,8 +17,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -211,7 +211,7 @@
     gap: 30px;
     padding-top: 24px;
     border-top: 1px solid var(--border-color);
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .league-transition.static {
@@ -282,6 +282,74 @@
     font-style: italic;
 }
 
+/* League Power Breakdown */
+.league-power-breakdown {
+    background: rgba(99, 102, 241, 0.04);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+
+.league-power-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.league-power-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.league-power-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.league-power-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.league-power-value.accent {
+    color: var(--accent-primary);
+    text-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+}
+
+.transition-arrow.small {
+    font-size: 16px;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.league-power-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(99, 102, 241, 0.1);
+    font-size: 12px;
+    color: rgba(167, 139, 250, 0.9);
+    line-height: 1.5;
+    text-align: center;
+}
+
+.league-power-note .note-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
 .added-miners-list {
     margin-top: 16px;
     border-top: 1px solid var(--border-color);
@@ -338,26 +406,273 @@
     min-width: 0;
 }
 
-@media (max-width: 600px) {
+/* Bonus + Add Button Row */
+.bonus-add-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.bonus-add-row .power-value-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.add-miner-btn {
+    height: 42px;
+    min-width: 80px;
+    padding: 0 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--accent-gradient);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.add-miner-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.add-miner-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .power-simulator {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    /* Header - match DataInputForm section header style */
+    .simulator-header {
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .simulator-header .section-title {
+        font-size: 14px;
+        justify-content: center;
+    }
+
+    .simulator-header .section-desc {
+        font-size: 12px;
+    }
+
+    /* Fetch row */
+    .user-fetcher-row {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .fetch-input-wrapper {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .fetch-input-wrapper .power-value-input {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .fetch-input-wrapper .fetch-btn {
+        flex: 1 1 100%;
+        height: 40px;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    /* Mode info text - prevent overflow */
+    .mode-info-container {
+        height: auto !important;
+        min-height: 38px;
+        padding: 8px 12px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .mode-info-text {
+        font-size: 11px;
+        word-break: break-word;
+        line-height: 1.4;
+    }
+
+    /* User profile summary */
+    .user-profile-summary {
+        min-width: 0;
+        width: 100%;
+    }
+
+    /* Simulator cards */
+    .simulator-card {
+        padding: 16px;
+    }
+
+    .simulator-card h4 {
+        font-size: 13px;
+        text-align: center;
+    }
+
     .result-row {
-        gap: 15px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .result-item {
+        align-items: center;
     }
 
     .transition-arrow {
         transform: rotate(90deg);
+        align-self: center;
+        font-size: 16px;
+    }
+
+    .value.primary,
+    .value.secondary {
+        font-size: 20px;
     }
 
     .league-transition {
-        gap: 15px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
     }
 
+    .league-card {
+        padding: 12px;
+        width: auto;
+        min-width: 140px;
+    }
+
+    .league-card .league-name {
+        font-size: 15px;
+    }
+
+    /* League Power Breakdown */
+    .league-power-breakdown {
+        padding: 12px 14px;
+    }
+
+    .league-power-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .league-power-value {
+        font-size: 18px;
+    }
+
+    .transition-arrow.small {
+        transform: rotate(90deg);
+        font-size: 14px;
+    }
+
+    .league-power-note {
+        font-size: 11px;
+    }
+
+    /* Add Miner Section */
     .responsive-input-row {
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
     }
 
     .responsive-input-row>.input-group {
         flex: 1 1 100%;
         width: 100%;
+    }
+
+    .add-miner-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .add-miner-row .input-group {
+        width: 100%;
+    }
+
+    .added-miner-item {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    /* Stats grid */
+    .simulator-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .sim-column {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .input-group.compact {
+        min-width: 0;
+        flex: 1 1 100% !important;
+    }
+
+    .power-input-container,
+    .power-input-row {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .power-input-row .power-value-input {
+        min-width: 0;
+    }
+
+    .power-input-row .power-unit-select {
+        width: 70px;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .power-simulator {
+        padding: 12px;
+    }
+
+    .simulator-header .section-title {
+        font-size: 13px;
+    }
+
+    .simulator-card {
+        padding: 12px;
+    }
+
+    .value.primary,
+    .value.secondary {
+        font-size: 18px;
+    }
+
+    .league-power-value {
+        font-size: 16px;
+    }
+
+    .user-fetcher-row {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .fetch-mode-selector {
+        width: 100%;
+    }
+
+    .mode-tab {
+        flex: 1;
+        text-align: center;
     }
 }

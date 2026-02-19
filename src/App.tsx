@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import trFlag from './assets/flags/tr.svg';
@@ -84,11 +85,18 @@ async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
 
 type Tab = 'calculator' | 'withdraw' | 'simulator';
 
+const TAB_ORDER: Record<Tab, number> = {
+  calculator: 0,
+  simulator: 1,
+  withdraw: 2,
+};
+
 import Notification from './components/Notification';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [coins, setCoins] = useState<CoinData[]>([]);
+  const pricesFetchedForRef = React.useRef<string>('');
 
   // Notification state
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -122,6 +130,11 @@ function App() {
   const [balances, setBalances] = useState<Record<string, number>>({});
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
+
+  const handleTabChange = (newTab: Tab) => {
+    if (newTab === activeTab) return;
+    setActiveTab(newTab);
+  };
 
   // League State
   const [league, setLeague] = useState<LeagueInfo>(LEAGUES[0]);
@@ -224,7 +237,6 @@ function App() {
       if (savedBalances) setBalances(JSON.parse(savedBalances));
       if (savedTab === 'calculator' || savedTab === 'withdraw') setActiveTab(savedTab);
       if (savedApiLeagues) setApiLeagues(JSON.parse(savedApiLeagues));
-      if (savedApiLeagues) setApiLeagues(JSON.parse(savedApiLeagues));
       const savedRawApiData = localStorage.getItem('rollercoin_web_raw_api_data');
       if (savedRawApiData) setRawApiData(JSON.parse(savedRawApiData));
 
@@ -249,14 +261,17 @@ function App() {
     }
   }, []);
 
-  // Fetch prices when coins are loaded
+  // Fetch prices when coins are loaded (only once per unique coin set)
   useEffect(() => {
     if (coins.length > 0) {
       const cryptoSymbols = coins
         .filter(c => !c.isGameToken)
         .map(c => c.displayName);
 
-      if (cryptoSymbols.length > 0) {
+      // Create a fingerprint to avoid duplicate fetches
+      const symbolKey = cryptoSymbols.sort().join(',');
+      if (cryptoSymbols.length > 0 && symbolKey !== pricesFetchedForRef.current) {
+        pricesFetchedForRef.current = symbolKey;
         fetchPrices(cryptoSymbols).then(setPrices);
       }
     }
@@ -495,21 +510,21 @@ function App() {
           <div className="main-tabs">
             <button
               className={`main-tab ${activeTab === 'calculator' ? 'active' : ''}`}
-              onClick={() => setActiveTab('calculator')}
+              onClick={() => handleTabChange('calculator')}
             >
               <span className="tab-icon">📊</span>
               {t('tabs.earnings')}
             </button>
             <button
               className={`main-tab ${activeTab === 'simulator' ? 'active' : ''}`}
-              onClick={() => setActiveTab('simulator')}
+              onClick={() => handleTabChange('simulator')}
             >
               <span className="tab-icon">⚡</span>
               {t('tabs.simulator')}
             </button>
             <button
               className={`main-tab ${activeTab === 'withdraw' ? 'active' : ''}`}
-              onClick={() => setActiveTab('withdraw')}
+              onClick={() => handleTabChange('withdraw')}
             >
               <span className="tab-icon">⏱️</span>
               {t('tabs.withdraw')}
@@ -517,33 +532,38 @@ function App() {
           </div>
         )}
 
-        {/* Content based on Tab */}
+        {/* Content based on Tab - Slider */}
         {earnings.length > 0 && (
-          <div className="tab-content" key={activeTab}>
-            {activeTab === 'calculator' && (
-              <EarningsTable
-                earnings={earnings}
-                prices={prices}
-                onOpenSettings={() => setIsSettingsOpen(true)}
-              />
-            )}
-            {activeTab === 'simulator' && (
-              <PowerSimulator
-                currentLeague={league}
-                apiLeagues={apiLeagues || null}
-                fetchedUser={fetchedUser}
-                onFetchUser={handleFetchUser}
-                isFetchingUser={isFetchingUser}
-              />
-            )}
-            {activeTab === 'withdraw' && (
-              <WithdrawTimer
-                earnings={earnings}
-                balances={balances}
-                onBalanceChange={handleBalanceChange}
-                prices={prices}
-              />
-            )}
+          <div className="tab-slider-viewport">
+            <div
+              className="tab-slider-track"
+              style={{ transform: `translateX(-${TAB_ORDER[activeTab] * 100}%)` }}
+            >
+              <div className="tab-panel">
+                <EarningsTable
+                  earnings={earnings}
+                  prices={prices}
+                  onOpenSettings={() => setIsSettingsOpen(true)}
+                />
+              </div>
+              <div className="tab-panel">
+                <PowerSimulator
+                  currentLeague={league}
+                  apiLeagues={apiLeagues || null}
+                  fetchedUser={fetchedUser}
+                  onFetchUser={handleFetchUser}
+                  isFetchingUser={isFetchingUser}
+                />
+              </div>
+              <div className="tab-panel">
+                <WithdrawTimer
+                  earnings={earnings}
+                  balances={balances}
+                  onBalanceChange={handleBalanceChange}
+                  prices={prices}
+                />
+              </div>
+            </div>
           </div>
         )}
       </main>

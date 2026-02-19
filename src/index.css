@@ -120,6 +120,7 @@ body {
   flex-direction: column;
   gap: 24px;
   padding-bottom: 40px;
+  overflow-x: hidden;
 }
 
 /* Input Form */
@@ -355,9 +356,19 @@ body {
   gap: 10px;
   padding: 16px 20px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   background: var(--bg-tertiary);
   border-bottom: 1px solid var(--border-color);
+}
+
+/* When section-title is inside section-header-row, parent provides bg/padding */
+.section-header-row .section-title {
+  padding: 0;
+  background: none;
+  border-bottom: none;
+  margin: 0;
 }
 
 .section-title svg {
@@ -693,20 +704,24 @@ body {
   font-size: 16px;
 }
 
-.tab-content {
-  animation: tabFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+/* Tab Slider */
+.tab-slider-viewport {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
 }
 
-@keyframes tabFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
-  }
+.tab-slider-track {
+  display: flex;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.tab-panel {
+  flex: 0 0 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -749,8 +764,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding: 0 4px;
+  padding: 16px 20px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .settings-icon-btn {
@@ -982,32 +998,260 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header-title h1 {
-    font-size: 20px;
+  .app {
+    padding: 0 12px;
   }
 
+  /* Header */
+  .header {
+    padding: 16px 0;
+    margin-bottom: 16px;
+  }
+
+  .header-content {
+    gap: 12px;
+  }
+
+  .header-title h1 {
+    font-size: 18px;
+  }
+
+  .header-title svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .header-right-group {
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .lang-switcher {
+    padding: 3px;
+  }
+
+  .lang-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .lang-btn .lang-text {
+    display: none;
+  }
+
+  .lang-btn .flag-icon {
+    width: 22px;
+    height: 16px;
+  }
+
+  .user-power-badge {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .power-label {
+    font-size: 11px;
+  }
+
+  .power-value {
+    font-size: 13px;
+  }
+
+  /* Main Tabs */
+  .main-tabs {
+    width: 100%;
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .main-tab {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .tab-icon {
+    font-size: 14px;
+  }
+
+  /* Main Content */
+  .main-content {
+    gap: 16px;
+    padding-bottom: 24px;
+  }
+
+  /* Period Tabs */
   .period-tabs {
     flex-wrap: wrap;
   }
 
   .period-tab {
     flex: 1 1 calc(50% - 4px);
+    padding: 8px 12px;
+    font-size: 13px;
   }
 
+  /* Withdraw Grid */
   .withdraw-grid {
     grid-template-columns: 1fr;
   }
 
+  /* Earnings Table */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .earnings-table th,
   .earnings-table td {
-    padding: 10px 12px;
-    font-size: 13px;
+    padding: 10px 10px;
+    font-size: 12px;
+    white-space: nowrap;
   }
 
   .wide-table th,
   .wide-table td {
-    padding: 8px 10px;
+    padding: 8px 8px;
+    font-size: 11px;
+  }
+
+  .coin-cell {
+    gap: 6px;
+  }
+
+  .coin-cell img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .coin-symbol {
     font-size: 12px;
+  }
+
+  .earning-crypto {
+    font-size: 11px;
+  }
+
+  .earning-usd {
+    font-size: 11px;
+  }
+
+  .best-badge {
+    font-size: 8px;
+    padding: 1px 6px;
+    margin-left: 4px;
+  }
+
+  /* Section headers */
+  .section-title {
+    font-size: 14px;
+    padding: 12px 14px;
+    justify-content: center;
+  }
+
+  .section-header-row {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .section-header-row .section-title {
+    padding: 0;
+    background: none;
+    border-bottom: none;
+    flex: 1;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .settings-icon-btn {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    right: 14px;
+  }
+
+  .section-header-row {
+    position: relative;
+  }
+
+  /* Input elements */
+  .power-value-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .power-unit-select {
+    width: 72px;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px 0;
+    margin-top: 24px;
+    font-size: 12px;
+  }
+
+  /* Modal */
+  .modal-content {
+    max-width: 100%;
+    margin: 8px;
+  }
+
+  .settings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  /* Withdraw cards */
+  .withdraw-card {
+    padding: 14px;
+  }
+
+  .withdraw-stats {
+    gap: 4px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+  }
+
+  .stat-value {
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .app {
+    padding: 0 8px;
+  }
+
+  .header-title h1 {
+    font-size: 16px;
+  }
+
+  .main-tab {
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+
+  .tab-icon {
+    font-size: 12px;
+  }
+
+  .earnings-table th,
+  .earnings-table td {
+    padding: 8px 6px;
+    font-size: 11px;
   }
 }
 

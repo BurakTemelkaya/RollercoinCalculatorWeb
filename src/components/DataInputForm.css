@@ -84,28 +84,75 @@
 .summary-chip {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: var(--bg-primary);
-    padding: 4px 10px;
-    border-radius: var(--radius-md);
-    font-size: 12px;
-    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.summary-chip:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .summary-chip .chip-value {
     font-weight: 600;
 }
 
+/* Power Chip Style */
+.summary-chip.power {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: var(--accent-primary);
+}
+
+.summary-chip.power:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+/* League Chip Style */
+.summary-chip.league {
+    background: rgba(234, 179, 8, 0.08);
+    border-color: rgba(234, 179, 8, 0.25);
+    color: #facc15;
+}
+
+.summary-chip.league:hover {
+    background: rgba(234, 179, 8, 0.12);
+    border-color: #facc15;
+    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.15);
+}
+
+.summary-chip.league .chip-value {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Success/Coins Chip Style */
 .summary-chip.success {
+    background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.3);
-    background: rgba(16, 185, 129, 0.05);
+    color: var(--success);
+}
+
+.summary-chip.success:hover {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--success);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .league-icon-summary {
     width: 20px;
     height: 20px;
-    vertical-align: middle;
+    object-fit: contain;
 }
 
 .header-arrow {
@@ -526,4 +573,138 @@
     font-size: 14px;
     font-weight: 700;
     min-width: 250px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .data-input-section {
+        margin-bottom: 16px;
+    }
+
+    .section-header {
+        padding: 12px 14px;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .header-left {
+        justify-content: center;
+        flex: 1;
+    }
+
+    .section-title {
+        font-size: 13px;
+        gap: 8px;
+        letter-spacing: 0.3px;
+        justify-content: center;
+    }
+
+    .section-icon {
+        font-size: 16px;
+    }
+
+    .input-content-padding {
+        padding: 16px;
+        gap: 14px;
+    }
+
+    /* Stack data source cards vertically */
+    .data-source-cards {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .data-source-card {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .data-source-icon {
+        font-size: 20px;
+    }
+
+    .data-source-label {
+        font-size: 13px;
+    }
+
+    .data-source-desc {
+        font-size: 10px;
+    }
+
+    /* Fetch row - allow wrapping */
+    .api-fetch-row {
+        flex-wrap: wrap !important;
+        gap: 8px;
+    }
+
+    .fetch-btn {
+        padding: 0 16px;
+        font-size: 13px;
+        min-width: unset;
+        flex: 1 1 100%;
+        height: 40px;
+        border-radius: var(--radius-md);
+        justify-content: center;
+    }
+
+    .fetch-btn .btn-text {
+        font-size: 13px;
+    }
+
+    /* Mode selector */
+    .fetch-mode-selector {
+        margin-bottom: 6px;
+    }
+
+    .mode-tab {
+        padding: 5px 10px;
+        font-size: 9px;
+    }
+
+    /* League dropdown */
+    .custom-dropdown-trigger {
+        height: 38px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .auto-toggle-inline {
+        height: 38px;
+        padding: 0 12px;
+        font-size: 10px;
+        gap: 6px;
+    }
+
+    /* Summary chips */
+    .collapsed-summary {
+        gap: 6px;
+        margin-right: 8px;
+    }
+
+    .summary-chip {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+
+    .primary-button.wide-button {
+        min-width: 180px;
+        padding: 10px 24px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-content-padding {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .section-header {
+        padding: 10px 12px;
+    }
+
+    .collapsed-summary {
+        display: none;
+    }
 }
