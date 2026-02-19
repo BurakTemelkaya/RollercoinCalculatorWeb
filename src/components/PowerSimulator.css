@@ -585,13 +585,28 @@
 
     /* Add Miner Section */
     .responsive-input-row {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
     }
 
     .responsive-input-row>.input-group {
-        flex: 1 1 100%;
+        min-width: 0;
         width: 100%;
+    }
+
+    .input-group.mobile-full {
+        grid-column: 1 / -1;
+    }
+
+    .input-group.mobile-half {
+        grid-column: span 1;
+    }
+
+    /* Fallback for items without specific class if any */
+    .input-group.compact {
+        /* Reset specific flex behavior */
+        min-width: 0;
     }
 
     .add-miner-row {
@@ -616,12 +631,12 @@
 
     .sim-column {
         min-width: 0;
-        overflow: hidden;
+        overflow: visible; /* Prevent clipping of dropdowns */
     }
 
     .input-group.compact {
         min-width: 0;
-        flex: 1 1 100% !important;
+        /* Remove the forced flex: 1 1 100% that causes stacking */
     }
 
     .power-input-container,

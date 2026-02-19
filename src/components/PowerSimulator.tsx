@@ -306,7 +306,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             <h4>{fetchedUser ? t('simulator.currentStats') + ' (Verified)' : t('simulator.currentStats')}</h4>
 
                             <div className="responsive-input-row">
-                                <div className="input-group compact" style={{ flex: 2 }}>
+                                <div className="input-group compact mobile-full" style={{ flex: 2 }}>
                                     <label>{t('simulator.minersPower')}</label>
                                     <div className="power-input-row">
                                         <input
@@ -326,7 +326,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                     </div>
                                 </div>
 
-                                <div className="input-group compact" style={{ flex: 1 }}>
+                                <div className="input-group compact mobile-half" style={{ flex: 1 }}>
                                     <label>{t('simulator.totalBonus')} (%)</label>
                                     <input
                                         type="number"
@@ -337,7 +337,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                     />
                                 </div>
 
-                                <div className="input-group compact" style={{ flex: 1.5 }}>
+                                <div className="input-group compact mobile-half" style={{ flex: 1.5 }}>
                                     <label>{t('simulator.rackPower')}</label>
                                     <div className="power-input-row">
                                         <input
@@ -359,7 +359,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             </div>
 
                             <div className="responsive-input-row">
-                                <div className="input-group compact" style={{ flex: 1 }}>
+                                <div className="input-group compact mobile-half" style={{ flex: 1 }}>
                                     <label>{t('simulator.gamesPower')}</label>
                                     <div className="power-input-row">
                                         <input
@@ -379,7 +379,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                     </div>
                                 </div>
 
-                                <div className="input-group compact" style={{ flex: 1 }}>
+                                <div className="input-group compact mobile-half" style={{ flex: 1 }}>
                                     <label>{t('simulator.tempPower')}</label>
                                     <div className="power-input-row">
                                         <input
@@ -407,7 +407,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                     <h4>{t('simulator.addMiner')}</h4>
 
                     <div className="responsive-input-row" style={{ alignItems: 'flex-end' }}>
-                        <div className="input-group compact" style={{ flex: 2 }}>
+                        <div className="input-group compact mobile-full" style={{ flex: 2 }}>
                             <label>{t('simulator.minerPower')}</label>
                             <div className="power-input-row">
                                 <input
@@ -427,7 +427,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             </div>
                         </div>
 
-                        <div className="input-group compact">
+                        <div className="input-group compact mobile-full">
                             <label>{t('simulator.minerBonus')} (%)</label>
                             <div className="bonus-add-row">
                                 <input
