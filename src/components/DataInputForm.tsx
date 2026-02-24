@@ -9,9 +9,7 @@ import { getLeagueImage } from '../data/leagueImages';
 import './DataInputForm.css';
 import * as Select from '@radix-ui/react-select';
 import classNames from 'classnames';
-
-const API_CACHE_KEY = 'rollercoin_web_api_last_fetch';
-const CACHE_COOLDOWN_MS = 30 * 1000; // 30 seconds
+import { useApiCooldown } from '../hooks/useApiCooldown';
 
 interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower) => void;
@@ -24,8 +22,10 @@ interface DataInputFormProps {
     onShowNotification: (message: string, type: 'success' | 'error' | 'info') => void;
     onApiLeaguesLoaded?: (leagues: LeagueInfo[], rawData: ApiLeagueData[]) => void;
     apiLeagues?: LeagueInfo[] | null;
-    onFetchUser?: (username: string) => Promise<void>;
+    onFetchUser?: (username: string, showNotif?: boolean) => Promise<void>;
     isFetchingUser?: boolean;
+    globalUserName?: string;
+    setGlobalUserName?: (val: string) => void;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -41,6 +41,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     apiLeagues,
     onFetchUser,
     isFetchingUser,
+    globalUserName = '',
+    setGlobalUserName = () => { },
 }) => {
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
@@ -58,53 +60,32 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const [dataSource, setDataSource] = useState<'manual' | 'api'>('api');
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
-    const [userName, setUserName] = useState('');
     const [isFetchingUserLocal, setIsFetchingUserLocal] = useState(false);
     const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
+
+    // Use an uncontrolled local state for input to prevent whole-app rerenders on every keystroke
+    const [localUserName, setLocalUserName] = useState(globalUserName);
+    useEffect(() => {
+        setLocalUserName(globalUserName);
+    }, [globalUserName]);
 
     const [powerValue, setPowerValue] = useState<string>('');
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
 
     const DATA_SOURCE_KEY = 'rollercoin_web_data_source';
-    const USERNAME_KEY = 'rollercoin_web_username';
 
     useEffect(() => {
         const saved = localStorage.getItem(DATA_SOURCE_KEY);
         if (saved === 'api' || saved === 'manual') setDataSource(saved);
-        const savedUsername = localStorage.getItem(USERNAME_KEY);
-        if (savedUsername) setUserName(savedUsername);
     }, []);
 
     useEffect(() => {
         localStorage.setItem(DATA_SOURCE_KEY, dataSource);
     }, [dataSource]);
 
-    useEffect(() => {
-        if (userName) {
-            localStorage.setItem(USERNAME_KEY, userName);
-        }
-    }, [userName]);
+    const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
 
-    const [lastFetchTime, setLastFetchTime] = useState<number | null>(() => {
-        const saved = localStorage.getItem(API_CACHE_KEY);
-        return saved ? parseInt(saved, 10) : null;
-    });
-    const [cooldownRemaining, setCooldownRemaining] = useState(0);
-
-    useEffect(() => {
-        if (!lastFetchTime) return;
-        const updateCooldown = () => {
-            const elapsed = Date.now() - lastFetchTime;
-            setCooldownRemaining(Math.max(0, CACHE_COOLDOWN_MS - elapsed));
-        };
-        updateCooldown();
-        const interval = setInterval(updateCooldown, 1000);
-        return () => clearInterval(interval);
-    }, [lastFetchTime]);
-
-    const canFetch = cooldownRemaining === 0;
-
-    const handleFetchFromApi = async () => {
+    const handleFetchFromApi = async (showSuccessNotif: boolean = true) => {
         if (!canFetch) {
             const remainSec = Math.ceil(cooldownRemaining / 1000);
             onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
@@ -126,14 +107,18 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
             if (onApiLeaguesLoaded) onApiLeaguesLoaded(apiLeaguesResolved, rawApiData);
 
-            const now = Date.now();
-            setLastFetchTime(now);
-            localStorage.setItem(API_CACHE_KEY, String(now));
-            onShowNotification(t('input.apiSuccess'), 'success');
+            setFetchStarted();
+            if (showSuccessNotif) {
+                onShowNotification(t('input.apiSuccess'), 'success');
+            }
             return true;
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            onShowNotification(t('input.apiError', { error: errorMessage }), 'error');
+            if (errorMessage === 'RATE_LIMIT') {
+                onShowNotification(t('input.errors.tooManyRequests'), 'error');
+            } else {
+                onShowNotification(t('input.apiError', { error: errorMessage }), 'error');
+            }
             return false;
         } finally {
             setIsLoadingApi(false);
@@ -206,22 +191,22 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         return () => clearTimeout(timeoutId);
     }, [powerValue, powerUnit, dataSource, fetchMode, currentCoins, onDataParsed]);
 
-    const handleFetchUser = async () => {
-        if (!userName.trim() || !onFetchUser) return;
+    const handleFetchUserLocal = async (showSuccessNotif: boolean = true) => {
+        setGlobalUserName(localUserName.trim());
+        if (!localUserName.trim() || !onFetchUser) return false;
         if (!canFetch) {
             const remainSec = Math.ceil(cooldownRemaining / 1000);
             onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
-            return;
+            return false;
         }
         setIsFetchingUserLocal(true);
         try {
-            await onFetchUser(userName.trim());
-            // Update cooldown after successful fetch
-            const now = Date.now();
-            setLastFetchTime(now);
-            localStorage.setItem(API_CACHE_KEY, String(now));
+            await onFetchUser(localUserName.trim(), showSuccessNotif);
+            setFetchStarted();
+            return true;
         } catch (error) {
-            onShowNotification(t('input.errors.parseError'), 'error');
+            // Error is handled upstream
+            return false;
         } finally {
             setIsFetchingUserLocal(false);
         }
@@ -234,7 +219,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
                 <div className="header-left">
                     <span className="section-icon">⚙️</span>
-                    <h3 className="section-title">{t('input.title')}</h3>
+                    <h2 className="section-title">{t('input.title')}</h2>
                 </div>
 
                 {!isExpanded && currentCoins.length > 0 && (
@@ -271,6 +256,10 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 <div className="accordion-inner">
                     <div className="input-content-padding">
                         <div className="data-source-cards">
+                            <div
+                                className="data-source-bg"
+                                style={{ transform: dataSource === 'manual' ? 'translateX(0)' : 'translateX(100%)' }}
+                            />
                             <button className={`data-source-card ${dataSource === 'manual' ? 'active' : ''}`} onClick={() => setDataSource('manual')}>
                                 <span className="data-source-icon">✏️</span>
                                 <div className="data-source-info">
@@ -284,9 +273,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                     <span className="data-source-label">{t('input.serverLabel')}</span>
                                     <span className="data-source-desc">{t('input.serverDesc')}</span>
                                 </div>
-                                {lastFetchTime && dataSource === 'api' && (
-                                    <span className="data-source-badge">{t('input.lastFetched', { time: new Date(lastFetchTime).toLocaleTimeString() })}</span>
-                                )}
+
                             </button>
                         </div>
 
@@ -294,6 +281,10 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                             <div className="input-group">
                                 {dataSource === 'api' ? (
                                     <div className="fetch-mode-selector">
+                                        <div
+                                            className="mode-tab-bg"
+                                            style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
+                                        />
                                         <button
                                             className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
                                             onClick={() => setFetchMode('username')}
@@ -315,10 +306,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                     {dataSource === 'api' && fetchMode === 'username' ? (
                                         <input
                                             type="text"
-                                            value={userName}
-                                            onChange={(e) => setUserName(e.target.value)}
                                             placeholder={t('input.usernamePlaceholder')}
+                                            value={localUserName}
+                                            onChange={(e) => setLocalUserName(e.target.value)}
+                                            onBlur={() => setGlobalUserName(localUserName)}
                                             className="power-value-input flex-grow-input"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleFetchUserLocal();
+                                            }}
                                         />
                                     ) : (
                                         <div className="power-input-container flex-grow-input">
@@ -348,21 +343,25 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                     onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
                                                     return;
                                                 }
-                                                const aP = handleFetchFromApi();
-                                                if (fetchMode === 'username' && userName.trim()) {
-                                                    const uP = handleFetchUser();
-                                                    await Promise.all([uP, aP]);
+                                                const both = fetchMode === 'username' && localUserName.trim();
+                                                const aP = handleFetchFromApi(!both);
+                                                if (both) {
+                                                    const uP = handleFetchUserLocal(!both);
+                                                    const [userSuccess, apiSuccess] = await Promise.all([uP, aP]);
+                                                    if (userSuccess && apiSuccess) {
+                                                        onShowNotification(t('input.allDataFetched'), 'success');
+                                                    }
                                                 } else {
                                                     await aP;
                                                 }
                                                 // setIsExpanded(false); // Moved to useEffect to wait for data
                                             }}
-                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && (!userName.trim() || !canFetch)) || (fetchMode === 'power' && !canFetch)}
+                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && (!localUserName.trim() || !canFetch)) || (fetchMode === 'power' && !canFetch)}
                                             title={t('input.fetchFromApi')}
                                         >
                                             {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
                                                 <span className="spinner small"></span>
-                                            ) : !canFetch && dataSource === 'api' && lastFetchTime ? (
+                                            ) : !canFetch && dataSource === 'api' ? (
                                                 <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
                                             ) : (
                                                 <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
@@ -382,7 +381,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                     onValueChange={onLeagueChange}
                                     disabled={isAutoLeague}
                                 >
-                                    <Select.Trigger className={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })}>
+                                    <Select.Trigger className={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })} aria-label={t('input.leagueSelect')}>
                                         <Select.Value>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 <img src={getLeagueImage(currentLeague.id)} alt="" className="league-icon-dropdown" />

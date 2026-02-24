@@ -18,7 +18,8 @@
     "input": {
         "title": "Veri Girişi & Ayarlar",
         "userPower": "Kullanıcı Gücünüz",
-        "userFetched": "✅ '{{name}}' kullanıcısının verileri başarıyla çekildi",
+        "userFetched": "✅ '{{name}}' profil verileri başarıyla güncellendi",
+        "allDataFetched": "✅ Profil ve piyasa verileri başarıyla güncellendi",
         "leagueSelect": "Lig Seçimi",
         "auto": "Otomatik",
         "fetchFromApi": "Verileri Yenile",
@@ -27,7 +28,7 @@
         "manualDesc": "Oyundan lig verilerini yapıştırın",
         "serverLabel": "Sunucudan Çek",
         "serverDesc": "Güncel verileri otomatik alın",
-        "apiSuccess": "✅ API verisi başarıyla yüklendi",
+        "apiSuccess": "✅ Piyasa verileri başarıyla güncellendi",
         "apiError": "❌ API'den veri çekilemedi: {{error}}",
         "apiCooldown": "⏳ Tekrar çekmek için {{seconds}} saniye bekleyin",
         "apiCooldownBtn": "{{seconds}}s bekle",
@@ -41,7 +42,8 @@
             "parseError": "Veri ayrıştırılamadı. Formatı kontrol edin.",
             "missingBoth": "Kullanıcı gücü ve lig bilgileri eksik! Lütfen ikisini de giriniz.",
             "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
-            "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!"
+            "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!",
+            "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin."
         },
         "usernamePlaceholder": "Kullanıcı adı girin",
         "enterUsername": "Kullanıcı Adı",
@@ -93,6 +95,7 @@
         "totalBonus": "Toplam Bonus",
         "gamesPower": "Oyun Gücü (Opsiyonel)",
         "tempPower": "Geçici Güç (Opsiyonel)",
+        "freonPower": "Freon Gücü (Opsiyonel)",
         "includeGames": "Oyun / Geçici Dahil Et",
         "addMiner": "Yeni Madenci Ekle",
         "minerPower": "Madenci Gücü",

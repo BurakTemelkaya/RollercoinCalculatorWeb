@@ -6,6 +6,7 @@ import { getLeagueImage } from '../data/leagueImages';
 import { getLeagueByPower } from '../utils/leagueHelper';
 import { RollercoinUserResponse } from '../types/user';
 import { toBaseUnit, formatHashPower, autoScalePower } from '../utils/powerParser';
+import { useApiCooldown } from '../hooks/useApiCooldown';
 import './PowerSimulator.css';
 
 interface PowerSimulatorProps {
@@ -14,6 +15,8 @@ interface PowerSimulatorProps {
     fetchedUser?: RollercoinUserResponse | null;
     onFetchUser?: (username: string) => Promise<void>;
     isFetchingUser?: boolean;
+    globalUserName?: string;
+    setGlobalUserName?: (val: string) => void;
 }
 
 interface AddedMiner {
@@ -29,15 +32,18 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     apiLeagues,
     fetchedUser,
     onFetchUser,
-    isFetchingUser = false
+    isFetchingUser = false,
+    globalUserName = '',
+    setGlobalUserName = () => { }
 }) => {
     const { t } = useTranslation();
 
     // User API State
-    const [userName, setUserName] = useState(() => {
-        return localStorage.getItem('rollercoin_web_username') || '';
-    });
     const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
+    const [localUserName, setLocalUserName] = useState(globalUserName);
+    useEffect(() => {
+        setLocalUserName(globalUserName);
+    }, [globalUserName]);
 
     // Current Stats Inputs
     const [statMinersPower, setStatMinersPower] = useState<string>('');
@@ -49,6 +55,8 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     const [statGamesUnit, setStatGamesUnit] = useState<PowerUnit>('Ph');
     const [statTempPower, setStatTempPower] = useState<string>('');
     const [statTempUnit, setStatTempUnit] = useState<PowerUnit>('Ph');
+    const [statFreonPower, setStatFreonPower] = useState<string>('');
+    const [statFreonUnit, setStatFreonUnit] = useState<PowerUnit>('Ph');
 
     // New Miner Input
     const [newMinerPower, setNewMinerPower] = useState<string>('');
@@ -78,7 +86,11 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const gamesRawGh = fetchedUser.userPowerResponseDto.games || 0;
 
             const baseForBonusGh = minersRawGh + gamesRawGh; // Fix: Base for Bonus includes Miners + Games.
-            const bonusPowerRawGh = fetchedUser.userPowerResponseDto.bonus || 0;
+
+            const freonRawGhForBonus = fetchedUser.userPowerResponseDto.freon || 0;
+            // The API 'bonus' field bundles the 'freon' power within it.
+            // We must subtract it so we don't inflate the Bonus %.
+            const bonusPowerRawGh = Math.max(0, (fetchedUser.userPowerResponseDto.bonus || 0) - freonRawGhForBonus);
 
             let calculatedBonus = 0;
             if (baseForBonusGh > 0) {
@@ -118,12 +130,26 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const tempScaled = autoScalePower(tempHashes);
             setStatTempPower(tempScaled.value.toFixed(3));
             setStatTempUnit(tempScaled.unit);
+
+            const freonRawGh = fetchedUser.userPowerResponseDto.freon || 0;
+            if (freonRawGh > 0) {
+                const freonHashes = freonRawGh * 1e9;
+                const freonScaled = autoScalePower(freonHashes);
+                setStatFreonPower(freonScaled.value.toFixed(3));
+                setStatFreonUnit(freonScaled.unit);
+            } else {
+                setStatFreonPower('');
+            }
         }
     }, [fetchedUser]);
 
+    const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
+
     const handleFetchClick = async () => {
-        if (!userName.trim() || !onFetchUser) return;
-        await onFetchUser(userName.trim());
+        setGlobalUserName(localUserName.trim());
+        if (!localUserName.trim() || !onFetchUser || (!canFetch && fetchMode === 'username')) return;
+        await onFetchUser(localUserName.trim());
+        setFetchStarted();
     };
 
     const handleAddMiner = () => {
@@ -157,6 +183,9 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const tempVal = parseFloat(statTempPower) || 0;
         const tempH = toBaseUnit({ value: tempVal, unit: statTempUnit });
 
+        const freonVal = parseFloat(statFreonPower) || 0;
+        const freonH = toBaseUnit({ value: freonVal, unit: statFreonUnit });
+
         // === Official Rollercoin Formula (from FAQ & Blog) ===
         // Total Power = (Games + Miners) * (1 + CollectionBonus%) + RackBonus + TempPower
         //
@@ -172,10 +201,10 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         // League Power = Miners * (1 + Bonus%) + Racks
         const currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH;
 
-        // Total Power = (Games + Miners) * (1 + Bonus%) + Racks + Temp
+        // Total Power = (Games + Miners) * (1 + Bonus%) + Racks + Temp + Freon
         const bonusBase = currentMinerBaseH + gamesH;
         let currentBoostedPowerH = bonusBase * (1 + currentBonusVal / 100);
-        let currentTotalPowerH = currentBoostedPowerH + rackH + tempH;
+        let currentTotalPowerH = currentBoostedPowerH + rackH + tempH + freonH;
 
         let addedMinersBaseH = 0;
         let addedMinersBonusVal = 0;
@@ -200,10 +229,10 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         // New League Power = (AllMiners) * (1 + NewBonus%) + Racks
         const newLeaguePowerH = newAllMinersH * (1 + newTotalBonusPercent / 100) + rackH;
 
-        // New Total Power = (Games + AllMiners) * (1 + NewBonus%) + Racks + Temp
+        // New Total Power = (Games + AllMiners) * (1 + NewBonus%) + Racks + Temp + Freon
         const newBonusBaseH = newAllMinersH + gamesH;
         let newBoostedPowerH = newBonusBaseH * (1 + (newTotalBonusPercent / 100));
-        let newTotalPowerH = newBoostedPowerH + rackH + tempH;
+        let newTotalPowerH = newBoostedPowerH + rackH + tempH + freonH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;
@@ -230,17 +259,17 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         } else {
             setSimulationResult(null);
         }
-    }, [statMinersPower, statMinersUnit, statBonus, statRackPower, statRackUnit, statGamesPower, statGamesUnit, statTempPower, statTempUnit, addedMiners, newMinerPower, newMinerUnit, newMinerBonus, currentLeague]);
+    }, [statMinersPower, statMinersUnit, statBonus, statRackPower, statRackUnit, statGamesPower, statGamesUnit, statTempPower, statTempUnit, statFreonPower, statFreonUnit, addedMiners, newMinerPower, newMinerUnit, newMinerBonus, currentLeague]);
 
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
     return (
         <div className="power-simulator">
             <div className="simulator-header">
-                <h3 className="section-title">
+                <h2 className="section-title">
                     <span className="section-icon">⚡</span>
                     {t('simulator.title')}
-                </h3>
+                </h2>
                 <p className="section-desc">{t('simulator.desc')}</p>
             </div>
 
@@ -248,6 +277,10 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                 <div className="user-fetcher-row">
                     <div className="input-group compact" style={{ flex: 1 }}>
                         <div className="fetch-mode-selector">
+                            <div
+                                className="mode-tab-bg"
+                                style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
+                            />
                             <button
                                 className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
                                 onClick={() => setFetchMode('username')}
@@ -265,10 +298,14 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             {fetchMode === 'username' ? (
                                 <input
                                     type="text"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
+                                    value={localUserName}
+                                    onChange={(e) => setLocalUserName(e.target.value)}
+                                    onBlur={() => setGlobalUserName(localUserName)}
                                     placeholder={t('simulator.enterUsername')}
                                     className="power-value-input"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') handleFetchClick();
+                                    }}
                                 />
                             ) : (
                                 <div className="flex-grow-input mode-info-container">
@@ -279,9 +316,15 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             <button
                                 className="fetch-btn"
                                 onClick={handleFetchClick}
-                                disabled={isFetchingUser || (fetchMode === 'username' && !userName.trim())}
+                                disabled={isFetchingUser || (fetchMode === 'username' && (!localUserName.trim() || !canFetch))}
                             >
-                                {isFetchingUser ? <span className="spinner small"></span> : t('simulator.fetch')}
+                                {isFetchingUser ? (
+                                    <span className="spinner small"></span>
+                                ) : !canFetch && fetchMode === 'username' ? (
+                                    <span className="cooldown-text" style={{ fontSize: '13px' }}>{Math.ceil(cooldownRemaining / 1000)}s</span>
+                                ) : (
+                                    t('simulator.fetch')
+                                )}
                             </button>
                         </div>
                     </div>
@@ -392,6 +435,26 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                         <select
                                             value={statTempUnit}
                                             onChange={e => setStatTempUnit(e.target.value as PowerUnit)}
+                                            className="power-unit-select small"
+                                        >
+                                            {units.map(u => <option key={u} value={u}>{u}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="input-group compact mobile-half" style={{ flex: 1 }}>
+                                    <label>{t('simulator.freonPower')}</label>
+                                    <div className="power-input-row">
+                                        <input
+                                            type="number"
+                                            value={statFreonPower}
+                                            onChange={e => setStatFreonPower(e.target.value)}
+                                            placeholder="0"
+                                            className="power-value-input small"
+                                        />
+                                        <select
+                                            value={statFreonUnit}
+                                            onChange={e => setStatFreonUnit(e.target.value as PowerUnit)}
                                             className="power-unit-select small"
                                         >
                                             {units.map(u => <option key={u} value={u}>{u}</option>)}

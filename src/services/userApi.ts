@@ -21,7 +21,19 @@ export async function fetchUserFromApi(userName: string): Promise<RollercoinUser
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            if (response.status === 429) {
+                throw new Error('RATE_LIMIT');
+            }
+            let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                if (errorData && errorData.detail) {
+                    errorMessage = errorData.detail;
+                }
+            } catch (e) {
+                // Ignore json parsing error, use default message
+            }
+            throw new Error(errorMessage);
         }
 
         const data: RollercoinUserResponse = await response.json();

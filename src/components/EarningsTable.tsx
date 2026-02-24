@@ -96,12 +96,12 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             {cryptoCoins.length > 0 && (
                 <div className="table-section">
                     <div className="section-header-row">
-                        <h3 className="section-title">
+                        <h2 className="section-title">
                             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                             </svg>
                             {t('table.cryptoTitle')}
-                        </h3>
+                        </h2>
                         <button
                             className="settings-icon-btn"
                             onClick={onOpenSettings}
@@ -135,12 +135,12 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             {/* Game Tokens Table */}
             {gameTokens.length > 0 && (
                 <div className="table-section">
-                    <h3 className="section-title">
+                    <h2 className="section-title">
                         <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                             <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
                         </svg>
                         {t('table.gameTokenTitle')}
-                    </h3>
+                    </h2>
                     <div className="table-container">
                         <table className="earnings-table wide-table">
                             <thead>

@@ -17,9 +17,12 @@ import { autoScalePower } from './utils/powerParser';
 import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
-import WithdrawTimer from './components/WithdrawTimer';
-import PowerSimulator from './components/PowerSimulator';
-import SettingsModal from './components/SettingsModal';
+
+// Lazy load complex components to improve initial load and shorten critical request chains
+const WithdrawTimer = React.lazy(() => import('./components/WithdrawTimer'));
+const PowerSimulator = React.lazy(() => import('./components/PowerSimulator'));
+const SettingsModal = React.lazy(() => import('./components/SettingsModal'));
+
 import './index.css';
 
 // Local storage keys
@@ -141,6 +144,17 @@ function App() {
   const [isAutoLeague, setIsAutoLeague] = useState(true);
   const [blockRewards, setBlockRewards] = useState<Record<string, number>>({});
 
+  // Global Username State
+  const [globalUserName, setGlobalUserName] = useState<string>(() => {
+    return localStorage.getItem('rollercoin_web_username') || '';
+  });
+
+  useEffect(() => {
+    if (globalUserName) {
+      localStorage.setItem('rollercoin_web_username', globalUserName);
+    }
+  }, [globalUserName]);
+
   // API State
   const [apiLeagues, setApiLeagues] = useState<LeagueInfo[] | null>(null);
   const [rawApiData, setRawApiData] = useState<ApiLeagueData[] | null>(null);
@@ -157,7 +171,7 @@ function App() {
   // And autoScalePower.
 
   // Helper to fetch and set user data globally
-  const handleFetchUser = async (username: string) => {
+  const handleFetchUser = async (username: string, showSuccessNotif: boolean = true) => {
     if (!username.trim()) return;
     setIsFetchingUser(true);
     try {
@@ -166,17 +180,11 @@ function App() {
 
       // 1. Update User Power
       // API returns total power in current_Power (raw value in Gh) 
-      // User reported it's 1000x smaller (e.g. Ph instead of Eh).
       // We need to convert Gh to Hashes (* 1e9).
+      // Note: current_Power already includes freon bonuses from the API, so we don't add it again.
       const rawHashes = (data.userPowerResponseDto.current_Power || 0) * 1e9;
       const scaledPower = autoScalePower(rawHashes);
       setUserPower(scaledPower);
-
-      // 2. Update League from API league_Id
-      // API league_Id might be something like "18" (Diamond) etc.
-      // We need to match this with our LeagueInfo.id
-      // Our IDs are internal strings usually "0", "1", ... or matching API?
-      // Let's check LEAGUES data. LEAGUES IDs are "13", "14", etc. from API integration earlier.
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
       if (apiLeagueId) {
@@ -196,12 +204,19 @@ function App() {
         }
       }
 
-      showNotification(t('input.userFetched', { name: data.userProfileResponseDto.name }), 'success');
-
+      if (showSuccessNotif) {
+        showNotification(t('input.userFetched', { name: data.userProfileResponseDto.name }), 'success');
+      }
 
     } catch (error) {
       console.error('Failed to fetch user:', error);
-      showNotification('Failed to fetch user data', 'error');
+      // Always show error notifications
+      let msg = error instanceof Error ? error.message : t('input.errors.parseError');
+      if (msg === 'RATE_LIMIT') {
+        msg = t('input.errors.tooManyRequests');
+      }
+      showNotification(msg, 'error');
+      throw error;
     } finally {
       setIsFetchingUser(false);
     }
@@ -319,7 +334,8 @@ function App() {
         // Fallback if max_Power is missing (unlikely)
         const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
         const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
-        const bonusRaw = (fetchedUser.userPowerResponseDto.bonus || 0) * 1e9;
+        const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+        const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
 
         const base = minersRaw + racksRaw;
         const totalMinerPower = base + bonusRaw;
@@ -433,13 +449,15 @@ function App() {
 
   return (
     <div className="app">
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        blockDurations={blockDurations}
-        onSave={handleSaveDurations}
-        coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
-      />
+      <React.Suspense fallback={null}>
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(true)}
+          blockDurations={blockDurations}
+          onSave={handleSaveDurations}
+          coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
+        />
+      </React.Suspense>
       {/* Notification */}
       {notification && (
         <div className="notification-container">
@@ -503,11 +521,17 @@ function App() {
           apiLeagues={apiLeagues}
           onFetchUser={handleFetchUser}
           isFetchingUser={isFetchingUser}
+          globalUserName={globalUserName}
+          setGlobalUserName={setGlobalUserName}
         />
 
         {/* Tabs */}
         {earnings.length > 0 && (
           <div className="main-tabs">
+            <div
+              className="main-tabs-bg"
+              style={{ transform: `translateX(calc(${TAB_ORDER[activeTab] * 100}% + calc(${TAB_ORDER[activeTab]} * var(--tab-gap))))` }}
+            />
             <button
               className={`main-tab ${activeTab === 'calculator' ? 'active' : ''}`}
               onClick={() => handleTabChange('calculator')}
@@ -547,21 +571,27 @@ function App() {
                 />
               </div>
               <div className="tab-panel">
-                <PowerSimulator
-                  currentLeague={league}
-                  apiLeagues={apiLeagues || null}
-                  fetchedUser={fetchedUser}
-                  onFetchUser={handleFetchUser}
-                  isFetchingUser={isFetchingUser}
-                />
+                <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+                  <PowerSimulator
+                    currentLeague={league}
+                    apiLeagues={apiLeagues || null}
+                    fetchedUser={fetchedUser}
+                    onFetchUser={handleFetchUser}
+                    isFetchingUser={isFetchingUser}
+                    globalUserName={globalUserName}
+                    setGlobalUserName={setGlobalUserName}
+                  />
+                </React.Suspense>
               </div>
               <div className="tab-panel">
-                <WithdrawTimer
-                  earnings={earnings}
-                  balances={balances}
-                  onBalanceChange={handleBalanceChange}
-                  prices={prices}
-                />
+                <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+                  <WithdrawTimer
+                    earnings={earnings}
+                    balances={balances}
+                    onBalanceChange={handleBalanceChange}
+                    prices={prices}
+                  />
+                </React.Suspense>
               </div>
             </div>
           </div>
@@ -573,7 +603,7 @@ function App() {
         <p>{t('app.footerLink')}</p>
         <p className="footer-note">
           {t('app.footerText')}{' '}
-          <a href="https://rollercoin.com/game" target="_blank" rel="noopener noreferrer">
+          <a href="https://rollercoin.com/game" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
             rollercoin.com
           </a>
         </p>
