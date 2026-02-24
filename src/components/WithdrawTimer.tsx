@@ -109,10 +109,10 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
 
     return (
         <div className="withdraw-timer-section">
-            <h3 className="section-title">
+            <h2 className="section-title">
                 <span className="section-icon">⏱️</span>
                 {t('withdraw.title')}
-            </h3>
+            </h2>
             <p className="section-desc">
                 {t('withdraw.desc')}
             </p>

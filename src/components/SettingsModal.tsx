@@ -44,7 +44,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="modal-content premium-settings">
                 <div className="modal-header">
                     <div className="header-icon">⚙️</div>
-                    <h3 className="modal-title">{t('settings.title')}</h3>
+                    <h2 className="modal-title">{t('settings.title')}</h2>
                     <button className="close-btn" onClick={onClose}>✕</button>
                 </div>
 

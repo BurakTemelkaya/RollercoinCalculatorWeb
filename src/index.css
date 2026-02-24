@@ -9,8 +9,8 @@
   --bg-card-hover: #252b3b;
 
   --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-secondary: #cbd5e1;
+  --text-muted: #a0aec0;
 
   --accent-primary: #6366f1;
   --accent-secondary: #8b5cf6;
@@ -57,6 +57,16 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+a {
+  color: #818cf8;
+  text-decoration: underline;
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
 }
 
 /* Header */
@@ -662,23 +672,45 @@ body {
 
 /* Main Tabs */
 .main-tabs {
+  --tab-gap: 12px;
+  --tab-padding: 8px;
+  position: relative;
   display: flex;
-  gap: 12px;
+  gap: var(--tab-gap);
   background: var(--bg-card);
-  padding: 8px;
+  padding: var(--tab-padding);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  width: fit-content;
+  width: 100%;
+  max-width: 600px;
+  /* Constrain width but allow equal flex items */
   margin: 0 auto;
-  position: relative;
   z-index: 5;
 }
 
+.main-tabs-bg {
+  position: absolute;
+  top: var(--tab-padding);
+  bottom: var(--tab-padding);
+  left: var(--tab-padding);
+  width: calc((100% - (var(--tab-padding) * 2) - (var(--tab-gap) * 2)) / 3);
+  background: var(--accent-gradient);
+  border-radius: var(--radius-md);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-glow);
+  z-index: 0;
+}
+
 .main-tab {
+  position: relative;
+  z-index: 1;
+  /* Keep text above the sliding bg */
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 10px 0;
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
@@ -687,17 +719,18 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .main-tab:hover {
-  background: var(--bg-tertiary);
   color: var(--text-primary);
+  /* Optional slight hover: background: rgba(255,255,255,0.05); */
 }
 
 .main-tab.active {
-  background: var(--accent-gradient);
   color: white;
-  box-shadow: var(--shadow-glow);
+  background: transparent;
+  /* Glow/shadow is handled by .main-tabs-bg */
 }
 
 .tab-icon {
@@ -742,8 +775,9 @@ body {
   padding: 24px 0;
   margin-top: 40px;
   border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 13px;
+  font-weight: 500;
 }
 
 .footer-note {
@@ -751,8 +785,8 @@ body {
 }
 
 .footer a {
-  color: var(--accent-primary);
-  text-decoration: none;
+  color: #818cf8;
+  text-decoration: underline;
 }
 
 .footer a:hover {
@@ -1061,9 +1095,9 @@ body {
 
   /* Main Tabs */
   .main-tabs {
+    --tab-gap: 4px;
+    --tab-padding: 5px;
     width: 100%;
-    gap: 4px;
-    padding: 5px;
   }
 
   .main-tab {
@@ -1337,7 +1371,7 @@ body {
 
 .primary-button {
   background: var(--accent-gradient);
-  color: white;
+  color: #0f172a;
   border: none;
   padding: 12px 24px;
   border-radius: var(--radius-md);
@@ -1823,39 +1857,55 @@ body {
 
 /* Data Source Toggle Cards */
 .data-source-cards {
+  position: relative;
   display: flex;
-  gap: 12px;
-  width: 100%;
+  background: var(--bg-tertiary);
+  padding: 4px;
+  border-radius: 9999px;
+  border: none;
   margin-bottom: 16px;
+  width: 100%;
+  z-index: 1;
+}
+
+.data-source-bg {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: var(--accent-gradient);
+  border-radius: 9999px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  z-index: 0;
 }
 
 .data-source-card {
   flex: 1;
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   padding: 12px 16px;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: color 0.25s ease;
   color: var(--text-secondary);
-  position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .data-source-card:hover {
-  border-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.05);
-  transform: translateY(-1px);
+  color: var(--text-primary);
 }
 
 .data-source-card.active {
-  border-color: var(--accent-primary);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.08));
-  color: var(--text-primary);
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+  color: white;
 }
 
 .data-source-icon {
@@ -1876,26 +1926,17 @@ body {
   color: inherit;
 }
 
-.data-source-card.active .data-source-label {
-  color: var(--accent-primary);
-}
-
 .data-source-desc {
   font-size: 11px;
   color: var(--text-muted);
   line-height: 1.3;
+  transition: color 0.25s ease;
 }
 
-.data-source-badge {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  font-size: 10px;
-  color: var(--text-muted);
-  background: rgba(0, 0, 0, 0.2);
-  padding: 2px 6px;
-  border-radius: 8px;
+.data-source-card.active .data-source-desc {
+  color: #ffffff;
 }
+
 
 /* Fetch Button Enhancements */
 .fetch-button {
@@ -1913,16 +1954,33 @@ body {
 
 /* Fetch Mode Selector */
 .fetch-mode-selector {
+  position: relative;
   display: flex;
   background: var(--bg-primary);
-  padding: 3px;
+  padding: 4px;
   border-radius: var(--radius-md);
   margin-bottom: 12px;
   border: 1px solid var(--border-color);
   width: fit-content;
+  z-index: 1;
+}
+
+.mode-tab-bg {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: var(--accent-gradient);
+  border-radius: calc(var(--radius-md) - 2px);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  z-index: 0;
 }
 
 .mode-tab {
+  position: relative;
+  z-index: 1;
   padding: 6px 14px;
   border: none;
   background: transparent;
@@ -1934,6 +1992,9 @@ body {
   border-radius: calc(var(--radius-md) - 2px);
   transition: all 0.2s;
   letter-spacing: 0.5px;
+  flex: 1;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mode-tab:hover {
@@ -1941,9 +2002,9 @@ body {
 }
 
 .mode-tab.active {
-  background: var(--accent-gradient);
-  color: white;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  color: #ffffff;
+  background: transparent;
+  box-shadow: none;
 }
 
 /* Fetch Mode Info */

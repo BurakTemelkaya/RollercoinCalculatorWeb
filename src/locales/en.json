@@ -18,7 +18,8 @@
     "input": {
         "title": "Data Input & Settings",
         "userPower": "Your Power",
-        "userFetched": "✅ Data for '{{name}}' fetched successfully",
+        "userFetched": "✅ Profile data for '{{name}}' updated successfully",
+        "allDataFetched": "✅ Profile and market data updated successfully",
         "leagueSelect": "League",
         "auto": "Auto",
         "fetchFromApi": "Fetch Data",
@@ -27,7 +28,7 @@
         "manualDesc": "Paste league data from the game",
         "serverLabel": "Fetch from Server",
         "serverDesc": "Get the latest data automatically",
-        "apiSuccess": "✅ API data loaded successfully",
+        "apiSuccess": "✅ Market data updated successfully",
         "apiError": "❌ Failed to fetch from API: {{error}}",
         "apiCooldown": "⏳ Please wait {{seconds}}s before fetching again",
         "apiCooldownBtn": "Wait {{seconds}}s",
@@ -41,7 +42,8 @@
             "parseError": "Could not parse data. Check format.",
             "missingBoth": "User power and league data are missing!",
             "missingUserPower": "User power is required!",
-            "missingLeagueData": "League power data is required!"
+            "missingLeagueData": "League power data is required!",
+            "tooManyRequests": "Too many requests to the API, please wait."
         },
         "usernamePlaceholder": "Enter username",
         "enterUsername": "Username",
@@ -93,6 +95,7 @@
         "totalBonus": "Total Bonus",
         "gamesPower": "Games Power (Optional)",
         "tempPower": "Temporary Power (Optional)",
+        "freonPower": "Freon Power (Optional)",
         "includeGames": "Include Games/Temp",
         "addMiner": "Add New Miner",
         "minerPower": "Miner Power",

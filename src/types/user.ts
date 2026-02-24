@@ -15,6 +15,7 @@ export interface UserPowerResponseDto {
     temp: number;
     racks: number;
     bonus: number;
+    freon?: number;
 }
 
 export interface RollercoinUserResponse {

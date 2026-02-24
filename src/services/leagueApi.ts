@@ -19,6 +19,9 @@ export async function fetchLeaguesFromApi(): Promise<ApiLeaguesResponse> {
         const response = await fetch(url);
 
         if (!response.ok) {
+            if (response.status === 429) {
+                throw new Error('RATE_LIMIT');
+            }
             throw new Error(`API request failed: ${response.status} ${response.statusText}`);
         }
 
