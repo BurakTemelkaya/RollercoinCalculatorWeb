@@ -45,26 +45,50 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         setLocalUserName(globalUserName);
     }, [globalUserName]);
 
+    // Local Storage Helpers
+    const getStoredStr = (key: string, def: string) => localStorage.getItem(`rollercoin_sim_${key}`) || def;
+    const getStoredUnit = (key: string, def: PowerUnit) => (localStorage.getItem(`rollercoin_sim_${key}`) as PowerUnit) || def;
+
     // Current Stats Inputs
-    const [statMinersPower, setStatMinersPower] = useState<string>('');
-    const [statMinersUnit, setStatMinersUnit] = useState<PowerUnit>('Eh');
-    const [statBonus, setStatBonus] = useState<string>('');
-    const [statRackPower, setStatRackPower] = useState<string>('');
-    const [statRackUnit, setStatRackUnit] = useState<PowerUnit>('Ph');
-    const [statGamesPower, setStatGamesPower] = useState<string>('');
-    const [statGamesUnit, setStatGamesUnit] = useState<PowerUnit>('Ph');
-    const [statTempPower, setStatTempPower] = useState<string>('');
-    const [statTempUnit, setStatTempUnit] = useState<PowerUnit>('Ph');
-    const [statFreonPower, setStatFreonPower] = useState<string>('');
-    const [statFreonUnit, setStatFreonUnit] = useState<PowerUnit>('Ph');
+    const [statMinersPower, setStatMinersPower] = useState<string>(() => getStoredStr('miners', ''));
+    const [statMinersUnit, setStatMinersUnit] = useState<PowerUnit>(() => getStoredUnit('minersUnit', 'Eh'));
+    const [statBonus, setStatBonus] = useState<string>(() => getStoredStr('bonus', ''));
+    const [statRackPower, setStatRackPower] = useState<string>(() => getStoredStr('rack', ''));
+    const [statRackUnit, setStatRackUnit] = useState<PowerUnit>(() => getStoredUnit('rackUnit', 'Ph'));
+    const [statGamesPower, setStatGamesPower] = useState<string>(() => getStoredStr('games', ''));
+    const [statGamesUnit, setStatGamesUnit] = useState<PowerUnit>(() => getStoredUnit('gamesUnit', 'Ph'));
+    const [statTempPower, setStatTempPower] = useState<string>(() => getStoredStr('temp', ''));
+    const [statTempUnit, setStatTempUnit] = useState<PowerUnit>(() => getStoredUnit('tempUnit', 'Ph'));
+    const [statFreonPower, setStatFreonPower] = useState<string>(() => getStoredStr('freon', ''));
+    const [statFreonUnit, setStatFreonUnit] = useState<PowerUnit>(() => getStoredUnit('freonUnit', 'Ph'));
 
     // New Miner Input
-    const [newMinerPower, setNewMinerPower] = useState<string>('');
-    const [newMinerUnit, setNewMinerUnit] = useState<PowerUnit>('Ph');
-    const [newMinerBonus, setNewMinerBonus] = useState<string>('');
+    const [newMinerPower, setNewMinerPower] = useState<string>(() => getStoredStr('newMiner', ''));
+    const [newMinerUnit, setNewMinerUnit] = useState<PowerUnit>(() => getStoredUnit('newMinerUnit', 'Ph'));
+    const [newMinerBonus, setNewMinerBonus] = useState<string>(() => getStoredStr('newBonus', ''));
 
     // List of added miners
-    const [addedMiners, setAddedMiners] = useState<AddedMiner[]>([]);
+    const [addedMiners, setAddedMiners] = useState<AddedMiner[]>(() => {
+        const saved = localStorage.getItem('rollercoin_sim_addedMiners');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // Save outputs to local storage
+    useEffect(() => { localStorage.setItem('rollercoin_sim_miners', statMinersPower); }, [statMinersPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_minersUnit', statMinersUnit); }, [statMinersUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_bonus', statBonus); }, [statBonus]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_rack', statRackPower); }, [statRackPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_rackUnit', statRackUnit); }, [statRackUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_games', statGamesPower); }, [statGamesPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_gamesUnit', statGamesUnit); }, [statGamesUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_temp', statTempPower); }, [statTempPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_tempUnit', statTempUnit); }, [statTempUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_freon', statFreonPower); }, [statFreonPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_freonUnit', statFreonUnit); }, [statFreonUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_newMiner', newMinerPower); }, [newMinerPower]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_newMinerUnit', newMinerUnit); }, [newMinerUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_newBonus', newMinerBonus); }, [newMinerBonus]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_addedMiners', JSON.stringify(addedMiners)); }, [addedMiners]);
 
     // Results
     const [simulationResult, setSimulationResult] = useState<{
@@ -570,21 +594,48 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                             {simulationResult.isLeagueChange ? (
                                 <div className="league-transition">
                                     <div className="league-card">
-                                        <img src={getLeagueImage(simulationResult.currentLeague.id)} alt="" />
+                                        <img
+                                            src={getLeagueImage(simulationResult.currentLeague.id)}
+                                            alt={`${simulationResult.currentLeague.name} League`}
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.onerror = null;
+                                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                target.style.display = 'none';
+                                            }}
+                                        />
                                         <span>{simulationResult.currentLeague.name}</span>
                                     </div>
                                     <div className="transition-arrow">➜</div>
                                     <div className="league-card new">
                                         <div className="new-badge">NEW!</div>
                                         <div className="move-up-text">{t('simulator.moveUp')}</div>
-                                        <img src={getLeagueImage(simulationResult.newLeague.id)} alt="" />
+                                        <img
+                                            src={getLeagueImage(simulationResult.newLeague.id)}
+                                            alt={`${simulationResult.newLeague.name} League`}
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.onerror = null;
+                                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                target.style.display = 'none';
+                                            }}
+                                        />
                                         <span>{simulationResult.newLeague.name}</span>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="league-transition static">
                                     <div className="league-card">
-                                        <img src={getLeagueImage(simulationResult.currentLeague.id)} alt="" />
+                                        <img
+                                            src={getLeagueImage(simulationResult.currentLeague.id)}
+                                            alt={`${simulationResult.currentLeague.name} League`}
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.onerror = null;
+                                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                target.style.display = 'none';
+                                            }}
+                                        />
                                         <span>{simulationResult.currentLeague.name}</span>
                                     </div>
                                     <span className="no-change-text">{t('simulator.noChange')}</span>
