@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CoinData, HashPower, PowerUnit } from '../types';
 import { parsePowerText } from '../utils/powerParser';
@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 
 interface DataInputFormProps {
-    onDataParsed: (coins: CoinData[], userPower: HashPower) => void;
+    onDataParsed: (coins: CoinData[], userPower: HashPower, isManual?: boolean) => void;
     currentCoins: CoinData[];
     currentUserPower: HashPower | null;
     currentLeague: LeagueInfo;
@@ -26,6 +26,9 @@ interface DataInputFormProps {
     isFetchingUser?: boolean;
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
+    onForceFetchPrices?: () => void;
+    fetchMode: 'username' | 'power';
+    setFetchMode: (mode: 'username' | 'power') => void;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -43,30 +46,25 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     isFetchingUser,
     globalUserName = '',
     setGlobalUserName = () => { },
+    onForceFetchPrices,
+    fetchMode,
+    setFetchMode,
 }) => {
     const { t } = useTranslation();
     const [inputText, setInputText] = useState('');
     const [isExpanded, setIsExpanded] = useState(true);
-    const prevCoinsLengthRef = useRef(currentCoins.length);
-
-    // Auto-collapse when coins are populated
-    useEffect(() => {
-        if (currentCoins.length > 0 && prevCoinsLengthRef.current === 0) {
-            setIsExpanded(false);
-        }
-        prevCoinsLengthRef.current = currentCoins.length;
-    }, [currentCoins.length]);
 
     const [dataSource, setDataSource] = useState<'manual' | 'api'>('api');
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
     const [isFetchingUserLocal, setIsFetchingUserLocal] = useState(false);
-    const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
 
     // Use an uncontrolled local state for input to prevent whole-app rerenders on every keystroke
     const [localUserName, setLocalUserName] = useState(globalUserName);
     useEffect(() => {
-        setLocalUserName(globalUserName);
+        if (globalUserName && !localUserName) {
+            setLocalUserName(globalUserName);
+        }
     }, [globalUserName]);
 
     const [powerValue, setPowerValue] = useState<string>('');
@@ -155,8 +153,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 return;
             }
 
-            onDataParsed(coins, finalPower);
-            setIsExpanded(false);
+            onDataParsed(coins, finalPower, true);
             onShowNotification(t('input.loadedData', { count: coins.length }), 'success');
         } catch (error) {
             onShowNotification(t('input.errors.parseError'), 'error');
@@ -186,7 +183,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         if (isNaN(val) || val <= 0) return;
 
         const timeoutId = setTimeout(() => {
-            onDataParsed(currentCoins, { value: val, unit: powerUnit });
+            onDataParsed(currentCoins, { value: val, unit: powerUnit }, true);
         }, 500);
         return () => clearTimeout(timeoutId);
     }, [powerValue, powerUnit, dataSource, fetchMode, currentCoins, onDataParsed]);
@@ -234,7 +231,17 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                         )}
                         <div className="summary-chip league">
                             <span className="chip-value">
-                                <img src={getLeagueImage(currentLeague.id)} className="league-icon-summary" alt="" />
+                                <img
+                                    src={getLeagueImage(currentLeague.id)}
+                                    className="league-icon-summary"
+                                    alt={`${currentLeague.name} League`}
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.onerror = null;
+                                        target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                        target.style.display = 'none';
+                                    }}
+                                />
                                 {currentLeague.name}
                             </span>
                         </div>
@@ -343,25 +350,35 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                     onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
                                                     return;
                                                 }
-                                                const both = fetchMode === 'username' && localUserName.trim();
-                                                const aP = handleFetchFromApi(!both);
-                                                if (both) {
-                                                    const uP = handleFetchUserLocal(!both);
+                                                const isUsernameMode = fetchMode === 'username' && localUserName.trim();
+                                                const aP = handleFetchFromApi(!isUsernameMode);
+
+                                                if (isUsernameMode) {
+                                                    const uP = handleFetchUserLocal(!isUsernameMode);
                                                     const [userSuccess, apiSuccess] = await Promise.all([uP, aP]);
                                                     if (userSuccess && apiSuccess) {
                                                         onShowNotification(t('input.allDataFetched'), 'success');
                                                     }
+                                                    if (onForceFetchPrices && (userSuccess || apiSuccess)) {
+                                                        onForceFetchPrices();
+                                                    }
+                                                    if (userSuccess) {
+                                                        setIsExpanded(false);
+                                                    }
                                                 } else {
-                                                    await aP;
+                                                    const apiSuccess = await aP;
+                                                    if (onForceFetchPrices && apiSuccess) {
+                                                        onForceFetchPrices();
+                                                    }
+                                                    // Allow manual updates of API global data in power mode to not close the form
                                                 }
-                                                // setIsExpanded(false); // Moved to useEffect to wait for data
                                             }}
-                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && (!localUserName.trim() || !canFetch)) || (fetchMode === 'power' && !canFetch)}
+                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
                                             title={t('input.fetchFromApi')}
                                         >
                                             {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
                                                 <span className="spinner small"></span>
-                                            ) : !canFetch && dataSource === 'api' ? (
+                                            ) : !canFetch ? (
                                                 <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
                                             ) : (
                                                 <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
@@ -384,7 +401,16 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                     <Select.Trigger className={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })} aria-label={t('input.leagueSelect')}>
                                         <Select.Value>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <img src={getLeagueImage(currentLeague.id)} alt="" className="league-icon-dropdown" />
+                                                <img
+                                                    src={getLeagueImage(currentLeague.id)}
+                                                    alt={`${currentLeague.name} League`}
+                                                    className="league-icon-dropdown"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.onerror = null;
+                                                        target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                    }}
+                                                />
                                                 <span>{currentLeague.name}</span>
                                             </div>
                                         </Select.Value>
@@ -399,7 +425,16 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                 {leaguesList.map(l => (
                                                     <Select.Item key={l.id} value={l.id} className={classNames("custom-dropdown-item", { active: l.id === currentLeague.id })}>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                            <img src={getLeagueImage(l.id)} alt="" style={{ width: 20, height: 20 }} />
+                                                            <img
+                                                                src={getLeagueImage(l.id)}
+                                                                alt={`${l.name} League`}
+                                                                style={{ width: 20, height: 20 }}
+                                                                onError={(e) => {
+                                                                    const target = e.target as HTMLImageElement;
+                                                                    target.onerror = null;
+                                                                    target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                                }}
+                                                            />
                                                             <Select.ItemText>{l.name}</Select.ItemText>
                                                         </div>
                                                     </Select.Item>

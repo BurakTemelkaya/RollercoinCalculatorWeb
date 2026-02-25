@@ -14,6 +14,8 @@ import { ApiLeagueData } from './types/api';
 import { convertApiLeagueToCoinData } from './services/leagueApi';
 import { fetchUserFromApi } from './services/userApi';
 import { autoScalePower } from './utils/powerParser';
+import { COIN_ICONS } from './utils/constants';
+import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
@@ -99,7 +101,6 @@ import Notification from './components/Notification';
 function App() {
   const { t, i18n } = useTranslation();
   const [coins, setCoins] = useState<CoinData[]>([]);
-  const pricesFetchedForRef = React.useRef<string>('');
 
   // Notification state
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -155,6 +156,31 @@ function App() {
     }
   }, [globalUserName]);
 
+  // Handle 5-minute expiration for user data and league data
+  useEffect(() => {
+    const powerTimestamp = localStorage.getItem('rollercoin_web_userpower_timestamp');
+    const clearData = () => {
+      localStorage.removeItem(STORAGE_KEYS.USER_POWER);
+      localStorage.removeItem(STORAGE_KEYS.COINS);
+      localStorage.removeItem(STORAGE_KEYS.API_LEAGUES);
+      localStorage.removeItem('rollercoin_web_raw_api_data');
+      localStorage.removeItem('rollercoin_web_fetched_user');
+      localStorage.removeItem('rollercoin_web_userpower_timestamp');
+    };
+
+    if (powerTimestamp) {
+      const savedTime = parseInt(powerTimestamp, 10);
+      const currentTime = new Date().getTime();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      if (currentTime - savedTime > fiveMinutesInMs) {
+        clearData();
+      }
+    } else {
+      clearData();
+    }
+  }, []);
+
   // API State
   const [apiLeagues, setApiLeagues] = useState<LeagueInfo[] | null>(null);
   const [rawApiData, setRawApiData] = useState<ApiLeagueData[] | null>(null);
@@ -162,6 +188,7 @@ function App() {
   // User Fetch State (Lifted)
   const [fetchedUser, setFetchedUser] = useState<RollercoinUserResponse | null>(null);
   const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
 
   // Services
   // We need to import these at top level, checking imports now...
@@ -177,14 +204,6 @@ function App() {
     try {
       const data = await fetchUserFromApi(username.trim());
       setFetchedUser(data);
-
-      // 1. Update User Power
-      // API returns total power in current_Power (raw value in Gh) 
-      // We need to convert Gh to Hashes (* 1e9).
-      // Note: current_Power already includes freon bonuses from the API, so we don't add it again.
-      const rawHashes = (data.userPowerResponseDto.current_Power || 0) * 1e9;
-      const scaledPower = autoScalePower(rawHashes);
-      setUserPower(scaledPower);
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
       if (apiLeagueId) {
@@ -240,7 +259,6 @@ function App() {
   useEffect(() => {
     try {
       const savedCoins = localStorage.getItem(STORAGE_KEYS.COINS);
-      const savedPower = localStorage.getItem(STORAGE_KEYS.USER_POWER);
       const savedBalances = localStorage.getItem(STORAGE_KEYS.BALANCES);
       const savedTab = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
       const savedLeagueId = localStorage.getItem(STORAGE_KEYS.LEAGUE_ID);
@@ -248,7 +266,10 @@ function App() {
       const savedApiLeagues = localStorage.getItem(STORAGE_KEYS.API_LEAGUES);
 
       if (savedCoins) setCoins(JSON.parse(savedCoins));
+      const savedPower = localStorage.getItem(STORAGE_KEYS.USER_POWER);
       if (savedPower) setUserPower(JSON.parse(savedPower));
+      const savedFetchedUser = localStorage.getItem('rollercoin_web_fetched_user');
+      if (savedFetchedUser) setFetchedUser(JSON.parse(savedFetchedUser));
       if (savedBalances) setBalances(JSON.parse(savedBalances));
       if (savedTab === 'calculator' || savedTab === 'withdraw') setActiveTab(savedTab);
       if (savedApiLeagues) setApiLeagues(JSON.parse(savedApiLeagues));
@@ -264,8 +285,8 @@ function App() {
         setIsAutoLeague(savedAutoLeague === 'true');
       }
 
-      // If manual league was saved, restore it
-      if (savedLeagueId && savedAutoLeague === 'false') {
+      // If a league was saved, always restore it as visual default even if auto-league is true
+      if (savedLeagueId) {
         // Try to find in API leagues first, then fall back to LEAGUES
         const savedLeaguesSource = savedApiLeagues ? JSON.parse(savedApiLeagues) : LEAGUES;
         const foundLeague = savedLeaguesSource.find((l: LeagueInfo) => l.id === savedLeagueId);
@@ -276,71 +297,91 @@ function App() {
     }
   }, []);
 
-  // Fetch prices when coins are loaded (only once per unique coin set)
+  // Fetch ALL supported crypto prices once initially, further fetches are manual
+  const pricesInitializedRef = React.useRef(false);
   useEffect(() => {
-    if (coins.length > 0) {
-      const cryptoSymbols = coins
-        .filter(c => !c.isGameToken)
-        .map(c => c.displayName);
-
-      // Create a fingerprint to avoid duplicate fetches
-      const symbolKey = cryptoSymbols.sort().join(',');
-      if (cryptoSymbols.length > 0 && symbolKey !== pricesFetchedForRef.current) {
-        pricesFetchedForRef.current = symbolKey;
-        fetchPrices(cryptoSymbols).then(setPrices);
-      }
+    if (!pricesInitializedRef.current) {
+      pricesInitializedRef.current = true;
+      const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
+      fetchPrices(allCryptos).then(setPrices);
     }
-  }, [coins]);
+  }, []);
 
-  // Auto-detect league when userPower changes
+  // Preload UI images (Coins and Leagues) to prevent flashing/delay on appearance
   useEffect(() => {
+    // Preload coin icons
+    Object.values(COIN_ICONS).forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Preload league badges
+    LEAGUE_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Track if this is the initial load to prevent power from overriding cached league
+  const isInitialLoadRef = React.useRef(true);
+
+  const handleForceFetchPrices = () => {
+    const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
+    fetchPrices(allCryptos).then(setPrices).catch(console.error);
+  };
+
+  // Auto-detect league when userPower or fetchMode changes
+  useEffect(() => {
+    // Skip auto-detect on initial load so cached league takes precedence
+    if (isInitialLoadRef.current) {
+      if (userPower) {
+        isInitialLoadRef.current = false;
+      }
+      return;
+    }
+
     if (userPower && isAutoLeague) {
       let powerForLeague = userPower;
-      // Priority 1: Use specific league ID from User Profile if available
-      // This is the definitive "Authoritative" source
-      if (fetchedUser?.userProfileResponseDto?.league_Id) {
-        const apiLeagueId = fetchedUser.userProfileResponseDto.league_Id;
-        const leaguesSource = apiLeagues || LEAGUES;
 
-        let foundLeague = leaguesSource.find(l => l.id === apiLeagueId);
-        if (!foundLeague) {
-          foundLeague = leaguesSource.find(l => String(l.id) === String(apiLeagueId));
-        }
+      // If we are in 'username' mode and have fetched user data, that takes priority
+      if (fetchMode === 'username' && fetchedUser) {
+        // Priority 1: Use specific league ID from User Profile
+        if (fetchedUser.userProfileResponseDto?.league_Id) {
+          const apiLeagueId = fetchedUser.userProfileResponseDto.league_Id;
+          const leaguesSource = apiLeagues || LEAGUES;
 
-        if (foundLeague) {
-          if (foundLeague.id !== league.id) {
-            setLeague(foundLeague);
-            // DO NOT disable auto-league. This IS the auto-detection result.
+          let foundLeague = leaguesSource.find(l => l.id === apiLeagueId);
+          if (!foundLeague) {
+            foundLeague = leaguesSource.find(l => String(l.id) === String(apiLeagueId));
           }
-          return; // Skip power-based calculation
-        } else if (!apiLeagues) {
-          // CRITICAL FIX:
-          // If we have a user with a League ID (e.g. "18"), but NO API Leagues yet (apiLeagues is null),
-          // foundLeague will be undefined because "18" isn't in static LEAGUES.
-          // DO NOT fall through to Priority 2/3 (Power-based calc), because that will incorrectly set league to e.g. "Diamond 1" (static ID).
-          // Instead, do nothing and wait for apiLeagues to load.
-          return;
+
+          if (foundLeague) {
+            if (foundLeague.id !== league.id) {
+              setLeague(foundLeague);
+            }
+            return; // Skip power-based calculation
+          } else if (!apiLeagues) {
+            return; // Wait for apiLeagues to load
+          }
+        }
+
+        // Priority 2: Use Max Power logic if API User is fetched but no league ID (fallback)
+        if (fetchedUser.userPowerResponseDto.max_Power) {
+          const maxPowerRaw = fetchedUser.userPowerResponseDto.max_Power * 1e9;
+          powerForLeague = autoScalePower(maxPowerRaw);
+        } else {
+          // Fallback if max_Power is missing (unlikely)
+          const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
+          const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
+          const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+          const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
+
+          const base = minersRaw + racksRaw;
+          const totalMinerPower = base + bonusRaw;
+          powerForLeague = autoScalePower(totalMinerPower);
         }
       }
-
-      // Priority 2: Use Max Power logic if API User is fetched but no league ID (fallback)
-      if (fetchedUser && fetchedUser.userPowerResponseDto.max_Power) {
-        // API gives values in Gh. Convert to Hashes (* 1e9).
-        const maxPowerRaw = fetchedUser.userPowerResponseDto.max_Power * 1e9;
-
-        // Use autoScalePower to get the unit-agnostic HashPower object
-        powerForLeague = autoScalePower(maxPowerRaw);
-      } else if (fetchedUser) {
-        // Fallback if max_Power is missing (unlikely)
-        const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
-        const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
-        const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
-        const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
-
-        const base = minersRaw + racksRaw;
-        const totalMinerPower = base + bonusRaw;
-        powerForLeague = autoScalePower(totalMinerPower);
-      }
+      // If we are in 'power' mode, or haven't fetched a user yet, we just use `userPower` (which is `powerForLeague` default)
 
       // Use API leagues if available, otherwise default LEAGUES
       const detectedLeague = getLeagueByPower(powerForLeague, apiLeagues || undefined);
@@ -348,7 +389,7 @@ function App() {
         setLeague(detectedLeague);
       }
     }
-  }, [userPower, isAutoLeague, league.id, apiLeagues, fetchedUser]);
+  }, [userPower, isAutoLeague, league.id, apiLeagues, fetchedUser, fetchMode]);
 
   // Regenerate CoinData when league changes and we have raw API data
   useEffect(() => {
@@ -375,22 +416,48 @@ function App() {
 
   // Calculate earnings when coins, userPower or blockRewards change
   useEffect(() => {
-    if (coins.length > 0 && userPower) {
-      const results = calculateAllEarnings(coins, userPower, blockRewards, blockDurations);
+    let effectiveUserPower = userPower;
+
+    // If we are in 'username' mode, we use the fetched user power
+    if (fetchMode === 'username' && fetchedUser) {
+      if (fetchedUser.userPowerResponseDto.max_Power) {
+        effectiveUserPower = autoScalePower(fetchedUser.userPowerResponseDto.max_Power * 1e9);
+      } else {
+        const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
+        const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
+        const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+        const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
+        effectiveUserPower = autoScalePower(minersRaw + racksRaw + bonusRaw);
+      }
+    }
+
+    if (coins.length > 0 && effectiveUserPower) {
+      const results = calculateAllEarnings(coins, effectiveUserPower, blockRewards, blockDurations);
       setEarnings(results);
     } else {
       setEarnings([]);
     }
-  }, [coins, userPower, blockRewards, blockDurations]);
+  }, [coins, userPower, blockRewards, blockDurations, fetchMode, fetchedUser]);
 
   // Save to localStorage when data changes
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.COINS, JSON.stringify(coins));
+    if (coins.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.COINS, JSON.stringify(coins));
+    }
   }, [coins]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.USER_POWER, JSON.stringify(userPower));
+    if (userPower) {
+      localStorage.setItem(STORAGE_KEYS.USER_POWER, JSON.stringify(userPower));
+      localStorage.setItem('rollercoin_web_userpower_timestamp', new Date().getTime().toString());
+    }
   }, [userPower]);
+
+  useEffect(() => {
+    if (fetchedUser) {
+      localStorage.setItem('rollercoin_web_fetched_user', JSON.stringify(fetchedUser));
+    }
+  }, [fetchedUser]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.BALANCES, JSON.stringify(balances));
@@ -452,7 +519,7 @@ function App() {
       <React.Suspense fallback={null}>
         <SettingsModal
           isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(true)}
+          onClose={() => setIsSettingsOpen(false)}
           blockDurations={blockDurations}
           onSave={handleSaveDurations}
           coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
@@ -523,6 +590,9 @@ function App() {
           isFetchingUser={isFetchingUser}
           globalUserName={globalUserName}
           setGlobalUserName={setGlobalUserName}
+          onForceFetchPrices={handleForceFetchPrices}
+          fetchMode={fetchMode}
+          setFetchMode={setFetchMode}
         />
 
         {/* Tabs */}

@@ -1,18 +1,18 @@
-import img1 from '../assets/leagues/68af01ce48490927df92d679.png';
-import img2 from '../assets/leagues/68af01ce48490927df92d67a.png';
-import img3 from '../assets/leagues/68af01ce48490927df92d67b.png';
-import img4 from '../assets/leagues/68af01ce48490927df92d67c.png';
-import img5 from '../assets/leagues/68af01ce48490927df92d67d.png';
-import img6 from '../assets/leagues/68af01ce48490927df92d67e.png';
-import img7 from '../assets/leagues/68af01ce48490927df92d67f.png';
-import img8 from '../assets/leagues/68af01ce48490927df92d680.png';
-import img9 from '../assets/leagues/68af01ce48490927df92d681.png';
-import img10 from '../assets/leagues/68af01ce48490927df92d682.png';
-import img11 from '../assets/leagues/68af01ce48490927df92d683.png';
-import img12 from '../assets/leagues/68af01ce48490927df92d684.png';
-import img13 from '../assets/leagues/68af01ce48490927df92d685.png';
-import img14 from '../assets/leagues/68af01ce48490927df92d686.png';
-import img15 from '../assets/leagues/68af01ce48490927df92d687.png';
+import img1 from '../assets/leagues/68af01ce48490927df92d679.png?url';
+import img2 from '../assets/leagues/68af01ce48490927df92d67a.png?url';
+import img3 from '../assets/leagues/68af01ce48490927df92d67b.png?url';
+import img4 from '../assets/leagues/68af01ce48490927df92d67c.png?url';
+import img5 from '../assets/leagues/68af01ce48490927df92d67d.png?url';
+import img6 from '../assets/leagues/68af01ce48490927df92d67e.png?url';
+import img7 from '../assets/leagues/68af01ce48490927df92d67f.png?url';
+import img8 from '../assets/leagues/68af01ce48490927df92d680.png?url';
+import img9 from '../assets/leagues/68af01ce48490927df92d681.png?url';
+import img10 from '../assets/leagues/68af01ce48490927df92d682.png?url';
+import img11 from '../assets/leagues/68af01ce48490927df92d683.png?url';
+import img12 from '../assets/leagues/68af01ce48490927df92d684.png?url';
+import img13 from '../assets/leagues/68af01ce48490927df92d685.png?url';
+import img14 from '../assets/leagues/68af01ce48490927df92d686.png?url';
+import img15 from '../assets/leagues/68af01ce48490927df92d687.png?url';
 import { LEAGUES } from './leagues';
 
 // Order matches the LEAGUES array in data/leagues.ts

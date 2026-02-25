@@ -5,6 +5,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // GitHub Pages için base path ayarı
-  // Eğer repository adınız "my-project" ise burayı '/my-project/' yapın.
   base: '/RollercoinCalculatorWeb/',
+  build: {
+    // Disable inlining of SVGs as base64 for production builds
+    assetsInlineLimit: (filePath) => {
+      if (filePath.endsWith('.svg') || filePath.endsWith('.png')) {
+        return false;
+      }
+      return undefined;
+    }
+  }
 })

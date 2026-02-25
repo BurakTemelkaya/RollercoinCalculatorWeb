@@ -18,8 +18,8 @@
     "input": {
         "title": "Data Input & Settings",
         "userPower": "Your Power",
-        "userFetched": "✅ Profile data for '{{name}}' updated successfully",
-        "allDataFetched": "✅ Profile and market data updated successfully",
+        "userFetched": "Profile data for '{{name}}' updated successfully",
+        "allDataFetched": "Profile and market data updated successfully",
         "leagueSelect": "League",
         "auto": "Auto",
         "fetchFromApi": "Fetch Data",
@@ -28,7 +28,7 @@
         "manualDesc": "Paste league data from the game",
         "serverLabel": "Fetch from Server",
         "serverDesc": "Get the latest data automatically",
-        "apiSuccess": "✅ Market data updated successfully",
+        "apiSuccess": "Market data updated successfully",
         "apiError": "❌ Failed to fetch from API: {{error}}",
         "apiCooldown": "⏳ Please wait {{seconds}}s before fetching again",
         "apiCooldownBtn": "Wait {{seconds}}s",
@@ -36,7 +36,7 @@
         "leaguePowers": "League Powers",
         "placeholder": "Example Format:\nRST\n104.91 Eh/s\n1.2345 RST\n...",
         "calculate": "Calculate Now",
-        "loadedData": "✅ {{count}} coin data loaded",
+        "loadedData": "{{count}} coin data loaded",
         "errors": {
             "insufficientData": "Insufficient data. Please fill in the text area.",
             "parseError": "Could not parse data. Check format.",

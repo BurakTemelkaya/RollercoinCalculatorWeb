@@ -44,11 +44,13 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <div className="coin-cell">
                         <img
                             src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']} // Fallback to RLT icon if missing
-                            alt={earning.displayName}
+                            alt={`${earning.displayName} Coin Icon`}
                             onError={(e) => {
-                                // Hide image and show symbol instead if fails
-                                (e.target as HTMLImageElement).style.visibility = 'hidden';
-                                (e.target as HTMLImageElement).parentElement!.style.backgroundColor = GAME_TOKEN_COLORS[earning.displayName] || '#444';
+                                const target = e.target as HTMLImageElement;
+                                target.onerror = null; // Prevent infinite loop
+                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // Transparent pixel
+                                target.style.visibility = 'hidden';
+                                target.parentElement!.style.backgroundColor = GAME_TOKEN_COLORS[earning.displayName] || '#444';
                             }}
                             className="coin-icon-img"
                         />
