@@ -352,13 +352,13 @@ function App() {
   useEffect(() => {
     // Skip auto-detect on initial load so cached league takes precedence
     if (isInitialLoadRef.current) {
-      if (userPower) {
+      if (userPower || fetchedUser) {
         isInitialLoadRef.current = false;
       }
       return;
     }
 
-    if (userPower && isAutoLeague) {
+    if ((userPower || fetchedUser) && isAutoLeague) {
       let powerForLeague = userPower;
 
       // If we are in 'username' mode and have fetched user data, that takes priority
@@ -400,6 +400,7 @@ function App() {
         }
       }
       // If we are in 'power' mode, or haven't fetched a user yet, we just use `userPower` (which is `powerForLeague` default)
+      if (!powerForLeague) return;
 
       // Use API leagues if available, otherwise default LEAGUES
       const detectedLeague = getLeagueByPower(powerForLeague, apiLeagues || undefined);
