@@ -438,15 +438,20 @@ function App() {
     let effectiveUserPower = userPower;
 
     // If we are in 'username' mode, we use the fetched user power
+    // current_Power includes ALL power sources (miners, bonus, racks, games, temp, freon)
+    // max_Power only includes league-qualifying power (miners + bonus + racks) and excludes freon, games, temp
     if (fetchMode === 'username' && fetchedUser) {
-      if (fetchedUser.userPowerResponseDto.max_Power) {
-        effectiveUserPower = autoScalePower(fetchedUser.userPowerResponseDto.max_Power * 1e9);
+      if (fetchedUser.userPowerResponseDto.current_Power) {
+        effectiveUserPower = autoScalePower(fetchedUser.userPowerResponseDto.current_Power * 1e9);
       } else {
+        // Fallback: manually compute total power from all components
         const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
+        const gamesRaw = (fetchedUser.userPowerResponseDto.games || 0) * 1e9;
         const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
+        const tempRaw = (fetchedUser.userPowerResponseDto.temp || 0) * 1e9;
         const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
         const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
-        effectiveUserPower = autoScalePower(minersRaw + racksRaw + bonusRaw);
+        effectiveUserPower = autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + bonusRaw);
       }
     }
 
