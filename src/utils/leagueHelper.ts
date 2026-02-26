@@ -14,6 +14,7 @@ const PAYOUT_SCALES_FALLBACK: Record<string, number> = {
     'SOL_SMALL': 1e9, // Config confirms 1e9
     'LTC_SMALL': 1e8, // Config confirms 1e8
     'DOGE_SMALL': 1e4, // Config confirms 1e4
+    'USDT_SMALL': 1e6, // Config confirms 1e6
 };
 
 /**

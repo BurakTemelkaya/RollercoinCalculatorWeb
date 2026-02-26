@@ -85,6 +85,9 @@ async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
     console.error('Failed to fetch prices:', error);
   }
 
+  // USDT is a stablecoin, hardcode $1 price
+  prices['USDT'] = 1;
+
   return prices;
 }
 
@@ -252,6 +255,7 @@ function App() {
     'MATIC': 596,
     'SOL': 596,
     'RST': 596,
+    'USDT': 550,
   });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -413,7 +417,22 @@ function App() {
   // Regenerate CoinData when league changes and we have raw API data
   useEffect(() => {
     if (rawApiData && rawApiData.length > 0) {
-      const matchingApiLeague = rawApiData.find(l => String(l.id) === String(league.id));
+      // Try matching by league.id first
+      let matchingApiLeague = rawApiData.find(l => String(l.id) === String(league.id));
+
+      // If no match and we have a fetched user, try matching by user's league_Id directly
+      if (!matchingApiLeague && fetchedUser?.userProfileResponseDto?.league_Id) {
+        const userLeagueId = fetchedUser.userProfileResponseDto.league_Id;
+        matchingApiLeague = rawApiData.find(l => String(l.id) === String(userLeagueId));
+        // Also update the league state to the correct API league
+        if (matchingApiLeague && apiLeagues) {
+          const correctLeague = apiLeagues.find(l => String(l.id) === String(userLeagueId));
+          if (correctLeague && correctLeague.id !== league.id) {
+            setLeague(correctLeague);
+          }
+        }
+      }
+
       if (matchingApiLeague) {
         const newCoins = convertApiLeagueToCoinData(matchingApiLeague);
         if (newCoins.length > 0) {
@@ -421,7 +440,7 @@ function App() {
         }
       }
     }
-  }, [league, rawApiData]);
+  }, [league, rawApiData, fetchedUser, apiLeagues]);
 
   // Update block rewards when league changes
   useEffect(() => {
