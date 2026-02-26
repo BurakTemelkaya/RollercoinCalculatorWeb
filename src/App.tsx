@@ -255,7 +255,7 @@ function App() {
     'MATIC': 596,
     'SOL': 596,
     'RST': 596,
-    'USDT': 550,
+    'USDT': 578,
   });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
