@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import trFlag from './assets/flags/tr.svg';
 import gbFlag from './assets/flags/gb.svg';
 // ... existing imports ...
@@ -255,7 +255,9 @@ function App() {
     'MATIC': 596,
     'SOL': 596,
     'RST': 596,
-    'USDT': 578,
+    'USDT': 596,
+    "XRP": 596,
+    "HMT": 596,
   });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -557,6 +559,25 @@ function App() {
     localStorage.setItem('rollercoin_web_block_durations', JSON.stringify(newDurations));
   };
 
+  // Compute the effective power to display in the header badge.
+  // In username fetch mode, power comes from fetchedUser, not from the userPower state.
+  const displayPower = useMemo<HashPower | null>(() => {
+    if (fetchMode === 'username' && fetchedUser) {
+      if (fetchedUser.userPowerResponseDto.current_Power) {
+        return autoScalePower(fetchedUser.userPowerResponseDto.current_Power * 1e9);
+      }
+      // Fallback: manually compute total power from all components
+      const minersRaw = (fetchedUser.userPowerResponseDto.miners || 0) * 1e9;
+      const gamesRaw = (fetchedUser.userPowerResponseDto.games || 0) * 1e9;
+      const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
+      const tempRaw = (fetchedUser.userPowerResponseDto.temp || 0) * 1e9;
+      const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+      const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
+      return autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + bonusRaw);
+    }
+    return userPower;
+  }, [fetchMode, fetchedUser, userPower]);
+
   return (
     <div className="app">
       <React.Suspense fallback={null}>
@@ -605,12 +626,23 @@ function App() {
                 <span className="lang-text">English</span>
               </button>
             </div>
-            {userPower && (
+            {displayPower && (
               <div className="user-power-badge">
                 <span className="power-label">{t('app.powerBadge')}:</span>
-                <span className="power-value">{formatHashPower(userPower)}</span>
+                <span className="power-value">{formatHashPower(displayPower)}</span>
               </div>
             )}
+            <a
+              href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-link"
+              title="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+            </a>
           </div>
         </div>
       </header>
@@ -681,6 +713,7 @@ function App() {
                   earnings={earnings}
                   prices={prices}
                   onOpenSettings={() => setIsSettingsOpen(true)}
+                  onShowNotification={showNotification}
                 />
               </div>
               <div className="tab-panel">

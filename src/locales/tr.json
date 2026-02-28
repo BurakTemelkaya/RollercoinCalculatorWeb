@@ -68,7 +68,10 @@
         },
         "best": "En İyi",
         "total": "TOPLAM",
-        "settingsTooltip": "Blok sürelerini (saniye) özelleştirin"
+        "settingsTooltip": "Blok sürelerini (saniye) özelleştirin",
+        "screenshotTooltip": "Tabloyu resim olarak kaydet",
+        "screenshotSuccess": "Ekran görüntüsü kaydedildi!",
+        "screenshotError": "Ekran görüntüsü alınamadı"
     },
     "withdraw": {
         "title": "Çekim Süresi Hesaplayıcı",

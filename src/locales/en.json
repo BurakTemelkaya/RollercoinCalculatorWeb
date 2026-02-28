@@ -68,7 +68,10 @@
         },
         "best": "Best",
         "total": "TOTAL",
-        "settingsTooltip": "Customize block durations (seconds)"
+        "settingsTooltip": "Customize block durations (seconds)",
+        "screenshotTooltip": "Save table as image",
+        "screenshotSuccess": "Screenshot saved!",
+        "screenshotError": "Failed to capture screenshot"
     },
     "withdraw": {
         "title": "Withdrawal Time Calculator",

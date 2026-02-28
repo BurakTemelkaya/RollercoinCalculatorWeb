@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import html2canvas from 'html2canvas';
 import { EarningsResult } from '../types';
 import { formatCryptoAmount, formatUSD } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
@@ -8,16 +9,18 @@ interface EarningsTableProps {
     earnings: EarningsResult[];
     prices: Record<string, number>;
     onOpenSettings: () => void;
+    onShowNotification?: (message: string, type: 'success' | 'error' | 'info') => void;
 }
-
-// ...
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
     earnings,
     prices,
-    onOpenSettings
+    onOpenSettings,
+    onShowNotification
 }) => {
     const { t } = useTranslation();
+    const tablesRef = useRef<HTMLDivElement>(null);
+    const [isCapturing, setIsCapturing] = useState(false);
 
     // Separate game tokens and crypto
     const gameTokens = earnings.filter(e => e.isGameToken);
@@ -35,6 +38,28 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         return prices[currency] || prices[currency.toUpperCase()] || 0;
     };
 
+    const handleScreenshot = async () => {
+        if (!tablesRef.current || isCapturing) return;
+        setIsCapturing(true);
+        try {
+            const canvas = await html2canvas(tablesRef.current, {
+                backgroundColor: '#0f0f23',
+                scale: 1.5,
+                useCORS: true,
+                logging: false,
+            });
+            const link = document.createElement('a');
+            link.download = `rollercoin-earnings-${new Date().toISOString().slice(0, 10)}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.85);
+            link.click();
+            onShowNotification?.(t('table.screenshotSuccess'), 'success');
+        } catch {
+            onShowNotification?.(t('table.screenshotError'), 'error');
+        } finally {
+            setIsCapturing(false);
+        }
+    };
+
     const renderRow = (earning: EarningsResult, isBest: boolean = false) => {
         const price = getPrice(earning.displayName);
 
@@ -43,12 +68,12 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 <td>
                     <div className="coin-cell">
                         <img
-                            src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']} // Fallback to RLT icon if missing
+                            src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']}
                             alt={`${earning.displayName} Coin Icon`}
                             onError={(e) => {
                                 const target = e.target as HTMLImageElement;
-                                target.onerror = null; // Prevent infinite loop
-                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // Transparent pixel
+                                target.onerror = null;
+                                target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
                                 target.style.visibility = 'hidden';
                                 target.parentElement!.style.backgroundColor = GAME_TOKEN_COLORS[earning.displayName] || '#444';
                             }}
@@ -63,19 +88,19 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.daily)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && (
+                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.daily * price)}</div>
                     )}
                 </td>
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.weekly)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && (
+                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.weekly * price)}</div>
                     )}
                 </td>
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.monthly)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && (
+                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.monthly * price)}</div>
                     )}
                 </td>
@@ -93,7 +118,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         );
     }
     return (
-        <div className="earnings-tables">
+        <div className="earnings-tables" ref={tablesRef}>
             {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
                 <div className="table-section">
@@ -104,16 +129,33 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             </svg>
                             {t('table.cryptoTitle')}
                         </h2>
-                        <button
-                            className="settings-icon-btn"
-                            onClick={onOpenSettings}
-                            title={t('table.settingsTooltip')}
-                        >
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+                        <div className="section-header-actions">
+                            <button
+                                className="settings-icon-btn screenshot-btn"
+                                onClick={handleScreenshot}
+                                disabled={isCapturing}
+                                title={t('table.screenshotTooltip')}
+                            >
+                                {isCapturing ? (
+                                    <span className="spinner small"></span>
+                                ) : (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                )}
+                            </button>
+                            <button
+                                className="settings-icon-btn"
+                                onClick={onOpenSettings}
+                                title={t('table.settingsTooltip')}
+                            >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div className="table-container">
                         <table className="earnings-table wide-table">

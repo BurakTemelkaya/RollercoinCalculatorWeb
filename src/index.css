@@ -830,6 +830,36 @@ a:hover {
   transform: rotate(45deg) scale(0.92);
 }
 
+.section-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.screenshot-btn:hover {
+  transform: scale(1.08);
+}
+
+.screenshot-btn:active {
+  transform: scale(0.94);
+}
+
+/* GitHub Link */
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.25s ease;
+  padding: 6px;
+  border-radius: var(--radius-md);
+}
+
+.github-link:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
 /* Power Input Row */
 .power-input-row {
   display: flex;
