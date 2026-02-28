@@ -1167,42 +1167,40 @@ a:hover {
 
   /* Earnings Table */
   .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: visible;
   }
 
   .earnings-table th,
   .earnings-table td {
-    padding: 10px 10px;
-    font-size: 12px;
-    white-space: nowrap;
+    padding: 8px 4px;
+    font-size: 10px;
   }
 
   .wide-table th,
   .wide-table td {
-    padding: 8px 8px;
-    font-size: 11px;
+    padding: 6px 3px;
+    font-size: 10px;
   }
 
   .coin-cell {
-    gap: 6px;
+    gap: 4px;
   }
 
   .coin-cell img {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
   .coin-symbol {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .earning-crypto {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .earning-usd {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .best-badge {
@@ -1237,6 +1235,9 @@ a:hover {
   .settings-icon-btn {
     width: 32px;
     height: 32px;
+  }
+
+  .section-header-actions {
     position: absolute;
     right: 14px;
   }
@@ -2288,7 +2289,9 @@ a:hover {
 
 /* Spinner Animation */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {

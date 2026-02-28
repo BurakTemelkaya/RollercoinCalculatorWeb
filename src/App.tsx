@@ -654,6 +654,7 @@ function App() {
           onDataParsed={handleDataParsed}
           currentCoins={coins}
           currentUserPower={userPower}
+          displayPower={displayPower}
           currentLeague={league}
           isAutoLeague={isAutoLeague}
           onLeagueChange={handleLeagueChange}

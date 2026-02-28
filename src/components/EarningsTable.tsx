@@ -42,12 +42,33 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         if (!tablesRef.current || isCapturing) return;
         setIsCapturing(true);
         try {
-            const canvas = await html2canvas(tablesRef.current, {
+            const el = tablesRef.current;
+
+            // Temporarily remove overflow constraints and expand to full table width
+            const containers = el.querySelectorAll<HTMLElement>('.table-container');
+            const origOverflows = Array.from(containers).map(c => c.style.overflow);
+            containers.forEach(c => { c.style.overflow = 'visible'; });
+
+            const origWidth = el.style.width;
+            const origMinWidth = el.style.minWidth;
+            const fullWidth = Math.max(el.scrollWidth, ...Array.from(containers).map(c => c.scrollWidth));
+            el.style.width = `${fullWidth}px`;
+            el.style.minWidth = `${fullWidth}px`;
+
+            const canvas = await html2canvas(el, {
                 backgroundColor: '#0f0f23',
                 scale: 1.5,
                 useCORS: true,
                 logging: false,
+                width: fullWidth,
+                windowWidth: fullWidth,
             });
+
+            // Restore original styles
+            el.style.width = origWidth;
+            el.style.minWidth = origMinWidth;
+            containers.forEach((c, i) => { c.style.overflow = origOverflows[i]; });
+
             const link = document.createElement('a');
             link.download = `rollercoin-earnings-${new Date().toISOString().slice(0, 10)}.jpg`;
             link.href = canvas.toDataURL('image/jpeg', 0.85);

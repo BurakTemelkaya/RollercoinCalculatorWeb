@@ -15,6 +15,7 @@ interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower, isManual?: boolean) => void;
     currentCoins: CoinData[];
     currentUserPower: HashPower | null;
+    displayPower?: HashPower | null;
     currentLeague: LeagueInfo;
     isAutoLeague: boolean;
     onLeagueChange: (newLeagueId: string) => void;
@@ -35,6 +36,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     onDataParsed,
     currentCoins,
     currentUserPower,
+    displayPower,
     currentLeague,
     isAutoLeague,
     onLeagueChange,
@@ -221,11 +223,11 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                 {!isExpanded && currentCoins.length > 0 && (
                     <div className="collapsed-summary">
-                        {currentUserPower && (
+                        {(displayPower || currentUserPower) && (
                             <div className="summary-chip power">
                                 <span className="chip-icon">⚡</span>
                                 <span className="chip-value">
-                                    {currentUserPower.value.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currentUserPower.unit}/s
+                                    {(displayPower || currentUserPower)!.value.toLocaleString(undefined, { maximumFractionDigits: 4 })} {(displayPower || currentUserPower)!.unit}/s
                                 </span>
                             </div>
                         )}
