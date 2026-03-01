@@ -139,7 +139,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         );
     }
     return (
-        <div className="earnings-tables" ref={tablesRef}>
+        <section className="earnings-tables" ref={tablesRef}>
             {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
                 <div className="table-section">
@@ -224,7 +224,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </div>
                 </div>
             )}
-        </div>
+        </section>
     );
 };
 

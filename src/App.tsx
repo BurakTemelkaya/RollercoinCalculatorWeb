@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
 import trFlag from './assets/flags/tr.svg';
 import gbFlag from './assets/flags/gb.svg';
+import appLogo from './assets/logo.png';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -603,10 +604,10 @@ function App() {
       {/* Header */}
       <header className="header">
         <div className="header-content">
+          <div className="header-logo">
+            <img src={appLogo} alt="Logo" width="80" height="80" className="app-main-logo" />
+          </div>
           <div className="header-title">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
             <h1>{t('app.title')}</h1>
           </div>
           <div className="header-right-group">

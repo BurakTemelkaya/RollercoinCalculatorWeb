@@ -214,7 +214,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const leaguesList = apiLeagues && apiLeagues.length > 0 ? apiLeagues : LEAGUES;
 
     return (
-        <div className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
+        <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
             <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
                 <div className="header-left">
                     <span className="section-icon">⚙️</span>
@@ -468,7 +468,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                     </div>
                 </div>
             </div>
-        </div >
+        </section >
     );
 };
 

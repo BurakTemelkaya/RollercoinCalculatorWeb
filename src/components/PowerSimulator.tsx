@@ -288,7 +288,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
     return (
-        <div className="power-simulator">
+        <section className="power-simulator">
             <div className="simulator-header">
                 <h2 className="section-title">
                     <span className="section-icon">⚡</span>
@@ -645,7 +645,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                     </div>
                 )}
             </div>
-        </div>
+        </section >
     );
 };
 
