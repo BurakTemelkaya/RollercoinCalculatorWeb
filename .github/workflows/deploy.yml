@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy config files
+        run: cp _config.yml dist/
+
       - name: upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

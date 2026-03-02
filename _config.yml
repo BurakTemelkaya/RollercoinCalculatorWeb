@@ -1,0 +1,5 @@
+include:
+  - public/sitemap.xml
+
+plugins:
+  - jekyll-sitemap
