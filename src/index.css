@@ -78,7 +78,7 @@ a:hover {
 
 .header-content {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
 }
@@ -122,6 +122,12 @@ a:hover {
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
 }
 
+@media (max-width: 1024px) {
+  .header-title h1 {
+    font-size: 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .header-content {
     grid-template-columns: auto auto;
@@ -156,26 +162,7 @@ a:hover {
 }
 
 
-.user-power-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-tertiary);
-  padding: 8px 16px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
-}
 
-.power-label {
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-.power-value {
-  color: var(--accent-primary);
-  font-weight: 600;
-  font-size: 14px;
-}
 
 /* Main Content */
 .main-content {
@@ -961,6 +948,8 @@ a:hover {
 
 .earning-cell {
   text-align: right;
+  height: 70px;
+  vertical-align: middle;
 }
 
 .earning-crypto {
@@ -1161,19 +1150,6 @@ a:hover {
   .lang-btn .flag-icon {
     width: 22px;
     height: 16px;
-  }
-
-  .user-power-badge {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  .power-label {
-    font-size: 11px;
-  }
-
-  .power-value {
-    font-size: 13px;
   }
 
   /* Main Tabs */
@@ -1762,6 +1738,8 @@ a:hover {
 /* Ensure parent cell centers content if needed, though text-align on child usually enough */
 .earning-cell {
   text-align: center;
+  height: 70px;
+  vertical-align: middle;
   /* Center everything in cell */
 }
 
@@ -1836,12 +1814,12 @@ a:hover {
 
 /* Language Switcher */
 .header-right-group {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
 }
 
 .lang-switcher {

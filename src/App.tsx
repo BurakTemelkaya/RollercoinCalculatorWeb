@@ -259,11 +259,13 @@ function App() {
     'USDT': 596,
     "XRP": 596,
     "HMT": 596,
+    "POL": 596,
+    "RLT": 596,
   });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '1.0.1';
+  const CURRENT_CACHE_VERSION = '1.0.2';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -627,12 +629,6 @@ function App() {
                 <span className="lang-text">English</span>
               </button>
             </div>
-            {displayPower && (
-              <div className="user-power-badge">
-                <span className="power-label">{t('app.powerBadge')}:</span>
-                <span className="power-value">{formatHashPower(displayPower)}</span>
-              </div>
-            )}
             <a
               href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb"
               target="_blank"

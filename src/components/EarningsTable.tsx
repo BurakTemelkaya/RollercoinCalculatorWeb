@@ -109,19 +109,19 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.daily)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
+                    {!earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.daily * price)}</div>
                     )}
                 </td>
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.weekly)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
+                    {!earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.weekly * price)}</div>
                     )}
                 </td>
                 <td className="earning-cell">
                     <div className="earning-crypto">{formatCryptoAmount(earning.earnings.monthly)} {earning.displayName}</div>
-                    {price > 0 && !earning.isGameToken && earning.displayName !== 'USDT' && (
+                    {!earning.isGameToken && earning.displayName !== 'USDT' && (
                         <div className="earning-usd">{formatUSD(earning.earnings.monthly * price)}</div>
                     )}
                 </td>
