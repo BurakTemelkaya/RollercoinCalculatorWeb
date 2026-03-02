@@ -8,7 +8,6 @@ import appLogo from './assets/logo.png';
 
 import { CoinData, HashPower, EarningsResult } from './types';
 import { calculateAllEarnings } from './utils/calculator';
-import { formatHashPower } from './utils/powerParser';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
 import { LEAGUES, LeagueInfo } from './data/leagues';
 import { ApiLeagueData } from './types/api';
