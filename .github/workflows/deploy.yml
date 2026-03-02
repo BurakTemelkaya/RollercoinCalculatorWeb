@@ -39,7 +39,7 @@ jobs:
         run: npm run build
 
       - name: Copy config files
-        run: cp _config.yml dist/
+        run: cp _config.yml dist/ && cp public/.nojekyll dist/
 
       - name: upload artifact
         uses: actions/upload-pages-artifact@v3
