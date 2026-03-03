@@ -71,6 +71,7 @@
         "settingsTooltip": "Blok sürelerini (saniye) özelleştirin",
         "screenshotTooltip": "Tabloyu resim olarak kaydet",
         "screenshotSuccess": "Ekran görüntüsü kaydedildi!",
+        "screenshotCopied": "Ekran görüntüsü panoya kopyalandı! Ctrl+V ile yapıştırın.",
         "screenshotError": "Ekran görüntüsü alınamadı"
     },
     "withdraw": {

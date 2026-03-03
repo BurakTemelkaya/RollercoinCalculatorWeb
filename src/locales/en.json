@@ -71,6 +71,7 @@
         "settingsTooltip": "Customize block durations (seconds)",
         "screenshotTooltip": "Save table as image",
         "screenshotSuccess": "Screenshot saved!",
+        "screenshotCopied": "Screenshot copied to clipboard! Paste with Ctrl+V.",
         "screenshotError": "Failed to capture screenshot"
     },
     "withdraw": {

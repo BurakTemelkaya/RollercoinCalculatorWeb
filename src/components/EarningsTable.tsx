@@ -69,10 +69,46 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             el.style.minWidth = origMinWidth;
             containers.forEach((c, i) => { c.style.overflow = origOverflows[i]; });
 
+            const fileName = `rollercoin-earnings-${new Date().toISOString().slice(0, 10)}.png`;
+
+            // Convert canvas to blob
+            const blob = await new Promise<Blob>((resolve, reject) => {
+                canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png');
+            });
+
+            // Mobile: use native share sheet if available
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (isMobile && navigator.share) {
+                const file = new File([blob], fileName, { type: 'image/png' });
+                try {
+                    await navigator.share({ files: [file] });
+                    onShowNotification?.(t('table.screenshotSuccess'), 'success');
+                    return;
+                } catch (e) {
+                    // User cancelled share or not supported, fall through to clipboard/download
+                    if (e instanceof Error && e.name === 'AbortError') return;
+                }
+            }
+
+            // Desktop: copy to clipboard for Ctrl+V
+            if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+                try {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                    ]);
+                    onShowNotification?.(t('table.screenshotCopied'), 'success');
+                    return;
+                } catch {
+                    // Clipboard write failed, fall through to download
+                }
+            }
+
+            // Fallback: download as file
             const link = document.createElement('a');
-            link.download = `rollercoin-earnings-${new Date().toISOString().slice(0, 10)}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.85);
+            link.download = fileName;
+            link.href = URL.createObjectURL(blob);
             link.click();
+            URL.revokeObjectURL(link.href);
             onShowNotification?.(t('table.screenshotSuccess'), 'success');
         } catch {
             onShowNotification?.(t('table.screenshotError'), 'error');
