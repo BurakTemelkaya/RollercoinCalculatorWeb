@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // GitHub Pages için base path ayarı
-  base: './',
+  base: '/RollercoinCalculatorWeb/',
   build: {
     target: "es2015",
     // Disable inlining of SVGs as base64 for production builds
