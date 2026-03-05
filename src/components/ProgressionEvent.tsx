@@ -451,7 +451,7 @@ export default function ProgressionEvent() {
                                                     {formatNumber(level.required_xp)}
                                                 </td>
                                                 <td className="pe-rewards-col">
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: 'fit-content', margin: '0 auto', textAlign: 'left' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '280px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
                                                         <div style={{ width: '96px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
                                                             {display?.imageUrl ? (
                                                                 <img src={display.imageUrl} alt={display.text} style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }} loading="lazy" />
@@ -463,7 +463,7 @@ export default function ProgressionEvent() {
                                                                 <span style={{ fontSize: '32px' }}>🎁</span>
                                                             )}
                                                         </div>
-                                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                                                             <span style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)' }}>{display?.text ?? '-'}</span>
                                                             <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{display?.subText ?? ''}</span>
                                                         </div>
