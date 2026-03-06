@@ -141,7 +141,7 @@
         "pointsUnit": "pts",
         "eventDifficulty": "Event Difficulty",
         "multiplier": "Multiplier",
-        "multiplierRate": "1x per 10 RLT",
+        "multiplierRate": "1x per 5 RLT",
         "multiplierDuration": "Multiplier Duration",
         "gameDifficulty": "Game Difficulty",
         "spend1Rlt": "Spend 1 RLT",

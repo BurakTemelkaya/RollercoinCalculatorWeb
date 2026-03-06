@@ -251,7 +251,7 @@ export default function ProgressionEvent() {
         const rows = [];
 
         for (let m = 1; m <= MAX_MULTIPLIER; m++) {
-            const rltToBuy = (m - 1) * 10;
+            const rltToBuy = (m - 1) * EVENT_CONSTANTS.MULTIPLIER_STEP_RLT;
             const xpPerBox = boxPrice * EVENT_CONSTANTS.XP_PER_RLT * m;
             const boxes = Math.ceil(max_xp / xpPerBox);
             const totalRltCost = rltToBuy + boxes * boxPrice;
