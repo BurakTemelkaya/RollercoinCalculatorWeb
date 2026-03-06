@@ -363,6 +363,16 @@ function App() {
     fetchPrices(allCryptos).then(setPrices).catch(console.error);
   };
 
+  // Synchronize 'league' state when 'apiLeagues' updates so latest block rewards are always used
+  useEffect(() => {
+    if (apiLeagues && apiLeagues.length > 0) {
+      const updatedLeague = apiLeagues.find(l => String(l.id) === String(league.id));
+      if (updatedLeague && updatedLeague !== league) {
+        setLeague(updatedLeague);
+      }
+    }
+  }, [apiLeagues, league.id, league]);
+
   // Auto-detect league when userPower or fetchMode changes
   useEffect(() => {
     // Skip auto-detect on initial load so cached league takes precedence
@@ -389,7 +399,7 @@ function App() {
           }
 
           if (foundLeague) {
-            if (foundLeague.id !== league.id) {
+            if (foundLeague.id !== league.id || foundLeague !== league) {
               setLeague(foundLeague);
             }
             return; // Skip power-based calculation
@@ -419,11 +429,11 @@ function App() {
 
       // Use API leagues if available, otherwise default LEAGUES
       const detectedLeague = getLeagueByPower(powerForLeague, apiLeagues || undefined);
-      if (detectedLeague.id !== league.id) {
+      if (detectedLeague.id !== league.id || detectedLeague !== league) {
         setLeague(detectedLeague);
       }
     }
-  }, [userPower, isAutoLeague, league.id, apiLeagues, fetchedUser, fetchMode]);
+  }, [userPower, isAutoLeague, league, apiLeagues, fetchedUser, fetchMode]);
 
   // Regenerate CoinData when league changes and we have raw API data
   useEffect(() => {
