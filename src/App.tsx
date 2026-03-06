@@ -692,7 +692,7 @@ function App() {
         ) : (
           <main className="main-content">
             {/* Event Page Link (Top) */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               <a href="#currentpe" className="pe-event-link" style={{ margin: 0 }}>
                 <span className="tab-icon">🎉</span>
                 {t('tabs.event')}
@@ -798,6 +798,13 @@ function App() {
             </div>
           </main>
         )}
+
+        {/* Mobile Ad Banner Bottom - Hidden on desktop */}
+        <div className="mobile-ad">
+          <iframe data-aa="2429578" src="//acceptable.a-ads.com/2429578/?size=Adaptive&background_color=1e2433&title_color=fffffe"
+            style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
+            title="Ad Mobile Bottom" />
+        </div>
 
         {/* Footer */}
         <footer className="footer">

@@ -124,7 +124,7 @@ body {
 /* Mobile Ad Banner - visible by default, hidden on desktop */
 .mobile-ad {
   width: 100%;
-  margin: 0 auto 16px auto;
+  margin: 8px auto 16px auto;
   position: relative;
   z-index: 5;
 }
@@ -151,16 +151,16 @@ a:hover {
 
 /* Header */
 .header {
-  padding: 24px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .header-content {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  position: relative;
 }
 
 .header-logo {
@@ -170,11 +170,12 @@ a:hover {
 }
 
 .header-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .header-title h1 {
@@ -190,10 +191,10 @@ a:hover {
 }
 
 .app-main-logo {
-  width: 160px !important;
-  height: 160px !important;
+  width: 48px !important;
+  height: 48px !important;
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
 }
 
@@ -210,34 +211,35 @@ a:hover {
 
 @media (max-width: 768px) {
   .header-content {
-    grid-template-columns: auto auto;
-    justify-content: center;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 6px;
   }
 
-  .header-logo {
-    justify-content: center;
+  .header {
+    padding: 8px 0;
+    margin-bottom: 8px;
   }
 
   .header-title {
-    white-space: normal;
+    position: static;
+    transform: none;
+    flex: 1;
+    min-width: 0;
   }
 
   .header-title h1 {
-    font-size: 24px;
-    white-space: normal;
-    text-align: left;
-  }
-
-  .header-right-group {
-    grid-column: 1 / -1;
-    justify-content: center;
-    margin-top: 8px;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   .app-main-logo {
-    width: 64px !important;
-    height: 64px !important;
+    width: 75px !important;
+    height: 75px !important;
+  }
+
+  .main-content {
+    gap: 16px;
+    padding-bottom: 20px;
   }
 }
 
@@ -887,8 +889,8 @@ a:hover {
 }
 
 .pe-event-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  transform: scale(1.03);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
   color: white;
 }
 
@@ -1234,7 +1236,7 @@ a:hover {
   }
 
   .header-content {
-    gap: 12px;
+    gap: 6px;
   }
 
   .header-title h1 {
@@ -1247,10 +1249,9 @@ a:hover {
   }
 
   .header-right-group {
-    gap: 8px;
-    flex-wrap: wrap;
-    width: 100%;
-    justify-content: space-between;
+    gap: 6px;
+    flex-wrap: nowrap;
+    width: auto;
   }
 
   .lang-switcher {
