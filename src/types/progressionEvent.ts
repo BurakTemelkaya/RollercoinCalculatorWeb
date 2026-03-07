@@ -10,6 +10,8 @@ export interface ProgressionEventResponse {
   name: string;
   endDate: string;
   data: string; // JSON string containing ProgressionEventData
+  multiplierData?: string; // JSON string containing MultiplierData[]
+  taskData?: string; // JSON string containing TaskData[]
 }
 
 // Parsed inner data
@@ -17,6 +19,22 @@ export interface ProgressionEventData {
   event: ProgressionEventInfo;
   rewards: ProgressionReward[];
   levels_config: LevelConfig[];
+}
+
+export interface MultiplierData {
+  id: string;
+  multiplier: number;
+  amount: number;
+  title: LocalizedText;
+}
+
+export interface TaskData {
+  id: string;
+  amount: number;
+  title: LocalizedText;
+  type: string;
+  xp_reward: number;
+  xp_type: string;
 }
 
 export interface ProgressionEventInfo {

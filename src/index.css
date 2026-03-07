@@ -820,6 +820,11 @@ a:hover {
   max-width: 780px;
 }
 
+.main-tabs.main-tabs-2 {
+  --tab-count: 2;
+  max-width: 400px;
+}
+
 .main-tabs.main-tabs-1 {
   --tab-count: 1;
   max-width: 260px;

@@ -243,6 +243,31 @@ export default function ProgressionEvent() {
         return { totalMinerPower, totalBonus, tempPower, seasonExp, rstAmount };
     }, [eventData]);
 
+    const dynamicConstants = useMemo(() => {
+        const base: Record<string, number> = { ...EVENT_CONSTANTS };
+        if (!eventData) return base;
+
+        if (eventData.taskData) {
+            const gameLevel = eventData.taskData.find((t: any) => t.type === 'game_level');
+            if (gameLevel) base.GAME_DIFFICULTY = gameLevel.xp_reward;
+
+            const spendRlt = eventData.taskData.find((t: any) => t.type === 'spend_rlt');
+            if (spendRlt) base.XP_PER_RLT = spendRlt.xp_reward;
+
+            const marketplace = eventData.taskData.find((t: any) => t.type === 'marketplace');
+            if (marketplace) base.MARKETPLACE_RATE = marketplace.xp_reward;
+        }
+
+        if (eventData.multiplierData && eventData.multiplierData.length > 0) {
+            const mData = eventData.multiplierData[0];
+            if (mData.multiplier && mData.amount) {
+                base.MULTIPLIER_STEP_RLT = (100 / mData.multiplier) * mData.amount;
+            }
+        }
+
+        return base;
+    }, [eventData]);
+
     // Calculate multiplier table data
     const multiplierData = useMemo(() => {
         if (!eventData) return [];
@@ -251,12 +276,12 @@ export default function ProgressionEvent() {
         const rows = [];
 
         for (let m = 1; m <= MAX_MULTIPLIER; m++) {
-            const rltToBuy = (m - 1) * EVENT_CONSTANTS.MULTIPLIER_STEP_RLT;
-            const xpPerBox = boxPrice * EVENT_CONSTANTS.XP_PER_RLT * m;
+            const rltToBuy = (m - 1) * dynamicConstants.MULTIPLIER_STEP_RLT;
+            const xpPerBox = boxPrice * dynamicConstants.XP_PER_RLT * m;
             const boxes = Math.ceil(max_xp / xpPerBox);
             const totalRltCost = rltToBuy + boxes * boxPrice;
-            const marketTrade = Math.ceil(max_xp / (EVENT_CONSTANTS.MARKETPLACE_RATE * m));
-            const fee = Math.ceil(marketTrade * EVENT_CONSTANTS.FEE_RATE);
+            const marketTrade = Math.ceil(max_xp / (dynamicConstants.MARKETPLACE_RATE * m));
+            const fee = Math.ceil(marketTrade * dynamicConstants.FEE_RATE);
             const discountPrice = rltToBuy * rltPrice * (1 - discount / 100);
 
             rows.push({
@@ -271,7 +296,7 @@ export default function ProgressionEvent() {
         }
 
         return rows;
-    }, [eventData, boxPrice, discount, rltPrice]);
+    }, [eventData, boxPrice, discount, rltPrice, dynamicConstants]);
 
     // Filtered data for display
     const filteredData = useMemo(() => {
@@ -352,10 +377,19 @@ export default function ProgressionEvent() {
         <div className="pe-container">
             {/* Event Header */}
             <div className="pe-header">
-                <div className="pe-header-time">
-                    {t('event.leftTime')}: <strong>{timeLeft}</strong>
+                <div className="pe-header-actions pe-header-left">
+                    <a href="#" className="pe-header-back-btn" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>
+                        {t('event.backToCalc')}
+                    </a>
                 </div>
+                
                 <h2 className="pe-title">{event.title.en}</h2>
+                
+                <div className="pe-header-actions pe-header-right">
+                    <div className="pe-header-time">
+                        {t('event.leftTime')}: <strong>{timeLeft}</strong>
+                    </div>
+                </div>
             </div>
 
             <div className="pe-layout">
@@ -379,11 +413,11 @@ export default function ProgressionEvent() {
                             </div>
                             <div className="pe-info-row">
                                 <span>{t('event.spend1Rlt')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.XP_PER_RLT}</span>
+                                <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
                             </div>
                             <div className="pe-info-row">
                                 <span>{t('event.marketplace')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.MARKETPLACE_RATE}</span>
+                                <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
                             </div>
                         </div>
                     </div>
@@ -421,26 +455,36 @@ export default function ProgressionEvent() {
                 {/* Main Content */}
                 <div className="pe-main">
                     {/* Sub-tabs */}
-                    <div className="pe-tabs">
+                    <div className="main-tabs main-tabs-2" style={{ marginBottom: '16px' }}>
+                        <div
+                            className="main-tabs-bg"
+                            style={{ transform: activeTab === 'rewards' ? 'translateX(0)' : 'translateX(calc(100% + var(--tab-gap)))' }}
+                        />
                         <button
-                            className={`pe-tab ${activeTab === 'rewards' ? 'active' : ''}`}
+                            className={`main-tab ${activeTab === 'rewards' ? 'active' : ''}`}
                             onClick={() => setActiveTab('rewards')}
                         >
                             {t('event.rewardsTab')}
                         </button>
                         <button
-                            className={`pe-tab ${activeTab === 'multiplier' ? 'active' : ''}`}
+                            className={`main-tab ${activeTab === 'multiplier' ? 'active' : ''}`}
                             onClick={() => setActiveTab('multiplier')}
                         >
                             {t('event.multiplierTab')}
                         </button>
                     </div>
 
-                    {/* Rewards Table */}
-                    {activeTab === 'rewards' && (
-                        <div className="pe-table-container">
-                            <table className="pe-table">
-                                <thead>
+                    {/* Tab Slider Content */}
+                    <div className="tab-slider-viewport" style={{ marginTop: '4px' }}>
+                        <div 
+                            className="tab-slider-track" 
+                            style={{ transform: activeTab === 'rewards' ? 'translateX(0)' : 'translateX(-100%)' }}
+                        >
+                            {/* Rewards Table */}
+                            <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}`}>
+                                <div className="pe-table-container">
+                                    <table className="pe-table">
+                                        <thead>
                                     <tr>
                                         <th>{t('event.headers.lvl')}</th>
                                         <th>{t('event.headers.total')}</th>
@@ -499,14 +543,14 @@ export default function ProgressionEvent() {
                                         );
                                     })}
                                 </tbody>
-                            </table>
-                        </div>
-                    )}
+                                    </table>
+                                </div>
+                            </div>
 
-                    {/* Multiplier Section */}
-                    {activeTab === 'multiplier' && (
-                        <>
-                            {/* Controls Bar */}
+                            {/* Multiplier Section */}
+                            <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}`}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    {/* Controls Bar */}
                             <div className="pe-controls-bar">
                                 <div className="pe-control-group pe-filter-group">
                                     <label className="pe-control-label">{t('event.filter')}</label>
@@ -652,11 +696,13 @@ export default function ProgressionEvent() {
                                         ))}
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
-                        </>
-                    )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
     );
 }

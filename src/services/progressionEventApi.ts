@@ -5,13 +5,15 @@
  */
 
 import { buildApiUrl } from '../config/api';
-import type { ProgressionEventResponse, ProgressionEventData } from '../types/progressionEvent';
+import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData } from '../types/progressionEvent';
 
 export interface ParsedProgressionEvent {
     id: string;
     name: string;
     endDate: string;
     data: ProgressionEventData;
+    multiplierData?: MultiplierData[];
+    taskData?: TaskData[];
 }
 
 /**
@@ -30,11 +32,26 @@ export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
 
     // Parse the nested JSON data string
     const data: ProgressionEventData = JSON.parse(raw.data);
+    let multiplierData: MultiplierData[] | undefined;
+    let taskData: TaskData[] | undefined;
+
+    try {
+        if (raw.multiplierData) {
+            multiplierData = JSON.parse(raw.multiplierData);
+        }
+        if (raw.taskData) {
+            taskData = JSON.parse(raw.taskData);
+        }
+    } catch (e) {
+        console.error("Error parsing dynamic progression event data:", e);
+    }
 
     return {
         id: raw.id,
         name: raw.name,
         endDate: raw.endDate,
         data,
+        multiplierData,
+        taskData,
     };
 }
