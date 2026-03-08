@@ -12,7 +12,7 @@ import { calculateAllEarnings } from './utils/calculator';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
 import { LEAGUES, LeagueInfo } from './data/leagues';
 import { ApiLeagueData } from './types/api';
-import { convertApiLeagueToCoinData, getLeaguesFromApi, fetchLeaguesFromApi } from './services/leagueApi';
+import { convertApiLeagueToCoinData } from './services/leagueApi';
 import { fetchUserFromApi } from './services/userApi';
 import { autoScalePower } from './utils/powerParser';
 import { COIN_ICONS } from './utils/constants';
@@ -165,36 +165,6 @@ function CalculatorArea() {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
-  /** 
-   * NEW logic to fetch API leagues correctly on mount
-   * This ensures the block reward calculation is correct from the start
-   */
-  const fetchApiData = async () => {
-    try {
-      const rawLeagues = await fetchLeaguesFromApi();
-      const processedLeagues = await getLeaguesFromApi();
-
-      setApiLeagues(processedLeagues);
-      setRawApiData(rawLeagues);
-
-      // Cache the results
-      localStorage.setItem(STORAGE_KEYS.API_LEAGUES, JSON.stringify(processedLeagues));
-      localStorage.setItem('rollercoin_web_raw_api_data', JSON.stringify(rawLeagues));
-
-      // Initial sync: set current league to the one from API if found
-      const currentLeagueId = localStorage.getItem(STORAGE_KEYS.LEAGUE_ID) || LEAGUES[0].id;
-      const foundLeague = processedLeagues.find(l => String(l.id) === String(currentLeagueId));
-      if (foundLeague) {
-        setLeague(foundLeague);
-      }
-    } catch (error) {
-      console.error('Failed to fetch API leagues:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchApiData();
-  }, []);
 
   const currentUrl = `https://buraktemelkaya.github.io/RollercoinCalculatorWeb/`;
 
@@ -633,6 +603,12 @@ function CalculatorArea() {
     // Save to localStorage
     localStorage.setItem(STORAGE_KEYS.API_LEAGUES, JSON.stringify(leagues));
     localStorage.setItem('rollercoin_web_raw_api_data', JSON.stringify(rawData));
+
+    // Optional sync: update current league to latest API data if it's the same ID
+    const foundLeague = leagues.find(l => String(l.id) === String(league.id));
+    if (foundLeague && foundLeague !== league) {
+      setLeague(foundLeague);
+    }
   };
 
   // Sync League Logic Merged into main Auto-Detect Effect above.
