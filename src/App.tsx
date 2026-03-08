@@ -735,9 +735,6 @@ function CalculatorArea() {
         {/* Main Content */}
         {showEventPage ? (
           <main className="main-content">
-            <a href="#" className="pe-back-btn" onClick={(e) => { e.preventDefault(); window.location.hash = ''; }}>
-              {t('event.backToCalc')}
-            </a>
             <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
               <ProgressionEvent />
             </React.Suspense>
