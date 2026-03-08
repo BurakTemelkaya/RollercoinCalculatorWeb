@@ -792,7 +792,6 @@ a:hover {
   font-size: 15px;
 }
 
-/* Main Tabs */
 .main-tabs {
   --tab-gap: 12px;
   --tab-padding: 8px;
@@ -814,6 +813,11 @@ a:hover {
 .main-tabs.main-tabs-4 {
   --tab-count: 4;
   max-width: 780px;
+}
+
+.main-tabs.main-tabs-2 {
+  --tab-count: 2;
+  max-width: 400px;
 }
 
 .main-tabs.main-tabs-1 {

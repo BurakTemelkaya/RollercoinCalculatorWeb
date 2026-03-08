@@ -464,6 +464,10 @@ export default function ProgressionEvent() {
                 <div className="pe-main">
                     {/* Sub-tabs */}
                     <div className="main-tabs main-tabs-2" style={{ marginBottom: '16px' }}>
+                        <div
+                            className="main-tabs-bg"
+                            style={{ transform: `translateX(calc(${activeTab === 'rewards' ? 0 : 1} * (100% + var(--tab-gap))))` }}
+                        />
                         <button
                             className={`main-tab ${activeTab === 'rewards' ? 'active' : ''}`}
                             onClick={() => setActiveTab('rewards')}
