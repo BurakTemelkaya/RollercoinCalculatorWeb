@@ -27,8 +27,9 @@ const PrivacyTR: React.FC = () => (
       telefon numaranız veya benzeri herhangi bir kişisel tanımlayıcı bilginizi istemiyoruz ve saklamıyoruz.
     </p>
     <p>
-      Hesaplama aracına girdiğiniz veriler (hash gücü, lig bilgisi vb.) <strong>yalnızca tarayıcınızda
-      işlenir</strong>; hiçbir sunucuya veya veritabanına gönderilmez ya da kaydedilmez.
+      API modu kullanıldığında girdiğiniz kullanıcı adı veya hash gücü, hesaplama amacıyla sunucuya
+      gönderilebilir; ancak bu veriler <strong>hiçbir veritabanında veya kalıcı depolama alanında
+      saklanmaz</strong>.
     </p>
 
     <h2>2. Otomatik Olarak Toplanan Veriler</h2>
@@ -125,11 +126,15 @@ const PrivacyTR: React.FC = () => (
 
     <h2>10. İletişim</h2>
     <p>
-      Bu gizlilik politikasıyla ilgili sorularınız için{' '}
-      <a href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb" target="_blank" rel="noopener noreferrer">
-        GitHub deposu
+      Bu proje;{' '}
+      <a href="https://buraktemelkaya.com" target="_blank" rel="noopener noreferrer">
+        Burak Temelkaya
       </a>{' '}
-      üzerinden ulaşabilirsiniz.
+      tarafından sunulmuştur. Projeye katkıda bulunmak, hata bildirmek veya öneride bulunmak için{' '}
+      <a href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb" target="_blank" rel="noopener noreferrer">
+        GitHub sayfasını
+      </a>{' '}
+      ziyaret edebilirsiniz.
     </p>
   </article>
 );
@@ -154,9 +159,9 @@ const PrivacyEN: React.FC = () => (
       name, email address, phone number, or any similar personal identifier.
     </p>
     <p>
-      Data entered into the calculator (hash power, league info, etc.) is processed{' '}
-      <strong>entirely within your browser</strong> — it is never sent to or stored on any server or
-      database.
+      When using API mode, your username or hash power may be sent to the server for calculation
+      purposes; however, this data is <strong>never stored in any database or persistent
+      storage</strong>.
     </p>
 
     <h2>2. Automatically Collected Data</h2>
@@ -248,9 +253,13 @@ const PrivacyEN: React.FC = () => (
 
     <h2>10. Contact</h2>
     <p>
-      For questions about this privacy policy, you can reach us through our{' '}
+      This project is presented by{' '}
+      <a href="https://buraktemelkaya.com" target="_blank" rel="noopener noreferrer">
+        Burak Temelkaya
+      </a>.
+      {' '}To contribute, report issues, or suggest features, visit the{' '}
       <a href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb" target="_blank" rel="noopener noreferrer">
-        GitHub repository
+        GitHub page
       </a>.
     </p>
   </article>

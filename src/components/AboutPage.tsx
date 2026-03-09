@@ -28,8 +28,7 @@ const AboutTR: React.FC = () => (
 
     <h2>Geliştirici Hakkında</h2>
     <p>
-      Bu proje; Yönetim Bilişim Sistemleri öğrencisi ve yazılım geliştirici{' '}
-      <strong>Burak Temelkaya</strong> tarafından oluşturulmuş ve açık kaynak olarak{' '}
+      Bu proje <strong>Burak Temelkaya</strong> tarafından oluşturulmuş ve açık kaynak olarak{' '}
       <a href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb" target="_blank" rel="noopener noreferrer">
         GitHub üzerinde
       </a>{' '}
@@ -77,8 +76,7 @@ const AboutEN: React.FC = () => (
 
     <h2>About the Developer</h2>
     <p>
-      This project was created by <strong>Burak Temelkaya</strong>, a Management Information Systems
-      student and software developer. The project is open source and available on{' '}
+      This project was created by <strong>Burak Temelkaya</strong>. The project is open source and available on{' '}
       <a href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb" target="_blank" rel="noopener noreferrer">
         GitHub
       </a>. Feel free to contribute, report issues, or suggest features by visiting the GitHub page.

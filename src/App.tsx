@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import trFlag from './assets/flags/tr.svg';
 import gbFlag from './assets/flags/gb.svg';
 import appLogo from './assets/logo.png';
-import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, Link } from 'react-router-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -868,9 +868,9 @@ function CalculatorArea() {
             </a>
           </p>
           <p className="footer-note">
-            <a href={`/${i18n.language}/about`}>{i18n.language === 'tr' ? 'Hakkımızda' : 'About Us'}</a>
+            <Link to={`/${lang}/about`}>{lang === 'tr' ? 'Hakkımızda' : 'About Us'}</Link>
             {' · '}
-            <a href={`/${i18n.language}/privacy`}>{i18n.language === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</a>
+            <Link to={`/${lang}/privacy`}>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</Link>
           </p>
         </footer>
       </div>
