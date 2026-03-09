@@ -43,7 +43,9 @@ const STORAGE_KEYS = {
   API_LEAGUES: 'rollercoin_web_api_leagues',
 };
 
-// Fetch prices from Binance API
+const PRICES_CACHE_KEY = 'rollercoin_web_prices_cache';
+
+// Fetch prices from Binance API - only fetches the specific pairs needed
 async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
 
@@ -57,18 +59,25 @@ async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
     'LTC': ['LTCUSDT'],
     'XRP': ['XRPUSDT'],
     'TRX': ['TRXUSDT'],
-    'POL': ['POLUSDT', 'MATICUSDT'], // Try POL first
+    'POL': ['POLUSDT', 'MATICUSDT'],
     'MATIC': ['POLUSDT', 'MATICUSDT'],
     'ALGO': ['ALGOUSDT'],
   };
 
+  // Build deduplicated list of only the Binance pairs we actually need
+  const neededPairs = new Set<string>();
+  for (const symbol of symbols) {
+    const candidates = symbolMap[symbol.toUpperCase()];
+    if (candidates) candidates.forEach(c => neededPairs.add(c));
+  }
+
   try {
-    // Fetch all prices at once
-    const response = await fetch('https://api.binance.com/api/v3/ticker/price');
+    // Fetch only the specific pairs needed (~1KB) instead of all ~2000 pairs (~500KB)
+    const encoded = encodeURIComponent(JSON.stringify([...neededPairs]));
+    const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${encoded}`);
     const data = await response.json();
 
-    // Create map for faster lookup
-    const priceMap = new Map();
+    const priceMap = new Map<string, number>();
     if (Array.isArray(data)) {
       data.forEach((item: { symbol: string; price: string }) => {
         priceMap.set(item.symbol, parseFloat(item.price));
@@ -81,18 +90,32 @@ async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
         for (const candidate of candidates) {
           if (priceMap.has(candidate)) {
             prices[symbol.toUpperCase()] = priceMap.get(candidate) as number;
-            break; // Found price, stop checking candidates
+            break;
           }
         }
       }
     }
+
+    // Cache successful result in localStorage
+    prices['USDT'] = 1;
+    localStorage.setItem(PRICES_CACHE_KEY, JSON.stringify({ prices, ts: Date.now() }));
+    return prices;
   } catch (error) {
     console.error('Failed to fetch prices:', error);
+    // Use cached prices as fallback only if they are less than 10 minutes old
+    try {
+      const cached = localStorage.getItem(PRICES_CACHE_KEY);
+      if (cached) {
+        const { prices: cachedPrices, ts } = JSON.parse(cached);
+        if (Date.now() - ts < 10 * 60 * 1000) {
+          return cachedPrices;
+        }
+      }
+    } catch (_) { /* ignore */ }
   }
 
   // USDT is a stablecoin, hardcode $1 price
   prices['USDT'] = 1;
-
   return prices;
 }
 
