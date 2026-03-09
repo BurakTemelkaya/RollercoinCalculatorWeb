@@ -46,10 +46,16 @@ export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
         console.error("Error parsing dynamic progression event data:", e);
     }
 
+    // Ensure endDate is treated as UTC. The API returns dates without timezone info
+    // (e.g. "2026-03-09T15:00:00"), which JavaScript would parse as local time instead of UTC.
+    const endDate = raw.endDate && !raw.endDate.endsWith('Z') && !raw.endDate.includes('+')
+        ? raw.endDate + 'Z'
+        : raw.endDate;
+
     return {
         id: raw.id,
         name: raw.name,
-        endDate: raw.endDate,
+        endDate,
         data,
         multiplierData,
         taskData,
