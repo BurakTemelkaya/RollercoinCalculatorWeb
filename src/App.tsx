@@ -168,7 +168,7 @@ function CalculatorArea() {
   }, [i18n.language]);
 
 
-  const currentUrl = `https://buraktemelkaya.github.io/RollercoinCalculatorWeb/`;
+  const currentUrl = `https://rollercoincalculator.app/`;
 
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
