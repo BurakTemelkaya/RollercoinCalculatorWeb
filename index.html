@@ -84,6 +84,22 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script>
+    // Service Worker: forces fresh index.html on navigation, auto-reloads on new deploy
+    if ('serviceWorker' in navigator && navigator.userAgent.indexOf('ReactSnap') === -1) {
+      navigator.serviceWorker.register('/sw.js').then(function (reg) {
+        reg.addEventListener('updatefound', function () {
+          var newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function () {
+            // Only reload if there was a previous SW (i.e. this is an update, not first install)
+            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+              window.location.reload();
+            }
+          });
+        });
+      });
+    }
+  </script>
 </body>
 
 </html>

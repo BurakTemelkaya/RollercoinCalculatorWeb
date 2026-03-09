@@ -315,7 +315,7 @@ function CalculatorArea() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '1.0.2';
+  const CURRENT_CACHE_VERSION = '1.0.3';
 
   // Load from localStorage on mount
   useEffect(() => {

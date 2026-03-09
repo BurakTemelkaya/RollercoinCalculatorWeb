@@ -13,6 +13,8 @@
   "reactSnap": {
     "source": "dist",
     "publicPath": "/",
+    "include": ["/", "/en", "/tr", "/en/about", "/en/privacy", "/tr/about", "/tr/privacy"],
+    "exclude": ["/404.html"],
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox"
