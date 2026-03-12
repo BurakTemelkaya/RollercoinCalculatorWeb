@@ -15,6 +15,7 @@ export interface UserPowerResponseDto {
     temp: number;
     racks: number;
     bonus: number;
+    bonus_percent?: number;
     freon?: number;
 }
 

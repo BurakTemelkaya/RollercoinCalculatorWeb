@@ -109,18 +109,18 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const minersRawGh = fetchedUser.userPowerResponseDto.miners || 0;
             const gamesRawGh = fetchedUser.userPowerResponseDto.games || 0;
 
-            const baseForBonusGh = minersRawGh + gamesRawGh; // Fix: Base for Bonus includes Miners + Games.
-
-            const freonRawGhForBonus = fetchedUser.userPowerResponseDto.freon || 0;
-            // The API 'bonus' field bundles the 'freon' power within it.
-            // We must subtract it so we don't inflate the Bonus %.
-            const bonusPowerRawGh = Math.max(0, (fetchedUser.userPowerResponseDto.bonus || 0) - freonRawGhForBonus);
+            const baseForBonusGh = minersRawGh + gamesRawGh; 
 
             let calculatedBonus = 0;
-            if (baseForBonusGh > 0) {
+            if (fetchedUser.userPowerResponseDto.bonus_percent !== undefined) {
+                // If API provides bonus_percent directly (value like 97483 for 974.83%)
+                calculatedBonus = fetchedUser.userPowerResponseDto.bonus_percent / 100;
+            } else if (baseForBonusGh > 0) {
+                // The true bonus is applied to (Miners + Games)
+                const bonusPowerRawGh = fetchedUser.userPowerResponseDto.bonus || 0;
                 calculatedBonus = (bonusPowerRawGh / baseForBonusGh) * 100;
             }
-            setStatBonus(calculatedBonus.toFixed(2));
+            setStatBonus(calculatedBonus.toFixed(4));
 
             // User requested that inputs be treated as Raw Miner Power.
             // So we populate the input with the Base (Raw) value if fetching.
@@ -206,29 +206,33 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
 
         const tempVal = parseFloat(statTempPower) || 0;
         const tempH = toBaseUnit({ value: tempVal, unit: statTempUnit });
-
         const freonVal = parseFloat(statFreonPower) || 0;
         const freonH = toBaseUnit({ value: freonVal, unit: statFreonUnit });
 
         // === Official Rollercoin Formula (from FAQ & Blog) ===
-        // Total Power = (Games + Miners) * (1 + CollectionBonus%) + RackBonus + TempPower
+        // Total Power = Miners + Games + RackBonus + TempPower + CollectionBonus
         //
         // Collection Bonus applies to: ✅ Miners, ✅ Games
         // Collection Bonus does NOT apply to: ❌ Rack Bonus, ❌ Temp Power
         //
         // === League Determination ===
-        // League-qualifying power (affects league): Miners * (1 + Bonus%) + RackBonus
+        // League-qualifying power (affects league): Miners + RackBonus + (Miners * Bonus%) - Freon
         // Non-league power (does NOT affect league): Games, Temp Power
         // Games & Temp power inflate your total but don't help you advance leagues.
 
-        // --- Current State ---
-        // League Power = Miners * (1 + Bonus%) + Racks
-        const currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH;
+        // --- Current State Base ---
+        // Fallback formula when typing manually:
+        let currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH - freonH;
 
-        // Total Power = (Games + Miners) * (1 + Bonus%) + Racks + Temp + Freon
         const bonusBase = currentMinerBaseH + gamesH;
-        const currentBoostedPowerH = bonusBase * (1 + currentBonusVal / 100);
-        const currentTotalPowerH = currentBoostedPowerH + rackH + tempH + freonH;
+        let currentTotalPowerH = (bonusBase * (1 + currentBonusVal / 100)) + rackH + tempH;
+
+        // If we fetched the exact API values, use them directly to guarantee 100% precision!
+        // (API contains unlisted inventory power & backend rounding offsets)
+        if (fetchMode === 'username' && fetchedUser) {
+            currentLeaguePowerH = (fetchedUser.userPowerResponseDto.max_Power || 0) * 1e9;
+            currentTotalPowerH = (fetchedUser.userPowerResponseDto.current_Power || 0) * 1e9;
+        }
 
         let addedMinersBaseH = 0;
         let addedMinersBonusVal = 0;
@@ -246,17 +250,17 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const totalAddedBaseH = addedMinersBaseH + previewMinerH;
         const totalAddedBonusVal = addedMinersBonusVal + previewBonusVal;
 
-        // --- New State ---
+        // --- New State (Calculated via Delta) ---
         const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
-        const newAllMinersH = currentMinerBaseH + totalAddedBaseH;
+        
+        // Exact Delta Formula to preserve baseline offsets:
+        // Delta = New Formula - Old Formula
+        const deltaLeaguePowerH = ((currentMinerBaseH + totalAddedBaseH) * (1 + newTotalBonusPercent / 100)) - (currentMinerBaseH * (1 + currentBonusVal / 100));
+        const newLeaguePowerH = currentLeaguePowerH + deltaLeaguePowerH;
 
-        // New League Power = (AllMiners) * (1 + NewBonus%) + Racks
-        const newLeaguePowerH = newAllMinersH * (1 + newTotalBonusPercent / 100) + rackH;
-
-        // New Total Power = (Games + AllMiners) * (1 + NewBonus%) + Racks + Temp + Freon
-        const newBonusBaseH = newAllMinersH + gamesH;
-        const newBoostedPowerH = newBonusBaseH * (1 + (newTotalBonusPercent / 100));
-        const newTotalPowerH = newBoostedPowerH + rackH + tempH + freonH;
+        const newBonusBaseH = currentMinerBaseH + totalAddedBaseH + gamesH;
+        const deltaTotalPowerH = (newBonusBaseH * (1 + newTotalBonusPercent / 100)) - (bonusBase * (1 + currentBonusVal / 100));
+        const newTotalPowerH = currentTotalPowerH + deltaTotalPowerH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;
