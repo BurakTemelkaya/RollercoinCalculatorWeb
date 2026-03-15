@@ -81,6 +81,14 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         }
     };
 
+    const isDefaultColumnSet =
+        visibleColumns.size === 3 &&
+        visibleColumns.has('daily') &&
+        visibleColumns.has('weekly') &&
+        visibleColumns.has('monthly');
+
+    const tableContainerClassName = `table-container${isDefaultColumnSet ? ' fit-default-columns' : ''}`;
+
     // Calculate custom period earnings
     const calculateCustomEarnings = (earning: EarningsResult): number => {
         const periodInHours = getCustomPeriodInHours();
@@ -95,14 +103,24 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         if (coinName === 'BTC' && amount > 0) {
             const satoshi = amount * 100000000;
             const formattedSat = satoshi.toLocaleString('en-US', { maximumFractionDigits: 0 });
-            const formattedBTC = formatCryptoAmount(amount);
             return (
-                <span className="btc-satoshi-wrapper" title={`${formattedBTC} BTC`}>
+                <span className="btc-satoshi-wrapper">
                     {formattedSat} SAT
                 </span>
             );
         }
         return formatCryptoAmount(amount, coinName);
+    };
+
+    const renderCryptoWithTooltip = (amount: number, coinName: string): React.ReactNode => {
+        const fullValue = `${formatCryptoAmount(amount)} ${coinName}`;
+        return (
+            <div className="earning-crypto earning-crypto-tooltip" tabIndex={0} data-full={fullValue}>
+                <span className="earning-crypto-text">
+                    {formatCryptoDisplay(amount, coinName)}{coinName !== 'BTC' ? ` ${coinName}` : ''}
+                </span>
+            </div>
+        );
     };
 
     const handleScreenshot = async () => {
@@ -212,7 +230,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('blockReward') && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(earning.earnings.perBlock, earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(earning.earnings.perBlock, earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(earning.earnings.perBlock * price)}</div>
                         )}
@@ -221,7 +239,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('hourly') && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(earning.earnings.hourly, earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(earning.earnings.hourly, earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(earning.earnings.hourly * price)}</div>
                         )}
@@ -230,7 +248,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('daily') && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(earning.earnings.daily, earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(earning.earnings.daily, earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(earning.earnings.daily * price)}</div>
                         )}
@@ -239,7 +257,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('weekly') && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(earning.earnings.weekly, earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(earning.earnings.weekly, earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(earning.earnings.weekly * price)}</div>
                         )}
@@ -248,7 +266,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('monthly') && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(earning.earnings.monthly, earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(earning.earnings.monthly, earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(earning.earnings.monthly * price)}</div>
                         )}
@@ -257,7 +275,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                 {visibleColumns.has('custom') && getCustomPeriodInHours() > 0 && (
                     <td className="earning-cell">
-                        <div className="earning-crypto">{formatCryptoDisplay(calculateCustomEarnings(earning), earning.displayName)}{earning.displayName !== 'BTC' ? ` ${earning.displayName}` : ''}</div>
+                        {renderCryptoWithTooltip(calculateCustomEarnings(earning), earning.displayName)}
                         {!earning.isGameToken && earning.displayName !== 'USDT' && (
                             <div className="earning-usd">{formatUSD(calculateCustomEarnings(earning) * price)}</div>
                         )}
@@ -327,7 +345,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                         </div>
                     </div>
 
-                    <div className="table-container">
+                    <div className={tableContainerClassName}>
                         <table className="earnings-table wide-table">
                             <thead>
                                 <tr>
@@ -358,7 +376,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                         </svg>
                         {t('table.gameTokenTitle')}
                     </h2>
-                    <div className="table-container">
+                    <div className={tableContainerClassName}>
                         <table className="earnings-table wide-table">
                             <thead>
                                 <tr>

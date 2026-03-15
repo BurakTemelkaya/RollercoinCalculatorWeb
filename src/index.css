@@ -1485,6 +1485,59 @@ a:hover {
   font-size: 13px;
 }
 
+.earning-crypto-tooltip {
+  position: relative;
+  cursor: help;
+  outline: none;
+}
+
+.earning-crypto-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  vertical-align: bottom;
+}
+
+.earning-crypto-tooltip::after {
+  content: attr(data-full);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-primary);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 130;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (hover: hover) {
+  .earning-crypto-tooltip:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .earning-crypto-tooltip:hover::after {
+    opacity: 0;
+  }
+
+  .earning-crypto-tooltip:focus::after,
+  .earning-crypto-tooltip:active::after {
+    opacity: 1;
+  }
+}
+
 .earning-usd {
   font-size: 11px;
   color: var(--success);
@@ -1771,7 +1824,75 @@ a:hover {
   }
 
   .earning-usd {
-    font-size: 9px;
+    font-size: 11px;
+  }
+
+  .table-container.fit-default-columns {
+    overflow-x: hidden;
+  }
+
+  .table-container.fit-default-columns .earnings-table {
+    min-width: 100%;
+    table-layout: fixed;
+  }
+
+  .table-container.fit-default-columns .earnings-table th,
+  .table-container.fit-default-columns .earnings-table td,
+  .table-container.fit-default-columns .wide-table th,
+  .table-container.fit-default-columns .wide-table td {
+    padding: 6px 2px;
+    font-size: 10px;
+  }
+
+  .table-container.fit-default-columns .earnings-table th:nth-child(1),
+  .table-container.fit-default-columns .earnings-table td:nth-child(1) {
+    width: 18%;
+  }
+
+  .table-container.fit-default-columns .earnings-table th:nth-child(2),
+  .table-container.fit-default-columns .earnings-table td:nth-child(2) {
+    width: 19%;
+  }
+
+  .table-container.fit-default-columns .earnings-table th:nth-child(n + 3),
+  .table-container.fit-default-columns .earnings-table td:nth-child(n + 3) {
+    width: 21%;
+  }
+
+  .table-container.fit-default-columns .coin-cell {
+    gap: 2px;
+  }
+
+  .table-container.fit-default-columns .coin-cell img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .table-container.fit-default-columns .coin-symbol {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .table-container.fit-default-columns .league-power {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .table-container.fit-default-columns .earning-crypto {
+    font-size: 10px;
+  }
+
+  .table-container.fit-default-columns .earning-crypto-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .table-container.fit-default-columns .earning-usd {
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .best-badge {
@@ -2269,10 +2390,10 @@ a:hover {
 
 /* Enhanced USD Value Display */
 .earning-usd {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--success);
-  margin-top: 4px;
+  margin-top: 2px;
   text-align: center;
   /* Center text */
   display: block;
@@ -2290,6 +2411,23 @@ a:hover {
 .earning-crypto {
   text-align: center;
   font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .earning-crypto,
+  .table-container.fit-default-columns .earning-crypto {
+    font-size: 11px !important;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .earning-usd,
+  .table-container.fit-default-columns .earning-usd {
+    font-size: 12px !important;
+    margin-top: 2px !important;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
 }
 
 /* Withdraw Timer Value Centering */
@@ -2543,8 +2681,17 @@ a:hover {
   }
 
   .btc-satoshi-wrapper::after {
-    bottom: auto;
-    top: 110%;
+    top: auto;
+    bottom: calc(100% + 6px);
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+    white-space: nowrap;
+    max-width: none;
+    line-height: 1.2;
+    z-index: 120;
   }
 
   .custom-period-setting-group {
@@ -2567,6 +2714,8 @@ a:hover {
   position: relative;
   cursor: help;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
   border-bottom: 1px dashed rgba(99, 102, 241, 0.5);
   transition: border-color 0.2s;
 }
@@ -2596,8 +2745,27 @@ a:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.btc-satoshi-wrapper:hover::after {
-  opacity: 1;
+@media (hover: hover) {
+  .btc-satoshi-wrapper:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .btc-satoshi-wrapper:hover::after {
+    opacity: 0;
+  }
+
+  .btc-satoshi-wrapper:focus::after,
+  .btc-satoshi-wrapper:active::after {
+    opacity: 1;
+  }
+
+  .earning-crypto-tooltip::after {
+    font-size: 10px;
+    padding: 4px 8px;
+    line-height: 1.2;
+  }
 }
 
 .satoshi-unit {
