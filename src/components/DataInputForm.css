@@ -15,6 +15,7 @@
     border-color: var(--accent-primary);
     box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.2);
     z-index: 101;
+    overflow: visible;
     /* Even higher when expanded */
 }
 
@@ -468,6 +469,154 @@
     border-right: 1px solid var(--border-color) !important;
 }
 
+.username-input-with-help {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.username-input-with-help .power-value-input {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border-right: 1px solid var(--border-color);
+    padding-right: 42px;
+}
+
+.username-help-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: help;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.username-help-btn:hover,
+.username-help-btn:focus-visible {
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    outline: none;
+}
+
+.username-help-tooltip {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: min(360px, 92vw);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: all 0.2s ease;
+    z-index: 999;
+}
+
+.username-help-btn:hover + .username-help-tooltip,
+.username-help-btn:focus + .username-help-tooltip,
+.username-help-tooltip:hover,
+.username-help-tooltip:focus-within {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.username-help-tooltip .help-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.username-help-tooltip .help-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin-bottom: 8px;
+}
+
+.username-help-preview {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.username-help-preview-image {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.help-preview-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border-color);
+    background: color-mix(in srgb, var(--bg-secondary) 82%, black 18%);
+}
+
+.help-preview-icon {
+    font-size: 12px;
+}
+
+.help-preview-label {
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.help-preview-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+.help-preview-url {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.help-preview-action {
+    font-size: 11px;
+    color: var(--accent-primary);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.username-help-tooltip .help-link {
+    color: var(--accent-primary);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
 .fetch-btn,
 .cloud-btn {
     height: 42px;
@@ -577,6 +726,12 @@
     .api-fetch-row {
         flex-wrap: wrap !important;
         gap: 8px;
+    }
+
+    .username-help-tooltip {
+        right: 0;
+        left: auto;
+        width: min(320px, calc(100vw - 40px));
     }
 
     .fetch-btn {

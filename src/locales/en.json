@@ -54,7 +54,14 @@
         "fetchMode": "Input Method",
         "byUsername": "Username",
         "byPower": "User Power",
-        "fetchingByPower": "Use the power value entered above"
+        "fetchingByPower": "Use the power value entered above",
+        "usernameHelpAria": "Show username help",
+        "usernameHelpTitle": "How do I find my username?",
+        "usernameHelpText": "Open this page, copy the last part of your profile URL (e.g. XYZ), and paste it here.",
+        "usernameHelpLink": "Open profile page",
+        "usernameHelpPreviewTitle": "Profile link",
+        "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+        "usernameHelpPreviewAction": "Change"
     },
     "table": {
         "cryptoTitle": "Cryptocurrencies",

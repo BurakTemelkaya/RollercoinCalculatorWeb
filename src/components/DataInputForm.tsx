@@ -6,6 +6,7 @@ import { LEAGUES, LeagueInfo } from '../data/leagues';
 import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
 import { getLeagueImage } from '../data/leagueImages';
+import profileLinkImage from '../assets/profile_link.png';
 import './DataInputForm.css';
 import * as Select from '@radix-ui/react-select';
 import classNames from 'classnames';
@@ -313,17 +314,43 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                                 <div className="api-fetch-row">
                                     {dataSource === 'api' && fetchMode === 'username' ? (
-                                        <input
-                                            type="text"
-                                            placeholder={t('input.usernamePlaceholder')}
-                                            value={localUserName}
-                                            onChange={(e) => setLocalUserName(e.target.value)}
-                                            onBlur={() => setGlobalUserName(localUserName)}
-                                            className="power-value-input flex-grow-input"
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') handleFetchUserLocal();
-                                            }}
-                                        />
+                                        <div className="username-input-with-help flex-grow-input">
+                                            <input
+                                                type="text"
+                                                placeholder={t('input.usernamePlaceholder')}
+                                                value={localUserName}
+                                                onChange={(e) => setLocalUserName(e.target.value)}
+                                                onBlur={() => setGlobalUserName(localUserName)}
+                                                className="power-value-input"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') handleFetchUserLocal();
+                                                }}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="username-help-btn"
+                                                aria-label={t('input.usernameHelpAria')}
+                                            >
+                                                ?
+                                            </button>
+                                            <div className="username-help-tooltip" role="tooltip">
+                                                <div className="help-title">{t('input.usernameHelpTitle')}</div>
+                                                <div className="help-text">{t('input.usernameHelpText')}</div>
+                                                <img
+                                                    src={profileLinkImage}
+                                                    alt={t('input.usernameHelpPreviewTitle')}
+                                                    className="username-help-preview-image"
+                                                />
+                                                <a
+                                                    href="https://rollercoin.com/profile/personal-profile"
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="help-link"
+                                                >
+                                                    {t('input.usernameHelpLink')}
+                                                </a>
+                                            </div>
+                                        </div>
                                     ) : (
                                         <div className="power-input-container flex-grow-input">
                                             <input

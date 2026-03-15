@@ -1539,7 +1539,7 @@ a:hover {
 }
 
 .earning-usd {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--success);
   margin-top: 2px;
 }
@@ -2390,7 +2390,7 @@ a:hover {
 
 /* Enhanced USD Value Display */
 .earning-usd {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--success);
   margin-top: 2px;

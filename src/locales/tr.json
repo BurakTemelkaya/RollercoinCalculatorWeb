@@ -54,7 +54,14 @@
         "fetchMode": "Giriş Yöntemi",
         "byUsername": "Kullanıcı Adı",
         "byPower": "Kullanıcı Gücü",
-        "fetchingByPower": "Üstteki gücü kullanarak verileri çek"
+        "fetchingByPower": "Üstteki gücü kullanarak verileri çek",
+        "usernameHelpAria": "Kullanıcı adı yardımını göster",
+        "usernameHelpTitle": "Kullanıcı adını nasıl bulurum?",
+        "usernameHelpText": "Bu sayfaya gidin, profil linkindeki son kısmı (ör. XYZ) kopyalayıp buraya yapıştırın.",
+        "usernameHelpLink": "Profili aç",
+        "usernameHelpPreviewTitle": "Profil linki",
+        "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+        "usernameHelpPreviewAction": "Değiştir"
     },
     "table": {
         "cryptoTitle": "Kripto Paralar",
