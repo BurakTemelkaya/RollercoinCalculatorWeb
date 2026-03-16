@@ -13,7 +13,7 @@
   "reactSnap": {
     "source": "dist",
     "publicPath": "/",
-    "cleanUrls": false,
+    "cleanUrls": true,
     "include": [
       "/",
       "/en",

@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import trFlag from './assets/flags/tr.svg';
 import gbFlag from './assets/flags/gb.svg';
 import appLogo from './assets/logo.png';
-import { Routes, Route, Navigate, useParams, useNavigate, Link } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -149,6 +149,21 @@ function AutoRedirect() {
     const targetLang = browserLang === 'tr' ? 'tr' : 'en';
     navigate(`/${targetLang}`, { replace: true });
   }, [navigate]);
+
+  return null;
+}
+
+function CanonicalPathHandler() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const { pathname, search, hash } = location;
+    if (pathname.length > 1 && pathname.endsWith('/')) {
+      const normalizedPath = pathname.replace(/\/+$/, '');
+      navigate(`${normalizedPath}${search}${hash}`, { replace: true });
+    }
+  }, [location, navigate]);
 
   return null;
 }
@@ -971,14 +986,17 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AutoRedirect />} />
-      <Route path="/:lang" element={<CalculatorArea />} />
-      <Route path="/:lang/event" element={<CalculatorArea showEventPageRoute={true} />} />
-      <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
-      <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <CanonicalPathHandler />
+      <Routes>
+        <Route path="/" element={<AutoRedirect />} />
+        <Route path="/:lang" element={<CalculatorArea />} />
+        <Route path="/:lang/event" element={<CalculatorArea showEventPageRoute={true} />} />
+        <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
+        <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }
 
