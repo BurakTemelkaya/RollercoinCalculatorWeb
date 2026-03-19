@@ -30,7 +30,11 @@ const ColumnSettingsModal = React.lazy(() => import('./components/ColumnSettings
 const ProgressionEvent = React.lazy(() => import('./components/ProgressionEvent'));
 const AboutPage = React.lazy(() => import('./components/AboutPage'));
 const PrivacyPage = React.lazy(() => import('./components/PrivacyPage'));
+const FaqPage = React.lazy(() => import('./components/FaqPage'));
+const GuidesPage = React.lazy(() => import('./components/GuidesPage'));
+const SupportPage = React.lazy(() => import('./components/SupportPage'));
 
+import SeoArticle from './components/SeoArticle';
 import './index.css';
 
 // Local storage keys
@@ -771,6 +775,11 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
               <h1>{t('app.title')}</h1>
             </div>
             <div className="header-right-group">
+              <div className="main-nav-links">
+                 <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
+                 <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
+                 <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')}</Link>
+              </div>
               <div className="lang-switcher">
                 <button
                   className={`lang-btn ${i18n.language === 'tr' ? 'active' : ''}`}
@@ -930,15 +939,17 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
                 )}
               </div>
             </div>
+            
+            {/* Mobile Ad Banner - Moved above SeoArticle per user request */}
+            <div className="mobile-ad">
+              <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"
+                style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
+                title="Ad Mobile Bottom" />
+            </div>
+
+            <SeoArticle />
           </main>
         )}
-
-        {/* Mobile Ad Banner Bottom - Hidden on desktop */}
-        <div className="mobile-ad">
-          <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"
-            style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
-            title="Ad Mobile Bottom" />
-        </div>
 
         {/* Footer */}
         <footer className="footer">
@@ -977,6 +988,9 @@ function App() {
       <Route path="/:lang/event" element={<CalculatorArea showEventPageRoute={true} />} />
       <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
       <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
+      <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
+      <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
+      <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

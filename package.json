@@ -23,7 +23,13 @@
       "/en/about",
       "/en/privacy",
       "/tr/about",
-      "/tr/privacy"
+      "/tr/privacy",
+      "/en/faq",
+      "/tr/faq",
+      "/en/guides",
+      "/tr/guides",
+      "/en/support",
+      "/tr/support"
     ],
     "exclude": [
       "/404.html"

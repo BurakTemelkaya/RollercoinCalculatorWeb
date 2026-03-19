@@ -89,5 +89,64 @@
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/event"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/event"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/event"/>
+  <!-- FAQ - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/faq</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/faq"/>
+  </url>
+  <!-- FAQ - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/faq</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/faq"/>
+  </url>
+  <!-- Guides - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/guides</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/guides"/>
+  </url>
+  <!-- Guides - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/guides</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/guides"/>
+  </url>
+  <!-- Support - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/support</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/support"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/support"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/support"/>
+  </url>
+  <!-- Support - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/support</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/support"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/support"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/support"/>
   </url>
 </urlset>

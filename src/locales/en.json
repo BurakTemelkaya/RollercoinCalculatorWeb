@@ -3,6 +3,11 @@
         "title": "Rollercoin Calculator | Earnings & Withdrawal Calculator",
         "description": "Free Rollercoin earnings calculator. Calculate your daily, weekly, and monthly crypto mining rewards. BTC, ETH, DOGE, SOL and more."
     },
+    "nav": {
+        "guides": "Guides",
+        "faq": "FAQ",
+        "support": "Support"
+    },
     "app": {
         "title": "Rollercoin Calculator",
         "powerWithUnit": "Power: {{power}} {{unit}}/s",
