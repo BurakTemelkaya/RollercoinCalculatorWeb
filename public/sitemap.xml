@@ -89,6 +89,7 @@
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/event"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/event"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/event"/>
+  </url>
   <!-- FAQ - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/faq</loc>
