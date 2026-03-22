@@ -158,7 +158,12 @@
         "title": "Settings",
         "blockDurationDesc": "Customize block durations (seconds). Default ~600s (10 min).",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "blockDurationMode": "Block Duration Mode",
+        "auto": "Auto",
+        "manual": "Manual",
+        "autoHint": "Block durations are automatically updated from the API.",
+        "manualHint": "You set block durations manually; API will not override them."
     },
     "event": {
         "loading": "Loading event data...",

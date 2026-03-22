@@ -158,7 +158,12 @@
         "title": "Ayarlar",
         "blockDurationDesc": "Blok sürelerini (saniye) özelleştirin. Varsayılan ~600 saniye (10 dk).",
         "save": "Kaydet",
-        "cancel": "İptal"
+        "cancel": "İptal",
+        "blockDurationMode": "Blok Süresi Modu",
+        "auto": "Otomatik",
+        "manual": "Manuel",
+        "autoHint": "Blok süreleri API'den otomatik güncellenir.",
+        "manualHint": "Blok sürelerini kendiniz ayarlarsınız, API güncellemez."
     },
     "event": {
         "loading": "Etkinlik verileri yükleniyor...",

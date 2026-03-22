@@ -337,6 +337,10 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
     "POL": 596,
     "RLT": 596,
   });
+  const [blockDurationMode, setBlockDurationMode] = useState<'auto' | 'manual'>(() => {
+    const saved = localStorage.getItem('rollercoin_web_block_duration_mode');
+    return saved === 'manual' ? 'manual' : 'auto';
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [columnModalOpen, setColumnModalOpen] = useState(false);
 
@@ -567,7 +571,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
             apiDurations[displayName] = currency.duration;
           }
         }
-        if (Object.keys(apiDurations).length > 0) {
+        if (Object.keys(apiDurations).length > 0 && blockDurationMode === 'auto') {
           setBlockDurations(prev => {
             const merged = { ...prev, ...apiDurations };
             localStorage.setItem('rollercoin_web_block_durations', JSON.stringify(merged));
@@ -694,7 +698,30 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   // Sync League Logic Merged into main Auto-Detect Effect above.
   // Previous separate useEffect removed to prevent conflicts and auto-league disabling.
 
-  const handleSaveDurations = (newDurations: Record<string, number>) => {
+  const handleSaveDurations = (newDurations: Record<string, number>, newMode: 'auto' | 'manual') => {
+    setBlockDurationMode(newMode);
+    localStorage.setItem('rollercoin_web_block_duration_mode', newMode);
+
+    if (newMode === 'auto' && rawApiData && rawApiData.length > 0) {
+      // Re-apply API durations immediately
+      const matchingApiLeague = rawApiData.find(l => l.id === league.id);
+      if (matchingApiLeague) {
+        const apiDurations: Record<string, number> = {};
+        for (const currency of matchingApiLeague.currencies) {
+          if (currency.duration) {
+            const displayName = CURRENCY_MAP[currency.name] || currency.name;
+            apiDurations[displayName] = currency.duration;
+          }
+        }
+        if (Object.keys(apiDurations).length > 0) {
+          const merged = { ...newDurations, ...apiDurations };
+          setBlockDurations(merged);
+          localStorage.setItem('rollercoin_web_block_durations', JSON.stringify(merged));
+          return;
+        }
+      }
+    }
+
     setBlockDurations(newDurations);
     localStorage.setItem('rollercoin_web_block_durations', JSON.stringify(newDurations));
   };
@@ -737,6 +764,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
             blockDurations={blockDurations}
             onSave={handleSaveDurations}
             coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
+            blockDurationMode={blockDurationMode}
           />
           <ColumnSettingsModal
             isOpen={columnModalOpen}

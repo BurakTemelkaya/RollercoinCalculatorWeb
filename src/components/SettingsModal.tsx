@@ -6,8 +6,9 @@ interface SettingsModalProps {
     isOpen: boolean;
     onClose: () => void;
     blockDurations: Record<string, number>;
-    onSave: (newDurations: Record<string, number>) => void;
+    onSave: (newDurations: Record<string, number>, mode: 'auto' | 'manual') => void;
     coins: string[];
+    blockDurationMode: 'auto' | 'manual';
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -15,14 +16,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     onClose,
     blockDurations,
     onSave,
-    coins
+    coins,
+    blockDurationMode,
 }) => {
     const { t } = useTranslation();
     const [durations, setDurations] = useState<Record<string, number>>(blockDurations);
+    const [mode, setMode] = useState<'auto' | 'manual'>(blockDurationMode);
 
     useEffect(() => {
         setDurations(blockDurations);
-    }, [blockDurations, isOpen]);
+        setMode(blockDurationMode);
+    }, [blockDurations, blockDurationMode, isOpen]);
 
     const handleChange = (coin: string, value: string) => {
         const numVal = parseInt(value, 10);
@@ -33,7 +37,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
 
     const handleSave = () => {
-        onSave(durations);
+        onSave(durations, mode);
         onClose();
     };
 
@@ -54,7 +58,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <p className="modal-desc">{t('settings.blockDurationDesc')}</p>
                     </div>
 
-                    <div className="settings-grid">
+                    <div className="block-duration-mode-toggle">
+                        <label className="mode-label">{t('settings.blockDurationMode')}</label>
+                        <div className="mode-switch">
+                            <button
+                                className={`mode-switch-btn ${mode === 'auto' ? 'active' : ''}`}
+                                onClick={() => setMode('auto')}
+                            >
+                                {t('settings.auto')}
+                            </button>
+                            <button
+                                className={`mode-switch-btn ${mode === 'manual' ? 'active' : ''}`}
+                                onClick={() => setMode('manual')}
+                            >
+                                {t('settings.manual')}
+                            </button>
+                        </div>
+                        <p className="mode-hint">
+                            {mode === 'auto' ? t('settings.autoHint') : t('settings.manualHint')}
+                        </p>
+                    </div>
+
+                    <div className={`settings-grid ${mode === 'auto' ? 'disabled-grid' : ''}`}>
                         {coins.map(coin => (
                             <div key={coin} className="setting-card">
                                 <div className="setting-card-header">
@@ -74,6 +99,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                                         onChange={(e) => handleChange(coin, e.target.value)}
                                         className="setting-input"
                                         placeholder="600"
+                                        disabled={mode === 'auto'}
                                     />
                                     <span className="unit-label">sec</span>
                                 </div>

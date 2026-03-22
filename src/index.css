@@ -3197,6 +3197,65 @@ a:hover {
   font-size: 18px;
 }
 
+/* Block Duration Mode Toggle */
+.block-duration-mode-toggle {
+  margin-bottom: 20px;
+}
+
+.block-duration-mode-toggle .mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.block-duration-mode-toggle .mode-switch {
+  display: flex;
+  background: var(--bg-primary);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.mode-switch-btn {
+  padding: 7px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: calc(var(--radius-md) - 2px);
+  transition: all 0.2s;
+}
+
+.mode-switch-btn:hover {
+  color: var(--text-primary);
+}
+
+.mode-switch-btn.active {
+  background: var(--accent-gradient);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.block-duration-mode-toggle .mode-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.settings-grid.disabled-grid {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
