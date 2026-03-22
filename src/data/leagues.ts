@@ -7,6 +7,7 @@ export interface LeagueInfo {
     currencies: {
         name: string;
         payout: number;
+        duration?: number;
     }[];
 }
 

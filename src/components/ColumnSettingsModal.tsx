@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type TableColumnType = 'blockReward' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
+type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
 interface ColumnSettingsModalProps {
     isOpen: boolean;
@@ -28,6 +28,7 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
 
     const columns: { id: TableColumnType; labelKey: string }[] = [
         { id: 'blockReward', labelKey: 'table.headers.blockReward' },
+        { id: 'blockDuration', labelKey: 'table.headers.blockDuration' },
         { id: 'hourly', labelKey: 'table.headers.hourly' },
         { id: 'daily', labelKey: 'table.headers.daily' },
         { id: 'weekly', labelKey: 'table.headers.weekly' },

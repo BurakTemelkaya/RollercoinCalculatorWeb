@@ -30,7 +30,7 @@ export async function fetchUserFromApi(userName: string): Promise<RollercoinUser
                 if (errorData && errorData.detail) {
                     errorMessage = errorData.detail;
                 }
-            } catch (e) {
+            } catch (_e) {
                 // Ignore json parsing error, use default message
             }
             throw new Error(errorMessage);

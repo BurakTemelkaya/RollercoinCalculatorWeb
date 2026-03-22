@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CoinData, HashPower, PowerUnit } from '../types';
-import { parsePowerText } from '../utils/powerParser';
 import { LEAGUES, LeagueInfo } from '../data/leagues';
 import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
@@ -54,10 +53,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     setFetchMode,
 }) => {
     const { t } = useTranslation();
-    const [inputText, setInputText] = useState('');
     const [isExpanded, setIsExpanded] = useState(true);
 
-    const [dataSource, setDataSource] = useState<'manual' | 'api'>('api');
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
     const [isFetchingUserLocal, setIsFetchingUserLocal] = useState(false);
@@ -72,17 +69,6 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
     const [powerValue, setPowerValue] = useState<string>('');
     const [powerUnit, setPowerUnit] = useState<PowerUnit>('Eh');
-
-    const DATA_SOURCE_KEY = 'rollercoin_web_data_source';
-
-    useEffect(() => {
-        const saved = localStorage.getItem(DATA_SOURCE_KEY);
-        if (saved === 'api' || saved === 'manual') setDataSource(saved);
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem(DATA_SOURCE_KEY, dataSource);
-    }, [dataSource]);
 
     const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
 
@@ -103,6 +89,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 currencies: l.currencies.map(c => ({
                     name: c.name,
                     payout: c.payoutAmount,
+                    duration: c.duration,
                 })),
             }));
 
@@ -126,43 +113,6 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         }
     };
 
-    const handleParse = () => {
-        try {
-            let coins = currentCoins;
-            let userPower = currentUserPower;
-
-            if (inputText.trim()) {
-                const result = parsePowerText(inputText);
-                if (result.coins.length > 0) coins = result.coins;
-                if (result.userPower) userPower = result.userPower;
-            }
-
-            let finalPower = userPower;
-            if (powerValue) {
-                const value = parseFloat(powerValue);
-                if (!isNaN(value) && value > 0) finalPower = { value, unit: powerUnit };
-            }
-
-            if (!coins.length && !finalPower) {
-                onShowNotification(t('input.errors.missingBoth'), 'error');
-                return;
-            }
-            if (!coins.length) {
-                onShowNotification(t('input.errors.missingLeagueData'), 'error');
-                return;
-            }
-            if (!finalPower) {
-                onShowNotification(t('input.errors.missingUserPower'), 'error');
-                return;
-            }
-
-            onDataParsed(coins, finalPower, true);
-            onShowNotification(t('input.loadedData', { count: coins.length }), 'success');
-        } catch (error) {
-            onShowNotification(t('input.errors.parseError'), 'error');
-        }
-    };
-
     useEffect(() => {
         if (currentUserPower) {
             setPowerValue(currentUserPower.value.toString());
@@ -173,11 +123,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
     useEffect(() => {
-        // If we are in API mode, power updates come from the API/User fetch,
-        // but we still need to update when user manually changes power
-        if (dataSource === 'api' && fetchMode === 'username') {
-            // In username mode, power comes from API, so don't trigger on manual change
-            // But if user switches to power mode and changes manually, we should update
+        // In username mode, power comes from API, so don't trigger on manual change
+        if (fetchMode === 'username') {
             return;
         }
 
@@ -189,7 +136,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             onDataParsed(currentCoins, { value: val, unit: powerUnit }, true);
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [powerValue, powerUnit, dataSource, fetchMode, currentCoins, onDataParsed]);
+    }, [powerValue, powerUnit, fetchMode, currentCoins, onDataParsed]);
 
     const handleFetchUserLocal = async (showSuccessNotif: boolean = true) => {
         setGlobalUserName(localUserName.trim());
@@ -265,55 +212,34 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             <div className={`accordion-wrapper ${isExpanded ? 'open' : ''}`}>
                 <div className="accordion-inner">
                     <div className="input-content-padding">
-                        <div className="data-source-cards">
-                            <div
-                                className="data-source-bg"
-                                style={{ transform: dataSource === 'manual' ? 'translateX(0)' : 'translateX(100%)' }}
-                            />
-                            <button className={`data-source-card ${dataSource === 'manual' ? 'active' : ''}`} onClick={() => setDataSource('manual')}>
-                                <span className="data-source-icon">✏️</span>
-                                <div className="data-source-info">
-                                    <span className="data-source-label">{t('input.manualLabel')}</span>
-                                    <span className="data-source-desc">{t('input.manualDesc')}</span>
-                                </div>
-                            </button>
-                            <button className={`data-source-card ${dataSource === 'api' ? 'active' : ''}`} onClick={() => setDataSource('api')}>
-                                <span className="data-source-icon">☁️</span>
-                                <div className="data-source-info">
-                                    <span className="data-source-label">{t('input.serverLabel')}</span>
-                                    <span className="data-source-desc">{t('input.serverDesc')}</span>
-                                </div>
-
-                            </button>
+                        <div className="alternative-site-hint">
+                            <a href="https://rchesapla.github.io" target="_blank" rel="noreferrer">
+                                {t('input.alternativeSite')} ↗
+                            </a>
                         </div>
-
                         <div className="desktop-3-up">
                             <div className="input-group">
-                                {dataSource === 'api' ? (
-                                    <div className="fetch-mode-selector">
-                                        <div
-                                            className="mode-tab-bg"
-                                            style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
-                                        />
-                                        <button
-                                            className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
-                                            onClick={() => setFetchMode('username')}
-                                        >
-                                            {t('input.byUsername')}
-                                        </button>
-                                        <button
-                                            className={`mode-tab ${fetchMode === 'power' ? 'active' : ''}`}
-                                            onClick={() => setFetchMode('power')}
-                                        >
-                                            {t('input.byPower')}
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <label>{t('input.userPower')}</label>
-                                )}
+                                <div className="fetch-mode-selector">
+                                    <div
+                                        className="mode-tab-bg"
+                                        style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
+                                    />
+                                    <button
+                                        className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
+                                        onClick={() => setFetchMode('username')}
+                                    >
+                                        {t('input.byUsername')}
+                                    </button>
+                                    <button
+                                        className={`mode-tab ${fetchMode === 'power' ? 'active' : ''}`}
+                                        onClick={() => setFetchMode('power')}
+                                    >
+                                        {t('input.byPower')}
+                                    </button>
+                                </div>
 
                                 <div className="api-fetch-row">
-                                    {dataSource === 'api' && fetchMode === 'username' ? (
+                                    {fetchMode === 'username' ? (
                                         <div className="username-input-with-help flex-grow-input">
                                             <input
                                                 type="text"
@@ -370,53 +296,50 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                         </div>
                                     )}
 
-                                    {dataSource === 'api' && (
-                                        <button
-                                            className="fetch-btn"
-                                            onClick={async () => {
-                                                if (!canFetch) {
-                                                    const remainSec = Math.ceil(cooldownRemaining / 1000);
-                                                    onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
-                                                    return;
-                                                }
-                                                const isUsernameMode = fetchMode === 'username' && localUserName.trim();
-                                                const aP = handleFetchFromApi(!isUsernameMode);
+                                    <button
+                                        className="fetch-btn"
+                                        onClick={async () => {
+                                            if (!canFetch) {
+                                                const remainSec = Math.ceil(cooldownRemaining / 1000);
+                                                onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
+                                                return;
+                                            }
+                                            const isUsernameMode = fetchMode === 'username' && localUserName.trim();
+                                            const aP = handleFetchFromApi(!isUsernameMode);
 
-                                                if (isUsernameMode) {
-                                                    const uP = handleFetchUserLocal(!isUsernameMode);
-                                                    const [userSuccess, apiSuccess] = await Promise.all([uP, aP]);
-                                                    if (userSuccess && apiSuccess) {
-                                                        onShowNotification(t('input.allDataFetched'), 'success');
-                                                    }
-                                                    if (onForceFetchPrices && (userSuccess || apiSuccess)) {
-                                                        onForceFetchPrices();
-                                                    }
-                                                    if (userSuccess) {
-                                                        setIsExpanded(false);
-                                                    }
-                                                } else {
-                                                    const apiSuccess = await aP;
-                                                    if (onForceFetchPrices && apiSuccess) {
-                                                        onForceFetchPrices();
-                                                    }
-                                                    // Allow manual updates of API global data in power mode to not close the form
+                                            if (isUsernameMode) {
+                                                const uP = handleFetchUserLocal(!isUsernameMode);
+                                                const [userSuccess, apiSuccess] = await Promise.all([uP, aP]);
+                                                if (userSuccess && apiSuccess) {
+                                                    onShowNotification(t('input.allDataFetched'), 'success');
                                                 }
-                                            }}
-                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
-                                            title={t('input.fetchFromApi')}
-                                        >
-                                            {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
-                                                <span className="spinner small"></span>
-                                            ) : !canFetch ? (
-                                                <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
-                                            ) : (
-                                                <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
-                                            )}
-                                            <span className="btn-text">
-                                                {currentCoins.length > 0 && canFetch ? t('input.fetchButton') : t('input.fetchAction')}
-                                            </span>
-                                        </button>
-                                    )}
+                                                if (onForceFetchPrices && (userSuccess || apiSuccess)) {
+                                                    onForceFetchPrices();
+                                                }
+                                                if (userSuccess) {
+                                                    setIsExpanded(false);
+                                                }
+                                            } else {
+                                                const apiSuccess = await aP;
+                                                if (onForceFetchPrices && apiSuccess) {
+                                                    onForceFetchPrices();
+                                                }
+                                            }
+                                        }}
+                                        disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
+                                        title={t('input.fetchFromApi')}
+                                    >
+                                        {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
+                                            <span className="spinner small"></span>
+                                        ) : !canFetch ? (
+                                            <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
+                                        ) : (
+                                            <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
+                                        )}
+                                        <span className="btn-text">
+                                            {currentCoins.length > 0 && canFetch ? t('input.fetchButton') : t('input.fetchAction')}
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -482,16 +405,6 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                 </label>
                             </div>
                         </div>
-
-                        {dataSource === 'manual' && (
-                            <div className="input-group full-width">
-                                <label>{t('input.leaguePowers')}</label>
-                                <textarea className="data-textarea" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder={t('input.placeholder')} rows={8} />
-                                <div className="action-row-centered">
-                                    <button className="primary-button wide-button" onClick={handleParse}>{t('input.calculate')}</button>
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ export interface ApiCurrency {
     totalPower: number;
     userCount: number;
     payoutAmount: number;
+    duration: number;
 }
 
 // League data from API

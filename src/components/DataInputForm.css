@@ -463,6 +463,25 @@
     width: 100%;
 }
 
+.alternative-site-hint {
+    text-align: right;
+    margin-bottom: -12px;
+}
+
+.alternative-site-hint a {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: all 0.2s;
+}
+
+.alternative-site-hint a:hover {
+    color: var(--accent-primary);
+    opacity: 1;
+    text-decoration: underline;
+}
+
 .flex-grow-input {
     flex: 1;
     border-radius: var(--radius-md) !important;

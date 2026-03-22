@@ -10,7 +10,7 @@ import { Routes, Route, Navigate, useParams, useNavigate, Link } from 'react-rou
 import { CoinData, HashPower, EarningsResult } from './types';
 import { calculateAllEarnings } from './utils/calculator';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
-import { LEAGUES, LeagueInfo } from './data/leagues';
+import { LEAGUES, LeagueInfo, CURRENCY_MAP } from './data/leagues';
 import { ApiLeagueData } from './types/api';
 import { convertApiLeagueToCoinData } from './services/leagueApi';
 import { fetchUserFromApi } from './services/userApi';
@@ -341,7 +341,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   const [columnModalOpen, setColumnModalOpen] = useState(false);
 
   // Table column configuration state
-  type TableColumnType = 'blockReward' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
+  type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
   const [visibleColumns, setVisibleColumns] = useState<Set<TableColumnType>>(
     new Set(['daily', 'weekly', 'monthly'])
   );
@@ -349,7 +349,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '1.0.4';
+  const CURRENT_CACHE_VERSION = '1.0.5';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -557,6 +557,22 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
         const newCoins = convertApiLeagueToCoinData(matchingApiLeague);
         if (newCoins.length > 0) {
           setCoins(newCoins);
+        }
+
+        // Extract block durations from API data for the matched league
+        const apiDurations: Record<string, number> = {};
+        for (const currency of matchingApiLeague.currencies) {
+          if (currency.duration) {
+            const displayName = CURRENCY_MAP[currency.name] || currency.name;
+            apiDurations[displayName] = currency.duration;
+          }
+        }
+        if (Object.keys(apiDurations).length > 0) {
+          setBlockDurations(prev => {
+            const merged = { ...prev, ...apiDurations };
+            localStorage.setItem('rollercoin_web_block_durations', JSON.stringify(merged));
+            return merged;
+          });
         }
       }
     }
@@ -776,9 +792,9 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
             </div>
             <div className="header-right-group">
               <div className="main-nav-links">
-                 <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
-                 <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
-                 <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')}</Link>
+                <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
+                <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
+                <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')}</Link>
               </div>
               <div className="lang-switcher">
                 <button
@@ -939,7 +955,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
                 )}
               </div>
             </div>
-            
+
             {/* Mobile Ad Banner - Moved above SeoArticle per user request */}
             <div className="mobile-ad">
               <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"

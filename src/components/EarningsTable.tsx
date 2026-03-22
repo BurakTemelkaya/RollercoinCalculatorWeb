@@ -6,7 +6,7 @@ import { formatCryptoAmount, formatUSD } from '../utils/calculator';
 import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 
-type TableColumnType = 'blockReward' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
+type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
 interface EarningsTableProps {
     earnings: EarningsResult[];
@@ -72,6 +72,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         const periodInHours = getCustomPeriodInHours();
         switch (column) {
             case 'blockReward': return t('table.headers.blockReward');
+            case 'blockDuration': return t('table.headers.blockDuration');
             case 'hourly': return t('table.headers.hourly');
             case 'daily': return t('table.headers.daily');
             case 'weekly': return t('table.headers.weekly');
@@ -79,6 +80,15 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             case 'custom': return periodInHours > 0 ? getCustomPeriodAbbr() : t('table.headers.custom');
             default: return '';
         }
+    };
+
+    // Format block duration as "Xm Ys" (localized)
+    const formatBlockDuration = (seconds: number): string => {
+        const mAbbr = t('table.minuteAbbr') || 'm';
+        const sAbbr = t('table.secondAbbr') || 's';
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return s > 0 ? `${m}${mAbbr} ${s}${sAbbr}` : `${m}${mAbbr}`;
     };
 
     const isDefaultColumnSet =
@@ -237,6 +247,16 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </td>
                 )}
 
+                {visibleColumns.has('blockDuration') && (
+                    <td className="earning-cell">
+                        <div className="earning-crypto">
+                            <span className="earning-crypto-text">
+                                {formatBlockDuration(blockDurations[earning.displayName] || 596)}
+                            </span>
+                        </div>
+                    </td>
+                )}
+
                 {visibleColumns.has('hourly') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.hourly, earning.displayName)}
@@ -352,6 +372,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                     <th>{t('table.headers.coin')}</th>
                                     <th>{t('table.headers.leaguePower')}</th>
                                     {visibleColumns.has('blockReward') && <th>{getColumnHeader('blockReward')}</th>}
+                                    {visibleColumns.has('blockDuration') && <th>{getColumnHeader('blockDuration')}</th>}
                                     {visibleColumns.has('hourly') && <th>{getColumnHeader('hourly')}</th>}
                                     {visibleColumns.has('daily') && <th>{getColumnHeader('daily')}</th>}
                                     {visibleColumns.has('weekly') && <th>{getColumnHeader('weekly')}</th>}
@@ -383,6 +404,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                     <th>{t('table.headers.coin')}</th>
                                     <th>{t('table.headers.leaguePower')}</th>
                                     {visibleColumns.has('blockReward') && <th>{getColumnHeader('blockReward')}</th>}
+                                    {visibleColumns.has('blockDuration') && <th>{getColumnHeader('blockDuration')}</th>}
                                     {visibleColumns.has('hourly') && <th>{getColumnHeader('hourly')}</th>}
                                     {visibleColumns.has('daily') && <th>{getColumnHeader('daily')}</th>}
                                     {visibleColumns.has('weekly') && <th>{getColumnHeader('weekly')}</th>}
