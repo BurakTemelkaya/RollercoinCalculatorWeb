@@ -822,7 +822,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
               <div className="main-nav-links">
                 <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
                 <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
-                <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')}</Link>
+                <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')} ☕</Link>
               </div>
               <div className="lang-switcher">
                 <button

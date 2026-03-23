@@ -129,6 +129,13 @@ body {
   z-index: 5;
 }
 
+/* App Wrapper (used by static pages) */
+.app-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* App Container */
 .app {
   max-width: 1200px;
@@ -151,16 +158,21 @@ a:hover {
 
 /* Header */
 .header {
-  padding: 12px 0;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 16px;
+  overflow: hidden;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .header-logo {
@@ -209,15 +221,24 @@ a:hover {
   }
 }
 
+.header-right-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-wrap: wrap;
     gap: 8px;
+    overflow: visible;
   }
 
   .header {
-    padding: 12px 0;
+    padding: 12px 16px;
     margin-bottom: 12px;
+    overflow: hidden;
   }
 
   .header-title {
@@ -239,6 +260,14 @@ a:hover {
   .app-main-logo {
     width: 70px !important;
     height: 70px !important;
+  }
+
+  .header-right-group {
+    flex-wrap: wrap;
+    width: 100%;
+    order: 3;
+    justify-content: center;
+    gap: 8px;
   }
 
   .main-content {
@@ -3386,9 +3415,9 @@ a:hover {
 /* Navigation Links */
 .main-nav-links {
   display: flex;
-  gap: 16px;
+  gap: 8px;
   align-items: center;
-  margin-right: 16px;
+  margin-right: 12px;
 }
 
 .nav-link {
@@ -3397,8 +3426,9 @@ a:hover {
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s, background 0.2s;
-  padding: 6px 12px;
+  padding: 5px 8px;
   border-radius: var(--radius-md);
+  white-space: nowrap;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -3408,12 +3438,29 @@ a:hover {
 
 @media (max-width: 768px) {
   .main-nav-links {
-    width: 100%;
+    width: auto;
     justify-content: center;
     margin-right: 0;
-    margin-bottom: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-color);
+    margin-bottom: 0;
+    padding-top: 0;
+    border-top: none;
+    gap: 4px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 400px) {
+  .nav-link {
+    font-size: 12px;
+    padding: 3px 4px;
+  }
+
+  .main-nav-links {
+    gap: 2px;
   }
 }
 
@@ -3575,8 +3622,23 @@ a:hover {
 .referral-card h3 {
   color: var(--text-primary);
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   margin-top: 0;
+}
+
+.referral-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.referral-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .referral-card p {
@@ -3607,6 +3669,15 @@ a:hover {
   font-size: 14px;
   font-weight: 600;
   color: var(--accent-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crypto-label-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .crypto-address-wrapper {

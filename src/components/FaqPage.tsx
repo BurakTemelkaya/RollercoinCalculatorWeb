@@ -134,7 +134,7 @@ function FaqPage() {
             <div className="main-nav-links">
                <Link to={`/${lang}/guides`} className="nav-link">{isTR ? 'Rehberler' : 'Guides'}</Link>
                <Link to={`/${lang}/faq`} className="nav-link active">{isTR ? 'SSS' : 'FAQ'}</Link>
-               <Link to={`/${lang}/support`} className="nav-link">{isTR ? 'Destek' : 'Support'}</Link>
+               <Link to={`/${lang}/support`} className="nav-link">{isTR ? 'Destek' : 'Support'} ☕</Link>
             </div>
             <div className="lang-switcher">
               <button
