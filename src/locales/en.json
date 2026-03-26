@@ -122,7 +122,9 @@
         "days": "days",
         "months": "months",
         "years": "years",
-        "hours": "hours"
+        "hours": "hours",
+        "editHint": "Click to edit",
+        "resetMin": "Reset to default"
     },
     "simulator": {
         "title": "Power Simulator",
@@ -163,7 +165,11 @@
         "auto": "Auto",
         "manual": "Manual",
         "autoHint": "Block durations are automatically updated from the API.",
-        "manualHint": "You set block durations manually; API will not override them."
+        "manualHint": "You set block durations manually; API will not override them.",
+        "priceApi": "Price API Provider",
+        "priceApiBinance": "Binance (Auto Fallback)",
+        "priceApiCoingecko": "CoinGecko",
+        "priceApiHint": "Select where price data is fetched from. Choose CoinGecko if Binance is blocked."
     },
     "event": {
         "loading": "Loading event data...",

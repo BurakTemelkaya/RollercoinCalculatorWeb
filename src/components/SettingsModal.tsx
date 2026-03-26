@@ -6,9 +6,10 @@ interface SettingsModalProps {
     isOpen: boolean;
     onClose: () => void;
     blockDurations: Record<string, number>;
-    onSave: (newDurations: Record<string, number>, mode: 'auto' | 'manual') => void;
+    onSave: (newDurations: Record<string, number>, mode: 'auto' | 'manual', priceApiMode: 'binance' | 'coingecko') => void;
     coins: string[];
     blockDurationMode: 'auto' | 'manual';
+    priceApiPref: 'binance' | 'coingecko';
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -18,15 +19,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     onSave,
     coins,
     blockDurationMode,
+    priceApiPref,
 }) => {
     const { t } = useTranslation();
     const [durations, setDurations] = useState<Record<string, number>>(blockDurations);
     const [mode, setMode] = useState<'auto' | 'manual'>(blockDurationMode);
+    const [priceApiMode, setPriceApiMode] = useState<'binance' | 'coingecko'>(priceApiPref);
 
     useEffect(() => {
         setDurations(blockDurations);
         setMode(blockDurationMode);
-    }, [blockDurations, blockDurationMode, isOpen]);
+        setPriceApiMode(priceApiPref);
+    }, [blockDurations, blockDurationMode, priceApiPref, isOpen]);
 
     const handleChange = (coin: string, value: string) => {
         const numVal = parseInt(value, 10);
@@ -37,7 +41,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
 
     const handleSave = () => {
-        onSave(durations, mode);
+        onSave(durations, mode, priceApiMode);
         onClose();
     };
 
@@ -56,6 +60,27 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     <div className="settings-info-card">
                         <span className="info-icon">ℹ️</span>
                         <p className="modal-desc">{t('settings.blockDurationDesc')}</p>
+                    </div>
+
+                    <div className="block-duration-mode-toggle">
+                        <label className="mode-label">{t('settings.priceApi')}</label>
+                        <div className="mode-switch">
+                            <button
+                                className={`mode-switch-btn ${priceApiMode === 'binance' ? 'active' : ''}`}
+                                onClick={() => setPriceApiMode('binance')}
+                            >
+                                {t('settings.priceApiBinance')}
+                            </button>
+                            <button
+                                className={`mode-switch-btn ${priceApiMode === 'coingecko' ? 'active' : ''}`}
+                                onClick={() => setPriceApiMode('coingecko')}
+                            >
+                                {t('settings.priceApiCoingecko')}
+                            </button>
+                        </div>
+                        <p className="mode-hint">
+                            {t('settings.priceApiHint')}
+                        </p>
                     </div>
 
                     <div className="block-duration-mode-toggle">

@@ -51,81 +51,7 @@ const STORAGE_KEYS = {
   CUSTOM_PERIOD_HOURS: 'rollercoin_web_custom_period_hours',
 };
 
-const PRICES_CACHE_KEY = 'rollercoin_web_prices_cache';
-
-// Fetch prices from Binance API - only fetches the specific pairs needed
-async function fetchPrices(symbols: string[]): Promise<Record<string, number>> {
-  const prices: Record<string, number> = {};
-
-  // Map to Binance symbols with correct priority
-  const symbolMap: Record<string, string[]> = {
-    'BTC': ['BTCUSDT'],
-    'ETH': ['ETHUSDT'],
-    'SOL': ['SOLUSDT'],
-    'DOGE': ['DOGEUSDT'],
-    'BNB': ['BNBUSDT'],
-    'LTC': ['LTCUSDT'],
-    'XRP': ['XRPUSDT'],
-    'TRX': ['TRXUSDT'],
-    'POL': ['POLUSDT', 'MATICUSDT'],
-    'MATIC': ['POLUSDT', 'MATICUSDT'],
-    'ALGO': ['ALGOUSDT'],
-  };
-
-  // Build deduplicated list of only the Binance pairs we actually need
-  const neededPairs = new Set<string>();
-  for (const symbol of symbols) {
-    const candidates = symbolMap[symbol.toUpperCase()];
-    if (candidates) candidates.forEach(c => neededPairs.add(c));
-  }
-
-  try {
-    // Fetch only the specific pairs needed (~1KB) instead of all ~2000 pairs (~500KB)
-    const encoded = encodeURIComponent(JSON.stringify([...neededPairs]));
-    const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${encoded}`);
-    const data = await response.json();
-
-    const priceMap = new Map<string, number>();
-    if (Array.isArray(data)) {
-      data.forEach((item: { symbol: string; price: string }) => {
-        priceMap.set(item.symbol, parseFloat(item.price));
-      });
-    }
-
-    for (const symbol of symbols) {
-      const candidates = symbolMap[symbol.toUpperCase()];
-      if (candidates) {
-        for (const candidate of candidates) {
-          if (priceMap.has(candidate)) {
-            prices[symbol.toUpperCase()] = priceMap.get(candidate) as number;
-            break;
-          }
-        }
-      }
-    }
-
-    // Cache successful result in localStorage
-    prices['USDT'] = 1;
-    localStorage.setItem(PRICES_CACHE_KEY, JSON.stringify({ prices, ts: Date.now() }));
-    return prices;
-  } catch (error) {
-    console.error('Failed to fetch prices:', error);
-    // Use cached prices as fallback only if they are less than 10 minutes old
-    try {
-      const cached = localStorage.getItem(PRICES_CACHE_KEY);
-      if (cached) {
-        const { prices: cachedPrices, ts } = JSON.parse(cached);
-        if (Date.now() - ts < 10 * 60 * 1000) {
-          return cachedPrices;
-        }
-      }
-    } catch (_) { /* ignore */ }
-  }
-
-  // USDT is a stablecoin, hardcode $1 price
-  prices['USDT'] = 1;
-  return prices;
-}
+import { fetchPrices, PriceApiProvider } from './services/priceApi';
 
 type Tab = 'calculator' | 'withdraw' | 'simulator';
 
@@ -341,6 +267,10 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
     const saved = localStorage.getItem('rollercoin_web_block_duration_mode');
     return saved === 'manual' ? 'manual' : 'auto';
   });
+  const [priceApiPref, setPriceApiPref] = useState<PriceApiProvider>(() => {
+    const saved = localStorage.getItem('rollercoin_web_price_api');
+    return saved === 'coingecko' ? 'coingecko' : 'binance';
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [columnModalOpen, setColumnModalOpen] = useState(false);
 
@@ -434,13 +364,16 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
 
   // Fetch ALL supported crypto prices once initially, further fetches are manual
   const pricesInitializedRef = React.useRef(false);
+  const [lastPricePrefFetched, setLastPricePrefFetched] = useState<PriceApiProvider | null>(null);
+
   useEffect(() => {
-    if (!pricesInitializedRef.current) {
+    if (!pricesInitializedRef.current || lastPricePrefFetched !== priceApiPref) {
       pricesInitializedRef.current = true;
+      setLastPricePrefFetched(priceApiPref);
       const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
-      fetchPrices(allCryptos).then(setPrices);
+      fetchPrices(allCryptos, priceApiPref).then(setPrices).catch(console.error);
     }
-  }, []);
+  }, [priceApiPref, lastPricePrefFetched]);
 
   // Preload UI images (Coins and Leagues) to prevent flashing/delay on appearance
   useEffect(() => {
@@ -462,7 +395,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
 
   const handleForceFetchPrices = () => {
     const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
-    fetchPrices(allCryptos).then(setPrices).catch(console.error);
+    fetchPrices(allCryptos, priceApiPref).then(setPrices).catch(console.error);
   };
 
   // Synchronize 'league' state when 'apiLeagues' updates so latest block rewards are always used
@@ -698,9 +631,12 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   // Sync League Logic Merged into main Auto-Detect Effect above.
   // Previous separate useEffect removed to prevent conflicts and auto-league disabling.
 
-  const handleSaveDurations = (newDurations: Record<string, number>, newMode: 'auto' | 'manual') => {
+  const handleSaveSettings = (newDurations: Record<string, number>, newMode: 'auto' | 'manual', newPriceApiMode: PriceApiProvider) => {
     setBlockDurationMode(newMode);
     localStorage.setItem('rollercoin_web_block_duration_mode', newMode);
+
+    setPriceApiPref(newPriceApiMode);
+    localStorage.setItem('rollercoin_web_price_api', newPriceApiMode);
 
     if (newMode === 'auto' && rawApiData && rawApiData.length > 0) {
       // Re-apply API durations immediately
@@ -762,9 +698,10 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
             isOpen={isSettingsOpen}
             onClose={() => setIsSettingsOpen(false)}
             blockDurations={blockDurations}
-            onSave={handleSaveDurations}
+            onSave={handleSaveSettings}
             coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
             blockDurationMode={blockDurationMode}
+            priceApiPref={priceApiPref}
           />
           <ColumnSettingsModal
             isOpen={columnModalOpen}

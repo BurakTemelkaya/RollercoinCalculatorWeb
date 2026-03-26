@@ -122,7 +122,9 @@
         "days": "gün",
         "months": "ay",
         "years": "yıl",
-        "hours": "saat"
+        "hours": "saat",
+        "editHint": "Düzenlemek için tıklayın",
+        "resetMin": "Varsayılana sıfırla"
     },
     "simulator": {
         "title": "Güç Simülatörü",
@@ -163,7 +165,11 @@
         "auto": "Otomatik",
         "manual": "Manuel",
         "autoHint": "Blok süreleri API'den otomatik güncellenir.",
-        "manualHint": "Blok sürelerini kendiniz ayarlarsınız, API güncellemez."
+        "manualHint": "Blok sürelerini kendiniz ayarlarsınız, API güncellemez.",
+        "priceApi": "Fiyat API Sağlayıcısı",
+        "priceApiBinance": "Binance (Otomatik Yedekli)",
+        "priceApiCoingecko": "CoinGecko",
+        "priceApiHint": "Fiyat verilerinin nereden çekileceğini seçin. Binance yasaklıysa CoinGecko'yu seçebilirsiniz."
     },
     "event": {
         "loading": "Etkinlik verileri yükleniyor...",

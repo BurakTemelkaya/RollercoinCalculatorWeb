@@ -16,6 +16,7 @@ interface WithdrawData {
     displayName: string;
     minWithdraw: number;
     currentBalance: number;
+    currentUsdValue: number;
     remainingToEarn: number;
     earningPerDay: number;
     daysToWithdraw: number;
@@ -34,6 +35,18 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     const [editingCoin, setEditingCoin] = useState<string | null>(null);
     const [tempValue, setTempValue] = useState<string>('');
 
+    // Custom Min Withdraw States
+    const [customMinWithdraws, setCustomMinWithdraws] = useState<Record<string, number>>(() => {
+        try {
+            const saved = localStorage.getItem('rollercoin_web_custom_min_withdraws');
+            return saved ? JSON.parse(saved) : {};
+        } catch {
+            return {};
+        }
+    });
+    const [editingMinCoin, setEditingMinCoin] = useState<string | null>(null);
+    const [tempMinValue, setTempMinValue] = useState<string>('');
+
     // Filter only crypto coins (not game tokens) and exclude non-withdrawable currencies
     const cryptoCoins = earnings.filter(e => !e.isGameToken && e.displayName !== 'ALGO' && e.displayName !== 'USDT');
 
@@ -43,11 +56,13 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
 
     // Calculate withdrawal data for each coin
     const withdrawData: WithdrawData[] = cryptoCoins.map(earning => {
-        const minWithdraw = DEFAULT_MIN_WITHDRAW[earning.displayName] ?? 0;
+        const customMin = customMinWithdraws[earning.displayName] !== undefined ? customMinWithdraws[earning.displayName] : (DEFAULT_MIN_WITHDRAW[earning.displayName] ?? 0);
+        const minWithdraw = customMin;
         const currentBalance = balances[earning.displayName] ?? 0;
         const earningPerDay = earning.earnings.daily;
         const price = prices[earning.displayName] || prices[earning.displayName.toUpperCase()] || 0;
 
+        const currentUsdValue = currentBalance * price;
         const remainingToEarn = Math.max(0, minWithdraw - currentBalance);
         const canWithdrawNow = currentBalance >= minWithdraw;
         const percent = minWithdraw > 0 ? Math.min(100, (currentBalance / minWithdraw) * 100) : 0;
@@ -67,6 +82,7 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
             displayName: earning.displayName,
             minWithdraw,
             currentBalance,
+            currentUsdValue,
             remainingToEarn,
             earningPerDay,
             daysToWithdraw,
@@ -107,6 +123,41 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
         }
     };
 
+    const handleStartMinEdit = (code: string, currentValue: number) => {
+        setEditingMinCoin(code);
+        setTempMinValue(currentValue > 0 ? currentValue.toString() : '');
+    };
+
+    const handleEndMinEdit = (code: string) => {
+        const value = parseFloat(tempMinValue.replace(',', '.')) || 0;
+        setCustomMinWithdraws(prev => {
+            const next = { ...prev, [code]: Math.max(0, value) };
+            localStorage.setItem('rollercoin_web_custom_min_withdraws', JSON.stringify(next));
+            return next;
+        });
+        setEditingMinCoin(null);
+        setTempMinValue('');
+    };
+
+    const handleMinKeyDown = (e: React.KeyboardEvent, code: string) => {
+        if (e.key === 'Enter') {
+            handleEndMinEdit(code);
+        } else if (e.key === 'Escape') {
+            setEditingMinCoin(null);
+            setTempMinValue('');
+        }
+    };
+
+    const handleResetMinWithdraw = (e: React.MouseEvent, code: string) => {
+        e.stopPropagation();
+        setCustomMinWithdraws(prev => {
+            const next = { ...prev };
+            delete next[code];
+            localStorage.setItem('rollercoin_web_custom_min_withdraws', JSON.stringify(next));
+            return next;
+        });
+    };
+
     return (
         <section className="withdraw-timer-section">
             <h2 className="section-title">
@@ -143,7 +194,14 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
 
                         {/* Balance input */}
                         <div className="balance-input-row">
-                            <label>{t('withdraw.balanceLabel')}</label>
+                            <div className="balance-label-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                <label style={{ marginBottom: 0 }}>{t('withdraw.balanceLabel')}</label>
+                                {data.currentBalance > 0 && (
+                                    <span className="balance-usd" style={{ fontSize: '0.85em', color: '#10b981' }}>
+                                        ≈ ${data.currentUsdValue.toFixed(2)}
+                                    </span>
+                                )}
+                            </div>
                             {editingCoin === data.displayName ? (
                                 <input
                                     type="text"
@@ -179,8 +237,44 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
 
                         <div className="withdraw-stats">
                             <div className="stat">
-                                <span className="stat-label">{t('withdraw.stats.minWithdraw')}</span>
-                                <span className="stat-value">{formatCryptoAmount(data.minWithdraw)}</span>
+                                <span className="stat-label">
+                                    {t('withdraw.stats.minWithdraw')}
+                                </span>
+                                {editingMinCoin === data.displayName ? (
+                                    <input
+                                        type="text"
+                                        value={tempMinValue}
+                                        onChange={(e) => setTempMinValue(e.target.value)}
+                                        onBlur={() => handleEndMinEdit(data.displayName)}
+                                        onKeyDown={(e) => handleMinKeyDown(e, data.displayName)}
+                                        autoFocus
+                                        className="balance-input"
+                                        style={{ padding: '2px 4px', fontSize: '0.9em', width: '100%', maxWidth: '80px', marginTop: '2px' }}
+                                        placeholder="0"
+                                    />
+                                ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                        <span 
+                                            className="stat-value" 
+                                            onClick={() => handleStartMinEdit(data.displayName, data.minWithdraw)}
+                                            style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                            title={t('withdraw.editHint')}
+                                        >
+                                            {formatCryptoAmount(data.minWithdraw)}
+                                            <span style={{ fontSize: '0.75em', opacity: 0.7 }}>✏️</span>
+                                        </span>
+                                        {customMinWithdraws[data.displayName] !== undefined && (
+                                            <button 
+                                                className="reset-min-btn" 
+                                                onClick={(e) => handleResetMinWithdraw(e, data.displayName)}
+                                                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', color: '#f87171', fontSize: '1.1em', display: 'flex', alignItems: 'center' }}
+                                                title={t('withdraw.resetMin')}
+                                            >
+                                                ↺
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <div className="stat">
                                 <span className="stat-label">{t('withdraw.stats.minValue')}</span>
