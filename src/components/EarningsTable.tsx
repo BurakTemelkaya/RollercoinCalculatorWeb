@@ -5,10 +5,14 @@ import { EarningsResult } from '../types';
 import { formatCryptoAmount, formatUSD } from '../utils/calculator';
 import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
+import { HashPower } from '../types';
+import { toBaseUnit } from '../utils/powerParser';
+import * as Select from '@radix-ui/react-select';
 
 type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
 interface EarningsTableProps {
+    effectiveUserPower: HashPower | null;
     earnings: EarningsResult[];
     prices: Record<string, number>;
     onOpenSettings: () => void;
@@ -21,6 +25,7 @@ interface EarningsTableProps {
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
+    effectiveUserPower,
     earnings,
     prices,
     onOpenSettings,
@@ -34,6 +39,15 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     const { t } = useTranslation();
     const tablesRef = useRef<HTMLDivElement>(null);
     const [isCapturing, setIsCapturing] = useState(false);
+    
+    // Simulator states V3
+    const [sourceAllocations, setSourceAllocations] = useState<Record<string, number>>({});
+    const [targetAllocations, setTargetAllocations] = useState<Record<string, number>>({});
+    
+    // UI states for the panel
+    const [selectedSourceAdd, setSelectedSourceAdd] = useState<string>('BTC');
+    const [selectedTargetAdd, setSelectedTargetAdd] = useState<string>('BTC');
+    const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
 
     // Separate game tokens and crypto
     const gameTokens = earnings.filter(e => e.isGameToken);
@@ -212,14 +226,130 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         }
     };
 
-    const renderRow = (earning: EarningsResult, isBest: boolean = false) => {
-        const price = getPrice(earning.displayName);
+    // Simulator Helpers
+    const handleAddSourceCoin = () => {
+        if (sourceAllocations[selectedSourceAdd] === undefined) {
+            setSourceAllocations(prev => {
+                const currentSum = Object.values(prev).reduce((a, b) => a + b, 0);
+                const remaining = Math.max(0, 100 - currentSum);
+                return { ...prev, [selectedSourceAdd]: remaining };
+            });
+        }
+    };
 
+    const handleAddTargetCoin = () => {
+        if (targetAllocations[selectedTargetAdd] === undefined) {
+            setTargetAllocations(prev => {
+                const currentSum = Object.values(prev).reduce((a, b) => a + b, 0);
+                const remaining = Math.max(0, 100 - currentSum);
+                return { ...prev, [selectedTargetAdd]: remaining };
+            });
+        }
+    };
+
+    const handleSourceChange = (coin: string, val: number) => {
+        setSourceAllocations(prev => {
+            const otherSum = Object.entries(prev).reduce((sum, [k, v]) => k !== coin ? sum + v : sum, 0);
+            const cappedVal = Math.max(0, Math.min(val, 100 - otherSum));
+            return { ...prev, [coin]: cappedVal };
+        });
+    };
+
+    const handleTargetChange = (coin: string, val: number) => {
+        setTargetAllocations(prev => {
+            const otherSum = Object.entries(prev).reduce((sum, [k, v]) => k !== coin ? sum + v : sum, 0);
+            const cappedVal = Math.max(0, Math.min(val, 100 - otherSum));
+            return { ...prev, [coin]: cappedVal };
+        });
+    };
+
+    const removeSourceCoin = (coin: string) => {
+        const next = { ...sourceAllocations };
+        delete next[coin];
+        setSourceAllocations(next);
+    };
+
+    const removeTargetCoin = (coin: string) => {
+        const next = { ...targetAllocations };
+        delete next[coin];
+        setTargetAllocations(next);
+    };
+
+    const calculateRowEarnings = (baseEarning: EarningsResult): EarningsResult => {
+        let earning = { ...baseEarning };
+
+        if (effectiveUserPower) {
+            const userBase = toBaseUnit(effectiveUserPower);
+            const sourcePercent = sourceAllocations[baseEarning.displayName] || 0;
+            // If the coin is explicitly in targetAllocations, use its value.
+            // Otherwise, default to 100% (the "What if I put 100% here" comparative mode)
+            const targetPercent = targetAllocations[baseEarning.displayName] !== undefined 
+                                    ? targetAllocations[baseEarning.displayName] 
+                                    : 100;
+
+            const leagueBase = toBaseUnit(baseEarning.leaguePower);
+
+            // Remove user's power if they were CURRENTLY mining this coin
+            // Remove user's power if they were CURRENTLY mining this coin
+            // NOTE: If userBase > leagueBase, the original calculator.ts assumed the user was ADDING their power
+            // to a pool they weren't in. In that case, we shouldn't subtract from the existing league pool because 
+            // their power wasn't inside it.
+            let powerToRemove = 0;
+            if (userBase <= leagueBase) {
+                 powerToRemove = userBase * (sourcePercent / 100);
+            }
+            // pureLeagueBase is the pool size stripping away the user's source extraction
+            let pureLeagueBase = Math.max(0, leagueBase - powerToRemove);
+            
+            // Add what they PROPOSE to mine
+            const allocatedUserBase = userBase * (targetPercent / 100);
+            
+            // Replicate powerRatio logic perfectly to avoid artificial jumps
+            let newShare = 0;
+            if (pureLeagueBase === 0 && allocatedUserBase === 0) {
+                newShare = 0;
+            } else if (allocatedUserBase > pureLeagueBase) {
+                // If user's proposed power overrides the entire remaining pool, they dominate it
+                newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
+            } else {
+                // Otherwise, calculation uses original league base equivalent to mirror powerRatio's approximation
+                newShare = allocatedUserBase / (pureLeagueBase + powerToRemove);
+            }
+
+            const originalShare = baseEarning.powerShare / 100;
+            const blockReward = originalShare > 0 ? baseEarning.earnings.perBlock / originalShare : 0;
+            const newPerBlock = blockReward * newShare;
+
+            const ratio = baseEarning.earnings.perBlock > 0 ? newPerBlock / baseEarning.earnings.perBlock : 0;
+            
+            earning.powerShare = newShare * 100;
+            earning.earnings = {
+                perBlock: newPerBlock,
+                hourly: baseEarning.earnings.hourly * ratio,
+                daily: baseEarning.earnings.daily * ratio,
+                weekly: baseEarning.earnings.weekly * ratio,
+                monthly: baseEarning.earnings.monthly * ratio,
+            };
+        }
+        return earning;
+    };
+
+    const renderRow = (baseEarning: EarningsResult, isBest: boolean = false) => {
+        const earning = calculateRowEarnings(baseEarning);
+        const price = getPrice(earning.displayName);
+        
+        const isSimulatedTarget = targetAllocations[baseEarning.displayName] !== undefined;
+        const targetPercent = isSimulatedTarget ? targetAllocations[baseEarning.displayName] : 100;
+
+        const isSimulatedSource = sourceAllocations[baseEarning.displayName] !== undefined;
+        const sourcePercent = isSimulatedSource ? sourceAllocations[baseEarning.displayName] : 0;
+        
         return (
-            <tr key={earning.code} className={isBest ? 'best-earning' : ''}>
-                <td>
-                    <div className="coin-cell">
-                        <img
+            <React.Fragment key={earning.code}>
+                <tr className={`data-row ${isBest ? 'best-earning' : ''}`}>
+                    <td>
+                        <div className="coin-cell">
+                            <img
                             src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']}
                             alt={`${earning.displayName} Coin Icon`}
                             onError={(e) => {
@@ -231,7 +361,17 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             }}
                             className="coin-icon-img"
                         />
-                        <span className="coin-symbol">{earning.displayName}</span>
+                        <div className="coin-info-wrapper" style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <span className="coin-symbol" style={{ color: 'inherit' }}>
+                                {earning.displayName}
+                            </span>
+                            {isSimulatedTarget && (
+                                <span className="sim-badge target-badge">{targetPercent}%</span>
+                            )}
+                            {isSimulatedSource && !isSimulatedTarget && (
+                                <span className="sim-badge source-badge">-{sourcePercent}%</span>
+                            )}
+                        </div>
                     </div>
                 </td>
                 <td className="league-power">
@@ -302,7 +442,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </td>
                 )}
             </tr>
-        );
+        </React.Fragment>
+    );
     };
 
     if (earnings.length === 0) {
@@ -317,6 +458,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
     return (
         <section className="earnings-tables" ref={tablesRef}>
+            {/* Panels moved to headers */}
+
             {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
                 <div className="table-section">
@@ -327,7 +470,18 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             </svg>
                             {t('table.cryptoTitle')}
                         </h2>
+                        
                         <div className="section-header-actions">
+                            <button
+                                className={`settings-icon-btn ${isSimulatorOpen ? 'active' : ''}`}
+                                onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
+                                title={t('simulator.panelTitle')}
+                            >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+                                </svg>
+                            </button>
                             <button
                                 className="settings-icon-btn screenshot-btn"
                                 onClick={handleScreenshot}
@@ -364,6 +518,117 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             </button>
                         </div>
                     </div>
+
+                    {/* Simulator Panel (Only when activated) */}
+                    {isSimulatorOpen && (
+                        <div className="simulator-panel open">
+                            <div className="simulator-content">
+                                <div className="sim-col source-col">
+                                    <h4>{t('simulator.sourceTitle')}</h4>
+                                    <p className="sim-desc">{t('simulator.sourceDesc')}</p>
+                                    <div className="sim-add-row">
+                                        {selectedSourceAdd && <img src={COIN_ICONS[selectedSourceAdd] || COIN_ICONS['RLT']} alt={selectedSourceAdd} className="sim-select-icon" />}
+                                        <Select.Root value={selectedSourceAdd} onValueChange={setSelectedSourceAdd}>
+                                            <Select.Trigger className="sim-select" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', height: '36px' }} aria-label="Select Source Coin">
+                                                <Select.Value>
+                                                    {selectedSourceAdd || t('simulator.allAdded')}
+                                                </Select.Value>
+                                                <Select.Icon style={{ fontSize: '10px', color: 'var(--text-muted)' }}>▼</Select.Icon>
+                                            </Select.Trigger>
+                                            <Select.Portal>
+                                                <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5} style={{ zIndex: 99999 }}>
+                                                    <Select.Viewport>
+                                                        {earnings.filter(c => sourceAllocations[c.displayName] === undefined).length === 0 ? (
+                                                            <Select.Item className="custom-dropdown-item" value="" disabled>
+                                                                <Select.ItemText>{t('simulator.allAdded')}</Select.ItemText>
+                                                            </Select.Item>
+                                                        ) : (
+                                                            earnings.filter(c => sourceAllocations[c.displayName] === undefined).map(c => (
+                                                                <Select.Item key={c.code} value={c.displayName} className="custom-dropdown-item">
+                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                        <img src={COIN_ICONS[c.displayName] || COIN_ICONS['RLT']} alt={c.displayName} style={{ width: 20, height: 20 }} />
+                                                                        <Select.ItemText>{c.displayName}</Select.ItemText>
+                                                                    </div>
+                                                                </Select.Item>
+                                                            ))
+                                                        )}
+                                                    </Select.Viewport>
+                                                </Select.Content>
+                                            </Select.Portal>
+                                        </Select.Root>
+                                        <button className="sim-add-btn" onClick={handleAddSourceCoin} disabled={earnings.filter(c => sourceAllocations[c.displayName] === undefined).length === 0 || !selectedSourceAdd}>{t('simulator.add')}</button>
+                                    </div>
+                                    <div className="sim-list">
+                                        {Object.entries(sourceAllocations).map(([coin, val]) => (
+                                            <div key={coin} className="sim-list-item">
+                                                <div className="sim-item-info">
+                                                    <img src={COIN_ICONS[coin] || COIN_ICONS['RLT']} alt={coin} className="sim-coin-icon" />
+                                                    <span className="sim-coin-name">{coin}</span>
+                                                </div>
+                                                <input className="sim-range warning-range" type="range" min="0" max="100" value={val} onChange={e => handleSourceChange(coin, parseInt(e.target.value))} />
+                                                <span className="sim-val warning-text">{val}%</span>
+                                                <button className="sim-remove-btn" onClick={() => removeSourceCoin(coin)}>
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="sim-col target-col">
+                                    <h4>{t('simulator.targetTitle')}</h4>
+                                    <p className="sim-desc">{t('simulator.targetDesc')}</p>
+                                    <div className="sim-add-row">
+                                        {selectedTargetAdd && <img src={COIN_ICONS[selectedTargetAdd] || COIN_ICONS['RLT']} alt={selectedTargetAdd} className="sim-select-icon" />}
+                                        <Select.Root value={selectedTargetAdd} onValueChange={setSelectedTargetAdd}>
+                                            <Select.Trigger className="sim-select" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', height: '36px' }} aria-label="Select Target Coin">
+                                                <Select.Value>
+                                                    {selectedTargetAdd || t('simulator.allAdded')}
+                                                </Select.Value>
+                                                <Select.Icon style={{ fontSize: '10px', color: 'var(--text-muted)' }}>▼</Select.Icon>
+                                            </Select.Trigger>
+                                            <Select.Portal>
+                                                <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5} style={{ zIndex: 99999 }}>
+                                                    <Select.Viewport>
+                                                        {earnings.filter(c => targetAllocations[c.displayName] === undefined).length === 0 ? (
+                                                            <Select.Item className="custom-dropdown-item" value="" disabled>
+                                                                <Select.ItemText>{t('simulator.allAdded')}</Select.ItemText>
+                                                            </Select.Item>
+                                                        ) : (
+                                                            earnings.filter(c => targetAllocations[c.displayName] === undefined).map(c => (
+                                                                <Select.Item key={c.code} value={c.displayName} className="custom-dropdown-item">
+                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                        <img src={COIN_ICONS[c.displayName] || COIN_ICONS['RLT']} alt={c.displayName} style={{ width: 20, height: 20 }} />
+                                                                        <Select.ItemText>{c.displayName}</Select.ItemText>
+                                                                    </div>
+                                                                </Select.Item>
+                                                            ))
+                                                        )}
+                                                    </Select.Viewport>
+                                                </Select.Content>
+                                            </Select.Portal>
+                                        </Select.Root>
+                                        <button className="sim-add-btn" onClick={handleAddTargetCoin} disabled={earnings.filter(c => targetAllocations[c.displayName] === undefined).length === 0 || !selectedTargetAdd}>{t('simulator.add')}</button>
+                                    </div>
+                                    <div className="sim-list">
+                                        {Object.entries(targetAllocations).map(([coin, val]) => (
+                                            <div key={coin} className="sim-list-item">
+                                                <div className="sim-item-info">
+                                                    <img src={COIN_ICONS[coin] || COIN_ICONS['RLT']} alt={coin} className="sim-coin-icon" />
+                                                    <span className="sim-coin-name">{coin}</span>
+                                                </div>
+                                                <input className="sim-range accent-range" type="range" min="0" max="100" value={val} onChange={e => handleTargetChange(coin, parseInt(e.target.value))} />
+                                                <span className="sim-val accent-text">{val}%</span>
+                                                <button className="sim-remove-btn" onClick={() => removeTargetCoin(coin)}>
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className={tableContainerClassName}>
                         <table className="earnings-table wide-table">

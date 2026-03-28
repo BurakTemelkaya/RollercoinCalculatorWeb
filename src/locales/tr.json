@@ -106,7 +106,10 @@
         "screenshotTooltip": "Tabloyu resim olarak kaydet",
         "screenshotSuccess": "Ekran görüntüsü kaydedildi!",
         "screenshotCopied": "Ekran görüntüsü panoya kopyalandı! Ctrl+V ile yapıştırın.",
-        "screenshotError": "Ekran görüntüsü alınamadı"
+        "screenshotError": "Ekran görüntüsü alınamadı",
+        "currentMineCoin": "Mevcut Kazılan Coin:",
+        "none": "Hiçbiri",
+        "adjustPowerSlider": "Yüzdeyi ayarlamak için kaydırın"
     },
     "withdraw": {
         "title": "Çekim Süresi Hesaplayıcı",
@@ -129,6 +132,12 @@
     "simulator": {
         "title": "Güç Simülatörü",
         "desc": "Yeni bir madenci eklemenin toplam gücünüzü ve liginizi nasıl etkileyeceğini hesaplayın.",
+        "panelTitle": "Güç Dağılım Simülatörü",
+        "sourceTitle": "Şu An Kazdığım (Kaldırılacak Güç)",
+        "sourceDesc": "Oyunda halihazırda kazmakta olduğunuz coinleri seçin. Böylece lig hesaplamasından sizin gücünüz kusursuzca düşülür.",
+        "targetTitle": "Hedeflenen Kazım (Eklenecek Güç)",
+        "targetDesc": "Olası yeni stratejinizde gücünüzü bölüştürmek istediğiniz coinleri ve yüzdelerini ayarlayın.",
+        "allAdded": "Tümü Eklendi",
         "currentStats": "Mevcut İstatistikler",
         "minersPower": "Madenci Gücü",
         "rackPower": "Raf Gücü (Bonus)",

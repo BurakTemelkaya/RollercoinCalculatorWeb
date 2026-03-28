@@ -106,7 +106,10 @@
         "screenshotTooltip": "Save table as image",
         "screenshotSuccess": "Screenshot saved!",
         "screenshotCopied": "Screenshot copied to clipboard! Paste with Ctrl+V.",
-        "screenshotError": "Failed to capture screenshot"
+        "screenshotError": "Failed to capture screenshot",
+        "currentMineCoin": "Currently Mined Coin:",
+        "none": "None",
+        "adjustPowerSlider": "Adjust percentage to simulate earnings"
     },
     "withdraw": {
         "title": "Withdrawal Time Calculator",
@@ -129,6 +132,12 @@
     "simulator": {
         "title": "Power Simulator",
         "desc": "Calculate how adding a new miner affects your total power and league.",
+        "panelTitle": "Power Distribution Simulator",
+        "sourceTitle": "Currently Mined (Power to Remove)",
+        "sourceDesc": "Select the coins you are currently mining. Your power will be accurately subtracted from these pools.",
+        "targetTitle": "Target Mining (Power to Add)",
+        "targetDesc": "Allocate your total power to your new target coins to simulate your future earnings.",
+        "allAdded": "All Added",
         "currentStats": "Current Stats",
         "minersPower": "Miners Power",
         "rackPower": "Rack Power (Flat/Bonus)",

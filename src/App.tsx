@@ -883,6 +883,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
                     <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
                       <EarningsTable
                         earnings={earnings}
+                        effectiveUserPower={displayPower}
                         prices={prices}
                         onOpenSettings={() => setIsSettingsOpen(true)}
                         onOpenColumnSettings={() => setColumnModalOpen(true)}
