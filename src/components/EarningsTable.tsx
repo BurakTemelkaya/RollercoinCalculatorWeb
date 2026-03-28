@@ -281,19 +281,13 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         if (effectiveUserPower) {
             const userBase = toBaseUnit(effectiveUserPower);
             const sourcePercent = sourceAllocations[baseEarning.displayName] || 0;
-            // If the coin is explicitly in targetAllocations, use its value.
-            // Otherwise, default to 100% (the "What if I put 100% here" comparative mode)
-            const targetPercent = targetAllocations[baseEarning.displayName] !== undefined 
-                                    ? targetAllocations[baseEarning.displayName] 
-                                    : 100;
+            const isTargeted = targetAllocations[baseEarning.displayName] !== undefined;
+            const targetPercent = isTargeted ? targetAllocations[baseEarning.displayName] : 100;
+            const isSimulatingAnything = Object.keys(sourceAllocations).length > 0 || Object.keys(targetAllocations).length > 0;
 
             const leagueBase = toBaseUnit(baseEarning.leaguePower);
 
-            // Remove user's power if they were CURRENTLY mining this coin
-            // Remove user's power if they were CURRENTLY mining this coin
-            // NOTE: If userBase > leagueBase, the original calculator.ts assumed the user was ADDING their power
-            // to a pool they weren't in. In that case, we shouldn't subtract from the existing league pool because 
-            // their power wasn't inside it.
+            // Remove user's power if they explicitly marked this coin as a source
             let powerToRemove = 0;
             if (userBase <= leagueBase) {
                  powerToRemove = userBase * (sourcePercent / 100);
@@ -301,19 +295,28 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             // pureLeagueBase is the pool size stripping away the user's source extraction
             let pureLeagueBase = Math.max(0, leagueBase - powerToRemove);
             
-            // Add what they PROPOSE to mine
             const allocatedUserBase = userBase * (targetPercent / 100);
             
-            // Replicate powerRatio logic perfectly to avoid artificial jumps
             let newShare = 0;
             if (pureLeagueBase === 0 && allocatedUserBase === 0) {
                 newShare = 0;
-            } else if (allocatedUserBase > pureLeagueBase) {
-                // If user's proposed power overrides the entire remaining pool, they dominate it
-                newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
+            } else if (!isSimulatingAnything) {
+                // Default table behavior
+                if (allocatedUserBase > pureLeagueBase) {
+                    newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
+                } else {
+                    newShare = allocatedUserBase / pureLeagueBase;
+                }
             } else {
-                // Otherwise, calculation uses original league base equivalent to mirror powerRatio's approximation
-                newShare = allocatedUserBase / (pureLeagueBase + powerToRemove);
+                // Simulator is active
+                if (isTargeted || allocatedUserBase > pureLeagueBase) {
+                    // Real targeted allocation! Explicitly entering a coin expands its pool.
+                    newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
+                } else {
+                    // Hypothetical row: display baseline profitability of the modified pool
+                    // without expanding it again with the hypothetical 100%.
+                    newShare = allocatedUserBase / pureLeagueBase;
+                }
             }
 
             const originalShare = baseEarning.powerShare / 100;
