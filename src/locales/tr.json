@@ -6,7 +6,106 @@
     "nav": {
         "guides": "Rehberler",
         "faq": "SSS",
-        "support": "Destek"
+        "support": "Destek",
+        "charts": "Grafikler"
+    },
+    "lpp": {
+        "title": "Lig Güç Dağılımı",
+        "gameCurrencies": "Oyun Paraları",
+        "cryptoCurrencies": "Kripto Paralar",
+        "power": "Güç",
+        "activeUsers": "Aktif Kullanıcı",
+        "perBlock": "Blok Başı",
+        "blockTime": "Blok Süresi",
+        "leaguePower": "Lig Gücü"
+    },
+    "pages": {
+        "privacy": {
+            "title": "Gizlilik Politikası",
+            "lastUpdated": "Son güncelleme: Mart 2026",
+            "intro": "RollerCoin Hesaplayıcı olarak gizliliğinize saygı duyuyor ve verilerinizi korumayı taahhüt ediyoruz.",
+            "s1_title": "1. Topladığımız Kişisel Veriler",
+            "s1_p": "Kişisel veri toplamıyoruz. Sitemizde hesap oluşturma, kayıt veya giriş yapma zorunluluğu yoktur. Adınız, e-posta adresiniz veya telefon numaranız gibi bilgiler saklanmaz.",
+            "s2_title": "2. Otomatik Olarak Toplanan Veriler",
+            "s2_p": "Sitemizi ziyaret ettiğinizde IP adresi (anonim), tarayıcı türü ve ziyaret zamanı gibi teknik veriler analiz amacıyla toplanabilir.",
+            "s3_title": "3. Çerezler (Cookies)",
+            "s3_p": "Sitemiz, Google Analytics ve A-Ads gibi üçüncü taraf hizmetler aracılığıyla çerez kullanmaktadır. Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz.",
+            "s4_title": "4. Yerel Depolama (LocalStorage)",
+            "s4_p": "Hesaplama ayarlarınızı (dil tercihi, blok süreleri vb.) tarayıcınızın yerel depolama alanında saklıyoruz. Bu veriler yalnızca sizin cihazınızda bulunur.",
+            "s5_title": "5. İletişim",
+            "s5_p": "Herhangi bir soru için GitHub sayfasını ziyaret edebilirsiniz."
+        },
+        "about": {
+            "title": "Hakkımızda",
+            "p1": "RollerCoin Kazanç Hesaplayıcı, RollerCoin oyuncularının stratejilerini optimize etmeleri için geliştirilmiş bağımsız bir analiz aracıdır.",
+            "features": "Temel Özellikler",
+            "f1": "Kazanç Hesaplayıcı — Günlük, haftalık ve aylık kripto para kazançlarınızı USD karşılığıyla görün.",
+            "f2": "Çekim Süresi Hesaplayıcı — Minimum çekim limitine ne kadar sürede ulaşacağınızı öğrenin.",
+            "f3": "Güç Simülatörü — Yeni madenciler veya parçalar eklediğinizde kazancınızın nasıl değişeceğini simüle edin.",
+            "f4": "Anlık Piyasa Verileri — Binance API üzerinden alınan canlı borsa fiyatları ile en doğru hesaplama sonuçları.",
+            "note": "Not: Bu araç bağımsızdır ve resmi RollerCoin ekibi tarafından yönetilmemektedir. Veriler girilen değerlere dayanmaktadır; gerçek kazançlar oyun içindeki anlık duruma göre değişebilir."
+        },
+        "faq": {
+            "title": "Sıkça Sorulan Sorular",
+            "q1": "1. Neden kazancım sürekli değişiyor?",
+            "a1": "RollerCoin'deki gelirler statik değildir. Seçtiğiniz coinin 'Ağ Gücü' (Network Power) saniyeden saniyeye değişmektedir. Diğer oyuncular güçlerini o coine yönlendirdiğinde veya yeni madenciler aldıklarında ağın toplam gücü artar. Sizin gücünüz sabit kalsa bile ağın toplam gücü arttığı için sizin payınıza düşen ödül miktarı azalacaktır. Ayrıca, kripto para piyasasındaki dalgalanmalar nedeniyle USD karşılığınız da canlı olarak değişir.",
+            "q2": "2. Hangi ligde olduğumu nasıl bilebilirim?",
+            "a2": "Oyunda sahip olduğunuz ve aktif olan toplam 'League Power' miktarınıza göre bir lige atanıyorsunuz. Hesaplayıcımız, isminizi (Username) girip API üzerinden verinizi çektiğinde, oyunun size atadığı ligi otomatik olarak algılar. Eğer manuel olarak güç veri girişi yapıyorsanız, hesaplayıcı 'Auto' modunda hash gücü toplamınıza göre sizi yaklaşık olarak doğru lige yerleştirir. Yanlışsa açılır menüden liginizi manuel değiştirebilirsiniz.",
+            "q3": "3. Hangi platformda hangi coini kazmalıyım? (En karlı coin hangisi?)",
+            "a3": "Bunun tek ve kesin bir cevabı yoktur çünkü ödül oranları her an değişebildiği gibi coinlerin piyasa fiyatı da (Örn; BTC, SOL, DOGE vs.) anlık değişir. 'Kazançlar' (Earnings) tablosumuzdaki USD sütununa bakarak, şu anki ağ koşullarında hangi coinin fiat (dolar) bazında en yüksek getiriyi sunduğunu saniyeler içinde görebilirsiniz. Unutmayın, en yüksek USD getirisine sahip coin genelde en mantıklı olanıdır, ancak o coinin gelecekteki fiyatlanma potansiyelini de kendi risk iştahınıza göre değerlendirmelisiniz.",
+            "q4": "4. Çekim süresi sayacı (Withdraw Timer) nasıl çalışır?",
+            "a4": "Bu araç, oyundaki mevcut bakiyenizi (balance) ve anlık üretim (kazanç) hızınızı baz alarak, o coin için belirlenmiş minimum çekim limitine tam olarak kaç gün ve saat içinde ulaşacağınızı hesaplar. Bu hesaplama o anki ağ gücüne göre yapıldığı için ağ gücü artarsa çekim süresi uzayabilir.",
+            "q5": "5. Power Simulator (Simülatör) ne işe yarar?",
+            "a5": "Eğer elinizdeki RLT veya kripto paralarla yeni bir Miner (Madenci) veya Rack (Raf) almak istiyorsanız, bu sekme size simülasyon yapma imkanı tanır. Yeni cihazın Raw Power (Sade Güç) ve Bonus Yüzdesini girdiğinizde, mevcut gücünüze eklenerek toplam gücünüzün ne olacağını ve yeni kazancınızın ne kadar artacağını anında gösterir. Böylece yanlış bir madenci satın almaktan kurtulursunuz."
+        },
+        "guides": {
+            "title": "RollerCoin Strateji Rehberleri",
+            "g1_title": "1. Yeni Başlayanlar İçin İlk Hedefler",
+            "g1_p": "RollerCoin dünyasına yeni katıldıysanız, önceliğiniz ücretsiz mini-oyunları düzenli bir şekilde oynayarak kalıcı gücünüzü (PC seviyesi) en yüksekte tutmak olmalıdır. Oyun Stratejisi: Günde 40-50 oyun oynayarak PC'nizi Level 4 seviyesine çıkarın. Bu sayede oyunlardan kazandığınız hash gücü 7 tam gün boyunca geçerli olur. Cryptonoid ve Token Blaster gibi oyunlara odaklanın. Kazançlarınızı başlangıçta tamamen RLT kazımına ayarlayarak madenci almak için kaynak yaratın.",
+            "g2_title": "2. Event Pass ve Etkinlikleri Yönetme",
+            "g2_p": "Büyük kazançlar günlük madencilikten değil, iyi planlanmış etkinlik (Progression Event) yatırımlarından gelir. Taktik: Hesabınızda her zaman bir miktar RLT tutun. Bir Progression Event başladığında eşya (parts) alıp satarak veya pazar yeri takasları yaparak etkinlik özel madencilerini çok daha ucuza alabilirsiniz.",
+            "g3_title": "3. Bonus Gücün Önemi",
+            "g3_p": "En büyük hata, sadece ham güce odaklanıp bonusu ihmal etmektir. Koleksiyonunuzdaki her farkı madenci, oda gücünüze bonus ekler. Örnek: 100 Ph/s gücünüz varsa ve %10 bonusunuz varsa, ekstra 10 Ph/s bedava eklenir. Bonuslar sadece eşsiz (farklı model) madenciler için geçerlidir."
+        },
+        "support": {
+            "title": "Destek & Referanslar",
+            "p1": "Bu projenin gelişmesini desteklemek isterseniz aşağıdaki kanalları kullanabilirsiniz. Her türlü bağış ve referans desteği, sunucu maliyetlerini karşılamaya ve yeni özellikler eklemeye yardımcı olur.",
+            "disclaimer": "Burada paylaşılan hiçbir bağlantı, site, oyun veya Telegram botu doğrudan sponsorumuz değildir. Bu projelerle hiçbir geliştirici bağımız bulunmamaktadır. Hiçbiri yatırım tavsiyesi (YTD) değildir. Sadece kendi kullandığımız ve faydalı bulduğumuz araçlardır. Sitemize destek olmak isterseniz, aşağıdaki referans bağlantılarımızı kullanarak bu servislere kayıt olabilirsiniz.",
+            "referrals": "🔗 Önerilen Platformlar ve Botlar",
+            "donations": "☕ Kripto Bağışları",
+            "coffee": "Destek ☕",
+            "desc": {
+                "chainers": "Her gün bedava NFT veya token kazanabileceğiniz eğlenceli ve gelişmekte olan bir kripto Web3 oyunu. Bedava kartları toplayarak ilerleyebilirsiniz.",
+                "chainersHeroes": "Chainers ekosisteminin Telegram üzerinden oynanan versiyonu. Tıklayarak (Tap) veya görev yaparak oyun içi ödüller biriktirin.",
+                "rollerTap": "RollerCoin ile benzer bir 'Tap to Earn' mantığında çalışan, giderek popülerleşen ödül odaklı yeni bir proje.",
+                "honeygain": "Cihazınızın kullanmadığı internet bant genişliğini (bandwith) arka planda paylaşarak tamamen pasif gelir (Dolar/Kripto) elde etmenizi sağlayan uygulama.",
+                "mystNodes": "Kendi cihazınızda küçük bir düğüm (node) çalıştırarak kripto (MYST) geliri elde etmenize olanak tanıyan altyapı paylaşım projesi.",
+                "onlyFunds": "Telegram üzerinde görev ve oyun mantığı ile potansiyel airdrop ödülleri dağıtan kullanışlı bir mini uygulama.",
+                "stellarBot": "Kripto para kazanç ve görev dünyasına odaklanan, Telegram üzerinden kolayca etkileşime geçilebilecek yeni nesil bir bot.",
+                "birdsEmpire": "Token/Coin toplama ekonomisine sahip popüler eğlencelik bir kuş imparatorluğu oyunu.",
+                "growTea": "Hem eğlenip hem de puan (token) kazanabileceğiniz ve zamanla airdrop ihtimali taşıyan mini bir Telegram uygulaması.",
+                "tonBirds": "TON Blockchain üzerinde geliştirilmiş ve The Open Network airdropları ile entegre uçan kuşlar tabanlı oyun."
+            }
+        }
+    },
+    "charts": {
+        "title": "Lig Veri Grafikleri",
+        "desc": "Son 30 güne ait lig bazlı ortalama güç ve ödeme trendlerini görüntüleyin.",
+        "7days": "7 Gün",
+        "30days": "30 Gün",
+        "allTime": "Tümü / Varsayılan",
+        "selectLeague": "Lig Seçiniz",
+        "selectCurrency": "Coin Seçiniz",
+        "startDate": "Başlangıç",
+        "endDate": "Bitiş",
+        "retry": "Tekrar Dene",
+        "payout": "Ortalama Ödül",
+        "power": "Ortalama Güç",
+        "noData": "Bu tarih aralığı için veri bulunamadı.",
+        "loading": "Grafik verileri yükleniyor...",
+        "fetchError": "Grafik verileri yüklenemedi",
+        "backToCalc": "Hesaplayıcıya Dön",
+        "date": "Tarih"
     },
     "app": {
         "title": "RollerCoin Kazanç Hesaplayıcı",
@@ -19,7 +118,8 @@
         "earnings": "Kazanç Hesaplayıcı",
         "withdraw": "Çekim Sayacı",
         "simulator": "Güç Simülatörü",
-        "event": "Etkinlik"
+        "event": "Etkinlik",
+        "charts": "Lig Grafikleri"
     },
     "input": {
         "title": "Veri Girişi & Ayarlar",
@@ -210,7 +310,7 @@
         "chart": "Grafik",
         "chartTitle": "Çarpan - Kutu Sayısı Grafiği",
         "rltPriceLabel": "RLT FİYATI (USD)",
-        "backToCalc": "← Hesaplayıcıya Dön",
+        "backToCalc": "Hesaplayıcıya Dön",
         "headers": {
             "lvl": "SEVİYE",
             "total": "Toplam",

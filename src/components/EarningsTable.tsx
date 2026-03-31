@@ -7,7 +7,7 @@ import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 import { HashPower } from '../types';
 import { toBaseUnit } from '../utils/powerParser';
-import * as Select from '@radix-ui/react-select';
+import RadixSelect from './RadixSelect';
 
 type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
@@ -530,35 +530,22 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                     <h4>{t('simulator.sourceTitle')}</h4>
                                     <p className="sim-desc">{t('simulator.sourceDesc')}</p>
                                     <div className="sim-add-row">
-                                        {selectedSourceAdd && <img src={COIN_ICONS[selectedSourceAdd] || COIN_ICONS['RLT']} alt={selectedSourceAdd} className="sim-select-icon" />}
-                                        <Select.Root value={selectedSourceAdd} onValueChange={setSelectedSourceAdd}>
-                                            <Select.Trigger className="sim-select" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', height: '36px' }} aria-label="Select Source Coin">
-                                                <Select.Value>
-                                                    {selectedSourceAdd || t('simulator.allAdded')}
-                                                </Select.Value>
-                                                <Select.Icon style={{ fontSize: '10px', color: 'var(--text-muted)' }}>▼</Select.Icon>
-                                            </Select.Trigger>
-                                            <Select.Portal>
-                                                <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5} style={{ zIndex: 99999 }}>
-                                                    <Select.Viewport>
-                                                        {earnings.filter(c => sourceAllocations[c.displayName] === undefined).length === 0 ? (
-                                                            <Select.Item className="custom-dropdown-item" value="" disabled>
-                                                                <Select.ItemText>{t('simulator.allAdded')}</Select.ItemText>
-                                                            </Select.Item>
-                                                        ) : (
-                                                            earnings.filter(c => sourceAllocations[c.displayName] === undefined).map(c => (
-                                                                <Select.Item key={c.code} value={c.displayName} className="custom-dropdown-item">
-                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                                        <img src={COIN_ICONS[c.displayName] || COIN_ICONS['RLT']} alt={c.displayName} style={{ width: 20, height: 20 }} />
-                                                                        <Select.ItemText>{c.displayName}</Select.ItemText>
-                                                                    </div>
-                                                                </Select.Item>
-                                                            ))
-                                                        )}
-                                                    </Select.Viewport>
-                                                </Select.Content>
-                                            </Select.Portal>
-                                        </Select.Root>
+                                        <RadixSelect
+                                            value={selectedSourceAdd}
+                                            onValueChange={setSelectedSourceAdd}
+                                            options={earnings
+                                                .filter(c => sourceAllocations[c.displayName] === undefined)
+                                                .map(c => ({
+                                                    value: c.displayName,
+                                                    label: c.displayName,
+                                                    icon: COIN_ICONS[c.displayName] || COIN_ICONS['RLT']
+                                                }))}
+                                            placeholder={t('simulator.allAdded')}
+                                            emptyText={t('simulator.allAdded')}
+                                            triggerClassName="sim-select"
+                                            className="sim-select-wrapper"
+                                            showSelectedIcon={true}
+                                        />
                                         <button className="sim-add-btn" onClick={handleAddSourceCoin} disabled={earnings.filter(c => sourceAllocations[c.displayName] === undefined).length === 0 || !selectedSourceAdd}>{t('simulator.add')}</button>
                                     </div>
                                     <div className="sim-list">
@@ -582,35 +569,22 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                     <h4>{t('simulator.targetTitle')}</h4>
                                     <p className="sim-desc">{t('simulator.targetDesc')}</p>
                                     <div className="sim-add-row">
-                                        {selectedTargetAdd && <img src={COIN_ICONS[selectedTargetAdd] || COIN_ICONS['RLT']} alt={selectedTargetAdd} className="sim-select-icon" />}
-                                        <Select.Root value={selectedTargetAdd} onValueChange={setSelectedTargetAdd}>
-                                            <Select.Trigger className="sim-select" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', height: '36px' }} aria-label="Select Target Coin">
-                                                <Select.Value>
-                                                    {selectedTargetAdd || t('simulator.allAdded')}
-                                                </Select.Value>
-                                                <Select.Icon style={{ fontSize: '10px', color: 'var(--text-muted)' }}>▼</Select.Icon>
-                                            </Select.Trigger>
-                                            <Select.Portal>
-                                                <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5} style={{ zIndex: 99999 }}>
-                                                    <Select.Viewport>
-                                                        {earnings.filter(c => targetAllocations[c.displayName] === undefined).length === 0 ? (
-                                                            <Select.Item className="custom-dropdown-item" value="" disabled>
-                                                                <Select.ItemText>{t('simulator.allAdded')}</Select.ItemText>
-                                                            </Select.Item>
-                                                        ) : (
-                                                            earnings.filter(c => targetAllocations[c.displayName] === undefined).map(c => (
-                                                                <Select.Item key={c.code} value={c.displayName} className="custom-dropdown-item">
-                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                                        <img src={COIN_ICONS[c.displayName] || COIN_ICONS['RLT']} alt={c.displayName} style={{ width: 20, height: 20 }} />
-                                                                        <Select.ItemText>{c.displayName}</Select.ItemText>
-                                                                    </div>
-                                                                </Select.Item>
-                                                            ))
-                                                        )}
-                                                    </Select.Viewport>
-                                                </Select.Content>
-                                            </Select.Portal>
-                                        </Select.Root>
+                                        <RadixSelect
+                                            value={selectedTargetAdd}
+                                            onValueChange={setSelectedTargetAdd}
+                                            options={earnings
+                                                .filter(c => targetAllocations[c.displayName] === undefined)
+                                                .map(c => ({
+                                                    value: c.displayName,
+                                                    label: c.displayName,
+                                                    icon: COIN_ICONS[c.displayName] || COIN_ICONS['RLT']
+                                                }))}
+                                            placeholder={t('simulator.allAdded')}
+                                            emptyText={t('simulator.allAdded')}
+                                            triggerClassName="sim-select"
+                                            className="sim-select-wrapper"
+                                            showSelectedIcon={true}
+                                        />
                                         <button className="sim-add-btn" onClick={handleAddTargetCoin} disabled={earnings.filter(c => targetAllocations[c.displayName] === undefined).length === 0 || !selectedTargetAdd}>{t('simulator.add')}</button>
                                     </div>
                                     <div className="sim-list">

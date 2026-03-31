@@ -6,7 +6,106 @@
     "nav": {
         "guides": "Guides",
         "faq": "FAQ",
-        "support": "Support"
+        "support": "Support",
+        "charts": "Charts"
+    },
+    "lpp": {
+        "title": "League Power Partition",
+        "gameCurrencies": "Game Currencies",
+        "cryptoCurrencies": "Crypto Currencies",
+        "power": "Power",
+        "activeUsers": "Active Users",
+        "perBlock": "Per Block",
+        "blockTime": "Block Time",
+        "leaguePower": "League Power"
+    },
+    "pages": {
+        "about": {
+            "title": "About Us",
+            "p1": "RollerCoin Calculator is an independent analytical tool developed to help RollerCoin players optimize their mining strategies.",
+            "features": "Key Features",
+            "f1": "Earnings Calculator — View your daily, weekly, and monthly crypto earnings in USD.",
+            "f2": "Withdrawal Timer — Find out exactly how long it takes to reach the minimum withdrawal limit.",
+            "f3": "Power Simulator — Simulate how adding new miners or parts will affect your overall profitability.",
+            "f4": "Live Market Data — Real-time exchange rates via Binance API for the most accurate results.",
+            "note": "Note: This tool is independent and not affiliated with the official RollerCoin team. Data is based on the values entered; actual earnings may vary based on live game conditions."
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "q1": "1. Why are my earnings constantly changing?",
+            "a1": "Earnings in RollerCoin are not static. The 'Network Power' of your chosen coin changes second by second. When other players allocate their power to that coin or buy new miners, the total network power increases. Even if your personal power remains constant, your share of the pie decreases because the total pool got larger. Additionally, due to crypto market volatility, the USD equivalent of your earnings changes live.",
+            "q2": "2. How do I know which league I am in?",
+            "a2": "You are assigned a league based on your total active 'League Power' in the game. When you enter your Username in our calculator to fetch data via the API, the tool automatically detects the exact league assigned to you by the game. If you are entering your power data manually, the calculator in 'Auto' mode places you in the approximately correct league based on your hash power sum. If it's incorrect, you can change your league manually from the dropdown menu.",
+            "q3": "3. Which coin is the most profitable to mine?",
+            "a3": "There is no single correct answer for this because reward rates and the market price of coins (e.g., BTC, SOL, DOGE, etc.) change constantly. By looking at the USD column in our 'Earnings' table, you can see in seconds which coin offers the highest fiat return under the current network conditions. Remember, the highest USD yielding coin is generally the most logical choice, but you should also factor in the future potential price appreciation of that coin.",
+            "q4": "4. How does the Withdraw Timer work?",
+            "a4": "This tool takes your current balance in the game and your real-time production (earning) rate to calculate exactly how many days and hours it will take for you to reach the minimum withdrawal limit for that specific coin. Since this calculation is based on current network power, an increase in network power might extend the withdrawal timeline.",
+            "q5": "5. What is the Power Simulator used for?",
+            "a5": "If you are planning to spend your RLT or crypto to buy a new Miner or Rack, this tab allows you to simulate the purchase. When you enter the new hardware's Raw Power and Bonus Percentage, it adds it to your existing power and instantly shows what your new total power and new earnings will be. This helps you avoid making unprofitable miner purchases."
+        },
+        "guides": {
+            "title": "RollerCoin Strategy Guides",
+            "g1_title": "1. First Goals for Beginners",
+            "g1_p": "If you are new to the RollerCoin world, your priority should be playing free mini-games regularly to keep your persistent power (PC level) at the maximum possible level. Game Strategy: Play around 40-50 games a day to upgrade your PC to Level 4. This ensures the hash power you gain from games lasts for a full 7 days. Focus on quick games like Cryptonoid. In the beginning, allocate 100% of your power to mining RLT so you can build a budget for miners later.",
+            "g2_title": "2. Managing Event Passes and Events",
+            "g2_p": "Big profits come from well-planned investments during Progression Events rather than daily raw mining. Tactic: Always keep a reserve of RLT in your account. When a Progression Event starts, flipping items on the marketplace or trading to gather event points will yield exclusive event miners for much lower costs.",
+            "g3_title": "3. The Importance of Bonus Power",
+            "g3_p": "The biggest mistake players make is buying miners with high raw power while ignoring Bonus Power. Every unique miner in your collection applies its bonus percentage to the raw power of your entire room. Example: If you have 100 Ph/s and 10% bonus, you get an extra 10 Ph/s for free. Bonuses only apply to unique miners in your collection."
+        },
+        "support": {
+            "title": "Support & Referrals",
+            "p1": "If you would like to support the development of this project, you can use the channels below. Every donation and referral support helps cover server costs and add new features.",
+            "disclaimer": "None of the links, games, or Telegram bots shared here are our official sponsors. We have no developer affiliation with any of these projects. None of this is Financial Advice (NFA). These are just tools we personally use and find interesting. If you wish to support our site, you can register for these services using our referral links below.",
+            "referrals": "🔗 Recommended Platforms & Bots",
+            "donations": "☕ Crypto Donations",
+            "coffee": "Support ☕",
+            "desc": {
+                "chainers": "A fun and growing Web3 crypto game where you can get free NFTs or tokens daily. Gather free cards to progress.",
+                "chainersHeroes": "The Telegram integration of the Chainers ecosystem. Earn in-game rewards by tapping and completing quests.",
+                "rollerTap": "A 'Tap to Earn' project similar in theme to RollerCoin, gaining popularity with reward-oriented mechanics.",
+                "honeygain": "Earn passive income (USD/Crypto) in the background simply by sharing your device's unused internet bandwidth.",
+                "mystNodes": "An infrastructure-sharing project that allows you to earn crypto (MYST) by running a lightweight node on your device.",
+                "onlyFunds": "A handy Telegram mini-app distributing potential airdrop rewards via tasks and game logic.",
+                "stellarBot": "A next-generation Telegram bot focused on crypto mining tasks and interactions.",
+                "birdsEmpire": "A popular bird empire game with a token/coin collecting economy inside Telegram.",
+                "growTea": "A mini Telegram game where you earn points by playing, carrying potential future airdrop opportunities.",
+                "tonBirds": "A flying birds game built on the TON Blockchain and integrated with The Open Network airdrop ecosystem."
+            }
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "lastUpdated": "Last updated: March 2026",
+            "intro": "RollerCoin Calculator respects your privacy and is committed to protecting your data.",
+            "s1_title": "1. Personal Data We Collect",
+            "s1_p": "We do not collect personal data. There is no account creation, registration, or login on this site. We do not request or store your name, email address, or phone number.",
+            "s2_title": "2. Automatically Collected Data",
+            "s2_p": "When you visit our site, technical data such as anonymized IP address, browser type, and visit time may be collected for analytics.",
+            "s3_title": "3. Cookies",
+            "s3_p": "Our site uses cookies through third-party services like Google Analytics and A-Ads. You can manage cookies in your browser settings.",
+            "s4_title": "4. Local Storage",
+            "s4_p": "We store your preferences (language, settings) in your browser's localStorage. This data remains only on your device.",
+            "s5_title": "5. Contact",
+            "s5_p": "For any questions, you can visit the GitHub page."
+        }
+    },
+    "charts": {
+        "title": "League Data Charts",
+        "desc": "View average power and payout trends for each league over the last 30 days.",
+        "7days": "7 Days",
+        "30days": "30 Days",
+        "allTime": "All Time / Default",
+        "selectLeague": "Select League",
+        "selectCurrency": "Select Currency",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "retry": "Retry",
+        "payout": "Average Payout",
+        "power": "Average Power",
+        "noData": "No data available for this selection.",
+        "loading": "Loading chart data...",
+        "fetchError": "Failed to load chart data",
+        "backToCalc": "Back to Calculator",
+        "date": "Date"
     },
     "app": {
         "title": "Rollercoin Calculator",
@@ -19,7 +118,8 @@
         "earnings": "Earnings Calculator",
         "withdraw": "Withdrawal Timer",
         "simulator": "Power Simulator",
-        "event": "Event"
+        "event": "Event",
+        "charts": "League Charts"
     },
     "input": {
         "title": "Data Input & Settings",
@@ -210,7 +310,7 @@
         "chart": "Chart",
         "chartTitle": "Multiplier vs Boxes Chart",
         "rltPriceLabel": "RLT PRICE (USD)",
-        "backToCalc": "← Back to Calculator",
+        "backToCalc": "Back to Calculator",
         "headers": {
             "lvl": "LVL",
             "total": "Total",

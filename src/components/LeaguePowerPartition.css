@@ -1,0 +1,208 @@
+.lpp-wrapper {
+    margin-top: 32px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.lpp-toggle-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.lpp-toggle-btn:hover {
+    background: var(--bg-card-hover);
+}
+
+.lpp-toggle-icon {
+    margin-right: 12px;
+}
+
+.lpp-toggle-text {
+    flex: 1;
+    text-align: left;
+}
+
+.lpp-chevron {
+    transition: transform 0.3s;
+}
+
+.lpp-toggle-btn.open {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: none;
+}
+
+.lpp-toggle-btn.open .lpp-chevron {
+    transform: rotate(180deg);
+}
+
+.lpp-container {
+    padding: 24px;
+    background: #1a1b26; /* Darker theme like screenshot */
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+.lpp-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 24px 0;
+    color: #fff;
+}
+
+.lpp-content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.lpp-chart-col {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lpp-pie-wrapper {
+    width: 280px;
+    height: 280px;
+    margin-bottom: 24px;
+}
+
+.lpp-league-power {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.lpp-lp-label {
+    font-size: 14px;
+    color: #a1a1aa;
+}
+
+.lpp-lp-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.lpp-nav-chart-btn {
+    background: linear-gradient(180deg, #9ca3af 0%, #6b7280 100%);
+    color: white;
+    font-weight: 800;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.lpp-nav-chart-btn:hover {
+    transform: translateY(-2px);
+}
+
+.lpp-data-col {
+    flex: 1;
+    min-width: 300px;
+}
+
+.lpp-section {
+    margin-bottom: 32px;
+}
+
+.lpp-section-title {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0 0 16px 0;
+    font-weight: 600;
+}
+
+.lpp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.lpp-card {
+    background: #232533;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.lpp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.lpp-card-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.lpp-coin-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.lpp-card-percent {
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.lpp-card-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+
+.lpp-card-row:last-child {
+    margin-bottom: 0;
+}
+
+.lpp-row-label {
+    color: #94a3b8;
+}
+
+.lpp-row-val {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .lpp-content {
+        flex-direction: column;
+    }
+    
+    .lpp-chart-col {
+        flex: auto;
+        width: 100%;
+    }
+}

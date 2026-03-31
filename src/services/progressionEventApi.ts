@@ -5,6 +5,7 @@
  */
 
 import { buildApiUrl } from '../config/api';
+import { apiGet } from './apiClient';
 import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData } from '../types/progressionEvent';
 
 export interface ParsedProgressionEvent {
@@ -21,14 +22,7 @@ export interface ParsedProgressionEvent {
  */
 export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
     const url = buildApiUrl('/api/ProgressionEvents');
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-    }
-
-    const raw: ProgressionEventResponse = await response.json();
+    const raw = await apiGet<ProgressionEventResponse>(url);
 
     // Parse the nested JSON data string
     const data: ProgressionEventData = JSON.parse(raw.data);

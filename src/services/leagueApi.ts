@@ -5,6 +5,7 @@
  */
 
 import { getApiUrl } from '../config/api';
+import { apiGet } from './apiClient';
 import { ApiLeaguesResponse, ApiLeagueData } from '../types/api';
 import { LeagueInfo } from '../data/leagues';
 import { CoinData } from '../types';
@@ -14,26 +15,11 @@ import { CURRENCY_MAP } from '../data/leagues';
 /**
  * Fetches league data from the API
  * @returns Promise resolving to array of league data
- * @throws Error if the request fails
+ * @throws ApiError if the request fails
  */
 export async function fetchLeaguesFromApi(): Promise<ApiLeaguesResponse> {
-    try {
-        const url = getApiUrl('leagues');
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            if (response.status === 429) {
-                throw new Error('RATE_LIMIT');
-            }
-            throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-        }
-
-        const data: ApiLeaguesResponse = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching leagues from API:', error);
-        throw error;
-    }
+    const url = getApiUrl('leagues');
+    return apiGet<ApiLeaguesResponse>(url);
 }
 
 /**

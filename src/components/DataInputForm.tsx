@@ -7,9 +7,10 @@ import { ApiLeagueData } from '../types/api';
 import { getLeagueImage } from '../data/leagueImages';
 import profileLinkImage from '../assets/profile_link.png';
 import './DataInputForm.css';
-import * as Select from '@radix-ui/react-select';
 import classNames from 'classnames';
 import { useApiCooldown } from '../hooks/useApiCooldown';
+import { ApiError } from '../services/apiClient';
+import RadixSelect from './RadixSelect';
 
 interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower, isManual?: boolean) => void;
@@ -101,10 +102,10 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             }
             return true;
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            if (errorMessage === 'RATE_LIMIT') {
+            if (error instanceof ApiError && error.isRateLimit) {
                 onShowNotification(t('input.errors.tooManyRequests'), 'error');
             } else {
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 onShowNotification(t('input.apiError', { error: errorMessage }), 'error');
             }
             return false;
@@ -345,56 +346,21 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                             <div className="input-group">
                                 <label>{t('input.leagueSelect')}</label>
-                                <Select.Root
+                                <RadixSelect
                                     value={currentLeague.id}
                                     onValueChange={onLeagueChange}
                                     disabled={isAutoLeague}
-                                >
-                                    <Select.Trigger className={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })} aria-label={t('input.leagueSelect')}>
-                                        <Select.Value>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <img
-                                                    src={getLeagueImage(currentLeague.id)}
-                                                    alt={`${currentLeague.name} League`}
-                                                    className="league-icon-dropdown"
-                                                    onError={(e) => {
-                                                        const target = e.target as HTMLImageElement;
-                                                        target.onerror = null;
-                                                        target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                                                    }}
-                                                />
-                                                <span>{currentLeague.name}</span>
-                                            </div>
-                                        </Select.Value>
-                                        <Select.Icon className="dropdown-arrow">
-                                            ▼
-                                        </Select.Icon>
-                                    </Select.Trigger>
-
-                                    <Select.Portal>
-                                        <Select.Content className="custom-dropdown-list-radix" position="popper" sideOffset={5}>
-                                            <Select.Viewport>
-                                                {leaguesList.map(l => (
-                                                    <Select.Item key={l.id} value={l.id} className={classNames("custom-dropdown-item", { active: l.id === currentLeague.id })}>
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                            <img
-                                                                src={getLeagueImage(l.id)}
-                                                                alt={`${l.name} League`}
-                                                                style={{ width: 20, height: 20 }}
-                                                                onError={(e) => {
-                                                                    const target = e.target as HTMLImageElement;
-                                                                    target.onerror = null;
-                                                                    target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                                                                }}
-                                                            />
-                                                            <Select.ItemText>{l.name}</Select.ItemText>
-                                                        </div>
-                                                    </Select.Item>
-                                                ))}
-                                            </Select.Viewport>
-                                        </Select.Content>
-                                    </Select.Portal>
-                                </Select.Root>
+                                    options={leaguesList.map(l => ({
+                                        value: l.id,
+                                        label: l.name,
+                                        icon: getLeagueImage(l.id),
+                                        iconAlt: `${l.name} League`
+                                    }))}
+                                    ariaLabel={t('input.leagueSelect')}
+                                    triggerClassName={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })}
+                                    showSelectedIcon={false}
+                                    fullWidth={true}
+                                />
                             </div>
 
                             <div className="input-group">

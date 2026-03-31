@@ -1,9 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
-import trFlag from './assets/flags/tr.svg';
-import gbFlag from './assets/flags/gb.svg';
-import appLogo from './assets/logo.png';
 import { Routes, Route, Navigate, useParams, useNavigate, Link } from 'react-router-dom';
 // ... existing imports ...
 
@@ -20,7 +17,7 @@ import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
-import { Helmet } from 'react-helmet-async';
+import { ApiError } from './services/apiClient';
 
 // Lazy load complex components to improve initial load and shorten critical request chains
 const WithdrawTimer = React.lazy(() => import('./components/WithdrawTimer'));
@@ -33,8 +30,10 @@ const PrivacyPage = React.lazy(() => import('./components/PrivacyPage'));
 const FaqPage = React.lazy(() => import('./components/FaqPage'));
 const GuidesPage = React.lazy(() => import('./components/GuidesPage'));
 const SupportPage = React.lazy(() => import('./components/SupportPage'));
+const LeagueChart = React.lazy(() => import('./components/LeagueChart'));
 
 import SeoArticle from './components/SeoArticle';
+import MainLayout from './components/MainLayout';
 import './index.css';
 
 // Local storage keys
@@ -62,6 +61,7 @@ const TAB_ORDER: Record<Tab, number> = {
 };
 
 import Notification from './components/Notification';
+import LeaguePowerPartition from './components/LeaguePowerPartition';
 
 function AutoRedirect() {
   const navigate = useNavigate();
@@ -83,13 +83,13 @@ function AutoRedirect() {
   return null;
 }
 
-function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: boolean }) {
+function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [coins, setCoins] = useState<CoinData[]>([]);
 
-  // Force language sync with URL parmater on mount and param change
+  // Force language sync with URL parameter on mount and param change
   useEffect(() => {
     if (lang && (lang === 'tr' || lang === 'en')) {
       if (i18n.language !== lang) {
@@ -105,21 +105,9 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   // Notification state
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  // Use the route prop directly instead of hash-based routing
-  const showEventPage = showEventPageRoute;
-
   const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setNotification({ message, type });
   };
-
-
-  // Dynamic SEO: update lang on language change
-  useEffect(() => {
-    document.documentElement.lang = i18n.language;
-  }, [i18n.language]);
-
-
-  const currentUrl = `https://rollercoincalculator.app/${lang || i18n.language}${showEventPageRoute ? '/event' : ''}`;
 
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
@@ -231,7 +219,9 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
       console.error('Failed to fetch user:', error);
       // Always show error notifications
       let msg = error instanceof Error ? error.message : t('input.errors.parseError');
-      if (msg === 'RATE_LIMIT') {
+      if (error instanceof ApiError && error.isRateLimit) {
+        msg = t('input.errors.tooManyRequests');
+      } else if (msg === 'RATE_LIMIT') { // Fallback, just in case
         msg = t('input.errors.tooManyRequests');
       } else if (msg === 'Failed to fetch') {
         // Handle generic network fetch failure
@@ -682,18 +672,8 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
   }, [fetchMode, fetchedUser, userPower]);
 
   return (
-    <div className="app-layout">
-      {/* Left Side Ad - Desktop Only */}
-      <div className="side-ad side-ad-left">
-        <div className="side-ad-inner">
-          <iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe"
-            style={{ border: 0, padding: 0, width: 160, height: 600, overflow: 'hidden', display: 'block', margin: '0 auto' }}
-            title="Ad Left" />
-        </div>
-      </div>
-
-      <div className="app">
-        <React.Suspense fallback={null}>
+    <div className="app">
+      <React.Suspense fallback={null}>
           <SettingsModal
             isOpen={isSettingsOpen}
             onClose={() => setIsSettingsOpen(false)}
@@ -734,84 +714,16 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
           </div>
         )}
 
-        {/* SEO Tags */}
-        <Helmet>
-          <title>{t('seo.title')}</title>
-          <meta name="description" content={t('seo.description')} />
-          <link rel="canonical" href={currentUrl} />
-          <meta property="og:title" content={t('seo.title')} />
-          <meta property="og:description" content={t('seo.description')} />
-          <meta property="og:url" content={currentUrl} />
-          <meta name="twitter:title" content={t('seo.title')} />
-          <meta name="twitter:description" content={t('seo.description')} />
-        </Helmet>
-
-        {/* Header */}
-        <header className="header">
-          <div className="header-content">
-            <div className="header-logo">
-              <img src={appLogo} alt="Logo" width="80" height="80" className="app-main-logo" />
-            </div>
-            <div className="header-title">
-              <h1>{t('app.title')}</h1>
-            </div>
-            <div className="header-right-group">
-              <div className="main-nav-links">
-                <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
-                <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
-                <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')} ☕</Link>
-              </div>
-              <div className="lang-switcher">
-                <button
-                  className={`lang-btn ${i18n.language === 'tr' ? 'active' : ''}`}
-                  onClick={() => navigate('/tr' + (showEventPageRoute ? '/event' : ''))}
-                  title="Türkçe"
-                >
-                  <img src={trFlag} alt="TR" className="flag-icon" />
-                  <span className="lang-text">Türkçe</span>
-                </button>
-                <button
-                  className={`lang-btn ${i18n.language === 'en' ? 'active' : ''}`}
-                  onClick={() => navigate('/en' + (showEventPageRoute ? '/event' : ''))}
-                  title="English"
-                >
-                  <img src={gbFlag} alt="EN" className="flag-icon" />
-                  <span className="lang-text">English</span>
-                </button>
-              </div>
-              <a
-                href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="github-link"
-                title="GitHub"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </header>
-
-        {/* Mobile Ad Banner - Hidden on desktop where side ads show */}
-        <div className="mobile-ad">
-          <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"
-            style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
-            title="Ad Mobile" />
-        </div>
-
-        {/* Main Content */}
-        {showEventPage ? (
-          <main className="main-content">
+        {/* Content */}
+        {isEventPage ? (
+          <>
             <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
               <ProgressionEvent />
             </React.Suspense>
-          </main>
+          </>
         ) : (
-          <main className="main-content">
-            {/* Event Page Link (Top) */}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
               <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
                 <span className="tab-icon">🎉</span>
                 {t('tabs.event')}
@@ -839,6 +751,7 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
               fetchMode={fetchMode}
               setFetchMode={setFetchMode}
             />
+
 
             {/* Tabs */}
             {earnings.length > 0 && (
@@ -881,19 +794,20 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
                 {earnings.length > 0 && (
                   <>
                     <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
-                      <EarningsTable
-                        earnings={earnings}
-                        effectiveUserPower={displayPower}
-                        prices={prices}
-                        onOpenSettings={() => setIsSettingsOpen(true)}
-                        onOpenColumnSettings={() => setColumnModalOpen(true)}
-                        onShowNotification={showNotification}
-                        visibleColumns={visibleColumns}
-                        blockDurations={blockDurations}
-                        customPeriodDays={customPeriodDays}
-                        customPeriodHours={customPeriodHours}
-                      />
-                    </div>
+                        <EarningsTable
+                          earnings={earnings}
+                          effectiveUserPower={displayPower}
+                          prices={prices}
+                          onOpenSettings={() => setIsSettingsOpen(true)}
+                          onOpenColumnSettings={() => setColumnModalOpen(true)}
+                          onShowNotification={showNotification}
+                          visibleColumns={visibleColumns}
+                          blockDurations={blockDurations}
+                          customPeriodDays={customPeriodDays}
+                          customPeriodHours={customPeriodHours}
+                        />
+                        <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
+                      </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
                         <PowerSimulator
@@ -922,59 +836,30 @@ function CalculatorArea({ showEventPageRoute = false }: { showEventPageRoute?: b
               </div>
             </div>
 
-            {/* Mobile Ad Banner - Moved above SeoArticle per user request */}
-            <div className="mobile-ad">
-              <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"
-                style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
-                title="Ad Mobile Bottom" />
-            </div>
 
             <SeoArticle />
-          </main>
+          </>
         )}
-
-        {/* Footer */}
-        <footer className="footer">
-          <p>{t('app.footerLink')}</p>
-          <p className="footer-note">
-            {t('app.footerText')}{' '}
-            <a href="https://rollercoin.com/game" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
-              rollercoin.com
-            </a>
-          </p>
-          <p className="footer-note">
-            <Link to={`/${lang}/about`}>{lang === 'tr' ? 'Hakkımızda' : 'About Us'}</Link>
-            {' · '}
-            <Link to={`/${lang}/privacy`}>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</Link>
-          </p>
-        </footer>
       </div>
-
-      {/* Right Side Ad - Desktop Only */}
-      <div className="side-ad side-ad-right">
-        <div className="side-ad-inner">
-          <iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe"
-            style={{ border: 0, padding: 0, width: 160, height: 600, overflow: 'hidden', display: 'block', margin: '0 auto' }}
-            title="Ad Right" />
-        </div>
-      </div>
-    </div>
   );
 }
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AutoRedirect />} />
-      <Route path="/:lang" element={<CalculatorArea />} />
-      <Route path="/:lang/event" element={<CalculatorArea showEventPageRoute={true} />} />
-      <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
-      <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
-      <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
-      <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
-      <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <MainLayout>
+      <Routes>
+        <Route path="/" element={<AutoRedirect />} />
+        <Route path="/:lang" element={<CalculatorArea />} />
+        <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
+        <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
+        <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
+        <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
+        <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
+        <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
+        <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </MainLayout>
   );
 }
 

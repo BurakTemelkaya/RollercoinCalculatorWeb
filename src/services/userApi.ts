@@ -5,41 +5,28 @@
  */
 
 import { getApiUrl } from '../config/api';
+import { apiFetch, ApiError } from './apiClient';
 import { RollercoinUserResponse } from '../types/user';
 
 /**
- * Fetches user data from the API by username
+ * Fetches user data from the API by username.
+ * Uses apiFetch (low-level) instead of apiGet because the error response
+ * body may contain a `detail` field that we want to surface.
+ *
  * @param userName - The username to fetch
  * @returns Promise resolving to user data
- * @throws Error if the request fails
+ * @throws ApiError if the request fails (with detail from error body)
  */
 export async function fetchUserFromApi(userName: string): Promise<RollercoinUserResponse> {
-    try {
-        const baseUrl = getApiUrl('user');
-        const url = `${baseUrl}?userName=${encodeURIComponent(userName)}`;
+    const baseUrl = getApiUrl('user');
+    const url = `${baseUrl}?userName=${encodeURIComponent(userName)}`;
 
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            if (response.status === 429) {
-                throw new Error('RATE_LIMIT');
-            }
-            let errorMessage = `API request failed: ${response.status} ${response.statusText}`;
-            try {
-                const errorData = await response.json();
-                if (errorData && errorData.detail) {
-                    errorMessage = errorData.detail;
-                }
-            } catch (_e) {
-                // Ignore json parsing error, use default message
-            }
-            throw new Error(errorMessage);
-        }
-
-        const data: RollercoinUserResponse = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching user from API:', error);
-        throw error;
-    }
+    // apiFetch already handles 429 and parses error detail from JSON body
+    const response = await apiFetch(url);
+    return response.json() as Promise<RollercoinUserResponse>;
 }
+
+/**
+ * Re-export ApiError for upstream error handling
+ */
+export { ApiError };

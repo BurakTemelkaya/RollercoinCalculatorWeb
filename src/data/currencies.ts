@@ -18,7 +18,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "MATIC_SMALL",
         to_small: 10000000000,
         min_withdraw: 300,
-        color: "#8247e5",
+        color: "#816BF8",
         is_game_token: false,
         precision: 6
     },
@@ -40,7 +40,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "LTC_SMALL",
         to_small: 100000000,
         min_withdraw: 5,
-        color: "#345d9d",
+        color: "#9AAAC7",
         is_game_token: false,
         precision: 6
     },
@@ -51,7 +51,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "USDT_SMALL",
         to_small: 1000000,
         min_withdraw: 5,
-        color: "#26a17b",
+        color: "#50AF95",
         is_game_token: false,
         precision: 6
     },
@@ -62,7 +62,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "ETH_SMALL",
         to_small: 10000000000,
         min_withdraw: 0.014,
-        color: "#987eff",
+        color: "#8B5CF6",
         is_game_token: false,
         precision: 6
     },
@@ -73,7 +73,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "SOL_SMALL",
         to_small: 1000000000,
         min_withdraw: 0.6,
-        color: "#5696d6",
+        color: "#14F195",
         is_game_token: false,
         precision: 6
     },
@@ -84,7 +84,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "TRX_SMALL",
         to_small: 10000000000,
         min_withdraw: 300,
-        color: "#5c0e0e",
+        color: "#EF2A2A",
         is_game_token: false,
         precision: 6
     },
@@ -106,7 +106,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "DOGE_SMALL",
         to_small: 10000,
         min_withdraw: 220,
-        color: "#c2a633",
+        color: "#F3BA2F",
         is_game_token: false,
         precision: 4
     },
@@ -117,7 +117,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "RLT",
         to_small: 1000000,
         min_withdraw: 1,
-        color: "#03e1e4",
+        color: "#2AC0BE",
         is_game_token: true,
         precision: 6
     },
@@ -128,7 +128,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "RST",
         to_small: 1000000,
         min_withdraw: 1,
-        color: "#82e73b",
+        color: "#F5D539",
         is_game_token: true,
         precision: 6
     },
@@ -139,7 +139,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "HMT",
         to_small: 1000000,
         min_withdraw: 1,
-        color: "#000000",
+        color: "#8748DA",
         is_game_token: true,
         precision: 6
     },
@@ -151,7 +151,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "XRP_SMALL",
         to_small: 1000000,
         min_withdraw: 10,
-        color: "#23292f",
+        color: "#64748b",
         is_game_token: false,
         precision: 6
     },
@@ -162,7 +162,7 @@ export const CURRENCY_CONFIG: CurrencyConfig[] = [
         balance_key: "ALGO_SMALL",
         to_small: 1000000,
         min_withdraw: 30, // Keeping this for reference, though not used in timer
-        color: "#CF2D4D",
+        color: "#EB567A",
         is_game_token: false,
         precision: 6
     }
