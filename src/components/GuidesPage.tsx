@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -21,7 +20,7 @@ export default function GuidesPage() {
 
       <article className="static-content guides-container">
         <h1>{t('pages.guides.title')}</h1>
-        
+
         <section className="guide-card">
           <h2>{t('pages.guides.g1_title')}</h2>
           <p>{t('pages.guides.g1_p')}</p>

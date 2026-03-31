@@ -3992,12 +3992,19 @@ a:hover {
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
   min-height: 48px;
+  min-width: 120px;
 }
 
 .sim-add-btn:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.sim-add-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .sim-add-btn:disabled {
