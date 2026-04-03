@@ -554,10 +554,6 @@
     overflow-y: auto;
 }
 
-.username-help-btn:hover + .username-help-tooltip,
-.username-help-btn:focus + .username-help-tooltip,
-.username-help-tooltip:hover,
-.username-help-tooltip:focus-within,
 .username-help-tooltip.open {
     opacity: 1;
     visibility: visible;

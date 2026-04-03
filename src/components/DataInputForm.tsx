@@ -63,17 +63,15 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const tooltipRef = React.useRef<HTMLDivElement>(null);
+    const tooltipHoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const [profileLinkInput, setProfileLinkInput] = useState('');
 
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
     const [isFetchingUserLocal, setIsFetchingUserLocal] = useState(false);
 
-    // Close tooltip when clicking outside (desktop only)
+    // Close tooltip when clicking outside
     useEffect(() => {
-        const isMobile = window.innerWidth <= 600;
-        if (isMobile) return; // Skip on mobile
-
         const handleClickOutside = (event: MouseEvent) => {
             if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
                 setIsTooltipOpen(false);
@@ -85,6 +83,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             return () => document.removeEventListener('mousedown', handleClickOutside);
         }
     }, [isTooltipOpen]);
+
+    useEffect(() => {
+        return () => {
+            if (tooltipHoverTimerRef.current) {
+                clearTimeout(tooltipHoverTimerRef.current);
+            }
+        };
+    }, []);
 
     // Show tooltip with error message when user not found
     useEffect(() => {
@@ -223,6 +229,40 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         }
     };
 
+    const handleFetchAction = async () => {
+        if (!canFetch) {
+            const remainSec = Math.ceil(cooldownRemaining / 1000);
+            onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
+            return;
+        }
+
+        const isUsernameMode = fetchMode === 'username' && localUserName.trim();
+        const apiPromise = handleFetchFromApi(!isUsernameMode);
+
+        if (isUsernameMode) {
+            const userPromise = handleFetchUserLocal(!isUsernameMode);
+            const [userSuccess, apiSuccess] = await Promise.all([userPromise, apiPromise]);
+
+            if (userSuccess && apiSuccess) {
+                onShowNotification(t('input.allDataFetched'), 'success');
+            }
+
+            if (onForceFetchPrices && (userSuccess || apiSuccess)) {
+                onForceFetchPrices();
+            }
+
+            if (userSuccess) {
+                setIsExpanded(false);
+            }
+            return;
+        }
+
+        const apiSuccess = await apiPromise;
+        if (onForceFetchPrices && apiSuccess) {
+            onForceFetchPrices();
+        }
+    };
+
     const leaguesList = apiLeagues && apiLeagues.length > 0 ? apiLeagues : LEAGUES;
 
     return (
@@ -313,17 +353,36 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                 onChange={(e) => setLocalUserName(e.target.value)}
                                                 onBlur={() => setGlobalUserName(localUserName)}
                                                 className="power-value-input"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') handleFetchUserLocal();
+                                                onKeyDown={async (e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        await handleFetchAction();
+                                                    }
                                                 }}
                                             />
                                             <button
                                                 type="button"
                                                 className="username-help-btn"
                                                 aria-label={t('input.usernameHelpAria')}
+                                                onMouseEnter={() => {
+                                                    if (tooltipHoverTimerRef.current) {
+                                                        clearTimeout(tooltipHoverTimerRef.current);
+                                                    }
+                                                    tooltipHoverTimerRef.current = setTimeout(() => {
+                                                        setIsTooltipOpen(true);
+                                                    }, 2000);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    if (tooltipHoverTimerRef.current) {
+                                                        clearTimeout(tooltipHoverTimerRef.current);
+                                                    }
+                                                }}
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
+                                                    if (tooltipHoverTimerRef.current) {
+                                                        clearTimeout(tooltipHoverTimerRef.current);
+                                                    }
                                                     setIsTooltipOpen(!isTooltipOpen);
                                                 }}
                                             >
@@ -429,34 +488,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                                     <button
                                         className="fetch-btn"
-                                        onClick={async () => {
-                                            if (!canFetch) {
-                                                const remainSec = Math.ceil(cooldownRemaining / 1000);
-                                                onShowNotification(t('input.apiCooldown', { seconds: remainSec }), 'info');
-                                                return;
-                                            }
-                                            const isUsernameMode = fetchMode === 'username' && localUserName.trim();
-                                            const aP = handleFetchFromApi(!isUsernameMode);
-
-                                            if (isUsernameMode) {
-                                                const uP = handleFetchUserLocal(!isUsernameMode);
-                                                const [userSuccess, apiSuccess] = await Promise.all([uP, aP]);
-                                                if (userSuccess && apiSuccess) {
-                                                    onShowNotification(t('input.allDataFetched'), 'success');
-                                                }
-                                                if (onForceFetchPrices && (userSuccess || apiSuccess)) {
-                                                    onForceFetchPrices();
-                                                }
-                                                if (userSuccess) {
-                                                    setIsExpanded(false);
-                                                }
-                                            } else {
-                                                const apiSuccess = await aP;
-                                                if (onForceFetchPrices && apiSuccess) {
-                                                    onForceFetchPrices();
-                                                }
-                                            }
-                                        }}
+                                        onClick={handleFetchAction}
                                         disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
                                         title={t('input.fetchFromApi')}
                                     >
