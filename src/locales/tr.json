@@ -81,10 +81,10 @@
                 "honeygain": "Cihazınızın kullanmadığı internet bant genişliğini (bandwith) arka planda paylaşarak tamamen pasif gelir (Dolar/Kripto) elde etmenizi sağlayan uygulama.",
                 "mystNodes": "Kendi cihazınızda küçük bir düğüm (node) çalıştırarak kripto (MYST) geliri elde etmenize olanak tanıyan altyapı paylaşım projesi.",
                 "onlyFunds": "Telegram üzerinde görev ve oyun mantığı ile potansiyel airdrop ödülleri dağıtan kullanışlı bir mini uygulama.",
-                "stellarBot": "Kripto para kazanç ve görev dünyasına odaklanan, Telegram üzerinden kolayca etkileşime geçilebilecek yeni nesil bir bot.",
                 "birdsEmpire": "Token/Coin toplama ekonomisine sahip popüler eğlencelik bir kuş imparatorluğu oyunu.",
                 "growTea": "Hem eğlenip hem de puan (token) kazanabileceğiniz ve zamanla airdrop ihtimali taşıyan mini bir Telegram uygulaması.",
-                "tonBirds": "TON Blockchain üzerinde geliştirilmiş ve The Open Network airdropları ile entegre uçan kuşlar tabanlı oyun."
+                "tonBirds": "TON Blockchain üzerinde geliştirilmiş ve The Open Network airdropları ile entegre uçan kuşlar tabanlı oyun.",
+                "grass": "İnternetini paylaş, $GRASS kazan! Grass ile pasif gelire hemen başla."
             }
         }
     },
@@ -151,7 +151,8 @@
             "missingBoth": "Kullanıcı gücü ve lig bilgileri eksik! Lütfen ikisini de giriniz.",
             "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
             "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!",
-            "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin."
+            "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin.",
+            "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin."
         },
         "usernamePlaceholder": "Kullanıcı adı girin",
         "enterUsername": "Kullanıcı Adı",
@@ -164,6 +165,8 @@
         "usernameHelpAria": "Kullanıcı adı yardımını göster",
         "usernameHelpTitle": "Kullanıcı adını nasıl bulurum?",
         "usernameHelpText": "Bu sayfaya gidin, profil linkindeki son kısmı (ör. XYZ) kopyalayıp buraya yapıştırın.",
+        "orPasteProfileLink": "veya profil linkini yapıştırın:",
+        "usernameExtracted": "Kullanıcı adı başarıyla çıkarıldı: {{name}}",
         "usernameHelpLink": "Profili aç",
         "usernameHelpPreviewTitle": "Profil linki",
         "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
@@ -284,6 +287,7 @@
         "loading": "Etkinlik verileri yükleniyor...",
         "fetchError": "Etkinlik verileri yüklenemedi",
         "retry": "Tekrar Dene",
+        "adBlockerWarning": "Reklam engelleme algılandı: Eşya görselleri yüklenmeyebilir. Bazı ödüller görüntülemezde gösterilmeyebilir.",
         "ended": "Etkinlik sona erdi",
         "days": "gün",
         "daysShort": "g",

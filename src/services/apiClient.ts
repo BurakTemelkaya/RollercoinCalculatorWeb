@@ -34,7 +34,20 @@ export class ApiError extends Error {
  */
 export async function apiFetch(url: string, options?: RequestInit): Promise<Response> {
     try {
-        const response = await fetch(url, options);
+        const savedLang = localStorage.getItem('rollercoin_web_language');
+        const appLang = savedLang === 'en' ? 'en' : 'tr';
+        const acceptLanguage = appLang === 'en'
+            ? 'en-US,en;q=0.9,tr;q=0.8'
+            : 'tr-TR,tr;q=0.9,en;q=0.8';
+
+        // Force API locale to follow in-app language selection.
+        const headers = new Headers(options?.headers);
+        headers.set('Accept-Language', acceptLanguage);
+
+        const response = await fetch(url, {
+            ...options,
+            headers,
+        });
 
         if (!response.ok) {
             if (response.status === 429) {

@@ -5,7 +5,7 @@ import { LEAGUES, LeagueInfo } from '../data/leagues';
 import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
 import { getLeagueImage } from '../data/leagueImages';
-import profileLinkImage from '../assets/profile_link.png';
+import findUsernameImage from '../assets/find_username.png';
 import './DataInputForm.css';
 import classNames from 'classnames';
 import { useApiCooldown } from '../hooks/useApiCooldown';
@@ -31,6 +31,8 @@ interface DataInputFormProps {
     onForceFetchPrices?: () => void;
     fetchMode: 'username' | 'power';
     setFetchMode: (mode: 'username' | 'power') => void;
+    userNotFoundError?: boolean;
+    setUserNotFoundError?: (val: boolean) => void;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -52,13 +54,46 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     onForceFetchPrices,
     fetchMode,
     setFetchMode,
+    userNotFoundError = false,
+    setUserNotFoundError = () => { },
 }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(true);
+    const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+    const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const tooltipRef = React.useRef<HTMLDivElement>(null);
+    const [profileLinkInput, setProfileLinkInput] = useState('');
 
     const [isLoadingApi, setIsLoadingApi] = useState(false);
 
     const [isFetchingUserLocal, setIsFetchingUserLocal] = useState(false);
+
+    // Close tooltip when clicking outside (desktop only)
+    useEffect(() => {
+        const isMobile = window.innerWidth <= 600;
+        if (isMobile) return; // Skip on mobile
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+                setIsTooltipOpen(false);
+            }
+        };
+
+        if (isTooltipOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isTooltipOpen]);
+
+    // Show tooltip with error message when user not found
+    useEffect(() => {
+        if (userNotFoundError) {
+            setErrorMessage(t('input.errors.userNotFound'));
+            setIsTooltipOpen(true);
+            setUserNotFoundError(false); // Reset error flag after displaying
+        }
+    }, [userNotFoundError, t, setUserNotFoundError]);
 
     // Use an uncontrolled local state for input to prevent whole-app rerenders on every keystroke
     const [localUserName, setLocalUserName] = useState(globalUserName);
@@ -123,6 +158,34 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
+    // Extract username from rollercoin profile URL
+    const extractUsernameFromProfileLink = (link: string): string | null => {
+        try {
+            // Match: https://rollercoin.com/p/USERNAME or /p/USERNAME/games etc
+            const match = link.match(/\/p\/([^\/\s]+)/);
+            if (match && match[1]) {
+                return match[1].toUpperCase();
+            }
+            return null;
+        } catch {
+            return null;
+        }
+    };
+
+    // Handle profile link paste
+    const handleProfileLinkPaste = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const link = e.target.value;
+        setProfileLinkInput(link);
+
+        if (link.trim()) {
+            const username = extractUsernameFromProfileLink(link);
+            if (username) {
+                setLocalUserName(username);
+                onShowNotification(t('input.usernameExtracted', { name: username }), 'success');
+            }
+        }
+    };
+
     useEffect(() => {
         // In username mode, power comes from API, so don't trigger on manual change
         if (fetchMode === 'username') {
@@ -163,6 +226,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const leaguesList = apiLeagues && apiLeagues.length > 0 ? apiLeagues : LEAGUES;
 
     return (
+        <>
         <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
             <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
                 <div className="header-left">
@@ -241,7 +305,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
                                 <div className="api-fetch-row">
                                     {fetchMode === 'username' ? (
-                                        <div className="username-input-with-help flex-grow-input">
+                                        <div className="username-input-with-help flex-grow-input" ref={tooltipRef}>
                                             <input
                                                 type="text"
                                                 placeholder={t('input.usernamePlaceholder')}
@@ -257,25 +321,91 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                 type="button"
                                                 className="username-help-btn"
                                                 aria-label={t('input.usernameHelpAria')}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setIsTooltipOpen(!isTooltipOpen);
+                                                }}
                                             >
                                                 ?
                                             </button>
-                                            <div className="username-help-tooltip" role="tooltip">
+                                            <div className={`username-help-tooltip ${isTooltipOpen ? 'open' : ''}`} role="tooltip">
+                                                {errorMessage && (
+                                                    <div style={{ 
+                                                        color: '#ef4444', 
+                                                        fontSize: '13px', 
+                                                        fontWeight: '600',
+                                                        marginBottom: '10px',
+                                                        padding: '8px 10px',
+                                                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                        borderRadius: '4px'
+                                                    }}>
+                                                        ⚠️ {errorMessage}
+                                                    </div>
+                                                )}
                                                 <div className="help-title">{t('input.usernameHelpTitle')}</div>
                                                 <div className="help-text">{t('input.usernameHelpText')}</div>
-                                                <img
-                                                    src={profileLinkImage}
-                                                    alt={t('input.usernameHelpPreviewTitle')}
-                                                    className="username-help-preview-image"
-                                                />
-                                                <a
-                                                    href="https://rollercoin.com/profile/personal-profile"
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="help-link"
+                                                <div 
+                                                    className="image-viewer-container"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setIsImageViewerOpen(true);
+                                                    }}
+                                                    style={{ cursor: 'pointer', position: 'relative', display: 'inline-block', width: '100%' }}
                                                 >
-                                                    {t('input.usernameHelpLink')}
-                                                </a>
+                                                    <img
+                                                        src={findUsernameImage}
+                                                        alt={t('input.usernameHelpPreviewTitle')}
+                                                        className="username-help-preview-image"
+                                                    />
+                                                    <div className="zoom-icon" style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: '50%',
+                                                        transform: 'translate(-50%, -50%)',
+                                                        fontSize: '36px',
+                                                        opacity: '0.5',
+                                                        transition: 'opacity 0.2s ease',
+                                                        pointerEvents: 'none',
+                                                        textShadow: '0 0 8px rgba(0,0,0,0.7)'
+                                                    }}>
+                                                        🔍
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                                                        {t('input.orPasteProfileLink')}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="https://rollercoin.com/p/YOUR_USERNAME"
+                                                        value={profileLinkInput}
+                                                        onChange={handleProfileLinkPaste}
+                                                        style={{
+                                                            padding: '8px 10px',
+                                                            background: 'var(--bg-primary)',
+                                                            border: '1px solid var(--border-color)',
+                                                            borderRadius: 'var(--radius-sm)',
+                                                            color: 'var(--text-primary)',
+                                                            fontSize: '12px',
+                                                        }}
+                                                        className="username-link-input"
+                                                    />
+                                                </div>
+
+                                                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
+                                                    <a
+                                                        href="https://rollercoin.com/profile/personal-profile"
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="help-link"
+                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                    >
+                                                        📂 {t('input.usernameHelpLink')}
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     ) : (
@@ -375,6 +505,81 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                 </div>
             </div>
         </section >
+
+        {/* Image Viewer Modal */}
+        {isImageViewerOpen && (
+            <div 
+                className="image-viewer-modal"
+                onClick={() => setIsImageViewerOpen(false)}
+                style={{
+                    position: 'fixed',
+                    inset: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 10000,
+                    backdropFilter: 'blur(2px)',
+                }}
+            >
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                        position: 'relative',
+                        maxWidth: '90vw',
+                        maxHeight: '85vh',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <img
+                        src={findUsernameImage}
+                        alt={t('input.usernameHelpPreviewTitle')}
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            borderRadius: 'var(--radius-md)',
+                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)',
+                        }}
+                    />
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsImageViewerOpen(false);
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '-40px',
+                            right: '0',
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            color: '#fff',
+                            border: 'none',
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            fontSize: '24px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                        }}
+                    >
+                        ✕
+                    </button>
+                </div>
+            </div>
+        )}
+        </>
     );
 };
 

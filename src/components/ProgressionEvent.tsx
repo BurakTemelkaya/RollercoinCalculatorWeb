@@ -26,6 +26,9 @@ import speedupImg from '../assets/items/speedup_item.gif';
 import rareFanImg from '../assets/items/rare_fan.png';
 import legendaryFanImg from '../assets/items/legendary_fan.png';
 import abandonedMineChestImg from '../assets/items/Abandoned_mine_chest_d310e38e-9dea-4756-a017-cf427dc65abf.png';
+import wiresCaseImg from '../assets/items/wires_case_855b977d-950c-45e3-a315-b20be4a052ab.png';
+import hashboardCaseImg from '../assets/items/hashboard_case_1116df97-ed73-4baf-a0d8-76a9cb7cf588.png';
+import fansCaseImg from '../assets/items/fans_case_7bfde88d-fc4c-414f-a539-2ee2673ad216.png';
 import rstImg from '../assets/coins/rst.svg';
 import rltImg from '../assets/coins/rlt.svg';
 
@@ -81,6 +84,11 @@ function getMutationComponentImage(itemId: string | null, item?: MutationCompone
     if ((name.includes('rare') && name.includes('fan')) || name.includes('hashboard')) {
         return rareFanImg;
     }
+    // Common wiring and similar mutation components use fallback icon
+    if (name.includes('wiring') || name.includes('wire')) {
+        // Return fallback (will show emoji in UI)
+        return null;
+    }
 
     return null;
 }
@@ -94,6 +102,22 @@ function getMutationComponentDisplayName(itemId: string | null, item?: MutationC
     }
 
     return item?.name?.en ?? 'Mutation Component';
+}
+
+function getMysteryBoxImage(box?: MysteryBoxItem, fallbackTitle?: string): string {
+    const title = (box?.title?.en ?? fallbackTitle ?? '').toLowerCase();
+
+    if (title.includes('wires') || title.includes('wire')) {
+        return wiresCaseImg;
+    }
+    if (title.includes('hashboard')) {
+        return hashboardCaseImg;
+    }
+    if (title.includes('fan')) {
+        return fansCaseImg;
+    }
+
+    return abandonedMineChestImg;
 }
 
 // Get local image for known reward types
@@ -203,7 +227,7 @@ function getRewardDisplay(
             return {
                 text: `${boxTitle} x${reward.amount}`,
                 subText: '',
-                localImage: abandonedMineChestImg,
+                localImage: getMysteryBoxImage(box, reward.title.en),
             };
         }
         default:
@@ -218,6 +242,7 @@ export default function ProgressionEvent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<EventTab>('rewards');
+    const [adBlockWarning, setAdBlockWarning] = useState(false);
 
     // Multiplier settings
     const [rltPrice, setRltPrice] = useState<number>(1.05);
@@ -265,6 +290,25 @@ export default function ProgressionEvent() {
 
         loadEvent();
     }, [t]);
+
+    // Test for ad-blocker by attempting to load external resource
+    useEffect(() => {
+        const testAdBlocker = async () => {
+            try {
+                const testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
+                await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' });
+                // If we get here without error, external resources are accessible
+                setAdBlockWarning(false);
+            } catch (err) {
+                console.warn('External resource blocked - possible ad-blocker detected:', err);
+                setAdBlockWarning(true);
+            }
+        };
+
+        // Delay test slightly to avoid interfering with main data load
+        const timer = setTimeout(testAdBlocker, 1000);
+        return () => clearTimeout(timer);
+    }, []);
 
     // Calculate total event rewards summary
     const eventSummary = useMemo(() => {
@@ -444,6 +488,25 @@ export default function ProgressionEvent() {
 
     return (
         <div className="pe-container">
+            {/* Ad-Blocker Warning */}
+            {adBlockWarning && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '12px 16px',
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: 'var(--radius-md)',
+                    marginBottom: '16px',
+                    color: '#ef4444',
+                    fontSize: '13px',
+                }}>
+                    <span style={{ fontSize: '16px' }}>⚠️</span>
+                    <span>{t('event.adBlockerWarning') || 'Ad-blocker detected: Item images may not load properly. Some rewards won\'t display images.'}</span>
+                </div>
+            )}
+
             {/* Event Header */}
             <div className="pe-header">
                 <div className="pe-header-actions pe-header-left">
@@ -587,14 +650,54 @@ export default function ProgressionEvent() {
                                                                                     src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
                                                                                     alt={`Level ${display.level}`}
                                                                                     style={{ position: 'absolute', top: '0px', left: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
+                                                                                    onError={(e) => {
+                                                                                        const target = e.target as HTMLImageElement;
+                                                                                        target.style.display = 'none';
+                                                                                    }}
                                                                                 />
                                                                             )}
-                                                                            <img src={display.imageUrl} alt={display.text} style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }} loading="lazy" />
+                                                                            <img 
+                                                                                src={display.imageUrl} 
+                                                                                alt={display.text} 
+                                                                                style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }} 
+                                                                                loading="lazy"
+                                                                                onError={(e) => {
+                                                                                    const target = e.target as HTMLImageElement;
+                                                                                    target.style.display = 'none';
+                                                                                    // Show fallback text icon
+                                                                                    const parent = target.parentElement;
+                                                                                    if (parent && !parent.querySelector('span.fallback-icon')) {
+                                                                                        const span = document.createElement('span');
+                                                                                        span.className = 'fallback-icon';
+                                                                                        span.style.fontSize = '32px';
+                                                                                        span.textContent = '📦';
+                                                                                        parent.appendChild(span);
+                                                                                    }
+                                                                                }} 
+                                                                            />
                                                                         </div>
                                                                     ) : display?.localImage ? (
-                                                                        <img src={display.localImage} alt={display.text} style={{ width: '48px', height: '48px', objectFit: 'contain' }} loading="lazy" />
+                                                                        <img 
+                                                                            src={display.localImage} 
+                                                                            alt={display.text} 
+                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }} 
+                                                                            loading="lazy"
+                                                                            onError={(e) => {
+                                                                                const target = e.target as HTMLImageElement;
+                                                                                target.style.display = 'none';
+                                                                            }}
+                                                                        />
                                                                     ) : typeImage ? (
-                                                                        <img src={typeImage} alt={reward?.type || ''} style={{ width: '48px', height: '48px', objectFit: 'contain' }} loading="lazy" />
+                                                                        <img 
+                                                                            src={typeImage} 
+                                                                            alt={reward?.type || ''} 
+                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }} 
+                                                                            loading="lazy"
+                                                                            onError={(e) => {
+                                                                                const target = e.target as HTMLImageElement;
+                                                                                target.style.display = 'none';
+                                                                            }}
+                                                                        />
                                                                     ) : (
                                                                         <span style={{ fontSize: '32px' }}>🎁</span>
                                                                     )}

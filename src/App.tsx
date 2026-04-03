@@ -144,6 +144,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     }
   }, [globalUserName]);
 
+  // User Not Found Error State
+  const [userNotFoundError, setUserNotFoundError] = useState(false);
+
   // Handle 5-minute expiration for user data and league data
   useEffect(() => {
     const powerTimestamp = localStorage.getItem('rollercoin_web_userpower_timestamp');
@@ -223,6 +226,10 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         msg = t('input.errors.tooManyRequests');
       } else if (msg === 'RATE_LIMIT') { // Fallback, just in case
         msg = t('input.errors.tooManyRequests');
+      } else if (error instanceof ApiError && error.status === 400) {
+        // Treat all 400 responses in user fetch flow as user-not-found.
+        msg = t('input.errors.userNotFound');
+        setUserNotFoundError(true);
       } else if (msg === 'Failed to fetch') {
         // Handle generic network fetch failure
         msg = t('input.fetchUserError', { error: 'Network Data Error / CORS' });
@@ -750,6 +757,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
               onForceFetchPrices={handleForceFetchPrices}
               fetchMode={fetchMode}
               setFetchMode={setFetchMode}
+              userNotFoundError={userNotFoundError}
+              setUserNotFoundError={setUserNotFoundError}
             />
 
 

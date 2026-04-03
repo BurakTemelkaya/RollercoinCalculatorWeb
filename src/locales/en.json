@@ -69,7 +69,8 @@
                 "stellarBot": "A next-generation Telegram bot focused on crypto mining tasks and interactions.",
                 "birdsEmpire": "A popular bird empire game with a token/coin collecting economy inside Telegram.",
                 "growTea": "A mini Telegram game where you earn points by playing, carrying potential future airdrop opportunities.",
-                "tonBirds": "A flying birds game built on the TON Blockchain and integrated with The Open Network airdrop ecosystem."
+                "tonBirds": "A flying birds game built on the TON Blockchain and integrated with The Open Network airdrop ecosystem.",
+                "grass": "Share internet, earn $GRASS! Start your passive income journey now."
             }
         },
         "privacy": {
@@ -151,7 +152,8 @@
             "missingBoth": "User power and league data are missing!",
             "missingUserPower": "User power is required!",
             "missingLeagueData": "League power data is required!",
-            "tooManyRequests": "Too many requests to the API, please wait."
+            "tooManyRequests": "Too many requests to the API, please wait.",
+            "userNotFound": "User not found. Please check the username."
         },
         "usernamePlaceholder": "Enter username",
         "enterUsername": "Username",
@@ -164,6 +166,8 @@
         "usernameHelpAria": "Show username help",
         "usernameHelpTitle": "How do I find my username?",
         "usernameHelpText": "Open this page, copy the last part of your profile URL (e.g. XYZ), and paste it here.",
+        "orPasteProfileLink": "or paste your profile link:",
+        "usernameExtracted": "Username successfully extracted: {{name}}",
         "usernameHelpLink": "Open profile page",
         "usernameHelpPreviewTitle": "Profile link",
         "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
@@ -284,6 +288,7 @@
         "loading": "Loading event data...",
         "fetchError": "Failed to load event data",
         "retry": "Retry",
+        "adBlockerWarning": "Ad-blocker detected: Item images may not load properly. Some rewards won't display images.",
         "ended": "Event ended",
         "days": "days",
         "daysShort": "d",

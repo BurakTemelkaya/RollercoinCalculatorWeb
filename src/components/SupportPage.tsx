@@ -10,10 +10,10 @@ import iconRollerTap from '../assets/support/rollertap.jpg';
 import iconHoneygain from '../assets/support/honeygain.jpg';
 import iconMystNodes from '../assets/support/mystnodes.png';
 import iconOnlyFunds from '../assets/support/onlyfunds.jpg';
-import iconStellarBot from '../assets/support/stellarbot.png';
 import iconBirdsEmpire from '../assets/support/birdsempire.jpg';
 import iconGrowTea from '../assets/support/growtea.jpg';
 import iconTonBirds from '../assets/support/tonbirds.jpg';
+import grass from "../assets/support/grass.png";
 
 // Coin icons
 import iconBtc from '../assets/coins/btc.svg';
@@ -59,10 +59,10 @@ export default function SupportPage() {
     { id: 'honeygain', name: 'Honeygain', url: 'https://join.honeygain.com/TEMELEB8F7', icon: iconHoneygain },
     { id: 'mystNodes', name: 'MystNodes', url: 'https://mystnodes.co/?referral_code=K9ugNp7ocqpm5zQQTydIWVrm5tQSZdAJQn73l3k4', icon: iconMystNodes },
     { id: 'onlyFunds', name: 'TheOnlyFunds Bot (Telegram)', url: 'https://t.me/TheOnlyFunds_Bot?start=241516', icon: iconOnlyFunds },
-    { id: 'stellarBot', name: 'StellarBot (Telegram)', url: 'https://t.me/cointbot_bit_bot?start=ref_136770_te7', icon: iconStellarBot },
     { id: 'birdsEmpire', name: 'Birds Empire Bot (Telegram)', url: 'https://t.me/BirdsEmpireBot?start=445772', icon: iconBirdsEmpire },
     { id: 'growTea', name: 'GrowTeaBot (Telegram)', url: 'https://t.me/GrowTeaBot/app?startapp=1276468423', icon: iconGrowTea },
     { id: 'tonBirds', name: 'TON Birds Bot (Telegram)', url: 'https://t.me/Ton_Birds_Bot?start=266710', icon: iconTonBirds },
+    { id: 'grass', name: 'Grass', url: 'https://app.grass.io/register?referralCode=bnXnt4EYb8xnTVw', icon: grass }
   ];
 
   return (
