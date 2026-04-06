@@ -34,6 +34,11 @@ export class ApiError extends Error {
  */
 export async function apiFetch(url: string, options?: RequestInit): Promise<Response> {
     try {
+        // Skip API calls during react-snap to prevent 30,000ms timeouts
+        if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
+            throw new Error("Skipping API fetch during react-snap build");
+        }
+
         const savedLang = localStorage.getItem('rollercoin_web_language');
         const appLang = savedLang === 'en' ? 'en' : 'tr';
         const acceptLanguage = appLang === 'en'

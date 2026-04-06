@@ -32,7 +32,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
   }, [lang, i18n]);
 
-  const currentUrl = `https://rollercoincalculator.app${location.pathname}`;
+  let normalizedPath = location.pathname;
+  if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
+    normalizedPath = normalizedPath.slice(0, -1);
+  }
+  const currentUrl = `https://rollercoincalculator.app${normalizedPath}`;
 
   const changeLanguage = (newLang: string) => {
     // Replace current lang in path
