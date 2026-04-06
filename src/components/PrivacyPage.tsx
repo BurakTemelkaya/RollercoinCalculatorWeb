@@ -20,7 +20,7 @@ const PrivacyPageTR = () => {
 
       <article className="static-content">
         <h1>Gizlilik Politikası (Privacy Policy)</h1>
-        <p className="static-meta">Son Güncelleme: Ekim 2024</p>
+        <p className="static-meta">Son Güncelleme: Nisan 2026</p>
 
         <p><strong>RollerCoin Kazanç Hesaplayıcı</strong> (rollercoincalculator.app) olarak önceliğimiz, şeffaflık ve kullanıcı gizliliğinin korunmasıdır. Araçlarımızı kullanırken verilerinizin nasıl (veya nasıl işlenmediği) hakkında tam bir açıklığa sahip olmanız gerektiğine inanıyoruz.</p>
 
@@ -33,8 +33,8 @@ const PrivacyPageTR = () => {
         <h2>3. Google Analytics ve İstatistik Verileri</h2>
         <p>Sitemizin geliştirilmesi, hangi bölümlerin daha çok okunduğunun tespiti ve performans raporlamaları amacıyla standart olarak <strong>Google Analytics</strong> kullanmaktayız. Bu araçlar; site içi kalma süresi, sayfa ziyaret oranları, kaba coğrafi konum bilgisi (ülke/şehir bazlı) gibi tamamen "anonim" hale getirilmiş standart metrikleri ölçümler. Kimlik tespiti yapılmaz.</p>
 
-        <h2>4. Reklam Ağları (Google AdSense ve Çeşitli Partnerler)</h2>
-        <p>Sunucu giderlerimizi karşılayabilmek adına <strong>Google AdSense</strong> ve <strong>AADS</strong> gibi üçüncü taraf reklam ve yayıncı ağları entegre edilmiştir. Reklam partnerlerimiz, size kişiselleştirilmiş reklamlar sunabilmek amacıyla veya tarayıcı gezintilerinize dayanan standart çerezleri (cookies) ve web işaretçilerini (web beacons) kullanabilirler. Bu çerez yönetimi tamamen bizim dışımızda, ilgili kurumların global gizlilik anlaşmaları uyarınca idare edilir.</p>
+        <h2>4. Reklam Ağları (Google AdSense)</h2>
+        <p>Sunucu giderlerimizi karşılayabilmek adına <strong>Google AdSense</strong> gibi üçüncü taraf reklam ve yayıncı ağları entegre edilmiştir. Reklam partnerlerimiz, size kişiselleştirilmiş reklamlar sunabilmek amacıyla veya tarayıcı gezintilerinize dayanan standart çerezleri (cookies) ve web işaretçilerini (web beacons) kullanabilirler. Bu çerez yönetimi tamamen bizim dışımızda, ilgili kurumların global gizlilik anlaşmaları uyarınca idare edilir.</p>
         
         <h2>5. Dış Bağlantılar Sorumluluğu</h2>
         <p>Rehberlerimiz içinde veya reklam modüllerinde yer alan harici sitelere yönlendirilen bağlantılardan doğacak riskler tamamen kullanıcının kendi sorumluluğundadır. Söz konusu dış sitelerin gizlilik uygulamaları veya içeriklerinden tarafımız sorumlu tutulamaz.</p>
@@ -62,7 +62,7 @@ const PrivacyPageEN = () => {
 
       <article className="static-content">
         <h1>Privacy Policy</h1>
-        <p className="static-meta">Last Updated: October 2024</p>
+        <p className="static-meta">Last Updated: April 2026</p>
 
         <p>At <strong>RollerCoin Profit Calculator</strong> (rollercoincalculator.app), our priority is transparency and the protection of user privacy. We believe you should have full clarity about how your data is (or isn't) processed while using our tools.</p>
 
@@ -75,8 +75,8 @@ const PrivacyPageEN = () => {
         <h2>3. Google Analytics and Statistical Data</h2>
         <p>For the purpose of improving our site, detecting which sections are read the most, and performance reporting, we use <strong>Google Analytics</strong> as a standard practice. These tools measure fully "anonymized" standard metrics such as time spent on the site, page visit rates, and rough geographical location information (country/city-based). No personal identification is ever made.</p>
 
-        <h2>4. Advertising Networks (Google AdSense and Various Partners)</h2>
-        <p>To cover our server expenses, third-party advertising and publisher networks such as <strong>Google AdSense</strong> and <strong>AADS</strong> have been integrated. Our advertising partners may use standard cookies and web beacons based on your browsing behavior in order to present personalized ads to you. This cookie management is handled entirely outside of our control and operates under the global privacy agreements of the respective organizations.</p>
+        <h2>4. Advertising Networks (Google AdSense)</h2>
+        <p>To cover our server expenses, third-party advertising and publisher networks such as <strong>Google AdSense</strong> have been integrated. Our advertising partners may use standard cookies and web beacons based on your browsing behavior in order to present personalized ads to you. This cookie management is handled entirely outside of our control and operates under the global privacy agreements of the respective organizations.</p>
         
         <h2>5. Responsibility for External Links</h2>
         <p>Any risks arising from links directed to external sites found within our guides or advertising modules are entirely the user's own responsibility. We cannot be held liable for the privacy practices or contents of the aforementioned external sites.</p>

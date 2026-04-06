@@ -29,7 +29,7 @@
             "s2_title": "2. Otomatik Olarak Toplanan Veriler",
             "s2_p": "Sitemizi ziyaret ettiğinizde IP adresi (anonim), tarayıcı türü ve ziyaret zamanı gibi teknik veriler analiz amacıyla toplanabilir.",
             "s3_title": "3. Çerezler (Cookies)",
-            "s3_p": "Sitemiz, Google Analytics ve A-Ads gibi üçüncü taraf hizmetler aracılığıyla çerez kullanmaktadır. Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz.",
+            "s3_p": "Sitemiz, Google Analytics ve Google AdSense gibi üçüncü taraf hizmetler aracılığıyla çerez kullanmaktadır. Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz.",
             "s4_title": "4. Yerel Depolama (LocalStorage)",
             "s4_p": "Hesaplama ayarlarınızı (dil tercihi, blok süreleri vb.) tarayıcınızın yerel depolama alanında saklıyoruz. Bu veriler yalnızca sizin cihazınızda bulunur.",
             "s5_title": "5. İletişim",
@@ -56,7 +56,15 @@
             "q4": "4. Çekim süresi sayacı (Withdraw Timer) nasıl çalışır?",
             "a4": "Bu araç, oyundaki mevcut bakiyenizi (balance) ve anlık üretim (kazanç) hızınızı baz alarak, o coin için belirlenmiş minimum çekim limitine tam olarak kaç gün ve saat içinde ulaşacağınızı hesaplar. Bu hesaplama o anki ağ gücüne göre yapıldığı için ağ gücü artarsa çekim süresi uzayabilir.",
             "q5": "5. Power Simulator (Simülatör) ne işe yarar?",
-            "a5": "Eğer elinizdeki RLT veya kripto paralarla yeni bir Miner (Madenci) veya Rack (Raf) almak istiyorsanız, bu sekme size simülasyon yapma imkanı tanır. Yeni cihazın Raw Power (Sade Güç) ve Bonus Yüzdesini girdiğinizde, mevcut gücünüze eklenerek toplam gücünüzün ne olacağını ve yeni kazancınızın ne kadar artacağını anında gösterir. Böylece yanlış bir madenci satın almaktan kurtulursunuz."
+            "a5": "Eğer elinizdeki RLT veya kripto paralarla yeni bir Miner (Madenci) veya Rack (Raf) almak istiyorsanız, bu sekme size simülasyon yapma imkanı tanır. Yeni cihazın Raw Power (Sade Güç) ve Bonus Yüzdesini girdiğinizde, mevcut gücünüze eklenerek toplam gücünüzün ne olacağını ve yeni kazancınızın ne kadar artacağını anında gösterir. Böylece yanlış bir madenci satın almaktan kurtulursunuz.",
+            "q6": "6. Veriler ne sıklıkla güncellenir?",
+            "a6": "API üzerinden veri çektiğinizde (kullanıcı adınızı girerek veya 'Verileri Yenile' butonuna basarak), tüm lig güçleri, blok ödülleri ve blok süreleri doğrudan RollerCoin sunucularından anlık olarak çekilir. Kripto para fiyatları Binance borsası API'sinden (yedek olarak CoinGecko) alınır ve o anki canlı piyasa kurlarını yansıtır. Aşırı API çağrısını önlemek için veriler yerel olarak 5 dakika süreyle cache'lenir.",
+            "q7": "7. Ligim neden otomatik değişiyor?",
+            "a7": "Hesaplayıcıda 'Otomatik Lig' algılama özelliği bulunur. Toplam lig gücünüze (Madenci + Bonus + Raf gücü; Oyun/Geçici/Freon hariç) dayanarak sizi otomatik olarak doğru lig kademesine yerleştirir. Otomatik algılama yanlışsa veya farklı bir ligin kazançlarını incelemek istiyorsanız, 'Otomatik' modunu kapatıp açılır menüden herhangi bir ligi manuel seçebilirsiniz.",
+            "q8": "8. 'Mevcut Güç' ile 'Maksimum Güç' arasındaki fark nedir?",
+            "a8": "'Mevcut Güç' (Current Power) TÜM güç kaynaklarını içerir: Madenciler, Raflar, Oyunlar (mini-oyun gücü), Geçici Güç, Freon ve Bonuslar. Bu, blok ödülü hesaplamalarında kullanılan toplam güçtür. 'Maksimum Güç' (Max Power / League Power) ise sadece Madenci + Raf + Bonus gücünü içerir ve hangi ligde olduğunuzu belirler. Oyun, Geçici ve Freon gücü lig atamanızı ETKİLEMEZ ancak madencilik kazancınızı artırır.",
+            "q9": "9. Bu hesaplayıcıyı mobil cihazlarda kullanabilir miyim?",
+            "a9": "Evet, hesaplayıcı tamamen responsive (duyarlı) tasarıma sahiptir ve Chrome, Safari ve Firefox dahil tüm modern mobil tarayıcılarda sorunsuz çalışır. Arayüz, küçük ekranlara otomatik uyum sağlayarak dokunma dostu kontroller sunar. Ayrıca, ana ekranınıza Progressive Web App (PWA) olarak kurarak hızlı erişim sağlayabilirsiniz."
         },
         "guides": {
             "title": "RollerCoin Strateji Rehberleri",

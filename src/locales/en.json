@@ -41,7 +41,15 @@
             "q4": "4. How does the Withdraw Timer work?",
             "a4": "This tool takes your current balance in the game and your real-time production (earning) rate to calculate exactly how many days and hours it will take for you to reach the minimum withdrawal limit for that specific coin. Since this calculation is based on current network power, an increase in network power might extend the withdrawal timeline.",
             "q5": "5. What is the Power Simulator used for?",
-            "a5": "If you are planning to spend your RLT or crypto to buy a new Miner or Rack, this tab allows you to simulate the purchase. When you enter the new hardware's Raw Power and Bonus Percentage, it adds it to your existing power and instantly shows what your new total power and new earnings will be. This helps you avoid making unprofitable miner purchases."
+            "a5": "If you are planning to spend your RLT or crypto to buy a new Miner or Rack, this tab allows you to simulate the purchase. When you enter the new hardware's Raw Power and Bonus Percentage, it adds it to your existing power and instantly shows what your new total power and new earnings will be. This helps you avoid making unprofitable miner purchases.",
+            "q6": "6. How often is the data updated?",
+            "a6": "When you fetch data via the API (using your username or the 'Fetch Data' button), all league powers, block rewards, and block durations are pulled directly from the RollerCoin servers in real-time. Cryptocurrency prices are fetched from the Binance exchange API (with CoinGecko as a fallback) and reflect the live market rates at that exact moment. The data is cached locally for 5 minutes to avoid excessive API calls.",
+            "q7": "7. Why does my league change automatically?",
+            "a7": "The calculator has an 'Auto League' detection feature. Based on your total qualifying power (Miners + Bonus + Rack power, excluding Games/Temp/Freon), it automatically places you in the correct league tier. If the auto-detection is incorrect or you want to explore a different league's earnings, you can disable 'Auto' mode and manually select any league from the dropdown menu.",
+            "q8": "8. What is the difference between 'Current Power' and 'Max Power'?",
+            "a8": "'Current Power' includes ALL power sources: Miners, Racks, Games (mini-game power), Temporary Power, Freon, and Bonuses. This is the total power used for block reward calculations. 'Max Power' (or League Power) only includes Miners + Racks + Bonus power and determines which league you belong to. Games, Temporary, and Freon power do NOT affect your league placement but do increase your mining earnings.",
+            "q9": "9. Can I use this calculator on mobile devices?",
+            "a9": "Yes, the calculator is fully responsive and works on all modern mobile browsers including Chrome, Safari, and Firefox. The interface automatically adapts to smaller screens with touch-friendly controls. You can also install it as a Progressive Web App (PWA) on your home screen for quick access."
         },
         "guides": {
             "title": "RollerCoin Strategy Guides",
@@ -82,7 +90,7 @@
             "s2_title": "2. Automatically Collected Data",
             "s2_p": "When you visit our site, technical data such as anonymized IP address, browser type, and visit time may be collected for analytics.",
             "s3_title": "3. Cookies",
-            "s3_p": "Our site uses cookies through third-party services like Google Analytics and A-Ads. You can manage cookies in your browser settings.",
+            "s3_p": "Our site uses cookies through third-party services like Google Analytics and Google AdSense. You can manage cookies in your browser settings.",
             "s4_title": "4. Local Storage",
             "s4_p": "We store your preferences (language, settings) in your browser's localStorage. This data remains only on your device.",
             "s5_title": "5. Contact",

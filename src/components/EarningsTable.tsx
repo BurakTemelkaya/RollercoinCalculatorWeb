@@ -137,9 +137,21 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     };
 
     const renderCryptoWithTooltip = (amount: number, coinName: string): React.ReactNode => {
-        const fullValue = `${formatCryptoAmount(amount)} ${coinName}`;
+        // For BTC, tooltip already shows satoshi; for others, show high-precision value
+        let tooltipValue: string;
+        if (coinName === 'BTC') {
+            tooltipValue = `${formatCryptoAmount(amount)} ${coinName}`;
+        } else {
+            const absAmount = Math.abs(amount);
+            let precision: number;
+            if (absAmount < 0.0001) precision = 10;
+            else if (absAmount < 0.01) precision = 8;
+            else if (absAmount < 1) precision = 6;
+            else precision = 4;
+            tooltipValue = `${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: precision })} ${coinName}`;
+        }
         return (
-            <div className="earning-crypto earning-crypto-tooltip" tabIndex={0} data-full={fullValue}>
+            <div className="earning-crypto earning-crypto-tooltip" tabIndex={0} data-full={tooltipValue}>
                 <span className="earning-crypto-text">
                     {formatCryptoDisplay(amount, coinName)}{coinName !== 'BTC' ? ` ${coinName}` : ''}
                 </span>
@@ -147,21 +159,44 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         );
     };
 
-    const renderUsdWithDiff = (newAmount: number, oldAmount: number, price: number): React.ReactNode => {
+    const renderUsdWithDiff = (newAmount: number, baseEarningAmount: number, price: number, coinName: string): React.ReactNode => {
         const newValue = newAmount * price;
-        const oldValue = oldAmount * price;
-        const diff = newValue - oldValue;
-        
+        const isSimulatedTarget = targetAllocations[coinName] !== undefined;
+        const isSimulatedSource = sourceAllocations[coinName] !== undefined;
         const isSimulatingAnything = Object.keys(sourceAllocations).length > 0 || Object.keys(targetAllocations).length > 0;
         
-        if (!isSimulatingAnything || Math.abs(diff) < 0.005) {
+        // Use the targeted percentage to determine the pre-dilution baseline.
+        // This answers: "If I allocate X%, what is that X% worth BEFORE my newly added power dilutes the pool?"
+        const targetPercent = isSimulatedTarget ? targetAllocations[coinName] : 100;
+        const oldAmount = baseEarningAmount * (targetPercent / 100);
+        const oldValue = oldAmount * price;
+        
+        const diff = newValue - oldValue;
+        
+        if (!isSimulatingAnything || (!isSimulatedSource && !isSimulatedTarget)) {
             return <div className="earning-usd">{formatUSD(newValue)}</div>;
         }
 
-        const isPositive = diff > 0;
+        const isPositive = diff >= 0;
         const percentDiff = oldValue > 0 ? (diff / oldValue) * 100 : 0;
-        const formattedPercent = `${isPositive ? '+' : ''}${percentDiff.toFixed(2)}%`;
-        const titleText = oldValue > 0 ? `${formatUSD(oldValue)} \u2192 ${formatUSD(newValue)} (${formattedPercent})` : formatUSD(newValue);
+        const absPercentDiff = Math.abs(percentDiff);
+        
+        if (Math.abs(diff) < 0.0001 && absPercentDiff < 0.001) {
+            return <div className="earning-usd">{formatUSD(newValue)}</div>;
+        }
+
+        const formattedPercent = `${isPositive && percentDiff !== 0 ? '+' : ''}${percentDiff.toFixed(2)}%`;
+        
+        const isTinyChange = Math.abs(diff) < 0.005;
+        const oldStr = isTinyChange ? `$${oldValue.toFixed(4)}` : formatUSD(oldValue);
+        const newStr = isTinyChange ? `$${newValue.toFixed(4)}` : formatUSD(newValue);
+        
+        const titleText = oldValue > 0 
+            ? `${oldStr} \u2192 ${newStr} (${formattedPercent})` 
+            : `${formatUSD(0)} \u2192 ${formatUSD(newValue)}`;
+            
+        // Show percentage instead of $0.00 if the drop is less than a cent
+        const displayValue = isTinyChange ? `%${absPercentDiff.toFixed(2)}` : formatUSD(Math.abs(diff));
 
         return (
             <div className="earning-usd has-diff">
@@ -171,7 +206,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     tabIndex={0} 
                     data-full={titleText}
                 >
-                    {isPositive ? '↗' : '↘'} {formatUSD(Math.abs(diff))}
+                    {isPositive ? '↗' : '↘'} {displayValue}
                 </span>
             </div>
         );
@@ -415,7 +450,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.perBlock, earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(earning.earnings.perBlock, baseEarning.earnings.perBlock, price)
+                            renderUsdWithDiff(earning.earnings.perBlock, baseEarning.earnings.perBlock, price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -434,7 +469,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.hourly, earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(earning.earnings.hourly, baseEarning.earnings.hourly, price)
+                            renderUsdWithDiff(earning.earnings.hourly, baseEarning.earnings.hourly, price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -443,7 +478,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.daily, earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(earning.earnings.daily, baseEarning.earnings.daily, price)
+                            renderUsdWithDiff(earning.earnings.daily, baseEarning.earnings.daily, price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -452,7 +487,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.weekly, earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(earning.earnings.weekly, baseEarning.earnings.weekly, price)
+                            renderUsdWithDiff(earning.earnings.weekly, baseEarning.earnings.weekly, price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -461,7 +496,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.monthly, earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(earning.earnings.monthly, baseEarning.earnings.monthly, price)
+                            renderUsdWithDiff(earning.earnings.monthly, baseEarning.earnings.monthly, price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -470,7 +505,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(calculateCustomEarnings(earning), earning.displayName)}
                         {!earning.isGameToken && (
-                            renderUsdWithDiff(calculateCustomEarnings(earning), calculateCustomEarnings(baseEarning), price)
+                            renderUsdWithDiff(calculateCustomEarnings(earning), calculateCustomEarnings(baseEarning), price, earning.displayName)
                         )}
                     </td>
                 )}
@@ -564,7 +599,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                             value={selectedSourceAdd}
                                             onValueChange={setSelectedSourceAdd}
                                             options={earnings
-                                                .filter(c => sourceAllocations[c.displayName] === undefined)
+                                                .filter(c => sourceAllocations[c.displayName] === undefined && targetAllocations[c.displayName] === undefined)
                                                 .map(c => ({
                                                     value: c.displayName,
                                                     label: c.displayName,
@@ -576,7 +611,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                             className="sim-select-wrapper"
                                             showSelectedIcon={true}
                                         />
-                                        <button className="sim-add-btn" onClick={handleAddSourceCoin} disabled={earnings.filter(c => sourceAllocations[c.displayName] === undefined).length === 0 || !selectedSourceAdd}>{t('simulator.add')}</button>
+                                        <button className="sim-add-btn" onClick={handleAddSourceCoin} disabled={earnings.filter(c => sourceAllocations[c.displayName] === undefined && targetAllocations[c.displayName] === undefined).length === 0 || !selectedSourceAdd}>{t('simulator.add')}</button>
                                     </div>
                                     <div className="sim-list">
                                         {Object.entries(sourceAllocations).map(([coin, val]) => (
@@ -617,7 +652,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                             value={selectedTargetAdd}
                                             onValueChange={setSelectedTargetAdd}
                                             options={earnings
-                                                .filter(c => targetAllocations[c.displayName] === undefined)
+                                                .filter(c => targetAllocations[c.displayName] === undefined && sourceAllocations[c.displayName] === undefined)
                                                 .map(c => ({
                                                     value: c.displayName,
                                                     label: c.displayName,
@@ -629,7 +664,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                             className="sim-select-wrapper"
                                             showSelectedIcon={true}
                                         />
-                                        <button className="sim-add-btn" onClick={handleAddTargetCoin} disabled={earnings.filter(c => targetAllocations[c.displayName] === undefined).length === 0 || !selectedTargetAdd}>{t('simulator.add')}</button>
+                                        <button className="sim-add-btn" onClick={handleAddTargetCoin} disabled={earnings.filter(c => targetAllocations[c.displayName] === undefined && sourceAllocations[c.displayName] === undefined).length === 0 || !selectedTargetAdd}>{t('simulator.add')}</button>
                                     </div>
                                     <div className="sim-list">
                                         {Object.entries(targetAllocations).map(([coin, val]) => (

@@ -183,6 +183,11 @@ export function formatDuration(days: number, t: TFunction): string {
         const hours = Math.ceil(days * 24);
         return `${hours} ${t('withdraw.hours')}`;
     } else if (days < 30) {
+        const wholeDays = Math.floor(days);
+        const remainingHours = Math.round((days - wholeDays) * 24);
+        if (remainingHours > 0 && remainingHours < 24) {
+            return `${wholeDays} ${t('withdraw.days')} ${remainingHours} ${t('withdraw.hours')}`;
+        }
         return `${Math.ceil(days)} ${t('withdraw.days')}`;
     } else {
         const months = Math.floor(days / 30);

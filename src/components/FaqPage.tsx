@@ -6,7 +6,7 @@ export default function FaqPage() {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
 
-  const faqItems = ['q1', 'q2', 'q3', 'q4', 'q5'];
+  const faqItems = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'];
 
   return (
     <div className="static-page-container">

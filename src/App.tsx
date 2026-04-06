@@ -15,8 +15,8 @@ import { autoScalePower } from './utils/powerParser';
 import { COIN_ICONS } from './utils/constants';
 import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
-import DataInputForm from './components/DataInputForm';
-import EarningsTable from './components/EarningsTable';
+const DataInputForm = React.lazy(() => import('./components/DataInputForm'));
+const EarningsTable = React.lazy(() => import('./components/EarningsTable'));
 import { ApiError } from './services/apiClient';
 
 // Lazy load complex components to improve initial load and shorten critical request chains
@@ -734,6 +734,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
           </React.Suspense>
         </>
       ) : (
+        <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
         <>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
             <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
@@ -853,6 +854,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
           <SeoArticle />
         </>
+        </React.Suspense>
       )}
     </div>
   );
