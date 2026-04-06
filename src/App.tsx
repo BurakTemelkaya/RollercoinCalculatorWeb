@@ -29,6 +29,11 @@ const AboutPage = React.lazy(() => import('./components/AboutPage'));
 const PrivacyPage = React.lazy(() => import('./components/PrivacyPage'));
 const FaqPage = React.lazy(() => import('./components/FaqPage'));
 const GuidesPage = React.lazy(() => import('./components/GuidesPage'));
+const F2PGuide = React.lazy(() => import('./components/guides/F2PGuide'));
+const BonusPowerGuide = React.lazy(() => import('./components/guides/BonusPowerGuide'));
+const MarketplaceArbitrageGuide = React.lazy(() => import('./components/guides/MarketplaceArbitrageGuide'));
+const MiningPowerGuide = React.lazy(() => import('./components/guides/MiningPowerGuide'));
+const CalculationLogicGuide = React.lazy(() => import('./components/guides/CalculationLogicGuide'));
 const SupportPage = React.lazy(() => import('./components/SupportPage'));
 const LeagueChart = React.lazy(() => import('./components/LeagueChart'));
 
@@ -681,175 +686,175 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   return (
     <div className="app">
       <React.Suspense fallback={null}>
-          <SettingsModal
-            isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
-            blockDurations={blockDurations}
-            onSave={handleSaveSettings}
-            coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
-            blockDurationMode={blockDurationMode}
-            priceApiPref={priceApiPref}
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          blockDurations={blockDurations}
+          onSave={handleSaveSettings}
+          coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
+          blockDurationMode={blockDurationMode}
+          priceApiPref={priceApiPref}
+        />
+        <ColumnSettingsModal
+          isOpen={columnModalOpen}
+          onClose={() => setColumnModalOpen(false)}
+          visibleColumns={visibleColumns}
+          onVisibleColumnsChange={(newCols) => {
+            setVisibleColumns(newCols);
+            localStorage.setItem(STORAGE_KEYS.TABLE_COLUMNS, JSON.stringify([...newCols]));
+          }}
+          customPeriodDays={customPeriodDays}
+          customPeriodHours={customPeriodHours}
+          onCustomPeriodDaysChange={(days) => {
+            setCustomPeriodDays(days);
+            localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_DAYS, days.toString());
+          }}
+          onCustomPeriodHoursChange={(hours) => {
+            setCustomPeriodHours(hours);
+            localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_HOURS, hours.toString());
+          }}
+        />
+      </React.Suspense>
+      {/* Notification */}
+      {notification && (
+        <div className="notification-container">
+          <Notification
+            message={notification.message}
+            type={notification.type}
+            onClose={() => setNotification(null)}
           />
-          <ColumnSettingsModal
-            isOpen={columnModalOpen}
-            onClose={() => setColumnModalOpen(false)}
-            visibleColumns={visibleColumns}
-            onVisibleColumnsChange={(newCols) => {
-              setVisibleColumns(newCols);
-              localStorage.setItem(STORAGE_KEYS.TABLE_COLUMNS, JSON.stringify([...newCols]));
-            }}
-            customPeriodDays={customPeriodDays}
-            customPeriodHours={customPeriodHours}
-            onCustomPeriodDaysChange={(days) => {
-              setCustomPeriodDays(days);
-              localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_DAYS, days.toString());
-            }}
-            onCustomPeriodHoursChange={(hours) => {
-              setCustomPeriodHours(hours);
-              localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_HOURS, hours.toString());
-            }}
-          />
-        </React.Suspense>
-        {/* Notification */}
-        {notification && (
-          <div className="notification-container">
-            <Notification
-              message={notification.message}
-              type={notification.type}
-              onClose={() => setNotification(null)}
-            />
+        </div>
+      )}
+
+      {/* Content */}
+      {isEventPage ? (
+        <>
+          <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+            <ProgressionEvent />
+          </React.Suspense>
+        </>
+      ) : (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
+            <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
+              <span className="tab-icon">🎉</span>
+              {t('tabs.event')}
+            </Link>
           </div>
-        )}
 
-        {/* Content */}
-        {isEventPage ? (
-          <>
-            <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-              <ProgressionEvent />
-            </React.Suspense>
-          </>
-        ) : (
-          <>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
-              <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
-                <span className="tab-icon">🎉</span>
-                {t('tabs.event')}
-              </Link>
-            </div>
-
-            {/* Data Input Form */}
-            <DataInputForm
-              onDataParsed={handleDataParsed}
-              currentCoins={coins}
-              currentUserPower={userPower}
-              displayPower={displayPower}
-              currentLeague={league}
-              isAutoLeague={isAutoLeague}
-              onLeagueChange={handleLeagueChange}
-              onToggleAutoLeague={toggleAutoLeague}
-              onShowNotification={showNotification}
-              onApiLeaguesLoaded={handleApiLeaguesLoaded}
-              apiLeagues={apiLeagues}
-              onFetchUser={handleFetchUser}
-              isFetchingUser={isFetchingUser}
-              globalUserName={globalUserName}
-              setGlobalUserName={setGlobalUserName}
-              onForceFetchPrices={handleForceFetchPrices}
-              fetchMode={fetchMode}
-              setFetchMode={setFetchMode}
-              userNotFoundError={userNotFoundError}
-              setUserNotFoundError={setUserNotFoundError}
-            />
+          {/* Data Input Form */}
+          <DataInputForm
+            onDataParsed={handleDataParsed}
+            currentCoins={coins}
+            currentUserPower={userPower}
+            displayPower={displayPower}
+            currentLeague={league}
+            isAutoLeague={isAutoLeague}
+            onLeagueChange={handleLeagueChange}
+            onToggleAutoLeague={toggleAutoLeague}
+            onShowNotification={showNotification}
+            onApiLeaguesLoaded={handleApiLeaguesLoaded}
+            apiLeagues={apiLeagues}
+            onFetchUser={handleFetchUser}
+            isFetchingUser={isFetchingUser}
+            globalUserName={globalUserName}
+            setGlobalUserName={setGlobalUserName}
+            onForceFetchPrices={handleForceFetchPrices}
+            fetchMode={fetchMode}
+            setFetchMode={setFetchMode}
+            userNotFoundError={userNotFoundError}
+            setUserNotFoundError={setUserNotFoundError}
+          />
 
 
-            {/* Tabs */}
-            {earnings.length > 0 && (
-              <div className="main-tabs">
-                <div
-                  className="main-tabs-bg"
-                  style={{ transform: `translateX(calc(${TAB_ORDER[activeTab] * 100}% + calc(${TAB_ORDER[activeTab]} * var(--tab-gap))))` }}
-                />
-                <button
-                  className={`main-tab ${activeTab === 'calculator' ? 'active' : ''}`}
-                  onClick={() => handleTabChange('calculator')}
-                >
-                  <span className="tab-icon">📊</span>
-                  {t('tabs.earnings')}
-                </button>
-                <button
-                  className={`main-tab ${activeTab === 'simulator' ? 'active' : ''}`}
-                  onClick={() => handleTabChange('simulator')}
-                >
-                  <span className="tab-icon">⚡</span>
-                  {t('tabs.simulator')}
-                </button>
-                <button
-                  className={`main-tab ${activeTab === 'withdraw' ? 'active' : ''}`}
-                  onClick={() => handleTabChange('withdraw')}
-                >
-                  <span className="tab-icon">⏱️</span>
-                  {t('tabs.withdraw')}
-                </button>
-              </div>
-            )}
-
-
-            {/* Content based on Tab - Slider */}
-            <div className="tab-slider-viewport">
+          {/* Tabs */}
+          {earnings.length > 0 && (
+            <div className="main-tabs">
               <div
-                className="tab-slider-track"
-                style={{ transform: `translateX(-${TAB_ORDER[activeTab] * 100}%)` }}
+                className="main-tabs-bg"
+                style={{ transform: `translateX(calc(${TAB_ORDER[activeTab] * 100}% + calc(${TAB_ORDER[activeTab]} * var(--tab-gap))))` }}
+              />
+              <button
+                className={`main-tab ${activeTab === 'calculator' ? 'active' : ''}`}
+                onClick={() => handleTabChange('calculator')}
               >
-                {earnings.length > 0 && (
-                  <>
-                    <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
-                        <EarningsTable
-                          earnings={earnings}
-                          effectiveUserPower={displayPower}
-                          prices={prices}
-                          onOpenSettings={() => setIsSettingsOpen(true)}
-                          onOpenColumnSettings={() => setColumnModalOpen(true)}
-                          onShowNotification={showNotification}
-                          visibleColumns={visibleColumns}
-                          blockDurations={blockDurations}
-                          customPeriodDays={customPeriodDays}
-                          customPeriodHours={customPeriodHours}
-                        />
-                        <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
-                      </div>
-                    <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
-                      <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-                        <PowerSimulator
-                          currentLeague={league}
-                          apiLeagues={apiLeagues || null}
-                          fetchedUser={fetchedUser}
-                          onFetchUser={handleFetchUser}
-                          isFetchingUser={isFetchingUser}
-                          globalUserName={globalUserName}
-                          setGlobalUserName={setGlobalUserName}
-                        />
-                      </React.Suspense>
-                    </div>
-                    <div className={`tab-panel${collapsedTabs.has('withdraw') ? ' collapsed' : ''}`}>
-                      <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-                        <WithdrawTimer
-                          earnings={earnings}
-                          balances={balances}
-                          onBalanceChange={handleBalanceChange}
-                          prices={prices}
-                        />
-                      </React.Suspense>
-                    </div>
-                  </>
-                )}
-              </div>
+                <span className="tab-icon">📊</span>
+                {t('tabs.earnings')}
+              </button>
+              <button
+                className={`main-tab ${activeTab === 'simulator' ? 'active' : ''}`}
+                onClick={() => handleTabChange('simulator')}
+              >
+                <span className="tab-icon">⚡</span>
+                {t('tabs.simulator')}
+              </button>
+              <button
+                className={`main-tab ${activeTab === 'withdraw' ? 'active' : ''}`}
+                onClick={() => handleTabChange('withdraw')}
+              >
+                <span className="tab-icon">⏱️</span>
+                {t('tabs.withdraw')}
+              </button>
             </div>
+          )}
 
 
-            <SeoArticle />
-          </>
-        )}
-      </div>
+          {/* Content based on Tab - Slider */}
+          <div className="tab-slider-viewport">
+            <div
+              className="tab-slider-track"
+              style={{ transform: `translateX(-${TAB_ORDER[activeTab] * 100}%)` }}
+            >
+              {earnings.length > 0 && (
+                <>
+                  <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
+                    <EarningsTable
+                      earnings={earnings}
+                      effectiveUserPower={displayPower}
+                      prices={prices}
+                      onOpenSettings={() => setIsSettingsOpen(true)}
+                      onOpenColumnSettings={() => setColumnModalOpen(true)}
+                      onShowNotification={showNotification}
+                      visibleColumns={visibleColumns}
+                      blockDurations={blockDurations}
+                      customPeriodDays={customPeriodDays}
+                      customPeriodHours={customPeriodHours}
+                    />
+                    <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
+                  </div>
+                  <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
+                    <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+                      <PowerSimulator
+                        currentLeague={league}
+                        apiLeagues={apiLeagues || null}
+                        fetchedUser={fetchedUser}
+                        onFetchUser={handleFetchUser}
+                        isFetchingUser={isFetchingUser}
+                        globalUserName={globalUserName}
+                        setGlobalUserName={setGlobalUserName}
+                      />
+                    </React.Suspense>
+                  </div>
+                  <div className={`tab-panel${collapsedTabs.has('withdraw') ? ' collapsed' : ''}`}>
+                    <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+                      <WithdrawTimer
+                        earnings={earnings}
+                        balances={balances}
+                        onBalanceChange={handleBalanceChange}
+                        prices={prices}
+                      />
+                    </React.Suspense>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+
+          <SeoArticle />
+        </>
+      )}
+    </div>
   );
 }
 
@@ -864,6 +869,11 @@ function App() {
         <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
         <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
         <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
+        <Route path="/:lang/guides/f2p-strategy" element={<React.Suspense fallback={null}><F2PGuide /></React.Suspense>} />
+        <Route path="/:lang/guides/bonus-power" element={<React.Suspense fallback={null}><BonusPowerGuide /></React.Suspense>} />
+        <Route path="/:lang/guides/marketplace-arbitrage" element={<React.Suspense fallback={null}><MarketplaceArbitrageGuide /></React.Suspense>} />
+        <Route path="/:lang/guides/mining-power" element={<React.Suspense fallback={null}><MiningPowerGuide /></React.Suspense>} />
+        <Route path="/:lang/guides/calculation-logic" element={<React.Suspense fallback={null}><CalculationLogicGuide /></React.Suspense>} />
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -147,6 +147,36 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         );
     };
 
+    const renderUsdWithDiff = (newAmount: number, oldAmount: number, price: number): React.ReactNode => {
+        const newValue = newAmount * price;
+        const oldValue = oldAmount * price;
+        const diff = newValue - oldValue;
+        
+        const isSimulatingAnything = Object.keys(sourceAllocations).length > 0 || Object.keys(targetAllocations).length > 0;
+        
+        if (!isSimulatingAnything || Math.abs(diff) < 0.005) {
+            return <div className="earning-usd">{formatUSD(newValue)}</div>;
+        }
+
+        const isPositive = diff > 0;
+        const percentDiff = oldValue > 0 ? (diff / oldValue) * 100 : 0;
+        const formattedPercent = `${isPositive ? '+' : ''}${percentDiff.toFixed(2)}%`;
+        const titleText = oldValue > 0 ? `${formatUSD(oldValue)} \u2192 ${formatUSD(newValue)} (${formattedPercent})` : formatUSD(newValue);
+
+        return (
+            <div className="earning-usd has-diff">
+                {formatUSD(newValue)}
+                <span 
+                    className={`sim-diff sim-diff-tooltip ${isPositive ? 'positive' : 'negative'}`} 
+                    tabIndex={0} 
+                    data-full={titleText}
+                >
+                    {isPositive ? '↗' : '↘'} {formatUSD(Math.abs(diff))}
+                </span>
+            </div>
+        );
+    };
+
     const handleScreenshot = async () => {
         if (!tablesRef.current || isCapturing) return;
         setIsCapturing(true);
@@ -384,8 +414,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('blockReward') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.perBlock, earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(earning.earnings.perBlock * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(earning.earnings.perBlock, baseEarning.earnings.perBlock, price)
                         )}
                     </td>
                 )}
@@ -403,8 +433,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('hourly') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.hourly, earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(earning.earnings.hourly * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(earning.earnings.hourly, baseEarning.earnings.hourly, price)
                         )}
                     </td>
                 )}
@@ -412,8 +442,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('daily') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.daily, earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(earning.earnings.daily * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(earning.earnings.daily, baseEarning.earnings.daily, price)
                         )}
                     </td>
                 )}
@@ -421,8 +451,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('weekly') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.weekly, earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(earning.earnings.weekly * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(earning.earnings.weekly, baseEarning.earnings.weekly, price)
                         )}
                     </td>
                 )}
@@ -430,8 +460,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('monthly') && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(earning.earnings.monthly, earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(earning.earnings.monthly * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(earning.earnings.monthly, baseEarning.earnings.monthly, price)
                         )}
                     </td>
                 )}
@@ -439,8 +469,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 {visibleColumns.has('custom') && getCustomPeriodInHours() > 0 && (
                     <td className="earning-cell">
                         {renderCryptoWithTooltip(calculateCustomEarnings(earning), earning.displayName)}
-                        {!earning.isGameToken && earning.displayName !== 'USDT' && (
-                            <div className="earning-usd">{formatUSD(calculateCustomEarnings(earning) * price)}</div>
+                        {!earning.isGameToken && (
+                            renderUsdWithDiff(calculateCustomEarnings(earning), calculateCustomEarnings(baseEarning), price)
                         )}
                     </td>
                 )}
@@ -556,7 +586,21 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                                     <span className="sim-coin-name">{coin}</span>
                                                 </div>
                                                 <input className="sim-range warning-range" type="range" min="0" max="100" value={val} onChange={e => handleSourceChange(coin, parseInt(e.target.value))} />
-                                                <span className="sim-val warning-text">{val}%</span>
+                                                <div className="sim-val-input-group warning-text">
+                                                    <input 
+                                                        type="number" 
+                                                        className="sim-val-input"
+                                                        min="0" 
+                                                        max="100" 
+                                                        value={Number.isNaN(val) ? '' : val} 
+                                                        onChange={e => {
+                                                            const newVal = parseInt(e.target.value);
+                                                            handleSourceChange(coin, Number.isNaN(newVal) ? 0 : newVal);
+                                                        }} 
+                                                        onFocus={e => e.target.select()}
+                                                    />
+                                                    <span>%</span>
+                                                </div>
                                                 <button className="sim-remove-btn" onClick={() => removeSourceCoin(coin)}>
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                                                 </button>
@@ -595,7 +639,21 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                                     <span className="sim-coin-name">{coin}</span>
                                                 </div>
                                                 <input className="sim-range accent-range" type="range" min="0" max="100" value={val} onChange={e => handleTargetChange(coin, parseInt(e.target.value))} />
-                                                <span className="sim-val accent-text">{val}%</span>
+                                                <div className="sim-val-input-group accent-text">
+                                                    <input 
+                                                        type="number" 
+                                                        className="sim-val-input"
+                                                        min="0" 
+                                                        max="100" 
+                                                        value={Number.isNaN(val) ? '' : val} 
+                                                        onChange={e => {
+                                                            const newVal = parseInt(e.target.value);
+                                                            handleTargetChange(coin, Number.isNaN(newVal) ? 0 : newVal);
+                                                        }} 
+                                                        onFocus={e => e.target.select()}
+                                                    />
+                                                    <span>%</span>
+                                                </div>
                                                 <button className="sim-remove-btn" onClick={() => removeTargetCoin(coin)}>
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                                                 </button>

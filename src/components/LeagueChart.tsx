@@ -642,12 +642,6 @@ export default function LeagueChart() {
                     </>
                 )}
             </div>
-            {/* Mobile Ad Banner */}
-            <div className="mobile-ad" style={{ marginTop: '30px' }}>
-                <iframe data-aa="2429728" src="//acceptable.a-ads.com/2429728/?size=Adaptive&background_color=1e2433&title_color=fffffe"
-                    style={{ border: 0, padding: 0, width: '70%', height: 'auto', overflow: 'hidden', display: 'block', margin: '0 auto' }}
-                    title="Ad Mobile Bottom" />
-            </div>
         </div>
     );
 }
