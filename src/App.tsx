@@ -15,8 +15,8 @@ import { autoScalePower } from './utils/powerParser';
 import { COIN_ICONS } from './utils/constants';
 import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
-const DataInputForm = React.lazy(() => import('./components/DataInputForm'));
-const EarningsTable = React.lazy(() => import('./components/EarningsTable'));
+import DataInputForm from './components/DataInputForm';
+import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
 
 // Lazy load complex components to improve initial load and shorten critical request chains
