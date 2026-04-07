@@ -571,7 +571,7 @@ export default function ProgressionEvent() {
                         <div className="pe-info-table">
                             <div className="pe-info-row">
                                 <span>{t('event.multiplier')}</span>
-                                <span className="pe-info-value">{t('event.multiplierRate')}</span>
+                                <span className="pe-info-value">{t('event.multiplierRate', { amount: dynamicConstants.MULTIPLIER_STEP_RLT })}</span>
                             </div>
                             <div className="pe-info-row">
                                 <span>{t('event.multiplierDuration')}</span>
