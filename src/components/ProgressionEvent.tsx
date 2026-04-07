@@ -23,14 +23,28 @@ import batteryImg from '../assets/items/battery.png';
 import bonusPowerImg from '../assets/items/bonus_power.png';
 import xpImg from '../assets/items/xp.png';
 import speedupImg from '../assets/items/speedup_item.gif';
+import commonFanImg from '../assets/items/common_fan.png';
+import commonHashboardImg from '../assets/items/common_hashboard.png';
+import commonWireImg from '../assets/items/common_wire.png';
+import uncommonFanImg from '../assets/items/uncommon_fan.png';
+import uncommonHashboardImg from '../assets/items/uncommon_hashboard.png';
+import uncommonWireImg from '../assets/items/uncommon_wire.png';
 import rareFanImg from '../assets/items/rare_fan.png';
+import rareHashboardImg from '../assets/items/rare_hashboard.png';
+import rareWireImg from '../assets/items/rare_wire.png';
+import epicFanImg from '../assets/items/epic_fan.png';
+import epicHashboardImg from '../assets/items/epic_hashboard.png';
+import epicWireImg from '../assets/items/epic_wire.png';
 import legendaryFanImg from '../assets/items/legendary_fan.png';
+import legendaryHashboardImg from '../assets/items/legendary_hashboard.png';
+import legendaryWireImg from '../assets/items/legendary_wire.png';
 import abandonedMineChestImg from '../assets/items/Abandoned_mine_chest_d310e38e-9dea-4756-a017-cf427dc65abf.png';
 import wiresCaseImg from '../assets/items/wires_case_855b977d-950c-45e3-a315-b20be4a052ab.png';
 import hashboardCaseImg from '../assets/items/hashboard_case_1116df97-ed73-4baf-a0d8-76a9cb7cf588.png';
 import fansCaseImg from '../assets/items/fans_case_7bfde88d-fc4c-414f-a539-2ee2673ad216.png';
 import rstImg from '../assets/coins/rst.svg';
 import rltImg from '../assets/coins/rlt.svg';
+import diamondChestImg from '../assets/items/diamond_mine_chest_abbb269d-2d0d-4773-8c76-93e300db4614.png';
 
 type EventTab = 'rewards' | 'multiplier';
 
@@ -70,24 +84,45 @@ function getRackImageUrl(id: string): string {
 }
 
 function getMutationComponentImage(itemId: string | null, item?: MutationComponentItem): string | null {
+    const name = item?.name?.en?.toLowerCase() ?? '';
+
+    if (name.includes('legendary')) {
+        if (name.includes('fan')) return legendaryFanImg;
+        if (name.includes('hashboard')) return legendaryHashboardImg;
+        if (name.includes('wire') || name.includes('wiring')) return legendaryWireImg;
+    }
+    if (name.includes('epic')) {
+        if (name.includes('fan')) return epicFanImg;
+        if (name.includes('hashboard')) return epicHashboardImg;
+        if (name.includes('wire') || name.includes('wiring')) return epicWireImg;
+    }
+    if (name.includes('rare')) {
+        if (name.includes('fan')) return rareFanImg;
+        if (name.includes('hashboard')) return rareHashboardImg;
+        if (name.includes('wire') || name.includes('wiring')) return rareWireImg;
+    }
+    if (name.includes('uncommon')) {
+        if (name.includes('fan')) return uncommonFanImg;
+        if (name.includes('hashboard')) return uncommonHashboardImg;
+        if (name.includes('wire') || name.includes('wiring')) return uncommonWireImg;
+    }
+    if (name.includes('common')) {
+        if (name.includes('fan')) return commonFanImg;
+        if (name.includes('hashboard')) return commonHashboardImg;
+        if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
+    }
+
+    // Fallbacks if rarity is not specified
+    if (name.includes('fan')) return commonFanImg;
+    if (name.includes('hashboard')) return commonHashboardImg;
+    if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
+
+    // Hardcoded legacy item IDs as last resort
     if (itemId === '6196269b67433d2dc52e0130') {
         return legendaryFanImg;
     }
     if (itemId === '61b35e3767433d2dc57f86a2') {
         return rareFanImg;
-    }
-
-    const name = item?.name?.en?.toLowerCase() ?? '';
-    if (name.includes('legendary') && name.includes('fan')) {
-        return legendaryFanImg;
-    }
-    if ((name.includes('rare') && name.includes('fan')) || name.includes('hashboard')) {
-        return rareFanImg;
-    }
-    // Common wiring and similar mutation components use fallback icon
-    if (name.includes('wiring') || name.includes('wire')) {
-        // Return fallback (will show emoji in UI)
-        return null;
     }
 
     return null;
@@ -115,6 +150,9 @@ function getMysteryBoxImage(box?: MysteryBoxItem, fallbackTitle?: string): strin
     }
     if (title.includes('fan')) {
         return fansCaseImg;
+    }
+    if (title.includes('diamond mine chest')) {
+        return diamondChestImg;
     }
 
     return abandonedMineChestImg;
@@ -656,10 +694,10 @@ export default function ProgressionEvent() {
                                                                                     }}
                                                                                 />
                                                                             )}
-                                                                            <img 
-                                                                                src={display.imageUrl} 
-                                                                                alt={display.text} 
-                                                                                style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }} 
+                                                                            <img
+                                                                                src={display.imageUrl}
+                                                                                alt={display.text}
+                                                                                style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }}
                                                                                 loading="lazy"
                                                                                 onError={(e) => {
                                                                                     const target = e.target as HTMLImageElement;
@@ -673,14 +711,14 @@ export default function ProgressionEvent() {
                                                                                         span.textContent = '📦';
                                                                                         parent.appendChild(span);
                                                                                     }
-                                                                                }} 
+                                                                                }}
                                                                             />
                                                                         </div>
                                                                     ) : display?.localImage ? (
-                                                                        <img 
-                                                                            src={display.localImage} 
-                                                                            alt={display.text} 
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }} 
+                                                                        <img
+                                                                            src={display.localImage}
+                                                                            alt={display.text}
+                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;
@@ -688,10 +726,10 @@ export default function ProgressionEvent() {
                                                                             }}
                                                                         />
                                                                     ) : typeImage ? (
-                                                                        <img 
-                                                                            src={typeImage} 
-                                                                            alt={reward?.type || ''} 
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }} 
+                                                                        <img
+                                                                            src={typeImage}
+                                                                            alt={reward?.type || ''}
+                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;
