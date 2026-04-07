@@ -1006,6 +1006,12 @@ a:hover {
   font-weight: 600;
 }
 
+.coin-info-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .best-badge {
   display: inline-block;
   font-size: 10px;
@@ -1974,6 +1980,13 @@ a:hover {
     font-size: 10px;
   }
 
+  .coin-info-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+
   .league-power {
     font-size: 11px;
   }
@@ -1988,6 +2001,22 @@ a:hover {
 
   .earning-usd {
     font-size: 11px;
+  }
+
+  .earning-usd.has-diff {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .sim-diff {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+
+  .sim-badge {
+    font-size: 10px;
+    margin-left: 0;
   }
 
   .table-container.fit-default-columns {
@@ -2036,6 +2065,13 @@ a:hover {
     white-space: nowrap;
   }
 
+  .table-container.fit-default-columns .coin-info-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+
   .table-container.fit-default-columns .league-power {
     font-size: 11px;
     white-space: nowrap;
@@ -2056,6 +2092,24 @@ a:hover {
   .table-container.fit-default-columns .earning-usd {
     font-size: 11px;
     white-space: nowrap;
+  }
+
+  .table-container.fit-default-columns .earning-usd.has-diff {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .table-container.fit-default-columns .sim-diff {
+    font-size: 10px;
+    padding: 1px 3px;
+    white-space: nowrap;
+  }
+
+  .table-container.fit-default-columns .sim-badge {
+    font-size: 10px;
+    padding: 1px 4px;
+    margin-left: 0;
   }
 
   .best-badge {

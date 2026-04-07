@@ -429,7 +429,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             }}
                             className="coin-icon-img"
                         />
-                        <div className="coin-info-wrapper" style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <div className="coin-info-wrapper">
                             <span className="coin-symbol" style={{ color: 'inherit' }}>
                                 {earning.displayName}
                             </span>
