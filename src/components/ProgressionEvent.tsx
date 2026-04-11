@@ -139,7 +139,15 @@ function getMutationComponentDisplayName(itemId: string | null, item?: MutationC
     return item?.name?.en ?? 'Mutation Component';
 }
 
-function getMysteryBoxImage(box?: MysteryBoxItem, fallbackTitle?: string): string {
+function getMysteryBoxImageUrl(box?: MysteryBoxItem): string | null {
+    // Prefer API-provided image URL (dynamic, no manual update needed)
+    if (box?.media?.box_image_url) {
+        return `https://static.rollercoin.com/${box.media.box_image_url}`;
+    }
+    return null;
+}
+
+function getMysteryBoxLocalFallback(box?: MysteryBoxItem, fallbackTitle?: string): string {
     const title = (box?.title?.en ?? fallbackTitle ?? '').toLowerCase();
 
     if (title.includes('wires') || title.includes('wire')) {
@@ -242,10 +250,15 @@ function getRewardDisplay(
         case 'utility_item': {
             const utility = reward.item as UtilityItem | undefined;
             if (utility) {
+                // Use API-provided image URL (dynamic, no manual update needed)
+                const utilityImageUrl = utility.media?.preview_url
+                    ? `https://static.rollercoin.com/${utility.media.preview_url}`
+                    : undefined;
                 return {
                     text: `${utility.name.en} x${reward.amount}`,
                     subText: utility.name.en,
-                    localImage: speedupImg,
+                    imageUrl: utilityImageUrl,
+                    localImage: utilityImageUrl ? undefined : speedupImg,
                 };
             }
             return { text: t('event.rewardTypes.utilityItem'), subText: '' };
@@ -262,10 +275,13 @@ function getRewardDisplay(
         case 'mystery_box': {
             const box = reward.item as MysteryBoxItem | undefined;
             const boxTitle = box?.title?.en ?? reward.title.en;
+            // Use API-provided image URL (dynamic, no manual update needed)
+            const boxImageUrl = getMysteryBoxImageUrl(box);
             return {
                 text: `${boxTitle} x${reward.amount}`,
                 subText: '',
-                localImage: getMysteryBoxImage(box, reward.title.en),
+                imageUrl: boxImageUrl ?? undefined,
+                localImage: boxImageUrl ? undefined : getMysteryBoxLocalFallback(box, reward.title.en),
             };
         }
         default:

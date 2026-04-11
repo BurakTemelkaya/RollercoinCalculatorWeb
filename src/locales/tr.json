@@ -295,7 +295,7 @@
         "loading": "Etkinlik verileri yükleniyor...",
         "fetchError": "Etkinlik verileri yüklenemedi",
         "retry": "Tekrar Dene",
-        "adBlockerWarning": "Reklam engelleme algılandı: Eşya görselleri yüklenmeyebilir. Bazı ödüller görüntülemezde gösterilmeyebilir.",
+        "adBlockerWarning": "Reklam engelleyici algılandı: Eşya görselleri yüklenmeyebilir.",
         "ended": "Etkinlik sona erdi",
         "days": "gün",
         "daysShort": "g",

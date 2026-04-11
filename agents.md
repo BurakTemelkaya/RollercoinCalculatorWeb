@@ -52,12 +52,14 @@ src/
 │   ├── DataInputForm.tsx/css  # Veri giriş formu (API/Manuel mod, güç, lig seçimi)
 │   ├── EarningsTable.tsx      # Kazanç tablosu (kripto + game token sekmeleri)
 │   ├── PowerSimulator.tsx/css # Güç simülatörü (madenci/raf ekleme simülasyonu)
+│   ├── ProgressionEvent.tsx/css # Progression Event ödül tablosu + multiplier hesaplayıcı
 │   ├── WithdrawTimer.tsx      # Çekim süresi hesaplayıcı
 │   ├── SettingsModal.tsx      # Blok süresi ayarları modalı
 │   └── Notification.tsx/css   # Toast bildirimleri
 │
 ├── services/
 │   ├── leagueApi.ts           # Lig API çağrıları + veri dönüşüm fonksiyonları
+│   ├── progressionEventApi.ts # Progression Event API çağrıları
 │   └── userApi.ts             # Kullanıcı API çağrıları
 │
 ├── data/
@@ -68,6 +70,7 @@ src/
 ├── types/
 │   ├── index.ts               # Ana tipler (HashPower, CoinData, EarningsResult, vb.)
 │   ├── api.ts                 # API response tipleri (ApiLeagueData, ApiCurrency)
+│   ├── progressionEvent.ts    # Progression Event tipleri (ProgressionReward, MinerItem, vb.)
 │   └── user.ts                # Kullanıcı tipleri (RollercoinUserResponse)
 │
 ├── utils/
@@ -88,7 +91,8 @@ src/
 │   └── en.json                # İngilizce çeviriler
 │
 └── assets/
-    └── coins/                 # Kripto para SVG ikonları
+    ├── coins/                 # Kripto para SVG ikonları
+    └── items/                 # Ödül görselleri (mutation component, battery, vb.)
 ```
 
 ## Kritik Veri Akışı
@@ -147,6 +151,21 @@ Uygulama tüm verileri localStorage'da cache'ler:
 7. Çekim yoksa → `WithdrawTimer.tsx`'de filtrele
 8. Stablecoin ise → `App.tsx`'te `fetchPrices` sonrasında sabit fiyat ekle (ör: `prices['USDT'] = 1`)
 9. Fiyat çekilecekse → `App.tsx`'te `fetchPrices` çağrısındaki `allCryptos` dizisine ekle
+
+## Progression Event Görsel Çözümleme
+
+Progression Event ödüllerinin görselleri şu öncelik sırasına göre çözümlenir:
+
+| Ödül Tipi | Görsel Kaynağı | Açıklama |
+|---|---|---|
+| **Miner** | `static.rollercoin.com` CDN | `filename` alanından dinamik URL oluşturulur |
+| **Rack** | `static.rollercoin.com` CDN | `_id` alanından dinamik URL oluşturulur |
+| **Mystery Box** | `static.rollercoin.com` CDN → Lokal fallback | API'deki `media.box_image_url` önce denenr, yoksa `title` eşleşmesiyle lokal resim |
+| **Utility Item** | `static.rollercoin.com` CDN → Lokal fallback | API'deki `media.preview_url` önce denenir, yoksa `speedupImg` fallback |
+| **Mutation Component** | Lokal (`assets/items/`) | İsim + rarity eşleşmesi ile lokal resim (API'de görsel URL yok) |
+| **Power/Battery/XP/Money** | Lokal (`assets/items/` ve `assets/coins/`) | Sabit ikon dosyaları |
+
+**Önemli:** Mystery box ve utility item görselleri API'den dinamik gelir, yeni kutu/booster eklendiğinde **manuel güncelleme gerekmez**. Ad-blocker `static.rollercoin.com` domain'ini engelliyorsa lokal fallback'ler kullanılır.
 
 ## Önemli Notlar
 
