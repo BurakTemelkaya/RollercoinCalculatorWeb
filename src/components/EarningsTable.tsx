@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
 import { EarningsResult } from '../types';
@@ -49,9 +50,75 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     const [selectedTargetAdd, setSelectedTargetAdd] = useState<string>('BTC');
     const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
 
+    // Sticky header state
+    const theadRef = useRef<HTMLTableSectionElement>(null);
+    const tableSectionRef = useRef<HTMLDivElement>(null);
+    const [showFixedHeader, setShowFixedHeader] = useState(false);
+    const [headerWidths, setHeaderWidths] = useState<number[]>([]);
+    const [tableLeft, setTableLeft] = useState(0);
+    const [tableWidth, setTableWidth] = useState(0);
+
     // Separate game tokens and crypto
     const gameTokens = earnings.filter(e => e.isGameToken);
     const cryptoCoins = earnings.filter(e => !e.isGameToken);
+
+    // Measure header cells and update fixed header
+    const measureHeader = useCallback(() => {
+        if (!theadRef.current || !tableSectionRef.current) return;
+        const ths = theadRef.current.querySelectorAll('th');
+        const widths = Array.from(ths).map(th => th.getBoundingClientRect().width);
+        setHeaderWidths(widths);
+        const tableRect = tableSectionRef.current.querySelector('.table-container')?.getBoundingClientRect();
+        if (tableRect) {
+            setTableLeft(tableRect.left);
+            setTableWidth(tableRect.width);
+        }
+    }, []);
+
+    // Scroll-based sticky header (works despite overflow:hidden ancestors)
+    useEffect(() => {
+        let rafId: number;
+        let lastShow = false;
+
+        const handleScroll = () => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+                const thead = theadRef.current;
+                const section = tableSectionRef.current;
+                if (!thead || !section) {
+                    if (lastShow) {
+                        lastShow = false;
+                        setShowFixedHeader(false);
+                    }
+                    return;
+                }
+                const theadRect = thead.getBoundingClientRect();
+                const sectionRect = section.getBoundingClientRect();
+                const shouldShow = theadRect.bottom < 0 && sectionRect.bottom > 60;
+                if (shouldShow !== lastShow) {
+                    lastShow = shouldShow;
+                    setShowFixedHeader(shouldShow);
+                }
+                if (shouldShow) measureHeader();
+            });
+        };
+
+        // Listen on multiple targets to catch scroll regardless of which element scrolls
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        document.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
+
+        // Initial check (delayed to ensure refs are populated after render)
+        const timer = setTimeout(handleScroll, 200);
+
+        return () => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleScroll);
+            clearTimeout(timer);
+        };
+    }, [earnings, measureHeader]);
 
     // Sort crypto by daily earnings (descending)
     const sortedCrypto = [...cryptoCoins].sort((a, b) => {
@@ -530,7 +597,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
             {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
-                <div className="table-section">
+                <div className="table-section" ref={tableSectionRef}>
                     <div className="section-header-row">
                         <h2 className="section-title">
                             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
@@ -702,7 +769,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
 
                     <div className={tableContainerClassName}>
                         <table className="earnings-table wide-table">
-                            <thead>
+                            <thead ref={theadRef}>
                                 <tr>
                                     <th>{t('table.headers.coin')}</th>
                                     <th>{t('table.headers.leaguePower')}</th>
@@ -720,6 +787,43 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Fixed sticky header clone - rendered via portal to escape overflow:hidden */}
+                    {showFixedHeader && headerWidths.length > 0 && createPortal(
+                        <div
+                            className="fixed-thead-clone"
+                            style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: tableLeft,
+                                width: tableWidth,
+                                zIndex: 100,
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            <table className="earnings-table wide-table" style={{ width: '100%' }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: headerWidths[0] }}>{t('table.headers.coin')}</th>
+                                        <th style={{ width: headerWidths[1] }}>{t('table.headers.leaguePower')}</th>
+                                        {(() => {
+                                            let idx = 2;
+                                            const cols: React.ReactNode[] = [];
+                                            if (visibleColumns.has('blockReward')) cols.push(<th key="br" style={{ width: headerWidths[idx++] }}>{getColumnHeader('blockReward')}</th>);
+                                            if (visibleColumns.has('blockDuration')) cols.push(<th key="bd" style={{ width: headerWidths[idx++] }}>{getColumnHeader('blockDuration')}</th>);
+                                            if (visibleColumns.has('hourly')) cols.push(<th key="h" style={{ width: headerWidths[idx++] }}>{getColumnHeader('hourly')}</th>);
+                                            if (visibleColumns.has('daily')) cols.push(<th key="d" style={{ width: headerWidths[idx++] }}>{getColumnHeader('daily')}</th>);
+                                            if (visibleColumns.has('weekly')) cols.push(<th key="w" style={{ width: headerWidths[idx++] }}>{getColumnHeader('weekly')}</th>);
+                                            if (visibleColumns.has('monthly')) cols.push(<th key="m" style={{ width: headerWidths[idx++] }}>{getColumnHeader('monthly')}</th>);
+                                            if (visibleColumns.has('custom') && getCustomPeriodInHours() > 0) cols.push(<th key="c" style={{ width: headerWidths[idx++] }}>{getColumnHeader('custom')}</th>);
+                                            return cols;
+                                        })()}
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>,
+                        document.body
+                    )}
                 </div>
             )}
 

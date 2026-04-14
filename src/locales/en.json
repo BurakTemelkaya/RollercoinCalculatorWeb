@@ -7,7 +7,8 @@
         "guides": "Guides",
         "faq": "FAQ",
         "support": "Support",
-        "charts": "Charts"
+        "charts": "Charts",
+        "events": "Events"
     },
     "lpp": {
         "title": "League Power Partition",
@@ -239,7 +240,9 @@
         "years": "years",
         "hours": "hours",
         "editHint": "Click to edit",
-        "resetMin": "Reset to default"
+        "resetMin": "Reset to default",
+        "showDate": "Show estimated date",
+        "showDuration": "Show remaining time"
     },
     "simulator": {
         "title": "Power Simulator",
@@ -344,6 +347,17 @@
             "miner": "Miner",
             "rack": "Rack",
             "utilityItem": "Utility Item"
-        }
+        },
+        "eventHistory": "Event History",
+        "viewHistory": "Past Events",
+        "totalEvents": "{{count}} events",
+        "latest": "Latest",
+        "viewDetails": "View Details",
+        "noEvents": "No events found."
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page {{current}} of {{total}}"
     }
 }

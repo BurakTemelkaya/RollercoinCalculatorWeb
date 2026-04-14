@@ -7,7 +7,8 @@
         "guides": "Rehberler",
         "faq": "SSS",
         "support": "Destek",
-        "charts": "Grafikler"
+        "charts": "Grafikler",
+        "events": "Etkinlikler"
     },
     "lpp": {
         "title": "Lig Güç Dağılımı",
@@ -238,7 +239,9 @@
         "years": "yıl",
         "hours": "saat",
         "editHint": "Düzenlemek için tıklayın",
-        "resetMin": "Varsayılana sıfırla"
+        "resetMin": "Varsayılana sıfırla",
+        "showDate": "Tahmini tarihi göster",
+        "showDuration": "Kalan süreyi göster"
     },
     "simulator": {
         "title": "Güç Simülatörü",
@@ -343,6 +346,17 @@
             "miner": "Madenci",
             "rack": "Raf",
             "utilityItem": "Yardımcı Eşya"
-        }
+        },
+        "eventHistory": "Etkinlik Geçmişi",
+        "viewHistory": "Geçmiş Etkinlikler",
+        "totalEvents": "{{count}} etkinlik",
+        "latest": "Güncel",
+        "viewDetails": "Detayları Gör",
+        "noEvents": "Etkinlik bulunamadı."
+    },
+    "pagination": {
+        "previous": "Önceki",
+        "next": "Sonraki",
+        "page": "Sayfa {{current}} / {{total}}"
     }
 }

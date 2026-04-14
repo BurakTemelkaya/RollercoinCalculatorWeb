@@ -25,6 +25,7 @@ const PowerSimulator = React.lazy(() => import('./components/PowerSimulator'));
 const SettingsModal = React.lazy(() => import('./components/SettingsModal'));
 const ColumnSettingsModal = React.lazy(() => import('./components/ColumnSettingsModal'));
 const ProgressionEvent = React.lazy(() => import('./components/ProgressionEvent'));
+const ProgressionEventHistory = React.lazy(() => import('./components/ProgressionEventHistory'));
 const AboutPage = React.lazy(() => import('./components/AboutPage'));
 const PrivacyPage = React.lazy(() => import('./components/PrivacyPage'));
 const FaqPage = React.lazy(() => import('./components/FaqPage'));
@@ -741,6 +742,14 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
               <span className="tab-icon">🎉</span>
               {t('tabs.event')}
             </Link>
+            <Link to={`/${lang}/events`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1))', borderColor: 'rgba(99, 102, 241, 0.2)' }}>
+              <span className="tab-icon">📋</span>
+              {t('event.viewHistory')}
+            </Link>
+            <Link to={`/${lang}/support`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1))', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
+              <span className="tab-icon">☕</span>
+              {t('nav.support')}
+            </Link>
           </div>
 
           {/* Data Input Form */}
@@ -867,6 +876,8 @@ function App() {
         <Route path="/" element={<AutoRedirect />} />
         <Route path="/:lang" element={<CalculatorArea />} />
         <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
+        <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
+        <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
         <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
         <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
         <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />

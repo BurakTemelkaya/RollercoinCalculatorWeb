@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { fetchProgressionEvent, type ParsedProgressionEvent } from '../services/progressionEventApi';
+import { fetchProgressionEvent, fetchProgressionEventById, type ParsedProgressionEvent } from '../services/progressionEventApi';
+import { extractEventIdFromSlug } from '../utils/slugUtils';
 import type {
     ProgressionReward,
     LevelConfig,
@@ -290,7 +291,8 @@ function getRewardDisplay(
 }
 
 export default function ProgressionEvent() {
-    const { lang } = useParams<{ lang: string }>();
+    const { lang, eventId: eventSlug } = useParams<{ lang: string; eventId?: string }>();
+    const eventId = eventSlug ? extractEventIdFromSlug(eventSlug) : undefined;
     const { t } = useTranslation();
     const [eventData, setEventData] = useState<ParsedProgressionEvent | null>(null);
     const [loading, setLoading] = useState(true);
@@ -308,32 +310,39 @@ export default function ProgressionEvent() {
 
     const MAX_MULTIPLIER = 100;
 
-    // Fetch event data
+    // Fetch event data — by specific ID or latest
     useEffect(() => {
         const loadEvent = async () => {
-            // Check cache first
-            try {
-                const cachedData = localStorage.getItem(STORAGE_KEY);
-                const cachedTimestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY);
-                if (cachedData && cachedTimestamp) {
-                    const elapsed = Date.now() - parseInt(cachedTimestamp, 10);
-                    if (elapsed < CACHE_DURATION) {
-                        setEventData(JSON.parse(cachedData));
-                        setLoading(false);
-                        return;
+            // Only use cache for the latest event (no eventId)
+            if (!eventId) {
+                try {
+                    const cachedData = localStorage.getItem(STORAGE_KEY);
+                    const cachedTimestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY);
+                    if (cachedData && cachedTimestamp) {
+                        const elapsed = Date.now() - parseInt(cachedTimestamp, 10);
+                        if (elapsed < CACHE_DURATION) {
+                            setEventData(JSON.parse(cachedData));
+                            setLoading(false);
+                            return;
+                        }
                     }
+                } catch {
+                    // Ignore cache errors
                 }
-            } catch {
-                // Ignore cache errors
             }
 
             try {
                 setLoading(true);
                 setError(null);
-                const data = await fetchProgressionEvent();
+                const data = eventId
+                    ? await fetchProgressionEventById(eventId)
+                    : await fetchProgressionEvent();
                 setEventData(data);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
+                // Only cache the latest event
+                if (!eventId) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                    localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
+                }
             } catch (err) {
                 console.error('Failed to fetch progression event:', err);
                 setError(err instanceof Error ? err.message : t('event.fetchError'));
@@ -343,7 +352,7 @@ export default function ProgressionEvent() {
         };
 
         loadEvent();
-    }, [t]);
+    }, [t, eventId]);
 
     // Test for ad-blocker by attempting to load external resource
     useEffect(() => {
@@ -566,6 +575,9 @@ export default function ProgressionEvent() {
                 <div className="pe-header-actions pe-header-left">
                     <Link to={`/${lang}`} className="pe-header-back-btn">
                         {t('event.backToCalc')}
+                    </Link>
+                    <Link to={`/${lang}/events`} className="pe-header-back-btn" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.12))', borderColor: 'rgba(99, 102, 241, 0.25)' }}>
+                        📋 {t('event.viewHistory')}
                     </Link>
                 </div>
 

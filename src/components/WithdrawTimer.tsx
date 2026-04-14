@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 import { EarningsResult, DEFAULT_MIN_WITHDRAW } from '../types';
 import { formatDuration, formatCryptoAmount } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
@@ -34,6 +35,13 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     const { t } = useTranslation();
     const [editingCoin, setEditingCoin] = useState<string | null>(null);
     const [tempValue, setTempValue] = useState<string>('');
+    const [showDate, setShowDate] = useState<boolean>(() => {
+        try {
+            return localStorage.getItem('rollercoin_web_withdraw_show_date') === 'true';
+        } catch {
+            return false;
+        }
+    });
 
     // Custom Min Withdraw States
     const [customMinWithdraws, setCustomMinWithdraws] = useState<Record<string, number>>(() => {
@@ -158,12 +166,40 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
         });
     };
 
+    const handleToggleShowDate = () => {
+        const next = !showDate;
+        setShowDate(next);
+        localStorage.setItem('rollercoin_web_withdraw_show_date', String(next));
+    };
+
+    const dateLocale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
+
     return (
         <section className="withdraw-timer-section">
-            <h2 className="section-title">
-                <span className="section-icon">⏱️</span>
-                {t('withdraw.title')}
-            </h2>
+            <div className="withdraw-header-row">
+                <h2 className="section-title">
+                    <span className="section-icon">⏱️</span>
+                    {t('withdraw.title')}
+                </h2>
+                <div className="withdraw-display-toggle">
+                    <div
+                        className="withdraw-toggle-bg"
+                        style={{ transform: showDate ? 'translateX(100%)' : 'translateX(0)' }}
+                    />
+                    <button
+                        className={`withdraw-toggle-btn ${!showDate ? 'active' : ''}`}
+                        onClick={handleToggleShowDate}
+                    >
+                        <span>⏱️</span> {t('withdraw.showDuration')}
+                    </button>
+                    <button
+                        className={`withdraw-toggle-btn ${showDate ? 'active' : ''}`}
+                        onClick={handleToggleShowDate}
+                    >
+                        <span>📅</span> {t('withdraw.showDate')}
+                    </button>
+                </div>
+            </div>
             <p className="section-desc">
                 {t('withdraw.desc')}
             </p>
@@ -293,6 +329,14 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
                                 <span className="time-ready">{t('withdraw.readyNow')}</span>
                             ) : !Number.isFinite(data.daysToWithdraw) ? (
                                 <span className="time-na">-</span>
+                            ) : showDate ? (
+                                <span className={`time-value ${data.daysToWithdraw < 7 ? 'fast' : data.daysToWithdraw < 30 ? 'medium' : 'slow'}`}>
+                                    {(() => {
+                                        const target = new Date();
+                                        target.setDate(target.getDate() + Math.ceil(data.daysToWithdraw));
+                                        return target.toLocaleDateString(dateLocale, { day: 'numeric', month: 'short', year: 'numeric' });
+                                    })()}
+                                </span>
                             ) : (
                                 <span className={`time-value ${data.daysToWithdraw < 7 ? 'fast' : data.daysToWithdraw < 30 ? 'medium' : 'slow'}`}>
                                     {formatDuration(data.daysToWithdraw, t)}

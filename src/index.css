@@ -917,7 +917,6 @@ a:hover {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  overflow: hidden;
 }
 
 .section-title {
@@ -933,6 +932,11 @@ a:hover {
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Make table headers sticky when direct child of table-section */
+.table-section > .section-title {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
 /* When section-title is inside section-header-row, parent provides bg/padding */
 .section-header-row .section-title {
   padding: 0;
@@ -946,7 +950,6 @@ a:hover {
 }
 
 .table-container {
-  overflow-x: auto;
 }
 
 .earnings-table {
@@ -968,10 +971,31 @@ a:hover {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  position: sticky;
-  top: 0;
   background: var(--bg-secondary);
-  z-index: 10;
+}
+
+/* Fixed header clone (JS-driven sticky) */
+.fixed-thead-clone {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--accent-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.fixed-thead-clone .earnings-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.fixed-thead-clone th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--bg-secondary);
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: none;
 }
 
 .earnings-table tr:last-child td {
@@ -1241,6 +1265,74 @@ a:hover {
   font-size: 15px;
 }
 
+/* Withdraw Header Row */
+.withdraw-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+/* Animated Sliding Toggle */
+.withdraw-display-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  background: var(--bg-primary, #0f172a);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 10px);
+  padding: 3px;
+  min-width: 0;
+}
+
+.withdraw-toggle-bg {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 4.5px);
+  background: var(--accent-gradient, linear-gradient(135deg, #6366f1, #8b5cf6));
+  border-radius: calc(var(--radius-md, 10px) - 2px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+  z-index: 0;
+}
+
+.withdraw-toggle-btn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius-md, 10px) - 2px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.withdraw-toggle-btn span {
+  font-size: 13px;
+}
+
+.withdraw-toggle-btn:hover {
+  color: var(--text-primary, #e2e8f0);
+}
+
+.withdraw-toggle-btn.active {
+  color: white;
+}
+
 .main-tabs {
   --tab-gap: 12px;
   --tab-padding: 8px;
@@ -1348,7 +1440,7 @@ a:hover {
 }
 
 .pe-event-link:hover {
-  transform: scale(1.03);
+  transform: translateY(-2px);
   box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
   color: white;
 }
@@ -1525,6 +1617,7 @@ a:hover {
   padding: 16px 20px;
   background: var(--bg-tertiary);
   border-bottom: 1px solid var(--border-color);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .settings-icon-btn {
@@ -2202,6 +2295,25 @@ a:hover {
 
   .stat-value {
     font-size: 12px;
+  }
+
+  .withdraw-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .withdraw-header-row .section-title {
+    justify-content: center;
+  }
+
+  .withdraw-display-toggle {
+    align-self: center;
+  }
+
+  .withdraw-toggle-btn {
+    font-size: 11px;
+    padding: 5px 10px;
   }
 }
 

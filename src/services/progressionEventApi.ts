@@ -6,7 +6,8 @@
 
 import { buildApiUrl } from '../config/api';
 import { apiGet } from './apiClient';
-import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData } from '../types/progressionEvent';
+import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData, ProgressionEventListItem } from '../types/progressionEvent';
+import type { PaginatedResponse } from '../types/pagination';
 
 export interface ParsedProgressionEvent {
     id: string;
@@ -18,13 +19,10 @@ export interface ParsedProgressionEvent {
 }
 
 /**
- * Fetches the current progression event from the API
+ * Parses a raw ProgressionEventResponse into a ParsedProgressionEvent.
+ * Shared between fetchProgressionEvent and fetchProgressionEventById.
  */
-export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
-    const url = buildApiUrl('/api/ProgressionEvents');
-    const raw = await apiGet<ProgressionEventResponse>(url);
-
-    // Parse the nested JSON data string
+function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedProgressionEvent {
     const data: ProgressionEventData = JSON.parse(raw.data);
     let multiplierData: MultiplierData[] | undefined;
     let taskData: TaskData[] | undefined;
@@ -55,3 +53,33 @@ export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
         taskData,
     };
 }
+
+/**
+ * Fetches the current (latest) progression event from the API
+ */
+export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
+    const url = buildApiUrl('/api/ProgressionEvents');
+    const raw = await apiGet<ProgressionEventResponse>(url);
+    return parseProgressionEventResponse(raw);
+}
+
+/**
+ * Fetches a specific progression event by ID
+ */
+export async function fetchProgressionEventById(id: string): Promise<ParsedProgressionEvent> {
+    const url = buildApiUrl(`/api/ProgressionEvents/GetById?id=${encodeURIComponent(id)}`);
+    const raw = await apiGet<ProgressionEventResponse>(url);
+    return parseProgressionEventResponse(raw);
+}
+
+/**
+ * Fetches a paginated list of progression events
+ */
+export async function fetchProgressionEventList(
+    pageIndex: number = 0,
+    pageSize: number = 10
+): Promise<PaginatedResponse<ProgressionEventListItem>> {
+    const url = buildApiUrl(`/api/ProgressionEvents/GetList?PageIndex=${pageIndex}&PageSize=${pageSize}`);
+    return apiGet<PaginatedResponse<ProgressionEventListItem>>(url);
+}
+

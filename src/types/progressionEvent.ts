@@ -14,6 +14,14 @@ export interface ProgressionEventResponse {
   taskData?: string; // JSON string containing TaskData[]
 }
 
+// List item returned by GetList endpoint
+export interface ProgressionEventListItem {
+  id: string;
+  name: string;
+  createdDate: string;
+  endDate: string;
+}
+
 // Parsed inner data
 export interface ProgressionEventData {
   event: ProgressionEventInfo;
