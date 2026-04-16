@@ -9,7 +9,7 @@ import iconChainersHeroes from '../assets/support/chainers_heroes.jpg';
 import iconRollerTap from '../assets/support/rollertap.jpg';
 import iconMystNodes from '../assets/support/mystnodes.png';
 import grass from "../assets/support/grass.png";
-import solSiege from "../assets/support/solSiege.png";
+import solSiege from "../assets/support/solsiege.png";
 
 // Coin icons
 import iconBtc from '../assets/coins/btc.svg';
