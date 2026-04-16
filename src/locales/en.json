@@ -8,7 +8,8 @@
         "faq": "FAQ",
         "support": "Support",
         "charts": "Charts",
-        "events": "Events"
+        "events": "Events",
+        "blog": "Blog"
     },
     "lpp": {
         "title": "League Power Partition",
@@ -71,14 +72,9 @@
             "desc": {
                 "chainers": "A fun and growing Web3 crypto game where you can get free NFTs or tokens daily. Gather free cards to progress.",
                 "chainersHeroes": "The Telegram integration of the Chainers ecosystem. Earn in-game rewards by tapping and completing quests.",
-                "rollerTap": "A 'Tap to Earn' project similar in theme to RollerCoin, gaining popularity with reward-oriented mechanics.",
-                "honeygain": "Earn passive income (USD/Crypto) in the background simply by sharing your device's unused internet bandwidth.",
+                "rollerTap": "With Rollertap, you can earn rewards by clicking and transfer the rewards you’ve earned to your Rollercoin account.",
+                "solsiege": "Sol Siege is an idle auto-battle wave defender built natively on Solana.",
                 "mystNodes": "An infrastructure-sharing project that allows you to earn crypto (MYST) by running a lightweight node on your device.",
-                "onlyFunds": "A handy Telegram mini-app distributing potential airdrop rewards via tasks and game logic.",
-                "stellarBot": "A next-generation Telegram bot focused on crypto mining tasks and interactions.",
-                "birdsEmpire": "A popular bird empire game with a token/coin collecting economy inside Telegram.",
-                "growTea": "A mini Telegram game where you earn points by playing, carrying potential future airdrop opportunities.",
-                "tonBirds": "A flying birds game built on the TON Blockchain and integrated with The Open Network airdrop ecosystem.",
                 "grass": "Share internet, earn $GRASS! Start your passive income journey now."
             }
         },

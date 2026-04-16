@@ -8,7 +8,8 @@
         "faq": "SSS",
         "support": "Destek",
         "charts": "Grafikler",
-        "events": "Etkinlikler"
+        "events": "Etkinlikler",
+        "blog": "Blog"
     },
     "lpp": {
         "title": "Lig Güç Dağılımı",
@@ -85,14 +86,11 @@
             "coffee": "Destek ☕",
             "desc": {
                 "chainers": "Her gün bedava NFT veya token kazanabileceğiniz eğlenceli ve gelişmekte olan bir kripto Web3 oyunu. Bedava kartları toplayarak ilerleyebilirsiniz.",
-                "chainersHeroes": "Chainers ekosisteminin Telegram üzerinden oynanan versiyonu. Tıklayarak (Tap) veya görev yaparak oyun içi ödüller biriktirin.",
-                "rollerTap": "RollerCoin ile benzer bir 'Tap to Earn' mantığında çalışan, giderek popülerleşen ödül odaklı yeni bir proje.",
-                "honeygain": "Cihazınızın kullanmadığı internet bant genişliğini (bandwith) arka planda paylaşarak tamamen pasif gelir (Dolar/Kripto) elde etmenizi sağlayan uygulama.",
+                "chainersHeroes": "Chainers ekosisteminin Telegram üzerinden oynanan versiyonu. Tıklayarak (Tap) veya görev yaparak ödüller biriktirin.",
+                "rollerTap": "Rollertap ile tıklayarak ödül kazanıp kazandığınız ödülleri rollercoin hesabınıza aktarabilirsiniz.",
+                "solsiege": "Sol Siege, Solana üzerinde yerel olarak geliştirilmiş bir pasif otomatik savaş dalga savunma oyunudur.",
                 "mystNodes": "Kendi cihazınızda küçük bir düğüm (node) çalıştırarak kripto (MYST) geliri elde etmenize olanak tanıyan altyapı paylaşım projesi.",
                 "onlyFunds": "Telegram üzerinde görev ve oyun mantığı ile potansiyel airdrop ödülleri dağıtan kullanışlı bir mini uygulama.",
-                "birdsEmpire": "Token/Coin toplama ekonomisine sahip popüler eğlencelik bir kuş imparatorluğu oyunu.",
-                "growTea": "Hem eğlenip hem de puan (token) kazanabileceğiniz ve zamanla airdrop ihtimali taşıyan mini bir Telegram uygulaması.",
-                "tonBirds": "TON Blockchain üzerinde geliştirilmiş ve The Open Network airdropları ile entegre uçan kuşlar tabanlı oyun.",
                 "grass": "İnternetini paylaş, $GRASS kazan! Grass ile pasif gelire hemen başla."
             }
         }

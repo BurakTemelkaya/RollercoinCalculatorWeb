@@ -78,6 +78,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <Link to={`/${i18n.language}/charts`} className="nav-link">📈 {t('nav.charts')}</Link>
                     <Link to={`/${i18n.language}/events`} className="nav-link">📋 {t('nav.events')}</Link>
                     <Link to={`/${i18n.language}/guides`} className="nav-link">{t('nav.guides')}</Link>
+                    <Link to={`/${i18n.language}/blog`} className="nav-link">{t('nav.blog')}</Link>
                     <Link to={`/${i18n.language}/faq`} className="nav-link">{t('nav.faq')}</Link>
                     <Link to={`/${i18n.language}/support`} className="nav-link">{t('nav.support')} ☕</Link>
                   </div>
@@ -132,6 +133,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">📈 {t('nav.charts')}</Link>
                     <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">📋 {t('nav.events')}</Link>
                     <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{t('nav.guides')}</Link>
+                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{t('nav.blog')}</Link>
                     <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{t('nav.faq')}</Link>
                     <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{t('nav.support')} ☕</Link>
                  </div>

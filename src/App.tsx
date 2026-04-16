@@ -37,6 +37,12 @@ const MiningPowerGuide = React.lazy(() => import('./components/guides/MiningPowe
 const CalculationLogicGuide = React.lazy(() => import('./components/guides/CalculationLogicGuide'));
 const SupportPage = React.lazy(() => import('./components/SupportPage'));
 const LeagueChart = React.lazy(() => import('./components/LeagueChart'));
+const BlogPage = React.lazy(() => import('./components/BlogPage'));
+const WhatIsRollercoin = React.lazy(() => import('./components/blog/WhatIsRollercoin'));
+const LeagueSystemExplained = React.lazy(() => import('./components/blog/LeagueSystemExplained'));
+const MarketplaceTradingGuide = React.lazy(() => import('./components/blog/MarketplaceTradingGuide'));
+const MostProfitableCoin = React.lazy(() => import('./components/blog/MostProfitableCoin'));
+const BeginnersCompleteGuide = React.lazy(() => import('./components/blog/BeginnersCompleteGuide'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -889,6 +895,12 @@ function App() {
         <Route path="/:lang/guides/calculation-logic" element={<React.Suspense fallback={null}><CalculationLogicGuide /></React.Suspense>} />
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+        <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
+        <Route path="/:lang/blog/what-is-rollercoin" element={<React.Suspense fallback={null}><WhatIsRollercoin /></React.Suspense>} />
+        <Route path="/:lang/blog/league-system-explained" element={<React.Suspense fallback={null}><LeagueSystemExplained /></React.Suspense>} />
+        <Route path="/:lang/blog/marketplace-trading-guide" element={<React.Suspense fallback={null}><MarketplaceTradingGuide /></React.Suspense>} />
+        <Route path="/:lang/blog/most-profitable-coin" element={<React.Suspense fallback={null}><MostProfitableCoin /></React.Suspense>} />
+        <Route path="/:lang/blog/beginners-complete-guide" element={<React.Suspense fallback={null}><BeginnersCompleteGuide /></React.Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </MainLayout>

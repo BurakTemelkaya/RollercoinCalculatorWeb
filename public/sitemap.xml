@@ -270,4 +270,124 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/support"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/support"/>
   </url>
+  <!-- Blog Index - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog"/>
+  </url>
+  <!-- Blog Index - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog"/>
+  </url>
+  <!-- Blog: What is RollerCoin - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog/what-is-rollercoin</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/what-is-rollercoin"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/what-is-rollercoin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/what-is-rollercoin"/>
+  </url>
+  <!-- Blog: What is RollerCoin - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog/what-is-rollercoin</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/what-is-rollercoin"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/what-is-rollercoin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/what-is-rollercoin"/>
+  </url>
+  <!-- Blog: League System - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog/league-system-explained</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/league-system-explained"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/league-system-explained"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/league-system-explained"/>
+  </url>
+  <!-- Blog: League System - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog/league-system-explained</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/league-system-explained"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/league-system-explained"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/league-system-explained"/>
+  </url>
+  <!-- Blog: Marketplace Trading - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog/marketplace-trading-guide</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/marketplace-trading-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/marketplace-trading-guide"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/marketplace-trading-guide"/>
+  </url>
+  <!-- Blog: Marketplace Trading - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog/marketplace-trading-guide</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/marketplace-trading-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/marketplace-trading-guide"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/marketplace-trading-guide"/>
+  </url>
+  <!-- Blog: Most Profitable Coin - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog/most-profitable-coin</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/most-profitable-coin"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/most-profitable-coin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/most-profitable-coin"/>
+  </url>
+  <!-- Blog: Most Profitable Coin - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog/most-profitable-coin</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/most-profitable-coin"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/most-profitable-coin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/most-profitable-coin"/>
+  </url>
+  <!-- Blog: Beginners Guide - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/blog/beginners-complete-guide</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/beginners-complete-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
+  </url>
+  <!-- Blog: Beginners Guide - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/blog/beginners-complete-guide</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/beginners-complete-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
+  </url>
 </urlset>
