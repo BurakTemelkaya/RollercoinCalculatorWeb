@@ -950,6 +950,8 @@ a:hover {
 }
 
 .table-container {
+  overflow-x: auto;
+  width: 100%;
 }
 
 .earnings-table {
@@ -3941,9 +3943,11 @@ a:hover {
 .referral-icon {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
-  object-fit: cover;
+  border-radius: 8px;
+  object-fit: contain;
   flex-shrink: 0;
+  background-color: var(--bg-primary); /* optional: gives a uniform background if images have transparent parts */
+  padding: 2px;
 }
 
 .referral-card p {
