@@ -1,0 +1,17 @@
+{
+  "name": "Rollercoin Calculator",
+  "short_name": "RC Calc",
+  "description": "Free Rollercoin earnings calculator for daily, weekly, and monthly crypto mining rewards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
