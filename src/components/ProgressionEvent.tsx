@@ -573,19 +573,23 @@ export default function ProgressionEvent() {
             {/* Event Header */}
             <div className="pe-header">
                 <div className="pe-header-actions pe-header-left">
-                    <Link to={`/${lang}`} className="pe-header-back-btn">
-                        {t('event.backToCalc')}
+                    <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                        <span className="pe-btn-label">{t('event.backToCalc')}</span>
                     </Link>
-                    <Link to={`/${lang}/events`} className="pe-header-back-btn" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.12))', borderColor: 'rgba(99, 102, 241, 0.25)' }}>
-                        📋 {t('event.viewHistory')}
+                    <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span className="pe-btn-label">{t('event.viewHistory')}</span>
                     </Link>
                 </div>
 
                 <h2 className="pe-title">{event.title.en}</h2>
 
                 <div className="pe-header-actions pe-header-right">
-                    <div className="pe-header-time">
-                        {t('event.leftTime')}:&nbsp;<strong>{timeLeft}</strong>
+                    <div className="pe-header-time" title={`${t('event.leftTime')}: ${timeLeft}`}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
+                        <strong>{timeLeft}</strong>
                     </div>
                 </div>
             </div>
