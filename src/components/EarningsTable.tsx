@@ -94,7 +94,13 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 }
                 const theadRect = thead.getBoundingClientRect();
                 const sectionRect = section.getBoundingClientRect();
-                const shouldShow = theadRect.bottom < 0 && sectionRect.bottom > 60;
+                
+                // If the parent tab is collapsed, the table is invisible, so hide the sticky header
+                const isCollapsed = section.closest('.collapsed') !== null;
+                const isVisibleHorizontally = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
+                
+                const shouldShow = !isCollapsed && isVisibleHorizontally && theadRect.bottom < 0 && sectionRect.bottom > 60;
+                
                 if (shouldShow !== lastShow) {
                     lastShow = shouldShow;
                     setShowFixedHeader(shouldShow);
