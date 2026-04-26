@@ -81,6 +81,76 @@
 </head>
 
 <body>
+  <!-- Global Ad Manager -->
+  <script>
+    window.AdManager = {
+        loadAd: function(containerId, aadsId, aadsW, aadsH, adsterraKey, adsterraW, adsterraH) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const renderAAds = () => {
+                container.innerHTML = '<iframe data-aa="' + aadsId + '" src="//ad.a-ads.com/' + aadsId + '/?size=' + aadsW + 'x' + aadsH + '&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:' + aadsW + 'px; height:' + aadsH + 'px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
+            };
+            
+            const renderAdsterra = () => {
+                const iframe = document.createElement('iframe');
+                iframe.style.border = '0';
+                iframe.style.padding = '0';
+                iframe.style.width = adsterraW + 'px';
+                iframe.style.height = adsterraH + 'px';
+                iframe.style.overflow = 'hidden';
+                iframe.style.display = 'block';
+                iframe.style.margin = '0 auto';
+                iframe.scrolling = 'no';
+                container.innerHTML = '';
+                container.appendChild(iframe);
+                const doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><style>body { margin: 0; padding: 0; background: transparent; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }</style></head><body>' +
+                    '<scr' + 'ipt type="text/javascript">' +
+                    'atOptions = { "key" : "' + adsterraKey + '", "format" : "iframe", "height" : ' + adsterraH + ', "width" : ' + adsterraW + ', "params" : {} };' +
+                    '</scr' + 'ipt>' +
+                    '<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/' + adsterraKey + '/invoke.js"></scr' + 'ipt>' +
+                    '</body></html>'
+                );
+                doc.close();
+            };
+
+            const tryAAds = () => {
+                let handled = false;
+                const timer = setTimeout(() => {
+                    if(handled) return;
+                    handled = true;
+                    renderAdsterra();
+                }, 1500);
+
+                fetch('https://ad.a-ads.com/', { mode: 'no-cors' })
+                    .then(() => {
+                        if(handled) return;
+                        handled = true;
+                        clearTimeout(timer);
+                        renderAAds();
+                    })
+                    .catch(() => {
+                        if(handled) return;
+                        handled = true;
+                        clearTimeout(timer);
+                        renderAdsterra();
+                    });
+            };
+
+            const useAAds = Math.random() < 0.5;
+            if (useAAds) {
+                tryAAds();
+            } else {
+                renderAdsterra();
+            }
+        }
+    };
+  </script>
+
+  <!-- Top Banner Ad moved to MainLayout.tsx -->
+
   <div id="root"></div>
 
   <!-- Desktop Left Sticky (A-Ads) -->
@@ -134,8 +204,10 @@
               points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 489.292,457.678 277.331,245.004 489.292,32.337 " />
           </svg>
         </label>
-        <iframe data-aa="2429728" src="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe"
-          style="border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin: 0 auto"></iframe>
+        <div id="mobile-sticky-ad" style="width: 320px; height: 50px;"></div>
+        <script>
+            window.AdManager.loadAd('mobile-sticky-ad', '2429728', 320, 50, '21bf0654ac3ca0059c5d930d8ff532c8', 320, 50);
+        </script>
       </div>
     </div>
     <style>

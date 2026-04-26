@@ -20,6 +20,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const lang = (langFromPath === 'tr' || langFromPath === 'en') ? langFromPath : i18n.language;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileAd, setIsMobileAd] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileAd(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Sync language with URL
   useEffect(() => {
@@ -31,6 +38,21 @@ export default function MainLayout({ children }: MainLayoutProps) {
       document.documentElement.lang = lang;
     }
   }, [lang, i18n]);
+
+  // Load Top Banner Ad
+  useEffect(() => {
+    // We use a slight delay to ensure the div is painted and the AdManager script is fully parsed
+    const timer = setTimeout(() => {
+        if ((window as any).AdManager) {
+            if (isMobileAd) {
+                (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50, '21bf0654ac3ca0059c5d930d8ff532c8', 320, 50);
+            } else {
+                (window as any).AdManager.loadAd('top-ad-container', '2435685', 728, 90, 'a100e93966f3b58954aacd7e7bf10a15', 728, 90);
+            }
+        }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [location.pathname, isMobileAd]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -139,6 +161,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                  </div>
               </div>
             </header>
+
+            {/* Top Banner Ad (Responsive) A/B Test */}
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '20px 0 10px 0' }}>
+               <div id="top-ad-container" style={{ width: isMobileAd ? '320px' : '728px', height: isMobileAd ? '50px' : '90px', maxWidth: '100%', overflow: 'hidden' }}></div>
+            </div>
 
             {/* Main Content */}
             <main className="main-content">
