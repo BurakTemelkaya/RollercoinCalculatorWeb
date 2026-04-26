@@ -134,6 +134,21 @@ function getCaseImage(itemName: string): string | null {
     return null;
 }
 
+/** Resolves the proper display name for a component, handling missing rarity prefixes */
+function getPartDisplayName(itemName: string, level?: number | null): string {
+    let displayName = itemName;
+    if (level !== undefined && level !== null) {
+        const lowerName = itemName.toLowerCase();
+        if (!lowerName.includes('common') && !lowerName.includes('rare') && !lowerName.includes('epic') && !lowerName.includes('legendary')) {
+            const rarityMap = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+            if (level >= 0 && level <= 4) {
+                displayName = `${rarityMap[level]} ${itemName}`;
+            }
+        }
+    }
+    return displayName;
+}
+
 type SortByOption = 'newest' | 'bonus' | 'percent' | 'name' | 'power';
 
 export default function MergePage() {
@@ -167,6 +182,66 @@ export default function MergePage() {
         const newMode = levelDisplayMode === 'roman' ? 'text' : 'roman';
         setLevelDisplayMode(newMode);
         localStorage.setItem('rollercoin_web_level_display', newMode);
+    };
+
+    // Custom Part Prices
+    const [customPartPrices, setCustomPartPrices] = useState<Record<string, number>>(() => {
+        try {
+            const saved = localStorage.getItem('rollercoin_web_custom_part_prices');
+            return saved ? JSON.parse(saved) : {};
+        } catch {
+            return {};
+        }
+    });
+    const [editingPartPrice, setEditingPartPrice] = useState<string | null>(null);
+    const [tempPartPrice, setTempPartPrice] = useState<string>('');
+
+    const [isPartPriceModalOpen, setIsPartPriceModalOpen] = useState(false);
+    const [tempSettingsPrices, setTempSettingsPrices] = useState<Record<string, string>>({});
+
+    const openPartPriceSettings = () => {
+        const stringified: Record<string, string> = {};
+        Object.keys(customPartPrices).forEach(key => {
+            stringified[key] = customPartPrices[key].toString();
+        });
+        setTempSettingsPrices(stringified);
+        setIsPartPriceModalOpen(true);
+    };
+
+    const savePartPriceSettings = () => {
+        const next: Record<string, number> = {};
+        Object.keys(tempSettingsPrices).forEach(key => {
+            if (tempSettingsPrices[key].trim() !== '') {
+                const val = parseFloat(tempSettingsPrices[key].replace(',', '.'));
+                if (!isNaN(val) && val >= 0) {
+                    next[key] = val;
+                }
+            }
+        });
+        setCustomPartPrices(next);
+        localStorage.setItem('rollercoin_web_custom_part_prices', JSON.stringify(next));
+        setIsPartPriceModalOpen(false);
+    };
+
+    const handleSavePartPrice = (itemName: string) => {
+        const val = parseFloat(tempPartPrice.replace(',', '.'));
+        if (!isNaN(val) && val >= 0) {
+            setCustomPartPrices(prev => {
+                const next = { ...prev, [itemName]: val };
+                localStorage.setItem('rollercoin_web_custom_part_prices', JSON.stringify(next));
+                return next;
+            });
+        }
+        setEditingPartPrice(null);
+    };
+
+    const handleResetPartPrice = (itemName: string) => {
+        setCustomPartPrices(prev => {
+            const next = { ...prev };
+            delete next[itemName];
+            localStorage.setItem('rollercoin_web_custom_part_prices', JSON.stringify(next));
+            return next;
+        });
     };
 
     // Debounce search
@@ -256,8 +331,15 @@ export default function MergePage() {
     // Calculate total parts cost for a detail
     const calcPartsCost = (detail: MergeDetail): number => {
         return detail.requiredItems
-            .filter(item => item.type === 'mutation_components' && item.price)
-            .reduce((sum, item) => sum + (item.count * (item.price || 0)), 0);
+            .filter(item => item.type === 'mutation_components')
+            .reduce((sum, item) => {
+                const defaultPrice = item.price ? item.price / 1e6 : 0;
+                const displayName = getPartDisplayName(item.itemName, item.level);
+                const customPrice = customPartPrices[displayName];
+                const unitPriceRlt = customPrice !== undefined ? customPrice : defaultPrice;
+                // Return to 1e6 scale so it matches the original logic that is expected by formatRltAmount
+                return sum + (item.count * (unitPriceRlt * 1e6));
+            }, 0);
     };
 
     return (
@@ -353,6 +435,15 @@ export default function MergePage() {
                                 Lv.2
                             </span>
                         )}
+                    </button>
+
+                    <button
+                        className="merge-sort-dir-btn"
+                        onClick={openPartPriceSettings}
+                        title={t('merge.partPrices', 'Parça Fiyatları')}
+                        style={{ minWidth: '40px', fontWeight: 'bold' }}
+                    >
+                        ⚙️
                     </button>
                 </div>
             </div>
@@ -568,27 +659,23 @@ export default function MergePage() {
                                 {selectedMerge.requiredItems.map((item, idx) => {
                                     const isMiner = item.type === 'miners';
                                     const isMutationComponent = item.type === 'mutation_components';
-                                    const unitPriceRlt = isMutationComponent && item.price ? item.price / 1e6 : null;
+                                    
+                                    // Determine display name first
+                                    let displayName = isMiner ? item.itemName : getPartDisplayName(item.itemName, item.level);
+                                    
+                                    const defaultUnitPrice = item.price ? item.price / 1e6 : null;
+                                    const customPrice = customPartPrices[displayName];
+                                    const unitPriceRlt = isMutationComponent ? (customPrice !== undefined ? customPrice : defaultUnitPrice) : null;
+                                    
                                     const totalItemCost = unitPriceRlt !== null ? unitPriceRlt * item.count : null;
 
                                     // Image for this required item
                                     let imgSrc: string | null = null;
-                                    let displayName = item.itemName;
 
                                     if (isMiner && item.fileName) {
                                         imgSrc = getMinerImageUrl(item.fileName, item.imageVersion || undefined);
                                     } else if (isMutationComponent) {
                                         imgSrc = getMutationComponentImage(item.itemName, item.level);
-
-                                        if (item.level !== undefined && item.level !== null) {
-                                            const lowerName = item.itemName.toLowerCase();
-                                            if (!lowerName.includes('common') && !lowerName.includes('rare') && !lowerName.includes('epic') && !lowerName.includes('legendary')) {
-                                                const rarityMap = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
-                                                if (item.level >= 0 && item.level <= 4) {
-                                                    displayName = `${rarityMap[item.level]} ${item.itemName}`;
-                                                }
-                                            }
-                                        }
                                     }
 
                                     // Required miner level: use API level, fallback to resultItemLevel - 1
@@ -673,16 +760,77 @@ export default function MergePage() {
                                             </div>
                                             <div className="merge-req-counts">
                                                 <span className="merge-req-qty">×{item.count}</span>
-                                                {unitPriceRlt !== null && (
+                                                {unitPriceRlt !== null ? (
                                                     <>
                                                         <span className="merge-req-price">
-                                                            {t('merge.unitPrice')}: {unitPriceRlt.toFixed(4)} RLT
+                                                            {t('merge.unitPrice')}: {editingPartPrice === displayName ? (
+                                                                <input 
+                                                                    autoFocus
+                                                                    value={tempPartPrice}
+                                                                    onChange={e => setTempPartPrice(e.target.value)}
+                                                                    onBlur={() => handleSavePartPrice(displayName)}
+                                                                    onKeyDown={e => {
+                                                                        if (e.key === 'Enter') handleSavePartPrice(displayName);
+                                                                        if (e.key === 'Escape') setEditingPartPrice(null);
+                                                                    }}
+                                                                    style={{
+                                                                        width: '60px', 
+                                                                        padding: '2px 4px', 
+                                                                        background: 'rgba(0,0,0,0.2)', 
+                                                                        border: '1px solid var(--accent-primary)', 
+                                                                        color: 'white',
+                                                                        borderRadius: '4px',
+                                                                        fontSize: '11px'
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <>
+                                                                    <span style={{ 
+                                                                        color: customPrice !== undefined ? '#f59e0b' : 'inherit',
+                                                                        fontWeight: customPrice !== undefined ? 'bold' : 'normal'
+                                                                    }}>
+                                                                        {unitPriceRlt.toFixed(4)} RLT
+                                                                    </span>
+                                                                    <span 
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setEditingPartPrice(displayName);
+                                                                            setTempPartPrice(unitPriceRlt.toString());
+                                                                        }}
+                                                                        style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
+                                                                        title="Düzenle"
+                                                                    >✏️</span>
+                                                                    {customPrice !== undefined && (
+                                                                        <span 
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                handleResetPartPrice(displayName);
+                                                                            }}
+                                                                            style={{ cursor: 'pointer', marginLeft: '4px', color: '#f87171' }}
+                                                                            title="Sıfırla"
+                                                                        >↺</span>
+                                                                    )}
+                                                                </>
+                                                            )}
                                                         </span>
-                                                        <span className="merge-req-total-price">
+                                                        <span className="merge-req-total-price" style={{ color: customPrice !== undefined ? '#f59e0b' : 'inherit' }}>
                                                             {totalItemCost!.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} RLT
                                                         </span>
                                                     </>
-                                                )}
+                                                ) : isMutationComponent ? (
+                                                    <span className="merge-req-price" style={{ color: '#f87171' }}>
+                                                        {t('merge.unitPrice')}: - 
+                                                        <span 
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setEditingPartPrice(displayName);
+                                                                setTempPartPrice('0.0001');
+                                                            }}
+                                                            style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
+                                                            title="Fiyat Ekle"
+                                                        >➕</span>
+                                                    </span>
+                                                ) : null}
                                             </div>
                                         </div>
                                     );
@@ -708,6 +856,94 @@ export default function MergePage() {
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Part Price Settings Modal */}
+            {isPartPriceModalOpen && (
+                <div className="merge-detail-overlay" onClick={() => setIsPartPriceModalOpen(false)}>
+                    <div className="merge-detail-modal" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
+                        <div className="merge-detail-header">
+                            <h3>⚙️ {t('merge.partPrices', 'Parça Fiyatları (RLT)')}</h3>
+                            <button className="merge-detail-close" onClick={() => setIsPartPriceModalOpen(false)}>×</button>
+                        </div>
+                        <div className="merge-detail-body" style={{ padding: '16px' }}>
+                            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                                {t('merge.partPricesDesc', 'Pazar yerindeki anlık parça fiyatlarını girerek merge maliyetlerini daha isabetli hesaplayabilirsiniz. Boş bıraktığınız parçalar için API verisi kullanılır.')}
+                            </p>
+                            
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px', minWidth: '350px' }}>
+                                    <thead>
+                                        <tr>
+                                            <th style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>Rarity</th>
+                                            <th style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>Wire</th>
+                                            <th style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>Fan</th>
+                                            <th style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>Board</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'].map(rarity => {
+                                            const rarityColors: Record<string, string> = {
+                                                'Common': '#9ca3af',
+                                                'Uncommon': '#10b981',
+                                                'Rare': '#3b82f6',
+                                                'Epic': '#a855f7',
+                                                'Legendary': '#f59e0b'
+                                            };
+                                            return (
+                                                <tr key={rarity}>
+                                                    <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 'bold', color: rarityColors[rarity] }}>
+                                                        {rarity}
+                                                    </td>
+                                                    {['Wire', 'Fan', 'Hashboard'].map(type => {
+                                                        const itemName = `${rarity} ${type}`;
+                                                        return (
+                                                            <td key={itemName} style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                                                <input 
+                                                                    type="text"
+                                                                    placeholder="-"
+                                                                    value={tempSettingsPrices[itemName] || ''}
+                                                                    onChange={(e) => setTempSettingsPrices(prev => ({...prev, [itemName]: e.target.value}))}
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        minWidth: '60px',
+                                                                        padding: '6px 8px',
+                                                                        background: 'rgba(0,0,0,0.2)',
+                                                                        border: '1px solid var(--border-color)',
+                                                                        color: 'white',
+                                                                        borderRadius: '6px',
+                                                                        fontSize: '13px'
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
+                                <button 
+                                    onClick={() => setTempSettingsPrices({})} 
+                                    className="btn-secondary"
+                                    style={{ padding: '8px 16px', borderRadius: '6px', fontSize: '13px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                                >
+                                    {t('merge.clearAll', 'Sıfırla')}
+                                </button>
+                                <button 
+                                    onClick={savePartPriceSettings} 
+                                    className="btn-primary"
+                                    style={{ padding: '8px 24px', borderRadius: '6px', fontSize: '13px', background: 'var(--accent-primary)', color: 'white', border: 'none', cursor: 'pointer' }}
+                                >
+                                    {t('merge.save', 'Kaydet')}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

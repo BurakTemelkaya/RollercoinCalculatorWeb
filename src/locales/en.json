@@ -389,6 +389,11 @@
         "fetchError": "Failed to load merge data",
         "backToCalc": "Back to Calculator",
         "close": "Close",
-        "details": "Details"
+        "details": "Details",
+        "toggleLevelDisplay": "Toggle Level Display (Lv / Roman)",
+        "partPrices": "Part Prices",
+        "partPricesDesc": "Enter the current part prices from the marketplace to calculate merge costs more accurately. For parts left blank, API data will be used.",
+        "clearAll": "Clear All",
+        "save": "Save"
     }
 }

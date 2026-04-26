@@ -220,6 +220,13 @@ a:hover {
   justify-content: flex-start;
   align-items: center;
   min-width: 0;
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.header-logo a {
+  pointer-events: auto !important;
 }
 
 .header-actions {
@@ -229,6 +236,13 @@ a:hover {
   align-items: center;
   gap: 12px;
   min-width: 0;
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.header-actions a, .header-actions button {
+  pointer-events: auto !important;
 }
 
 .header-center {
