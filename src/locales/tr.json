@@ -9,6 +9,7 @@
         "support": "Destek",
         "charts": "Grafikler",
         "events": "Etkinlikler",
+        "merges": "Birleştirme",
         "blog": "Blog"
     },
     "lpp": {
@@ -359,5 +360,36 @@
         "previous": "Önceki",
         "next": "Sonraki",
         "page": "Sayfa {{current}} / {{total}}"
+    },
+    "merge": {
+        "title": "Birleştirme Tarifleri",
+        "search": "Madenci ara...",
+        "sortBy": "Sırala",
+        "sortOptions": {
+            "newest": "En Yeni",
+            "name": "İsim",
+            "power": "Güç",
+            "bonus": "Bonus",
+            "percent": "Yüzde"
+        },
+        "ascending": "Artan",
+        "descending": "Azalan",
+        "cost": "Maliyet",
+        "discountedCost": "İndirimli",
+        "xpReward": "XP Ödülü",
+        "level": "Seviye",
+        "requiredItems": "Gerekli Malzemeler",
+        "unitPrice": "Birim",
+        "totalCost": "Toplam Maliyet",
+        "quantity": "Adet",
+        "partsCost": "Parça Maliyeti",
+        "component": "Parça",
+        "caseAlternative": "Alternatif: {{boxes}} Kutu ({{rst}} RST)",
+        "noResults": "Birleştirme tarifi bulunamadı.",
+        "loading": "Birleştirme verileri yükleniyor...",
+        "fetchError": "Birleştirme verileri yüklenemedi",
+        "backToCalc": "Hesaplayıcıya Dön",
+        "close": "Kapat",
+        "details": "Detaylar"
     }
 }

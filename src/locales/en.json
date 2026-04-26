@@ -9,6 +9,7 @@
         "support": "Support",
         "charts": "Charts",
         "events": "Events",
+        "merges": "Merges",
         "blog": "Blog"
     },
     "lpp": {
@@ -358,5 +359,36 @@
         "previous": "Previous",
         "next": "Next",
         "page": "Page {{current}} of {{total}}"
+    },
+    "merge": {
+        "title": "Merge Recipes",
+        "search": "Search miner...",
+        "sortBy": "Sort by",
+        "sortOptions": {
+            "newest": "Newest",
+            "name": "Name",
+            "power": "Power",
+            "bonus": "Bonus",
+            "percent": "Percent"
+        },
+        "ascending": "Ascending",
+        "descending": "Descending",
+        "cost": "Cost",
+        "discountedCost": "Discounted",
+        "xpReward": "XP Reward",
+        "level": "Level",
+        "requiredItems": "Required Items",
+        "unitPrice": "Unit",
+        "totalCost": "Total Cost",
+        "quantity": "Qty",
+        "partsCost": "Parts Cost",
+        "component": "Component",
+        "caseAlternative": "Alternative: {{boxes}} Cases ({{rst}} RST)",
+        "noResults": "No merge recipes found.",
+        "loading": "Loading merge data...",
+        "fetchError": "Failed to load merge data",
+        "backToCalc": "Back to Calculator",
+        "close": "Close",
+        "details": "Details"
     }
 }

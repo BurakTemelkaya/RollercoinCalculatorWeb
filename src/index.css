@@ -173,7 +173,7 @@ a:hover {
   flex-wrap: wrap;
   gap: 8px;
   position: relative;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -211,15 +211,11 @@ a:hover {
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
 }
 
-@media (max-width: 1024px) {
-  .header-title h1 {
-    font-size: 24px;
-  }
-}
 
-/* Base header parts: equal 1/1 fractions for Logo and Actions to naturally center Middle */
+
+/* Base header parts: auto sizing for Logo and Actions to prevent middle overlap */
 .header-logo {
-  flex: 1 1 0%;
+  flex: 0 0 auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -227,7 +223,7 @@ a:hover {
 }
 
 .header-actions {
-  flex: 1 1 0%;
+  flex: 0 0 auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -236,12 +232,26 @@ a:hover {
 }
 
 .header-center {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+
+@media (max-width: 1250px) {
+  .header-actions {
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-title h1 {
+    font-size: 24px;
+  }
 }
 
 .hamburger-btn {
@@ -302,6 +312,10 @@ a:hover {
   transition: all 0.2s;
   border-bottom: 1px solid var(--border-color);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .mobile-nav-link:last-child {
@@ -331,9 +345,9 @@ a:hover {
   }
 
   .header-content {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
     overflow: visible;
   }
 
@@ -343,28 +357,35 @@ a:hover {
     overflow: visible;
   }
 
-  /* Relax center and let it flex safely between Logo and Actions */
+  /* Title moves to full width row below logo and actions */
   .header-center {
-    flex: 1 1 0%;
-    align-items: flex-start;
+    flex: 1 1 100%;
+    align-items: center;
     min-width: 0;
+    order: 3;
   }
 
-  /* Force logo and actions to strictly wrap inner bounds on mobile */
-  .header-logo,
+  .header-logo {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
   .header-actions {
     flex: 0 0 auto;
+    order: 2;
   }
 
   .header-title {
     width: 100%;
     white-space: normal;
+    text-align: center;
+    justify-content: center;
   }
 
   .header-title h1 {
-    font-size: 16px;
+    font-size: 18px;
     white-space: normal;
-    text-align: left;
+    text-align: center;
     line-height: 1.2;
     overflow-wrap: break-word;
     word-break: break-word;
@@ -1689,6 +1710,113 @@ a:hover {
 .github-link:hover {
   color: var(--text-primary);
   transform: scale(1.1);
+}
+
+/* Telegram Link */
+.telegram-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2AABEE;
+  transition: all 0.25s ease;
+  margin-left: 12px;
+}
+
+.telegram-link:hover {
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}
+
+/* Nav Icons & Animated Coffee */
+.nav-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.nav-link:hover .nav-icon,
+.mobile-nav-link:hover .nav-icon {
+  opacity: 1;
+}
+
+@keyframes steam-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-4px) scale(1.2); opacity: 0; }
+}
+
+.animated-coffee {
+  overflow: visible;
+  color: #f59e0b; /* Amber/Coffee color */
+}
+
+.animated-coffee .steam-1,
+.animated-coffee .steam-2,
+.animated-coffee .steam-3 {
+  transform-origin: center bottom;
+}
+
+.animated-coffee:hover .steam-1 {
+  animation: steam-rise 2s infinite ease-in-out 0s;
+}
+.animated-coffee:hover .steam-2 {
+  animation: steam-rise 2s infinite ease-in-out 0.6s;
+}
+.animated-coffee:hover .steam-3 {
+  animation: steam-rise 2s infinite ease-in-out 1.2s;
+}
+
+/* Nav Icon Animations */
+@keyframes chart-bounce {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2px, -2px); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+@keyframes rotate-wrench {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+@keyframes bounce-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes pulse-icon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.nav-link:hover .anim-chart-arrow,
+.mobile-nav-link:hover .anim-chart-arrow,
+.pe-event-link:hover .anim-chart-arrow {
+  animation: chart-bounce 1s infinite;
+}
+
+.nav-link:hover .anim-wiggle,
+.mobile-nav-link:hover .anim-wiggle,
+.pe-event-link:hover .anim-wiggle {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+.nav-link:hover .anim-wrench,
+.mobile-nav-link:hover .anim-wrench,
+.pe-event-link:hover .anim-wrench {
+  animation: rotate-wrench 1.5s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.nav-link:hover .anim-bounce,
+.mobile-nav-link:hover .anim-bounce,
+.pe-event-link:hover .anim-bounce {
+  animation: bounce-up 1s infinite ease-in-out;
+}
+
+.nav-link:hover .anim-pulse,
+.mobile-nav-link:hover .anim-pulse,
+.pe-event-link:hover .anim-pulse {
+  animation: pulse-icon 1s infinite ease-in-out;
 }
 
 /* Power Input Row */
@@ -3730,8 +3858,11 @@ a:hover {
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s, background 0.2s;
-  padding: 5px 8px;
+  padding: 6px 10px;
   border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 6px;
   white-space: nowrap;
 }
 

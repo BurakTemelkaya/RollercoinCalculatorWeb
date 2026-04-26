@@ -18,6 +18,7 @@ import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
+import { NAV_ICONS } from './components/MainLayout';
 
 // Lazy load complex components to improve initial load and shorten critical request chains
 const WithdrawTimer = React.lazy(() => import('./components/WithdrawTimer'));
@@ -43,6 +44,7 @@ const LeagueSystemExplained = React.lazy(() => import('./components/blog/LeagueS
 const MarketplaceTradingGuide = React.lazy(() => import('./components/blog/MarketplaceTradingGuide'));
 const MostProfitableCoin = React.lazy(() => import('./components/blog/MostProfitableCoin'));
 const BeginnersCompleteGuide = React.lazy(() => import('./components/blog/BeginnersCompleteGuide'));
+const MergePage = React.lazy(() => import('./components/MergePage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -745,11 +747,15 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
           <>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
               <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
-                <span className="tab-icon">🎉</span>
+                <span className="tab-icon">{NAV_ICONS.events}</span>
                 {t('tabs.event')}
               </Link>
+              <Link to={`/${lang}/merges`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.1))', borderColor: 'rgba(56, 189, 248, 0.2)' }}>
+                <span className="tab-icon">{NAV_ICONS.merges}</span>
+                {t('nav.merges')}
+              </Link>
               <Link to={`/${lang}/support`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1))', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                <span className="tab-icon">☕</span>
+                <span className="tab-icon">{NAV_ICONS.support}</span>
                 {t('nav.support')}
               </Link>
             </div>
@@ -891,6 +897,7 @@ function App() {
         <Route path="/:lang/guides/calculation-logic" element={<React.Suspense fallback={null}><CalculationLogicGuide /></React.Suspense>} />
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+        <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
         <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
         <Route path="/:lang/blog/what-is-rollercoin" element={<React.Suspense fallback={null}><WhatIsRollercoin /></React.Suspense>} />
         <Route path="/:lang/blog/league-system-explained" element={<React.Suspense fallback={null}><LeagueSystemExplained /></React.Suspense>} />
