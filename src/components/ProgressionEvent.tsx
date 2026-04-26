@@ -719,7 +719,7 @@ export default function ProgressionEvent() {
                                                                                 <img
                                                                                     src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
                                                                                     alt={`Level ${display.level}`}
-                                                                                    style={{ position: 'absolute', top: '0px', left: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
+                                                                                    style={{ position: 'absolute', top: '0px', right: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
                                                                                     onError={(e) => {
                                                                                         const target = e.target as HTMLImageElement;
                                                                                         target.style.display = 'none';

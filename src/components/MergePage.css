@@ -260,11 +260,28 @@
 .merge-req-level-img {
     position: absolute;
     top: 0px;
-    left: -5px;
+    right: -5px;
     width: 22px;
     height: 14px;
     object-fit: contain;
     z-index: 2;
+}
+
+.merge-card-level-text,
+.merge-req-level-text {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #4f46e5;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+    line-height: 1;
 }
 
 .merge-card-stats {

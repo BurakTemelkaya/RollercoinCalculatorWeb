@@ -67,9 +67,34 @@ function formatPower(powerGhs: number): string {
     return `${formatted} ${scaled.unit}/s`;
 }
 
-/** Gets local image for mutation components by name */
-function getMutationComponentImage(itemName: string): string | null {
+/** Gets local image for mutation components by name and level */
+function getMutationComponentImage(itemName: string, level?: number): string | null {
     const name = itemName.toLowerCase();
+
+    // Check by explicitly provided level first (0=common, 1=uncommon, 2=rare, 3=epic, 4=legendary)
+    if (level !== undefined && level !== null) {
+        if (level === 4) {
+            if (name.includes('fan')) return legendaryFanImg;
+            if (name.includes('hashboard') || name.includes('board')) return legendaryHashboardImg;
+            if (name.includes('wire') || name.includes('wiring')) return legendaryWireImg;
+        } else if (level === 3) {
+            if (name.includes('fan')) return epicFanImg;
+            if (name.includes('hashboard') || name.includes('board')) return epicHashboardImg;
+            if (name.includes('wire') || name.includes('wiring')) return epicWireImg;
+        } else if (level === 2) {
+            if (name.includes('fan')) return rareFanImg;
+            if (name.includes('hashboard') || name.includes('board')) return rareHashboardImg;
+            if (name.includes('wire') || name.includes('wiring')) return rareWireImg;
+        } else if (level === 1) {
+            if (name.includes('fan')) return uncommonFanImg;
+            if (name.includes('hashboard') || name.includes('board')) return uncommonHashboardImg;
+            if (name.includes('wire') || name.includes('wiring')) return uncommonWireImg;
+        } else if (level === 0) {
+            if (name.includes('fan')) return commonFanImg;
+            if (name.includes('hashboard') || name.includes('board')) return commonHashboardImg;
+            if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
+        }
+    }
 
     if (name.includes('legendary')) {
         if (name.includes('fan')) return legendaryFanImg;
@@ -94,7 +119,7 @@ function getMutationComponentImage(itemName: string): string | null {
 
     // Default to common or by type
     if (name.includes('fan')) return commonFanImg;
-    if (name.includes('hashboard')) return commonHashboardImg;
+    if (name.includes('hashboard') || name.includes('board')) return commonHashboardImg;
     if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
 
     return null;
@@ -132,6 +157,17 @@ export default function MergePage() {
     // Detail modal
     const [selectedMerge, setSelectedMerge] = useState<MergeDetail | null>(null);
     const [detailLoading, setDetailLoading] = useState(false);
+
+    // Level Display Mode
+    const [levelDisplayMode, setLevelDisplayMode] = useState<'roman' | 'text'>(() => {
+        return (localStorage.getItem('rollercoin_web_level_display') as 'roman' | 'text') || 'text';
+    });
+
+    const toggleLevelDisplay = () => {
+        const newMode = levelDisplayMode === 'roman' ? 'text' : 'roman';
+        setLevelDisplayMode(newMode);
+        localStorage.setItem('rollercoin_web_level_display', newMode);
+    };
 
     // Debounce search
     const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -288,6 +324,36 @@ export default function MergePage() {
                             <path d="M12 5v14M19 12l-7 7-7-7" />
                         </svg>
                     </button>
+
+                    <button
+                        className="merge-sort-dir-btn"
+                        onClick={toggleLevelDisplay}
+                        title={t('merge.toggleLevelDisplay', 'Seviye Görünümünü Değiştir (Lv / Roma)')}
+                        style={{ minWidth: '40px', fontWeight: 'bold', gap: '6px' }}
+                    >
+                        <span style={{ fontSize: '12px' }}>👁️</span>
+                        {levelDisplayMode === 'roman' ? (
+                            <img
+                                src={getLevelIconUrl(2)}
+                                alt="Roman"
+                                style={{ width: '18px', height: '12px', objectFit: 'contain' }}
+                            />
+                        ) : (
+                            <span style={{
+                                background: '#4f46e5',
+                                color: 'white',
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                padding: '2px 4px',
+                                borderRadius: '4px',
+                                lineHeight: 1,
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                display: 'inline-block'
+                            }}>
+                                Lv.2
+                            </span>
+                        )}
+                    </button>
                 </div>
             </div>
 
@@ -318,12 +384,16 @@ export default function MergePage() {
                             >
                                 <div className="merge-card-img-wrap">
                                     {(item.resultItemLevel + 1) > 1 && (
-                                        <img
-                                            src={getLevelIconUrl(item.resultItemLevel + 1)}
-                                            alt={`Level ${item.resultItemLevel + 1}`}
-                                            className="merge-card-level-img"
-                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                        />
+                                        levelDisplayMode === 'roman' ? (
+                                            <img
+                                                src={getLevelIconUrl(item.resultItemLevel + 1)}
+                                                alt={`Level ${item.resultItemLevel + 1}`}
+                                                className="merge-card-level-img"
+                                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                            />
+                                        ) : (
+                                            <span className="merge-card-level-text">Lv.{item.resultItemLevel + 1}</span>
+                                        )
                                     )}
                                     <img
                                         src={getMinerImageUrl(item.resultItemFileName, item.resultItemImageVersion || undefined)}
@@ -439,12 +509,16 @@ export default function MergePage() {
                             <div className="merge-result-section">
                                 <div style={{ position: 'relative', display: 'inline-flex', flexShrink: 0 }}>
                                     {(selectedMerge.resultItemLevel + 1) > 1 && (
-                                        <img
-                                            src={getLevelIconUrl(selectedMerge.resultItemLevel + 1)}
-                                            alt={`Level ${selectedMerge.resultItemLevel + 1}`}
-                                            className="merge-card-level-img"
-                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                        />
+                                        levelDisplayMode === 'roman' ? (
+                                            <img
+                                                src={getLevelIconUrl(selectedMerge.resultItemLevel + 1)}
+                                                alt={`Level ${selectedMerge.resultItemLevel + 1}`}
+                                                className="merge-card-level-img"
+                                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                            />
+                                        ) : (
+                                            <span className="merge-card-level-text">Lv.{selectedMerge.resultItemLevel + 1}</span>
+                                        )
                                     )}
                                     {selectedMerge.resultItemFileName ? (
                                         <img
@@ -499,10 +573,22 @@ export default function MergePage() {
 
                                     // Image for this required item
                                     let imgSrc: string | null = null;
+                                    let displayName = item.itemName;
+
                                     if (isMiner && item.fileName) {
                                         imgSrc = getMinerImageUrl(item.fileName, item.imageVersion || undefined);
                                     } else if (isMutationComponent) {
-                                        imgSrc = getMutationComponentImage(item.itemName);
+                                        imgSrc = getMutationComponentImage(item.itemName, item.level);
+
+                                        if (item.level !== undefined && item.level !== null) {
+                                            const lowerName = item.itemName.toLowerCase();
+                                            if (!lowerName.includes('common') && !lowerName.includes('rare') && !lowerName.includes('epic') && !lowerName.includes('legendary')) {
+                                                const rarityMap = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+                                                if (item.level >= 0 && item.level <= 4) {
+                                                    displayName = `${rarityMap[item.level]} ${item.itemName}`;
+                                                }
+                                            }
+                                        }
                                     }
 
                                     // Required miner level: use API level, fallback to resultItemLevel - 1
@@ -514,17 +600,21 @@ export default function MergePage() {
                                         <div key={`${item.itemId}-${idx}`} className="merge-required-item">
                                             <div className="merge-req-img-wrap">
                                                 {isMiner && reqMinerLevel > 1 && (
-                                                    <img
-                                                        src={getLevelIconUrl(reqMinerLevel)}
-                                                        alt={`Level ${reqMinerLevel}`}
-                                                        className="merge-req-level-img"
-                                                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                                    />
+                                                    levelDisplayMode === 'roman' ? (
+                                                        <img
+                                                            src={getLevelIconUrl(reqMinerLevel)}
+                                                            alt={`Level ${reqMinerLevel}`}
+                                                            className="merge-req-level-img"
+                                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                                        />
+                                                    ) : (
+                                                        <span className="merge-req-level-text">Lv.{reqMinerLevel}</span>
+                                                    )
                                                 )}
                                                 {imgSrc ? (
                                                     <img
                                                         src={imgSrc}
-                                                        alt={item.itemName}
+                                                        alt={displayName}
                                                         className="merge-req-img"
                                                         loading="lazy"
                                                         onError={(e) => {
@@ -544,7 +634,7 @@ export default function MergePage() {
                                                 )}
                                             </div>
                                             <div className="merge-req-info">
-                                                <span className="merge-req-name">{item.itemName}</span>
+                                                <span className="merge-req-name">{displayName}</span>
                                                 <span className="merge-req-type">
                                                     {isMiner ? 'Miner' : t('merge.component')}
                                                 </span>
