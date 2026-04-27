@@ -317,11 +317,6 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             <div className={`accordion-wrapper ${isExpanded ? 'open' : ''}`}>
                 <div className="accordion-inner">
                     <div className="input-content-padding">
-                        <div className="alternative-site-hint">
-                            <a href="https://rchesapla.github.io" target="_blank" rel="noreferrer">
-                                {t('input.alternativeSite')} ↗
-                            </a>
-                        </div>
                         <div className="desktop-3-up">
                             <div className="input-group">
                                 <div className="fetch-mode-selector">

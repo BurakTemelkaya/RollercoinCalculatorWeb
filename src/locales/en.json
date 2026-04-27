@@ -146,7 +146,6 @@
         "serverDesc": "Get the latest data automatically",
         "apiSuccess": "Market data updated successfully",
         "apiError": "❌ Failed to fetch from API: {{error}}",
-        "alternativeSite": "If the site is down, try the alternative site",
         "fetchUserError": "❌ Failed to fetch user: {{error}}",
         "apiCooldown": "⏳ Please wait {{seconds}}s before fetching again",
         "apiCooldownBtn": "Wait {{seconds}}s",

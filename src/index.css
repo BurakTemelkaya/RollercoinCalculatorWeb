@@ -254,6 +254,54 @@ a:hover {
   gap: 10px;
 }
 
+/* Keep desktop nav perfectly centered by balancing left and right header areas */
+@media (min-width: 1709px) {
+  .header-logo,
+  .header-actions {
+    flex: 1 1 0;
+  }
+
+  .header-center {
+    flex: 0 1 auto;
+  }
+}
+
+/* Prevent header overlap on medium desktop widths */
+@media (min-width: 1251px) and (max-width: 1708px) {
+  .header-content {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .header-logo {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  .header-actions {
+    order: 2;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin-top: 0;
+  }
+
+  .header-center {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .header-title {
+    width: 100%;
+  }
+
+  .main-nav-links {
+    width: 100%;
+    margin-right: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 1250px) {
   .header-actions {
     flex: 1 1 100%;
@@ -302,7 +350,10 @@ a:hover {
 }
 
 .mobile-menu-dropdown.open {
-  max-height: 350px;
+  max-height: min(520px, calc(100dvh - 120px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 12px 16px;
   margin-top: 12px;
   border-width: 1px;
@@ -425,7 +476,7 @@ a:hover {
   flex-direction: column;
   gap: 24px;
   padding-bottom: 40px;
-  overflow-x: hidden;
+  overflow: visible;
 }
 
 /* Input Form */
@@ -1477,7 +1528,7 @@ a:hover {
 }
 
 .pe-event-link:hover {
-  transform: translateY(-2px);
+  transform: scale(1.02);
   box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
   color: white;
 }
