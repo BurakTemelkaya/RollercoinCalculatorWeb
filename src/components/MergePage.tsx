@@ -32,6 +32,8 @@ import wiresCaseImg from '../assets/items/wires_case_855b977d-950c-45e3-a315-b20
 
 import rltImg from '../assets/coins/rlt.svg';
 
+import bonusImg from '../assets/items/bonus.svg';
+
 const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 400;
 
@@ -149,7 +151,7 @@ function getPartDisplayName(itemName: string, level?: number | null): string {
     return displayName;
 }
 
-type SortByOption = 'newest' | 'bonus' | 'percent' | 'name' | 'power';
+type SortByOption = 'newest' | 'percent' | 'name' | 'power';
 
 export default function MergePage() {
     const { lang } = useParams<{ lang: string }>();
@@ -393,8 +395,7 @@ export default function MergePage() {
                         <option value="newest">{t('merge.sortOptions.newest')}</option>
                         <option value="name">{t('merge.sortOptions.name')}</option>
                         <option value="power">{t('merge.sortOptions.power')}</option>
-                        <option value="bonus">{t('merge.sortOptions.bonus')}</option>
-                        <option value="percent">{t('merge.sortOptions.percent')}</option>
+                        <option value="percent">{t('merge.sortOptions.bonus')}</option>
                     </select>
 
                     <button
@@ -522,34 +523,16 @@ export default function MergePage() {
                                             </span>
                                         </div>
                                     )}
-                                    {item.resultItemPower > 0 && (
-                                        <div className="merge-card-stat">
-                                            <span>⚡ {t('merge.sortOptions.power')}</span>
-                                            <span className="merge-card-stat-value">
-                                                {formatPower(item.resultItemPower)}
+                                    <div className="merge-card-power-bonus">
+                                        {item.resultItemPower > 0 && (
+                                            <span className="merge-card-pb-item">
+                                                <span className="merge-card-pb-icon">⚡</span>
+                                                <span className="merge-card-pb-value">{formatPower(item.resultItemPower)}</span>
                                             </span>
-                                        </div>
-                                    )}
-                                    {item.resultItemBonus > 0 && (
-                                        <div className="merge-card-stat">
-                                            <span>🎯 {t('merge.sortOptions.bonus')}</span>
-                                            <span className="merge-card-stat-value" style={{ color: '#a78bfa' }}>
-                                                {(item.resultItemBonus / 100).toFixed(2)}%
-                                            </span>
-                                        </div>
-                                    )}
-                                    {item.resultItemPercent > 0 && (
-                                        <div className="merge-card-stat">
-                                            <span>📊 {t('merge.sortOptions.percent')}</span>
-                                            <span className="merge-card-stat-value" style={{ color: '#38bdf8' }}>
-                                                {(item.resultItemPercent / 100).toFixed(2)}%
-                                            </span>
-                                        </div>
-                                    )}
-                                    <div className="merge-card-stat">
-                                        <span>XP</span>
-                                        <span className="merge-card-stat-value merge-card-xp">
-                                            +{item.xpReward.toLocaleString()}
+                                        )}
+                                        <span className="merge-card-pb-item">
+                                            <img src={bonusImg} alt="Bonus" width="13" height="13" className="merge-card-pb-icon" />
+                                            <span className="merge-card-pb-value" style={{ color: '#a78bfa' }}>{(item.resultItemPercent / 100).toFixed(2)}%</span>
                                         </span>
                                     </div>
                                 </div>
@@ -640,11 +623,11 @@ export default function MergePage() {
                                         {selectedMerge.resultItemPower > 0 && (
                                             <span>⚡ {formatPower(selectedMerge.resultItemPower)}</span>
                                         )}
-                                        {selectedMerge.resultItemBonus > 0 && (
-                                            <span style={{ color: '#a78bfa' }}>🎯 {(selectedMerge.resultItemBonus / 100).toFixed(2)}%</span>
-                                        )}
                                         {selectedMerge.resultItemPercent > 0 && (
-                                            <span style={{ color: '#38bdf8' }}>📊 {(selectedMerge.resultItemPercent / 100).toFixed(2)}%</span>
+                                            <span style={{ color: '#a78bfa', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                <img src={bonusImg} alt="Bonus" width="14" height="14" />
+                                                {(selectedMerge.resultItemPercent / 100).toFixed(2)}%
+                                            </span>
                                         )}
                                         <span>
                                             <span className="xp-value">+{selectedMerge.xpReward.toLocaleString()} XP</span>
@@ -659,14 +642,14 @@ export default function MergePage() {
                                 {selectedMerge.requiredItems.map((item, idx) => {
                                     const isMiner = item.type === 'miners';
                                     const isMutationComponent = item.type === 'mutation_components';
-                                    
+
                                     // Determine display name first
                                     let displayName = isMiner ? item.itemName : getPartDisplayName(item.itemName, item.level);
-                                    
+
                                     const defaultUnitPrice = item.price ? item.price / 1e6 : null;
                                     const customPrice = customPartPrices[displayName];
                                     const unitPriceRlt = isMutationComponent ? (customPrice !== undefined ? customPrice : defaultUnitPrice) : null;
-                                    
+
                                     const totalItemCost = unitPriceRlt !== null ? unitPriceRlt * item.count : null;
 
                                     // Image for this required item
@@ -684,154 +667,152 @@ export default function MergePage() {
                                         : 0;
 
                                     return (
-                                        <div key={`${item.itemId}-${idx}`} className="merge-required-item">
-                                            <div className="merge-req-img-wrap">
-                                                {isMiner && reqMinerLevel > 1 && (
-                                                    levelDisplayMode === 'roman' ? (
-                                                        <img
-                                                            src={getLevelIconUrl(reqMinerLevel)}
-                                                            alt={`Level ${reqMinerLevel}`}
-                                                            className="merge-req-level-img"
-                                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                                        />
-                                                    ) : (
-                                                        <span className="merge-req-level-text">Lv.{reqMinerLevel}</span>
-                                                    )
-                                                )}
-                                                {imgSrc ? (
-                                                    <img
-                                                        src={imgSrc}
-                                                        alt={displayName}
-                                                        className="merge-req-img"
-                                                        loading="lazy"
-                                                        onError={(e) => {
-                                                            const target = e.target as HTMLImageElement;
-                                                            target.style.display = 'none';
-                                                            const parent = target.parentElement;
-                                                            if (parent && !parent.querySelector('.merge-req-fallback')) {
-                                                                const span = document.createElement('span');
-                                                                span.className = 'merge-req-fallback';
-                                                                span.textContent = isMiner ? '⛏️' : '🔩';
-                                                                parent.appendChild(span);
-                                                            }
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <span className="merge-req-fallback">{isMiner ? '⛏️' : '🔩'}</span>
-                                                )}
-                                            </div>
-                                            <div className="merge-req-info">
-                                                <span className="merge-req-name">{displayName}</span>
-                                                <span className="merge-req-type">
-                                                    {isMiner ? 'Miner' : t('merge.component')}
-                                                </span>
-                                                {isMiner && (
-                                                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                                                        {item.power != null && item.power > 0 && <>⚡ {formatPower(item.power)}</>}
-                                                        {item.power != null && item.power > 0 && item.percent != null && item.percent > 0 && ' | '}
-                                                        {item.percent != null && item.percent > 0 && <span style={{ color: '#a78bfa' }}>🎯 {(item.percent / 100).toFixed(2)}%</span>}
-                                                    </span>
-                                                )}
-                                                {isMutationComponent && item.level === 0 && (
-                                                    <div style={{
-                                                        marginTop: '8px',
-                                                        padding: '8px 10px',
-                                                        background: 'rgba(56, 189, 248, 0.08)',
-                                                        borderRadius: '8px',
-                                                        border: '1px solid rgba(56, 189, 248, 0.2)',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: '8px'
-                                                    }}>
-                                                        {getCaseImage(item.itemName) ? (
+                                        <div key={`${item.itemId}-${idx}`} className="merge-required-item" style={{ flexWrap: 'wrap' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', minWidth: 0 }}>
+                                                <div className="merge-req-img-wrap">
+                                                    {isMiner && reqMinerLevel > 1 && (
+                                                        levelDisplayMode === 'roman' ? (
                                                             <img
-                                                                src={getCaseImage(item.itemName)!}
-                                                                alt={`${item.itemName} Case`}
-                                                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                                                                src={getLevelIconUrl(reqMinerLevel)}
+                                                                alt={`Level ${reqMinerLevel}`}
+                                                                className="merge-req-level-img"
+                                                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                                                             />
                                                         ) : (
-                                                            <span style={{ fontSize: '24px' }}>📦</span>
-                                                        )}
-                                                        <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: '600' }}>
-                                                            {t('merge.caseAlternative', { boxes: Math.ceil(item.count / 200), rst: Math.ceil(item.count / 200) * 40 })}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="merge-req-counts">
-                                                <span className="merge-req-qty">×{item.count}</span>
-                                                {unitPriceRlt !== null ? (
-                                                    <>
-                                                        <span className="merge-req-price">
-                                                            {t('merge.unitPrice')}: {editingPartPrice === displayName ? (
-                                                                <input 
-                                                                    autoFocus
-                                                                    value={tempPartPrice}
-                                                                    onChange={e => setTempPartPrice(e.target.value)}
-                                                                    onBlur={() => handleSavePartPrice(displayName)}
-                                                                    onKeyDown={e => {
-                                                                        if (e.key === 'Enter') handleSavePartPrice(displayName);
-                                                                        if (e.key === 'Escape') setEditingPartPrice(null);
-                                                                    }}
-                                                                    style={{
-                                                                        width: '60px', 
-                                                                        padding: '2px 4px', 
-                                                                        background: 'rgba(0,0,0,0.2)', 
-                                                                        border: '1px solid var(--accent-primary)', 
-                                                                        color: 'white',
-                                                                        borderRadius: '4px',
-                                                                        fontSize: '11px'
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                <>
-                                                                    <span style={{ 
-                                                                        color: customPrice !== undefined ? '#f59e0b' : 'inherit',
-                                                                        fontWeight: customPrice !== undefined ? 'bold' : 'normal'
-                                                                    }}>
-                                                                        {unitPriceRlt.toFixed(4)} RLT
-                                                                    </span>
-                                                                    <span 
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            setEditingPartPrice(displayName);
-                                                                            setTempPartPrice(unitPriceRlt.toString());
-                                                                        }}
-                                                                        style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
-                                                                        title="Düzenle"
-                                                                    >✏️</span>
-                                                                    {customPrice !== undefined && (
-                                                                        <span 
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                handleResetPartPrice(displayName);
-                                                                            }}
-                                                                            style={{ cursor: 'pointer', marginLeft: '4px', color: '#f87171' }}
-                                                                            title="Sıfırla"
-                                                                        >↺</span>
-                                                                    )}
-                                                                </>
+                                                            <span className="merge-req-level-text">Lv.{reqMinerLevel}</span>
+                                                        )
+                                                    )}
+                                                    {imgSrc ? (
+                                                        <img
+                                                            src={imgSrc}
+                                                            alt={displayName}
+                                                            className="merge-req-img"
+                                                            loading="lazy"
+                                                            onError={(e) => {
+                                                                const target = e.target as HTMLImageElement;
+                                                                target.style.display = 'none';
+                                                                const parent = target.parentElement;
+                                                                if (parent && !parent.querySelector('.merge-req-fallback')) {
+                                                                    const span = document.createElement('span');
+                                                                    span.className = 'merge-req-fallback';
+                                                                    span.textContent = isMiner ? '⛏️' : '🔩';
+                                                                    parent.appendChild(span);
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <span className="merge-req-fallback">{isMiner ? '⛏️' : '🔩'}</span>
+                                                    )}
+                                                </div>
+                                                <div className="merge-req-info">
+                                                    <span className="merge-req-name">{displayName}</span>
+                                                    <span className="merge-req-type">
+                                                        {isMiner ? 'Miner' : t('merge.component')}
+                                                    </span>
+                                                    {isMiner && (
+                                                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                                                            {item.power != null && item.power > 0 && <>⚡ {formatPower(item.power)}</>}
+                                                            {item.power != null && item.power > 0 && item.percent != null && item.percent > 0 && ' | '}
+                                                            {item.percent != null && item.percent > 0 && (
+                                                                <span style={{ color: '#a78bfa', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                                                    <img src={bonusImg} alt="Bonus" width="10" height="10" />
+                                                                    {(item.percent / 100).toFixed(2)}%
+                                                                </span>
                                                             )}
                                                         </span>
-                                                        <span className="merge-req-total-price" style={{ color: customPrice !== undefined ? '#f59e0b' : 'inherit' }}>
-                                                            {totalItemCost!.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} RLT
+                                                    )}
+                                                </div>
+                                                <div className="merge-req-counts">
+                                                    <span className="merge-req-qty">×{item.count}</span>
+                                                    {unitPriceRlt !== null ? (
+                                                        <>
+                                                            <span className="merge-req-price">
+                                                                {t('merge.unitPrice')}: {editingPartPrice === displayName ? (
+                                                                    <input
+                                                                        autoFocus
+                                                                        value={tempPartPrice}
+                                                                        onChange={e => setTempPartPrice(e.target.value)}
+                                                                        onBlur={() => handleSavePartPrice(displayName)}
+                                                                        onKeyDown={e => {
+                                                                            if (e.key === 'Enter') handleSavePartPrice(displayName);
+                                                                            if (e.key === 'Escape') setEditingPartPrice(null);
+                                                                        }}
+                                                                        style={{
+                                                                            width: '60px',
+                                                                            padding: '2px 4px',
+                                                                            background: 'rgba(0,0,0,0.2)',
+                                                                            border: '1px solid var(--accent-primary)',
+                                                                            color: 'white',
+                                                                            borderRadius: '4px',
+                                                                            fontSize: '11px'
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    <>
+                                                                        <span style={{
+                                                                            color: customPrice !== undefined ? '#f59e0b' : 'inherit',
+                                                                            fontWeight: customPrice !== undefined ? 'bold' : 'normal'
+                                                                        }}>
+                                                                            {unitPriceRlt.toFixed(4)} RLT
+                                                                        </span>
+                                                                        <span
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                setEditingPartPrice(displayName);
+                                                                                setTempPartPrice(unitPriceRlt.toString());
+                                                                            }}
+                                                                            style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
+                                                                            title="Düzenle"
+                                                                        >✏️</span>
+                                                                        {customPrice !== undefined && (
+                                                                            <span
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    handleResetPartPrice(displayName);
+                                                                                }}
+                                                                                style={{ cursor: 'pointer', marginLeft: '4px', color: '#f87171' }}
+                                                                                title="Sıfırla"
+                                                                            >↺</span>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </span>
+                                                            <span className="merge-req-total-price" style={{ color: customPrice !== undefined ? '#f59e0b' : 'inherit' }}>
+                                                                {totalItemCost!.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 3 })} RLT
+                                                            </span>
+                                                        </>
+                                                    ) : isMutationComponent ? (
+                                                        <span className="merge-req-price" style={{ color: '#f87171' }}>
+                                                            {t('merge.unitPrice')}: -
+                                                            <span
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setEditingPartPrice(displayName);
+                                                                    setTempPartPrice('0.0001');
+                                                                }}
+                                                                style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
+                                                                title="Fiyat Ekle"
+                                                            >➕</span>
                                                         </span>
-                                                    </>
-                                                ) : isMutationComponent ? (
-                                                    <span className="merge-req-price" style={{ color: '#f87171' }}>
-                                                        {t('merge.unitPrice')}: - 
-                                                        <span 
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setEditingPartPrice(displayName);
-                                                                setTempPartPrice('0.0001');
-                                                            }}
-                                                            style={{ cursor: 'pointer', marginLeft: '4px', opacity: 0.7 }}
-                                                            title="Fiyat Ekle"
-                                                        >➕</span>
-                                                    </span>
-                                                ) : null}
+                                                    ) : null}
+                                                </div>
                                             </div>
+                                            {isMutationComponent && item.level === 0 && (
+                                                <div className="merge-case-alternative">
+                                                    {getCaseImage(item.itemName) ? (
+                                                        <img
+                                                            src={getCaseImage(item.itemName)!}
+                                                            alt={`${item.itemName} Case`}
+                                                            style={{ width: '22px', height: '22px', objectFit: 'contain', flexShrink: 0 }}
+                                                        />
+                                                    ) : (
+                                                        <span style={{ fontSize: '18px' }}>📦</span>
+                                                    )}
+                                                    <span style={{ fontSize: '12px', color: '#38bdf8', fontWeight: '600' }}>
+                                                        {t('merge.caseAlternative', { boxes: Math.ceil(item.count / 200), rst: Math.ceil(item.count / 200) * 40 })}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -873,7 +854,7 @@ export default function MergePage() {
                             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
                                 {t('merge.partPricesDesc', 'Pazar yerindeki anlık parça fiyatlarını girerek merge maliyetlerini daha isabetli hesaplayabilirsiniz. Boş bıraktığınız parçalar için API verisi kullanılır.')}
                             </p>
-                            
+
                             <div style={{ overflowX: 'auto' }}>
                                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px', minWidth: '350px' }}>
                                     <thead>
@@ -902,11 +883,11 @@ export default function MergePage() {
                                                         const itemName = `${rarity} ${type}`;
                                                         return (
                                                             <td key={itemName} style={{ padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                                                <input 
+                                                                <input
                                                                     type="text"
                                                                     placeholder="-"
                                                                     value={tempSettingsPrices[itemName] || ''}
-                                                                    onChange={(e) => setTempSettingsPrices(prev => ({...prev, [itemName]: e.target.value}))}
+                                                                    onChange={(e) => setTempSettingsPrices(prev => ({ ...prev, [itemName]: e.target.value }))}
                                                                     style={{
                                                                         width: '100%',
                                                                         minWidth: '60px',
@@ -929,15 +910,15 @@ export default function MergePage() {
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
-                                <button 
-                                    onClick={() => setTempSettingsPrices({})} 
+                                <button
+                                    onClick={() => setTempSettingsPrices({})}
                                     className="btn-secondary"
                                     style={{ padding: '8px 16px', borderRadius: '6px', fontSize: '13px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', cursor: 'pointer' }}
                                 >
                                     {t('merge.clearAll', 'Sıfırla')}
                                 </button>
-                                <button 
-                                    onClick={savePartPriceSettings} 
+                                <button
+                                    onClick={savePartPriceSettings}
                                     className="btn-primary"
                                     style={{ padding: '8px 24px', borderRadius: '6px', fontSize: '13px', background: 'var(--accent-primary)', color: 'white', border: 'none', cursor: 'pointer' }}
                                 >

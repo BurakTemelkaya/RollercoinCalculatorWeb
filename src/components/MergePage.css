@@ -187,6 +187,7 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 12px;
     margin-bottom: 8px;
+    align-items: stretch;
 }
 
 /* Card */
@@ -195,7 +196,7 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    padding: 16px 14px;
+    padding: 16px 14px 0;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-md, 10px);
@@ -290,6 +291,8 @@
     gap: 4px;
     width: 100%;
     position: relative;
+    flex: 1;
+    min-height: 0; /* Prevents flex items from overflowing */
 }
 
 .merge-card-stat {
@@ -314,6 +317,39 @@
 
 .merge-card-xp {
     color: #10b981 !important;
+}
+
+.merge-card-power-bonus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: auto;
+    min-height: 64px;
+    flex: 0 0 auto;
+}
+
+.merge-card-pb-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary, #e2e8f0);
+    line-height: 1;
+}
+
+.merge-card-pb-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.merge-card-pb-value {
+    white-space: nowrap;
 }
 
 .merge-card-sold {
@@ -551,6 +587,17 @@
     font-weight: 700;
 }
 
+.merge-case-alternative {
+    width: 100%;
+    padding: 6px 10px;
+    background: rgba(56, 189, 248, 0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 /* Total Cost Summary */
 .merge-total-summary {
     display: flex;
@@ -648,7 +695,7 @@
     }
 
     .merge-card {
-        padding: 12px 10px;
+        padding: 12px 10px 0;
     }
 
     .merge-card-name {
