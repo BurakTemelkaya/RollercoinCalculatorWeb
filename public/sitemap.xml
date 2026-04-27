@@ -390,4 +390,24 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/blog/beginners-complete-guide"/>
   </url>
+<!-- Merges - English -->
+  <url>
+    <loc>https://rollercoincalculator.app/en/merges</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/merges"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/merges"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/merges"/>
+  </url>
+<!-- Merges - Turkish -->
+  <url>
+    <loc>https://rollercoincalculator.app/tr/merges</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/merges"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/merges"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/merges"/>
+  </url>
 </urlset>
