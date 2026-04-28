@@ -393,6 +393,8 @@
         "partPrices": "Part Prices",
         "partPricesDesc": "Enter the current part prices from the marketplace to calculate merge costs more accurately. For parts left blank, API data will be used.",
         "clearAll": "Clear All",
-        "save": "Save"
+        "save": "Save",
+        "forgeLevel": "Forge Level",
+        "mergeCount": "Count"
     }
 }

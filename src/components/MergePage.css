@@ -181,6 +181,111 @@
     transform: rotate(180deg);
 }
 
+/* Forge Level Selector */
+.merge-forge-selector {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg-primary, #0a0e17);
+    border: 1px solid var(--border-color, rgba(148, 163, 184, 0.1));
+    border-radius: var(--radius-md, 10px);
+    padding: 4px 8px;
+    transition: all 0.2s;
+}
+
+.merge-forge-selector:hover {
+    border-color: #f97316;
+}
+
+.merge-forge-label {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.merge-forge-select {
+    background: transparent;
+    border: none;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 2px;
+}
+
+.merge-forge-select option {
+    background: var(--bg-primary, #0a0e17);
+    color: var(--text-primary, #e2e8f0);
+}
+
+/* Merge Count Row */
+.merge-count-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.merge-count-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.merge-count-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.merge-count-btn:hover:not(:disabled) {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: var(--accent-primary, #6366f1);
+}
+
+.merge-count-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.merge-count-input {
+    width: 44px;
+    text-align: center;
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.merge-count-input::-webkit-outer-spin-button,
+.merge-count-input::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.merge-count-input:focus {
+    border-color: var(--accent-primary, #6366f1);
+}
+
 /* Grid */
 .merge-grid {
     display: grid;
@@ -559,6 +664,39 @@
     color: var(--text-muted, #a0aec0);
     text-transform: uppercase;
     letter-spacing: 0.3px;
+}
+
+.merge-req-miner-stats {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 3px;
+    flex-wrap: wrap;
+}
+
+.merge-req-stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(250, 204, 21, 0.1);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.2);
+    line-height: 1.4;
+}
+
+.merge-req-stat-icon {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.merge-req-stat-bonus {
+    background: rgba(167, 139, 250, 0.1);
+    color: #a78bfa;
+    border-color: rgba(167, 139, 250, 0.2);
 }
 
 .merge-req-counts {

@@ -394,6 +394,8 @@
         "partPrices": "Parça Fiyatları",
         "partPricesDesc": "Pazar yerindeki anlık parça fiyatlarını girerek merge maliyetlerini daha isabetli hesaplayabilirsiniz. Boş bıraktığınız parçalar için API verisi kullanılır.",
         "clearAll": "Sıfırla",
-        "save": "Kaydet"
+        "save": "Kaydet",
+        "forgeLevel": "Forge Seviyesi",
+        "mergeCount": "Adet"
     }
 }
