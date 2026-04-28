@@ -39,7 +39,11 @@
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox"
-    ]
+    ],
+    "puppeteerLaunchOptions": {
+      "timeout": 60000
+    },
+    "navigationTimeout": 60000
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
