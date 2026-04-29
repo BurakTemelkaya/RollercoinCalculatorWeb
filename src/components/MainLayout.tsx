@@ -6,6 +6,8 @@ import trFlag from '../assets/flags/tr.svg';
 import gbFlag from '../assets/flags/gb.svg';
 import appLogo from '../assets/logo.png';
 
+const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
+
 export const NAV_ICONS = {
   charts: <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>,
   events: <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>,
@@ -24,19 +26,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  
+
   // Extract lang from path part 1, fallback to i18n
   const langFromPath = location.pathname.split('/')[1];
   const lang = (langFromPath === 'tr' || langFromPath === 'en') ? langFromPath : i18n.language;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileAd, setIsMobileAd] = useState(window.innerWidth <= 768);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobileAd(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Sync language with URL
   useEffect(() => {
@@ -49,20 +44,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
   }, [lang, i18n]);
 
-  // Load Top Banner Ad
+  // Load Top Banner Ad (Always use 320x50 to fit next to quest card)
   useEffect(() => {
-    // We use a slight delay to ensure the div is painted and the AdManager script is fully parsed
     const timer = setTimeout(() => {
-        if ((window as any).AdManager) {
-            if (isMobileAd) {
-                (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50, '21bf0654ac3ca0059c5d930d8ff532c8', 320, 50);
-            } else {
-                (window as any).AdManager.loadAd('top-ad-container', '2435685', 728, 90, 'a100e93966f3b58954aacd7e7bf10a15', 728, 90);
-            }
-        }
+      if ((window as any).AdManager) {
+        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50, '21bf0654ac3ca0059c5d930d8ff532c8', 320, 50);
+      }
     }, 100);
     return () => clearTimeout(timer);
-  }, [location.pathname, isMobileAd]);
+  }, [location.pathname]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -116,7 +106,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
                   </div>
                 </div>
-                
+
                 <div className="header-actions">
                   <div className="lang-switcher">
                     <button
@@ -155,11 +145,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     title="Telegram"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.282-.346-.088l-6.4 4.024-2.76-.86c-.6-.185-.615-.595.125-.89l10.81-4.17c.5-.192.936.104.75 1.025z"/>
+                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.282-.346-.088l-6.4 4.024-2.76-.86c-.6-.185-.615-.595.125-.89l10.81-4.17c.5-.192.936.104.75 1.025z" />
                     </svg>
                   </a>
-                  <button 
-                    className="hamburger-btn mobile-only" 
+                  <button
+                    className="hamburger-btn mobile-only"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     aria-label="Menu"
                   >
@@ -171,23 +161,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </button>
                 </div>
               </div>
-              
+
               <div className={`mobile-menu-dropdown ${isMobileMenuOpen ? 'open' : ''}`}>
-                 <div className="mobile-nav-content">
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
-                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
-                 </div>
+                <div className="mobile-nav-content">
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
+                </div>
               </div>
             </header>
 
-            {/* Top Banner Ad (Responsive) A/B Test */}
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '10px 0 24px 0' }}>
-               <div id="top-ad-container" style={{ width: isMobileAd ? '320px' : '728px', height: isMobileAd ? '50px' : '90px', maxWidth: '100%', overflow: 'hidden' }}></div>
+            {/* Top Banner: Daily Quest + Ad */}
+            <div className="top-banner-row">
+              <React.Suspense fallback={null}>
+                <DailyBonusQuest />
+              </React.Suspense>
+              <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}></div>
             </div>
 
             {/* Main Content */}

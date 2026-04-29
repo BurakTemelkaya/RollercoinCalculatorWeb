@@ -102,11 +102,11 @@ body {
 /* Gap = (100vw - 1200px) / 2 per side. Center 160px ad in that gap: */
 /* offset = (gap - 160px) / 2 = (50vw - 600px - 160px) / 2 = 25vw - 380px */
 .side-ad-left {
-  left: calc(25vw - 380px);
+  left: calc(50% - 600px - 180px);
 }
 
 .side-ad-right {
-  right: calc(25vw - 380px);
+  right: calc(50% - 600px - 180px);
 }
 
 /* Show side ads only on wide screens (1560px+ ensures 180px gap per side for 160px ads) */
@@ -127,6 +127,29 @@ body {
   margin: 8px auto 16px auto;
   position: relative;
   z-index: 5;
+}
+
+/* Top Banner Row: Daily Quest + Ad side by side */
+.top-banner-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 24px 0;
+}
+
+.top-ad-wrapper {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1200px) {
+  .top-banner-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
 }
 
 /* App Wrapper (used by static pages) */

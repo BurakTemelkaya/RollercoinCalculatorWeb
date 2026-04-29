@@ -45,6 +45,7 @@ const MarketplaceTradingGuide = React.lazy(() => import('./components/blog/Marke
 const MostProfitableCoin = React.lazy(() => import('./components/blog/MostProfitableCoin'));
 const BeginnersCompleteGuide = React.lazy(() => import('./components/blog/BeginnersCompleteGuide'));
 const MergePage = React.lazy(() => import('./components/MergePage'));
+const DailyBonusQuestHistory = React.lazy(() => import('./components/DailyBonusQuestHistory'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -898,6 +899,7 @@ function App() {
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
         <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
+        <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
         <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
         <Route path="/:lang/blog/what-is-rollercoin" element={<React.Suspense fallback={null}><WhatIsRollercoin /></React.Suspense>} />
         <Route path="/:lang/blog/league-system-explained" element={<React.Suspense fallback={null}><LeagueSystemExplained /></React.Suspense>} />

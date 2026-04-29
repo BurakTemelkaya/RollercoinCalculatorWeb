@@ -1,0 +1,185 @@
+/* ===== Daily Bonus Quest History Page ===== */
+
+.dbqh-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.dbqh-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dbqh-header-left,
+.dbqh-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dbqh-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary, #e2e8f0);
+    margin: 0;
+    text-align: center;
+}
+
+.dbqh-count {
+    font-size: 13px;
+    color: var(--text-secondary, #94a3b8);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Loading & Error */
+.dbqh-loading,
+.dbqh-error,
+.dbqh-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-secondary, #94a3b8);
+}
+
+/* Grid */
+.dbqh-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Card */
+.dbqh-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.dbqh-card:hover {
+    border-color: rgba(45, 216, 208, 0.2);
+    background: linear-gradient(135deg, rgba(45, 216, 208, 0.02), rgba(45, 216, 208, 0.04));
+}
+
+.dbqh-card-latest {
+    border-color: rgba(45, 216, 208, 0.25);
+    background: linear-gradient(135deg, rgba(45, 216, 208, 0.03), rgba(45, 216, 208, 0.06));
+}
+
+.dbqh-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dbqh-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary, #e2e8f0);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dbqh-badge-latest {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, rgba(45, 216, 208, 0.15), rgba(0, 229, 160, 0.15));
+    color: #2dd8d0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    border: 1px solid rgba(45, 216, 208, 0.2);
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+/* Rewards row */
+.dbqh-card-rewards {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.dbqh-reward-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5eead4;
+}
+
+.dbqh-reward-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* Meta row */
+.dbqh-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dbqh-card-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.dbqh-card-config {
+    display: flex;
+    gap: 6px;
+}
+
+.dbqh-config-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(139, 92, 246, 0.1);
+    color: #c4b5fd;
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .dbqh-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dbqh-card {
+        padding: 12px 14px;
+    }
+}

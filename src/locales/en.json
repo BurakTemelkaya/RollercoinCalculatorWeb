@@ -396,5 +396,21 @@
         "save": "Save",
         "forgeLevel": "Forge Level",
         "mergeCount": "Count"
+    },
+    "dailyQuest": {
+        "title": "Daily Quest",
+        "bonus": "BONUS",
+        "replace": "Replace",
+        "paidClaim": "Skip",
+        "loading": "Loading quest...",
+        "fetchError": "Failed to load quest data",
+        "noQuest": "No daily quest available",
+        "reward": "Reward",
+        "seasonXp": "Season XP",
+        "target": "Target",
+        "questHistory": "Quest History",
+        "totalQuests": "{{count}} quests",
+        "viewDetails": "View Details",
+        "noQuests": "No quests found."
     }
 }

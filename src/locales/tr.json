@@ -397,5 +397,21 @@
         "save": "Kaydet",
         "forgeLevel": "Forge Seviyesi",
         "mergeCount": "Adet"
+    },
+    "dailyQuest": {
+        "title": "Günlük Görev",
+        "bonus": "BONUS",
+        "replace": "Değiştir",
+        "paidClaim": "Atla",
+        "loading": "Görev yükleniyor...",
+        "fetchError": "Görev verileri yüklenemedi",
+        "noQuest": "Günlük görev bulunamadı",
+        "reward": "Ödül",
+        "seasonXp": "Sezon XP",
+        "target": "Hedef",
+        "questHistory": "Görev Geçmişi",
+        "totalQuests": "{{count}} görev",
+        "viewDetails": "Detayları Gör",
+        "noQuests": "Görev bulunamadı."
     }
 }
