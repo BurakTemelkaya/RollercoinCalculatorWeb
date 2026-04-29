@@ -87,11 +87,11 @@
         loadAd: function(containerId, aadsId, aadsW, aadsH, adsterraKey, adsterraW, adsterraH) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            
+
             const renderAAds = () => {
                 container.innerHTML = '<iframe data-aa="' + aadsId + '" src="//ad.a-ads.com/' + aadsId + '/?size=' + aadsW + 'x' + aadsH + '&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:' + aadsW + 'px; height:' + aadsH + 'px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
             };
-            
+
             const renderAdsterra = () => {
                 const iframe = document.createElement('iframe');
                 iframe.style.border = '0';
@@ -116,35 +116,27 @@
                 doc.close();
             };
 
-            const tryAAds = () => {
-                let handled = false;
-                const timer = setTimeout(() => {
-                    if(handled) return;
-                    handled = true;
-                    renderAdsterra();
-                }, 1500);
-
-                fetch('https://ad.a-ads.com/', { mode: 'no-cors' })
-                    .then(() => {
-                        if(handled) return;
-                        handled = true;
-                        clearTimeout(timer);
-                        renderAAds();
-                    })
-                    .catch(() => {
-                        if(handled) return;
-                        handled = true;
-                        clearTimeout(timer);
-                        renderAdsterra();
-                    });
-            };
-
-            const useAAds = Math.random() < 0.5;
-            if (useAAds) {
-                tryAAds();
-            } else {
+            // Always try AADS first, wait up to 5 seconds, fallback to Adsterra
+            let handled = false;
+            const fallbackTimer = setTimeout(() => {
+                if (handled) return;
+                handled = true;
                 renderAdsterra();
-            }
+            }, 5000);
+
+            fetch('https://ad.a-ads.com/', { mode: 'no-cors' })
+                .then(() => {
+                    if (handled) return;
+                    handled = true;
+                    clearTimeout(fallbackTimer);
+                    renderAAds();
+                })
+                .catch(() => {
+                    if (handled) return;
+                    handled = true;
+                    clearTimeout(fallbackTimer);
+                    renderAdsterra();
+                });
         }
     };
   </script>
@@ -153,24 +145,17 @@
 
   <div id="root"></div>
 
-  <!-- Desktop Left Sticky (A-Ads) -->
+  <!-- Desktop Left Sticky (AADS first, Adsterra fallback) -->
   <div class="desktop-side-ad" style="position: absolute; z-index: 99999; pointer-events: none;">
     <div style="padding-top: 0; padding-bottom: 0;">
       <div
         style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <!-- Adsterra 160x600 -->
-          <script type="text/javascript">
-            atOptions = {
-              'key' : 'a2e005647919fa74a0e4341a28cb8284',
-              'format' : 'iframe',
-              'height' : 600,
-              'width' : 160,
-              'params' : {}
-            };
+          <div id="left-side-ad" style="width: 160px; height: 600px;"></div>
+          <script>
+            window.AdManager.loadAd('left-side-ad', '2429727', 160, 600, 'a2e005647919fa74a0e4341a28cb8284', 160, 600);
           </script>
-          <script type="text/javascript" src="https://www.highperformanceformat.com/a2e005647919fa74a0e4341a28cb8284/invoke.js"></script>
         </div>
       </div>
     </div>
