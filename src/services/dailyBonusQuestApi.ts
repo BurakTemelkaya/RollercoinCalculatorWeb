@@ -7,8 +7,44 @@
 
 import { buildApiUrl } from '../config/api';
 import { apiGet } from './apiClient';
-import type { DailyBonusQuest } from '../types/dailyBonusQuest';
+import type { DailyBonusQuest, DailyBonusQuestReward } from '../types/dailyBonusQuest';
 import type { PaginatedResponse } from '../types/pagination';
+
+type DailyBonusQuestRewardEntry = {
+    dailyBonusReward?: DailyBonusQuestReward;
+};
+
+function normalizeDailyBonusQuestRewards(rawRewards: unknown): DailyBonusQuestReward[] {
+    if (!Array.isArray(rawRewards)) return [];
+    return rawRewards
+        .map(reward => {
+            if (reward && typeof reward === 'object') {
+                const entry = reward as DailyBonusQuestRewardEntry;
+                if (entry.dailyBonusReward && typeof entry.dailyBonusReward === 'object') {
+                    return entry.dailyBonusReward;
+                }
+            }
+            return reward as DailyBonusQuestReward;
+        })
+        .filter((reward): reward is DailyBonusQuestReward => Boolean(reward));
+}
+
+function normalizeDailyBonusQuest(quest: DailyBonusQuest): DailyBonusQuest {
+    const rawRewards = (quest as { dailyBonusQuestRewards?: unknown }).dailyBonusQuestRewards;
+    return {
+        ...quest,
+        dailyBonusQuestRewards: normalizeDailyBonusQuestRewards(rawRewards),
+    };
+}
+
+function normalizeDailyBonusQuestList(
+    response: PaginatedResponse<DailyBonusQuest>
+): PaginatedResponse<DailyBonusQuest> {
+    return {
+        ...response,
+        items: response.items.map(normalizeDailyBonusQuest),
+    };
+}
 
 /**
  * Fetches today's daily bonus quest, or a specific quest by ID.
@@ -18,7 +54,8 @@ export async function fetchDailyBonusQuest(id?: string): Promise<DailyBonusQuest
     const url = id
         ? buildApiUrl(`${base}?id=${encodeURIComponent(id)}`)
         : buildApiUrl(base);
-    return apiGet<DailyBonusQuest>(url);
+    const data = await apiGet<DailyBonusQuest>(url);
+    return normalizeDailyBonusQuest(data);
 }
 
 /**
@@ -29,5 +66,6 @@ export async function fetchDailyBonusQuestList(
     pageSize: number = 10
 ): Promise<PaginatedResponse<DailyBonusQuest>> {
     const url = buildApiUrl(`/api/DailyBonusQuest/List?PageIndex=${pageIndex}&PageSize=${pageSize}`);
-    return apiGet<PaginatedResponse<DailyBonusQuest>>(url);
+    const data = await apiGet<PaginatedResponse<DailyBonusQuest>>(url);
+    return normalizeDailyBonusQuestList(data);
 }

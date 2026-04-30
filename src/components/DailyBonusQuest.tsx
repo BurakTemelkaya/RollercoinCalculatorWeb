@@ -2,35 +2,11 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { fetchDailyBonusQuest } from '../services/dailyBonusQuestApi';
-import { getCurrencyConfig } from '../data/currencies';
 import { COIN_ICONS } from '../utils/constants';
+import { formatAmount, normalizeAdditionalData, resolveQuestTemplate } from '../utils/dailyBonusQuestFormat';
 import type { DailyBonusQuest as DailyBonusQuestType, DailyBonusQuestReward } from '../types/dailyBonusQuest';
 import xpIcon from '../assets/items/xp.png';
 import './DailyBonusQuest.css';
-
-/** Known to_small divisors for formatting raw amounts to display values */
-const CURRENCY_DIVISORS: Record<string, number> = {
-    'RLT': 1e6,
-    'RST': 1e6,
-    'HMT': 1e6,
-    'TWCOIN': 1e6,
-};
-
-function getCurrencyDivisor(currencyName: string): number {
-    const config = getCurrencyConfig(currencyName);
-    if (config) return config.to_small;
-    return CURRENCY_DIVISORS[currencyName] || 1;
-}
-
-/** Format a raw amount using the currency's to_small divisor */
-function formatAmount(amount: number, currencyName?: string): string {
-    if (!currencyName) return String(amount);
-    const divisor = getCurrencyDivisor(currencyName);
-    const value = amount / divisor;
-    // Remove trailing zeros
-    if (value >= 1) return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
-    return value.toLocaleString('en-US', { maximumFractionDigits: 6 });
-}
 
 /** Build a human-readable reward summary for {reward} placeholder */
 function buildRewardSummary(rewards: DailyBonusQuestReward[], t: (key: string) => string): string {
@@ -46,32 +22,6 @@ function buildRewardSummary(rewards: DailyBonusQuestReward[], t: (key: string) =
 }
 
 /** Replace template placeholders in a string */
-function resolveTemplate(
-    template: string,
-    quest: DailyBonusQuestType,
-    rewardSummary: string
-): string {
-    let result = template;
-
-    // {count_repeats} — formatted with currency divisor
-    // Detect currency from the template text or title context
-    const countDisplay = formatAmount(quest.countRepeats, quest.replaceConfigCurrency || 'RLT');
-    result = result.replace(/\{count_repeats\}/g, countDisplay);
-
-    // {reward} — full reward summary
-    result = result.replace(/\{reward\}/g, rewardSummary);
-
-    // additionalData replacements (e.g. {game_name})
-    if (quest.additionalData) {
-        for (const [key, value] of Object.entries(quest.additionalData)) {
-            // Keys may or may not have braces
-            const keyWithBraces = key.startsWith('{') ? key : `{${key}}`;
-            result = result.replace(new RegExp(keyWithBraces.replace(/[{}]/g, '\\$&'), 'g'), value);
-        }
-    }
-
-    return result;
-}
 
 /** Render a single reward badge (icon + amount) */
 function RewardBadge({ reward }: { reward: DailyBonusQuestReward }) {
@@ -139,8 +89,9 @@ export default function DailyBonusQuest() {
     }
 
     const rewardSummary = buildRewardSummary(quest.dailyBonusQuestRewards, t);
-    const title = resolveTemplate(quest.title, quest, rewardSummary);
-    const description = resolveTemplate(quest.description, quest, rewardSummary);
+    const additionalData = normalizeAdditionalData(quest.additionalData);
+    const title = resolveQuestTemplate(quest.title, quest, { rewardSummary, additionalData });
+    const description = resolveQuestTemplate(quest.description, quest, { rewardSummary, additionalData });
 
     const replacePrice = formatAmount(quest.replaceConfigPrice, quest.replaceConfigCurrency);
     const paidPrice = formatAmount(quest.paidConfigPrice, quest.paidConfigCurrency);

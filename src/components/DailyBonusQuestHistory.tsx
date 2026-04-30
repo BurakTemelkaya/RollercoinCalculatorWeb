@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import i18n from '../i18n';
 import { fetchDailyBonusQuestList } from '../services/dailyBonusQuestApi';
-import { getCurrencyConfig } from '../data/currencies';
 import { COIN_ICONS } from '../utils/constants';
+import { formatAmount, normalizeAdditionalData, resolveQuestTemplate } from '../utils/dailyBonusQuestFormat';
 import type { DailyBonusQuest } from '../types/dailyBonusQuest';
 import type { PaginatedResponse } from '../types/pagination';
 import xpIcon from '../assets/items/xp.png';
@@ -13,14 +13,8 @@ import './DailyBonusQuestHistory.css';
 
 const PAGE_SIZE = 10;
 
-function formatAmount(amount: number, currencyName?: string): string {
-    if (!currencyName) return String(amount);
-    const config = getCurrencyConfig(currencyName);
-    const divisor = config?.to_small || 1e6;
-    const value = amount / divisor;
-    if (value >= 1) return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
-    return value.toLocaleString('en-US', { maximumFractionDigits: 6 });
-}
+const formatAmountWithFallback = (amount: number, currencyName?: string): string =>
+    formatAmount(amount, currencyName, 1e6);
 
 function formatDate(dateStr: string, locale: string): string {
     const date = new Date(
@@ -37,19 +31,12 @@ function formatDate(dateStr: string, locale: string): string {
 
 /** Replace template placeholders */
 function resolveTitle(title: string, quest: DailyBonusQuest): string {
-    let result = title;
-    const countDisplay = formatAmount(quest.countRepeats, quest.replaceConfigCurrency || 'RLT');
-    result = result.replace(/\{count_repeats\}/g, countDisplay);
-    result = result.replace(/\{reward\}/g, '...');
-
-    if (quest.additionalData) {
-        for (const [key, value] of Object.entries(quest.additionalData)) {
-            const keyWithBraces = key.startsWith('{') ? key : `{${key}}`;
-            result = result.replace(new RegExp(keyWithBraces.replace(/[{}]/g, '\\$&'), 'g'), value);
-        }
-    }
-
-    return result;
+    const additionalData = normalizeAdditionalData(quest.additionalData);
+    return resolveQuestTemplate(title, quest, {
+        rewardPlaceholder: '...',
+        additionalData,
+        formatOptions: { fallbackDivisor: 1e6 }
+    });
 }
 
 export default function DailyBonusQuestHistory() {
@@ -163,7 +150,7 @@ export default function DailyBonusQuestHistory() {
                                                         {COIN_ICONS[reward.currency.name] && (
                                                             <img src={COIN_ICONS[reward.currency.name]} alt={reward.currency.name} className="dbqh-reward-icon" />
                                                         )}
-                                                        <span>{formatAmount(reward.amount, reward.currency.name)} {reward.currency.name}</span>
+                                                        <span>{formatAmountWithFallback(reward.amount, reward.currency.name)} {reward.currency.name}</span>
                                                     </>
                                                 ) : null}
                                             </div>
@@ -185,13 +172,13 @@ export default function DailyBonusQuestHistory() {
                                             {quest.replaceConfigIsAvailable && (
                                                 <span className="dbqh-config-tag">
                                                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
-                                                     {formatAmount(quest.replaceConfigPrice, quest.replaceConfigCurrency)} {quest.replaceConfigCurrency}
+                                                     {formatAmountWithFallback(quest.replaceConfigPrice, quest.replaceConfigCurrency)} {quest.replaceConfigCurrency}
                                                 </span>
                                             )}
                                             {quest.paidConfigIsAvailable && (
                                                 <span className="dbqh-config-tag">
                                                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style={{ marginRight: '4px' }}><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" /></svg>
-                                                     {formatAmount(quest.paidConfigPrice, quest.paidConfigCurrency)} {quest.paidConfigCurrency}
+                                                     {formatAmountWithFallback(quest.paidConfigPrice, quest.paidConfigCurrency)} {quest.paidConfigCurrency}
                                                 </span>
                                             )}
                                         </div>

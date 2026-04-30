@@ -36,6 +36,6 @@ export interface DailyBonusQuest {
     paidConfigPrice: number;
     createdDate: string;
     endDate: string;
-    additionalData: Record<string, string> | null;
+    additionalData: Record<string, unknown> | string | null;
     dailyBonusQuestRewards: DailyBonusQuestReward[];
 }
