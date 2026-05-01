@@ -71,6 +71,35 @@ function getAdditionalDataString(
     return undefined;
 }
 
+function getAdditionalDataValue(
+    additionalData: NormalizedAdditionalData,
+    key: string
+): unknown {
+    if (!additionalData) return undefined;
+    if (Object.prototype.hasOwnProperty.call(additionalData, key)) {
+        return additionalData[key];
+    }
+    const bracedKey = `{${key}}`;
+    if (Object.prototype.hasOwnProperty.call(additionalData, bracedKey)) {
+        return additionalData[bracedKey];
+    }
+    return undefined;
+}
+
+function coerceNumber(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string' && value.trim() !== '') {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) return parsed;
+    }
+    return null;
+}
+
+function formatPlainNumber(value: number): string {
+    if (Number.isInteger(value)) return value.toLocaleString('en-US');
+    return String(value);
+}
+
 export function shouldFormatCountAsCurrency(
     template: string,
     quest: DailyBonusQuest,
@@ -110,19 +139,104 @@ export function formatCountRepeats(
     return String(quest.countRepeats);
 }
 
+function shouldFormatAmountAsCurrency(
+    template: string,
+    quest: DailyBonusQuest,
+    additionalData: NormalizedAdditionalData
+): boolean {
+    if (additionalData && Array.isArray(additionalData['lootbox_ids'])) {
+        return false;
+    }
+
+    if (template.includes('{currency}')) {
+        return true;
+    }
+
+    const dataCurrency = getAdditionalDataString(additionalData, 'currency');
+    const candidates = [dataCurrency, quest.replaceConfigCurrency, quest.paidConfigCurrency]
+        .filter((value): value is string => Boolean(value));
+
+    return candidates.some(currency => templateHasCurrencyToken(template, currency));
+}
+
+function replacePlaceholder(template: string, key: string, value: string): string {
+    const keyWithBraces = key.startsWith('{') ? key : `{${key}}`;
+    return template.replace(new RegExp(escapeRegExp(keyWithBraces), 'g'), value);
+}
+
 export function replaceAdditionalDataPlaceholders(
     template: string,
-    additionalData: NormalizedAdditionalData
+    additionalData: NormalizedAdditionalData,
+    options?: {
+        quest?: DailyBonusQuest;
+        formatOptions?: { fallbackDivisor?: number };
+    }
 ): string {
     if (!additionalData) return template;
     let result = template;
 
+    const quest = options?.quest;
+    const fallbackDivisor = options?.formatOptions?.fallbackDivisor;
+    const fallbackCurrency = quest ? (quest.replaceConfigCurrency || quest.paidConfigCurrency) : undefined;
+    const dataCurrency = getAdditionalDataString(additionalData, 'currency') || fallbackCurrency;
+
+    if (quest) {
+        const amountValue = getAdditionalDataValue(additionalData, 'amount');
+        if (amountValue !== undefined && amountValue !== null) {
+            let amountText: string | undefined;
+            if (typeof amountValue === 'string') {
+                const numeric = coerceNumber(amountValue);
+                if (numeric !== null) {
+                    amountText = shouldFormatAmountAsCurrency(template, quest, additionalData) && dataCurrency
+                        ? formatAmount(numeric, dataCurrency, fallbackDivisor)
+                        : formatPlainNumber(numeric);
+                } else {
+                    amountText = amountValue;
+                }
+            } else {
+                const numeric = coerceNumber(amountValue);
+                if (numeric !== null) {
+                    amountText = shouldFormatAmountAsCurrency(template, quest, additionalData) && dataCurrency
+                        ? formatAmount(numeric, dataCurrency, fallbackDivisor)
+                        : formatPlainNumber(numeric);
+                }
+            }
+            if (amountText !== undefined) {
+                result = replacePlaceholder(result, 'amount', amountText);
+            }
+        } else if (result.includes('{amount}')) {
+            result = replacePlaceholder(result, 'amount', '');
+        }
+
+        if (dataCurrency) {
+            result = replacePlaceholder(result, 'currency', dataCurrency);
+        } else if (result.includes('{currency}')) {
+            result = replacePlaceholder(result, 'currency', '');
+        }
+    }
+
+    // Specific Rollercoin map for provider_name -> provider_title & offertoro -> torox
+    const providerTitle = getAdditionalDataString(additionalData, 'provider_title');
+    if (providerTitle) {
+        const providerName = providerTitle.toLowerCase() === 'offertoro' ? 'torox' : providerTitle;
+        // In local web we might not want to inject HTML tags directly into strings
+        // if we are rendering React safely, but we can match the upper-case aesthetic or just string
+        result = replacePlaceholder(result, 'provider_name', providerName.toUpperCase());
+    }
+
+    const handledKeys = new Set(['amount', '{amount}', 'currency', '{currency}', 'provider_title']);
+
     for (const [key, value] of Object.entries(additionalData)) {
-        if (value === null || value === undefined) continue;
-        if (typeof value !== 'string' && typeof value !== 'number') continue;
+        if (handledKeys.has(key)) continue;
         const keyWithBraces = key.startsWith('{') ? key : `{${key}}`;
-        const valueText = String(value);
-        result = result.replace(new RegExp(keyWithBraces.replace(/[{}]/g, '\\$&'), 'g'), valueText);
+        if (!result.includes(keyWithBraces)) continue;
+        if (value === null || value === undefined) {
+            result = result.replace(new RegExp(escapeRegExp(keyWithBraces), 'g'), '');
+            continue;
+        }
+        if (typeof value !== 'string' && typeof value !== 'number') continue;
+        const valueText = typeof value === 'number' ? formatPlainNumber(value) : value;
+        result = result.replace(new RegExp(escapeRegExp(keyWithBraces), 'g'), valueText);
     }
 
     return result;
@@ -134,6 +248,7 @@ export function resolveQuestTemplate(
     options?: {
         rewardSummary?: string;
         rewardPlaceholder?: string;
+        dayType?: string;
         additionalData?: NormalizedAdditionalData;
         formatOptions?: { fallbackDivisor?: number };
     }
@@ -150,5 +265,12 @@ export function resolveQuestTemplate(
         result = result.replace(/\{reward\}/g, options.rewardPlaceholder);
     }
 
-    return replaceAdditionalDataPlaceholders(result, normalized);
+    if (options?.dayType !== undefined) {
+        result = result.replace(/\{day_type\}/g, options.dayType);
+    }
+
+    return replaceAdditionalDataPlaceholders(result, normalized, {
+        quest,
+        formatOptions: options?.formatOptions
+    });
 }
