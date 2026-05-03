@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import trFlag from '../assets/flags/tr.svg';
 import gbFlag from '../assets/flags/gb.svg';
 import appLogo from '../assets/logo.png';
-import TurnstileProvider from './TurnstileProvider';
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
 
@@ -70,7 +69,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="app-layout">
-      <TurnstileProvider />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">

@@ -1,5 +1,3 @@
-import { getTurnstileToken, invalidateTurnstileToken, TURNSTILE_HEADER_NAME } from './turnstile';
-
 /**
  * Centralized API Client
  *
@@ -26,10 +24,6 @@ export class ApiError extends Error {
     get isRateLimit(): boolean {
         return this.status === 429;
     }
-
-    get isForbidden(): boolean {
-        return this.status === 403;
-    }
 }
 
 /**
@@ -55,18 +49,12 @@ export async function apiFetch(url: string, options?: RequestInit): Promise<Resp
         const headers = new Headers(options?.headers);
         headers.set('Accept-Language', acceptLanguage);
 
-        const turnstileToken = await getTurnstileToken();
-        headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
-
         const response = await fetch(url, {
             ...options,
             headers,
         });
 
         if (!response.ok) {
-            if (response.status === 403) {
-                invalidateTurnstileToken();
-            }
             if (response.status === 429) {
                 throw new ApiError(429, 'Too Many Requests');
             }

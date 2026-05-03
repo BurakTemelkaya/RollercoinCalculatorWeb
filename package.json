@@ -46,7 +46,6 @@
     "navigationTimeout": 60000
   },
   "dependencies": {
-    "@marsidev/react-turnstile": "1.5.1",
     "@radix-ui/react-select": "^2.2.6",
     "chart.js": "^4.5.1",
     "classnames": "^2.5.1",

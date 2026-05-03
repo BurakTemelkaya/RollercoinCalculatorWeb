@@ -56,13 +56,6 @@ League API endpoint'i (genelde değiştirmenize gerek yok)
 
 **Default:** `/api/League`
 
-### VITE_TURNSTILE_SITE_KEY
-Cloudflare Turnstile site key
-
-**Örnekler:**
-- Development (test key): `1x00000000000000000000AA`
-- Production (site key): `0x4AAAAAADHTNGZVRlejEB_A`
-
 ## ⚠️ Önemli Notlar
 
 1. **VITE_ prefix zorunludur!** Vite sadece `VITE_` ile başlayan değişkenleri okur
