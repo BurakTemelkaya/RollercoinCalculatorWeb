@@ -131,6 +131,12 @@
         "event": "Event",
         "charts": "League Charts"
     },
+    "turnstile": {
+        "title": "Security verification",
+        "desc": "Please complete the verification to continue.",
+        "error": "Verification failed. Please try again.",
+        "retry": "Try again"
+    },
     "input": {
         "title": "Data Input & Settings",
         "userPower": "Your Power",
@@ -161,7 +167,8 @@
             "missingUserPower": "User power is required!",
             "missingLeagueData": "League power data is required!",
             "tooManyRequests": "Too many requests to the API, please wait.",
-            "userNotFound": "User not found. Please check the username."
+            "userNotFound": "User not found. Please check the username.",
+            "turnstileFailed": "Turnstile verification failed. Please try again."
         },
         "usernamePlaceholder": "Enter username",
         "enterUsername": "Username",

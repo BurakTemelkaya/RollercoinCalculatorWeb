@@ -239,6 +239,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       let msg = error instanceof Error ? error.message : t('input.errors.parseError');
       if (error instanceof ApiError && error.isRateLimit) {
         msg = t('input.errors.tooManyRequests');
+      } else if (error instanceof ApiError && error.isForbidden) {
+        msg = t('input.errors.turnstileFailed');
       } else if (msg === 'RATE_LIMIT') { // Fallback, just in case
         msg = t('input.errors.tooManyRequests');
       } else if (error instanceof ApiError && error.status === 400) {

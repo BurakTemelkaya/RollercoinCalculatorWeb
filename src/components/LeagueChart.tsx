@@ -233,8 +233,13 @@ export default function LeagueChart() {
             setChartData(data);
         } catch (err) {
             console.error('Failed to fetch chart data:', err);
-            const msg = err instanceof Error ? err.message : t('charts.fetchError');
-            setError(err instanceof ApiError && err.isRateLimit ? t('input.errors.tooManyRequests') : msg);
+            let msg = err instanceof Error ? err.message : t('charts.fetchError');
+            if (err instanceof ApiError && err.isRateLimit) {
+                msg = t('input.errors.tooManyRequests');
+            } else if (err instanceof ApiError && err.isForbidden) {
+                msg = t('input.errors.turnstileFailed');
+            }
+            setError(msg);
         } finally {
             setLoading(false);
         }

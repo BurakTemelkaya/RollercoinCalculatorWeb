@@ -132,6 +132,12 @@
         "event": "Etkinlik",
         "charts": "Lig Grafikleri"
     },
+    "turnstile": {
+        "title": "Güvenlik doğrulaması",
+        "desc": "Devam etmek için doğrulamayı tamamlayın.",
+        "error": "Doğrulama başarısız oldu. Lütfen tekrar deneyin.",
+        "retry": "Tekrar dene"
+    },
     "input": {
         "title": "Veri Girişi & Ayarlar",
         "userPower": "Kullanıcı Gücünüz",
@@ -162,7 +168,8 @@
             "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
             "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!",
             "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin.",
-            "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin."
+            "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin.",
+            "turnstileFailed": "Turnstile doğrulaması başarısız oldu. Lütfen tekrar deneyin."
         },
         "usernamePlaceholder": "Kullanıcı adı girin",
         "enterUsername": "Kullanıcı Adı",
