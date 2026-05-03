@@ -84,6 +84,10 @@ function canUseStorage(): boolean {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 }
 
+function isReactSnap(): boolean {
+    return typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap');
+}
+
 function getSiteKey(): string | null {
     if (typeof TURNSTILE_SITE_KEY !== 'string') return null;
     const trimmed = TURNSTILE_SITE_KEY.trim();
@@ -222,6 +226,10 @@ export function invalidateTurnstileToken() {
     }
     autoRetryCount = 0;
     clearAutoRetry();
+    if (isReactSnap()) {
+        setState('verified');
+        return;
+    }
     setState('verifying');
     void getTurnstileToken();
 }
@@ -236,6 +244,10 @@ export async function getTurnstileToken(): Promise<string | null> {
     }
 
     if (typeof window === 'undefined') return null;
+    if (isReactSnap()) {
+        setState('verified');
+        return null;
+    }
     if (!getSiteKey()) {
         setState('error');
         return null;

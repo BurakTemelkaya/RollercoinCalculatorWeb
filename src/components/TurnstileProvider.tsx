@@ -19,14 +19,17 @@ export default function TurnstileProvider() {
     const [state, setState] = useState<TurnstileState>('idle');
     const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
     const hasSiteKey = siteKey.trim().length > 0;
+    const isReactSnap = typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap');
 
     const isBlocking = state === 'verifying' || state === 'error';
 
     useEffect(() => {
+        if (isReactSnap) return;
         return subscribeTurnstileState(setState);
-    }, []);
+    }, [isReactSnap]);
 
     useEffect(() => {
+        if (isReactSnap) return;
         registerTurnstileExecutor({
             execute: () => {
                 if (!turnstileRef.current) {
@@ -39,13 +42,15 @@ export default function TurnstileProvider() {
         });
 
         return () => registerTurnstileExecutor(null);
-    }, []);
+    }, [isReactSnap]);
 
     useEffect(() => {
+        if (isReactSnap) return;
         void getTurnstileToken();
-    }, []);
+    }, [isReactSnap]);
 
     useEffect(() => {
+        if (isReactSnap) return;
         if (typeof document === 'undefined') return;
         const previous = document.body.style.overflow;
         if (isBlocking) {
@@ -54,7 +59,9 @@ export default function TurnstileProvider() {
         return () => {
             document.body.style.overflow = previous;
         };
-    }, [isBlocking]);
+    }, [isBlocking, isReactSnap]);
+
+    if (isReactSnap) return null;
 
     return (
         <div
@@ -94,7 +101,6 @@ export default function TurnstileProvider() {
                     <Turnstile
                         ref={turnstileRef}
                         siteKey={siteKey}
-                        injectScript={false}
                         options={{
                             execution: 'execute',
                             appearance: 'always',
@@ -107,7 +113,7 @@ export default function TurnstileProvider() {
                         onError={() => setTurnstileError()}
                         onUnsupported={() => setTurnstileError()}
                         scriptOptions={{
-                            id: 'cf-turnstile-script',
+                            onError: () => setTurnstileError(),
                         }}
                         style={{
                             display: 'flex',
