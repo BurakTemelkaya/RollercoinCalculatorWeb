@@ -6,11 +6,6 @@ export type PriceApiProvider = 'binance' | 'coingecko';
 export async function fetchPrices(symbols: string[], preferredApi: PriceApiProvider = 'binance'): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
 
-  if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
-    prices['USDT'] = 1;
-    return prices;
-  }
-
   const fetchFromBinance = async () => {
     // Map to Binance symbols with correct priority
     const symbolMap: Record<string, string[]> = {
