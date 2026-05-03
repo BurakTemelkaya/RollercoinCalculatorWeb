@@ -88,6 +88,10 @@ export async function apiFetch(url: string, options?: RequestInit): Promise<Resp
         return response;
     } catch (error) {
         if (error instanceof ApiError) throw error;
+        // Skip logging if this is our intentional ReactSnap abort
+        if (error instanceof Error && error.message.includes('ReactSnap')) {
+            throw error;
+        }
         // Network errors, CORS, etc.
         console.error('API fetch error:', error);
         throw error;

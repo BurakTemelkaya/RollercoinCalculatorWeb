@@ -8,6 +8,11 @@ import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 
 function normalizeInitialUrl() {
+  // Suppress expected console errors during react-snap prerendering for a clean build output
+  if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
+    console.error = () => {};
+  }
+
   const l = window.location
   let pathname = l.pathname
   let search = l.search
