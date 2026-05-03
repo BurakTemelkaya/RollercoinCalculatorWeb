@@ -46,11 +46,6 @@ export default function TurnstileProvider() {
 
     useEffect(() => {
         if (isReactSnap) return;
-        void getTurnstileToken();
-    }, [isReactSnap]);
-
-    useEffect(() => {
-        if (isReactSnap) return;
         if (typeof document === 'undefined') return;
         const previous = document.body.style.overflow;
         if (isBlocking) {

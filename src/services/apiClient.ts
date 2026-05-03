@@ -55,8 +55,11 @@ export async function apiFetch(url: string, options?: RequestInit): Promise<Resp
         const headers = new Headers(options?.headers);
         headers.set('Accept-Language', acceptLanguage);
 
-        const turnstileToken = await getTurnstileToken();
-        headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
+        const method = options?.method?.toUpperCase() || 'GET';
+        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+            const turnstileToken = await getTurnstileToken();
+            headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
+        }
 
         const response = await fetch(url, {
             ...options,
