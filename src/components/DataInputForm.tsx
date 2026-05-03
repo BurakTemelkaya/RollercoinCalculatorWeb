@@ -145,6 +145,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         } catch (error) {
             if (error instanceof ApiError && error.isRateLimit) {
                 onShowNotification(t('input.errors.tooManyRequests'), 'error');
+            } else if (error instanceof ApiError && error.isForbidden) {
+                onShowNotification(t('input.errors.turnstileFailed'), 'error');
             } else {
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 onShowNotification(t('input.apiError', { error: errorMessage }), 'error');
