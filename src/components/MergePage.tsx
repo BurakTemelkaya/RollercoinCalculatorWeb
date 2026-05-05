@@ -411,48 +411,22 @@ export default function MergePage() {
 
             {/* Controls */}
             <div className="merge-controls">
-                <div className="merge-search-wrapper">
-                    <span className="merge-search-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                    </span>
-                    <input
-                        type="text"
-                        className="merge-search"
-                        placeholder={t('merge.search')}
-                        value={searchInput}
-                        onChange={(e) => handleSearchChange(e.target.value)}
-                    />
-                </div>
-
-                <div className="merge-sort-group">
-                    <select
-                        className="merge-sort-select"
-                        value={sortBy}
-                        onChange={(e) => {
-                            setSortBy(e.target.value as SortByOption);
-                            setCurrentPage(0);
-                        }}
-                    >
-                        <option value="newest">{t('merge.sortOptions.newest')}</option>
-                        <option value="name">{t('merge.sortOptions.name')}</option>
-                        <option value="power">{t('merge.sortOptions.power')}</option>
-                        <option value="percent">{t('merge.sortOptions.bonus')}</option>
-                    </select>
-
-                    <button
-                        className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
-                        onClick={() => setIsDescending(!isDescending)}
-                        title={getSortLabel()}
-                        style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
-                    >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 5v14M19 12l-7 7-7-7" />
-                        </svg>
-                        <span>{getSortLabel()}</span>
-                    </button>
+                <div style={{ display: 'flex', gap: '6px', flex: 1, minWidth: '180px', width: '100%' }}>
+                    <div className="merge-search-wrapper" style={{ flex: 1, minWidth: 0 }}>
+                        <span className="merge-search-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                        <input
+                            type="text"
+                            className="merge-search"
+                            placeholder={t('merge.search')}
+                            value={searchInput}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                        />
+                    </div>
 
                     <button
                         className="merge-sort-dir-btn"
@@ -491,6 +465,34 @@ export default function MergePage() {
                         style={{ minWidth: '40px', fontWeight: 'bold' }}
                     >
                         ⚙️
+                    </button>
+                </div>
+
+                <div className="merge-sort-group">
+                    <select
+                        className="merge-sort-select"
+                        value={sortBy}
+                        onChange={(e) => {
+                            setSortBy(e.target.value as SortByOption);
+                            setCurrentPage(0);
+                        }}
+                    >
+                        <option value="newest">{t('merge.sortOptions.newest')}</option>
+                        <option value="name">{t('merge.sortOptions.name')}</option>
+                        <option value="power">{t('merge.sortOptions.power')}</option>
+                        <option value="percent">{t('merge.sortOptions.bonus')}</option>
+                    </select>
+
+                    <button
+                        className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
+                        onClick={() => setIsDescending(!isDescending)}
+                        title={getSortLabel()}
+                        style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 5v14M19 12l-7 7-7-7" />
+                        </svg>
+                        <span>{getSortLabel()}</span>
                     </button>
 
                     {/* Forge Level Selector */}

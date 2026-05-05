@@ -134,6 +134,7 @@
     display: flex;
     gap: 6px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .merge-sort-select {
@@ -289,7 +290,7 @@
 /* Grid */
 .merge-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 12px;
     margin-bottom: 8px;
     align-items: stretch;
@@ -739,6 +740,7 @@
     color: #facc15;
     border: 1px solid rgba(250, 204, 21, 0.2);
     line-height: 1.4;
+    white-space: nowrap;
 }
 
 .merge-req-stat-icon {
@@ -920,15 +922,22 @@
 
     .merge-sort-group {
         width: 100%;
-        justify-content: stretch;
+        justify-content: center;
     }
 
     .merge-sort-select {
-        flex: 1;
+        flex: 0 1 auto;
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 0;
+    }
+
+    .merge-sort-dir-btn {
+        padding: 6px 10px;
     }
 
     .merge-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 10px;
     }
 
@@ -938,6 +947,16 @@
 
     .merge-card-name {
         font-size: 13px;
+    }
+
+    .merge-card-power-bonus {
+        gap: 4px;
+    }
+
+    .merge-card .merge-req-stat-pill {
+        padding: 3px 6px;
+        font-size: 11.5px;
+        gap: 3px;
     }
 
     .merge-detail-modal {
