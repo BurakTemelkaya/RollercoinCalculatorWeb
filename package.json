@@ -39,12 +39,15 @@
     ],
     "puppeteerArgs": [
       "--no-sandbox",
-      "--disable-setuid-sandbox"
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu"
     ],
     "puppeteerLaunchOptions": {
-      "timeout": 60000
+      "timeout": 90000
     },
-    "navigationTimeout": 60000
+    "navigationTimeout": 90000,
+    "concurrency": 1
   },
   "dependencies": {
     "@marsidev/react-turnstile": "1.5.1",
