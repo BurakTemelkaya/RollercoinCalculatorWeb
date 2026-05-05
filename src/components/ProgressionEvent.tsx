@@ -307,6 +307,7 @@ export default function ProgressionEvent() {
     const [filterMin, setFilterMin] = useState<number>(1);
     const [filterMax, setFilterMax] = useState<number>(100);
     const [showChart, setShowChart] = useState(false);
+    const [showMarketplace, setShowMarketplace] = useState(false);
 
     const MAX_MULTIPLIER = 100;
 
@@ -571,23 +572,35 @@ export default function ProgressionEvent() {
             )}
 
             {/* Event Header */}
-            <div className="pe-header">
+            <div className="pe-header" style={{
+                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '150px',
+            }}>
                 <div className="pe-header-actions pe-header-left">
                     <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                         <span className="pe-btn-label">{t('event.backToCalc')}</span>
                     </Link>
                     <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                         <span className="pe-btn-label">{t('event.viewHistory')}</span>
                     </Link>
                 </div>
 
-                <h2 className="pe-title">{event.title.en}</h2>
+                <div className="pe-header-center">
+                    <div className="pe-header-time pe-time-mobile" title={`${t('event.leftTime')}: ${timeLeft}`} style={{ marginBottom: '12px' }}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
+                        <strong>{timeLeft}</strong>
+                    </div>
+                    <h2 className="pe-title">{event.title.en}</h2>
+                </div>
 
-                <div className="pe-header-actions pe-header-right">
+                <div className="pe-header-actions pe-header-right pe-time-desktop">
                     <div className="pe-header-time" title={`${t('event.leftTime')}: ${timeLeft}`}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                         <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
                         <strong>{timeLeft}</strong>
                     </div>
@@ -597,6 +610,7 @@ export default function ProgressionEvent() {
             <div className="pe-layout">
                 {/* Left Sidebar - Event Info */}
                 <aside className="pe-sidebar">
+
                     {/* Event Difficulty */}
                     <div className="pe-info-card">
                         <h3 className="pe-info-title">{t('event.eventDifficulty')}</h3>
@@ -690,8 +704,8 @@ export default function ProgressionEvent() {
                                             <tr>
                                                 <th>{t('event.headers.lvl')}</th>
                                                 <th>{t('event.headers.total')}</th>
-                                                <th className="pe-rewards-col">{t('event.headers.rewards')}</th>
                                                 <th>{t('event.headers.points')}</th>
+                                                <th className="pe-rewards-col">{t('event.headers.rewards')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -709,6 +723,9 @@ export default function ProgressionEvent() {
                                                         </td>
                                                         <td className="pe-number-cell pe-total-cell">
                                                             {formatNumber(level.required_xp)}
+                                                        </td>
+                                                        <td className="pe-number-cell pe-boxes-cell" style={{ color: 'var(--accent-primary)' }}>
+                                                            {formatNumber(level.level_xp)} {t('event.pointsUnit')}
                                                         </td>
                                                         <td className="pe-rewards-col">
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '280px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
@@ -778,9 +795,6 @@ export default function ProgressionEvent() {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="pe-number-cell pe-boxes-cell" style={{ color: 'var(--accent-primary)' }}>
-                                                            {formatNumber(level.level_xp)} {t('event.pointsUnit')}
-                                                        </td>
                                                     </tr>
                                                 );
                                             })}
@@ -830,6 +844,17 @@ export default function ProgressionEvent() {
                                             >
                                                 📊
                                             </button>
+                                        </div>
+                                        <div className="pe-control-group" style={{ justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600, height: '36px' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={showMarketplace}
+                                                    onChange={(e) => setShowMarketplace(e.target.checked)}
+                                                    style={{ width: '16px', height: '16px', margin: 0, cursor: 'pointer' }}
+                                                />
+                                                {t('event.headers.marketTrade')} & {t('event.headers.fee')}
+                                            </label>
                                         </div>
                                     </div>
 
@@ -908,8 +933,8 @@ export default function ProgressionEvent() {
                                                         </div>
                                                     </th>
                                                     <th>{t('event.headers.totalCost')}</th>
-                                                    <th>{t('event.headers.marketTrade')}</th>
-                                                    <th>{t('event.headers.fee')}</th>
+                                                    {showMarketplace && <th>{t('event.headers.marketTrade')}</th>}
+                                                    {showMarketplace && <th>{t('event.headers.fee')}</th>}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -928,12 +953,16 @@ export default function ProgressionEvent() {
                                                         <td className="pe-number-cell pe-total-cell">
                                                             {formatNumber(row.totalRltCost)}
                                                         </td>
-                                                        <td className="pe-number-cell">
-                                                            {formatNumber(row.marketTrade)}
-                                                        </td>
-                                                        <td className="pe-number-cell pe-fee-cell">
-                                                            {formatNumber(row.fee)}
-                                                        </td>
+                                                        {showMarketplace && (
+                                                            <td className="pe-number-cell">
+                                                                {formatNumber(row.marketTrade)}
+                                                            </td>
+                                                        )}
+                                                        {showMarketplace && (
+                                                            <td className="pe-number-cell pe-fee-cell">
+                                                                {formatNumber(row.fee)}
+                                                            </td>
+                                                        )}
                                                     </tr>
                                                 ))}
                                             </tbody>

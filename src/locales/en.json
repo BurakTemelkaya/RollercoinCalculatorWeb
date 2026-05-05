@@ -271,7 +271,7 @@
         "minerPower": "Miner Power",
         "minerBonus": "Miner Bonus",
         "newTotal": "Projected Total",
-        "moveUp": "Move up",
+        "moveUp": "New League",
         "addedMinersList": "Added Miners",
         "add": "Add",
         "remove": "Remove",
@@ -339,7 +339,7 @@
             "points": "Points",
             "rewards": "Rewards",
             "multiplier": "Multiplier",
-            "rltToBuy": "RLT to buy",
+            "rltToBuy": "RLT to exchange",
             "discount": "Discount",
             "boxesOf": "Boxes of",
             "totalCost": "Total RLT",
@@ -376,6 +376,14 @@
             "power": "Power",
             "bonus": "Bonus",
             "percent": "Percent"
+        },
+        "sort": {
+            "nameAsc": "A - Z",
+            "nameDesc": "Z - A",
+            "newestAsc": "Old - New",
+            "newestDesc": "New - Old",
+            "lowHigh": "Low - High",
+            "highLow": "High - Low"
         },
         "ascending": "Ascending",
         "descending": "Descending",

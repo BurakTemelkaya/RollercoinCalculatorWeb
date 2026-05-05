@@ -480,7 +480,7 @@
     background: var(--bg-card, #1e2433);
     border: 1px solid var(--border-color, rgba(148, 163, 184, 0.1));
     border-radius: var(--radius-lg, 16px);
-    max-width: 560px;
+    max-width: 680px;
     width: 100%;
     max-height: 85vh;
     display: flex;
@@ -539,16 +539,18 @@
 /* Result Miner Section */
 .merge-result-section {
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 16px;
-    padding: 16px;
+    padding: 16px 20px;
     background: rgba(99, 102, 241, 0.06);
     border: 1px solid rgba(99, 102, 241, 0.12);
     border-radius: var(--radius-md, 10px);
+    text-align: left;
 }
 
 .merge-result-img {
-    max-width: 96px;
+    max-width: 100px;
     max-height: 80px;
     object-fit: contain;
     border-radius: 6px;
@@ -558,12 +560,13 @@
 .merge-result-info {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 12px;
     flex: 1;
 }
 
 .merge-result-name {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -571,9 +574,23 @@
 .merge-result-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    font-size: 13px;
+    justify-content: center;
+    gap: 16px;
+    font-size: 14px;
     color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+    .merge-result-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .merge-result-info {
+        align-items: center;
+    }
+    .merge-result-meta {
+        justify-content: center;
+    }
 }
 
 .merge-result-meta span {
@@ -605,14 +622,16 @@
 .merge-required-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 }
 
 .merge-required-item {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
+    text-align: left;
+    gap: 16px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-md, 10px);
@@ -625,8 +644,8 @@
 
 .merge-req-img-wrap {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 100px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -634,10 +653,35 @@
 }
 
 .merge-req-img {
-    max-width: 48px;
-    max-height: 48px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     border-radius: 4px;
+}
+
+.merge-req-level-img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 22px;
+    height: 16px;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.merge-req-level-text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(56, 189, 248, 0.9);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .merge-req-fallback {
@@ -649,13 +693,21 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    align-items: flex-start;
+    gap: 6px;
     min-width: 0;
 }
 
+.merge-req-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .merge-req-name {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--text-primary);
 }
 
@@ -669,8 +721,9 @@
 .merge-req-miner-stats {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 6px;
-    margin-top: 3px;
+    margin-top: 4px;
     flex-wrap: wrap;
 }
 
@@ -678,9 +731,9 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 2px 8px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     background: rgba(250, 204, 21, 0.1);
     color: #facc15;
@@ -689,7 +742,7 @@
 }
 
 .merge-req-stat-icon {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
 }
 
@@ -699,12 +752,59 @@
     border-color: rgba(167, 139, 250, 0.2);
 }
 
+.merge-req-stat-level {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.2);
+}
+
+.merge-req-stat-rlt {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.merge-req-stat-xp {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.merge-req-stat-qty {
+    background: rgba(148, 163, 184, 0.1);
+    color: #cbd5e1;
+    border-color: rgba(148, 163, 184, 0.2);
+}
+
 .merge-req-counts {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 2px;
+    gap: 8px;
     flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .merge-required-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .merge-req-info {
+        align-items: center;
+    }
+    .merge-req-name-row {
+        justify-content: center;
+    }
+    .merge-req-miner-stats {
+        justify-content: center;
+    }
+    .merge-req-counts {
+        align-items: center;
+        margin-top: 8px;
+        padding-top: 12px;
+        width: 100%;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
 }
 
 .merge-req-qty {

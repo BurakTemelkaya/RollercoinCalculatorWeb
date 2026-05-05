@@ -272,7 +272,7 @@
         "minerPower": "Madenci Gücü",
         "minerBonus": "Madenci Bonusu",
         "newTotal": "Tahmini Toplam",
-        "moveUp": "Yukarı taşı",
+        "moveUp": "Yeni Lig",
         "addedMinersList": "Eklenen Madenciler",
         "add": "Ekle",
         "remove": "Kaldır",
@@ -340,7 +340,7 @@
             "points": "Puan",
             "rewards": "Ödüller",
             "multiplier": "Çarpan",
-            "rltToBuy": "Alınacak RLT",
+            "rltToBuy": "Çevrilecek RLT",
             "discount": "İndirim",
             "boxesOf": "Kutu Sayısı",
             "totalCost": "Toplam RLT",
@@ -377,6 +377,14 @@
             "power": "Güç",
             "bonus": "Bonus",
             "percent": "Yüzde"
+        },
+        "sort": {
+            "nameAsc": "A'dan - Z'ye",
+            "nameDesc": "Z'den - A'ya",
+            "newestAsc": "Eskiden - Yeniye",
+            "newestDesc": "Yeniden - Eskiye",
+            "lowHigh": "Düşükten - Yükseğe",
+            "highLow": "Yüksekten - Düşüğe"
         },
         "ascending": "Artan",
         "descending": "Azalan",

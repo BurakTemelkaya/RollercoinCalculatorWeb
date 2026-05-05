@@ -56,6 +56,10 @@ export interface ProgressionEventInfo {
   last_updated: number;
   description: LocalizedText;
   title: LocalizedText;
+  media?: {
+    banner_url?: string;
+    preview_url?: string;
+  };
 }
 
 export interface LocalizedText {

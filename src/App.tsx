@@ -297,24 +297,16 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '1.0.5';
+  const CURRENT_CACHE_VERSION = '20260505.015924';
 
   // Load from localStorage on mount
   useEffect(() => {
     try {
       const savedVersion = localStorage.getItem(CACHE_VERSION_KEY);
       if (savedVersion !== CURRENT_CACHE_VERSION) {
-        // App version updated, clear old cache to prevent malformed data bugs
-        console.log(`Cache version mismatch (${savedVersion} vs ${CURRENT_CACHE_VERSION}). Clearing cache...`);
-        const keysToRemove = [
-          STORAGE_KEYS.COINS, STORAGE_KEYS.USER_POWER, STORAGE_KEYS.BALANCES,
-          STORAGE_KEYS.ACTIVE_TAB, STORAGE_KEYS.LEAGUE_ID, STORAGE_KEYS.AUTO_LEAGUE,
-          STORAGE_KEYS.API_LEAGUES, 'rollercoin_web_fetched_user',
-          'rollercoin_web_raw_api_data', 'rollercoin_web_block_durations'
-        ];
-        keysToRemove.forEach(k => localStorage.removeItem(k));
+        // App version updated, just update the stored version without clearing user data
+        console.log(`Cache version mismatch (${savedVersion} vs ${CURRENT_CACHE_VERSION}). Updating cache version...`);
         localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION);
-        return; // Don't load erased data
       }
 
       const savedCoins = localStorage.getItem(STORAGE_KEYS.COINS);

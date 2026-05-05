@@ -1,0 +1,2 @@
+node scripts/bump-version.js
+git add src/App.tsx public/sw.js
