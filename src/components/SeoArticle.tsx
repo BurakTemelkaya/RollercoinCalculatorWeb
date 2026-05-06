@@ -21,6 +21,19 @@ const SeoArticleTR: React.FC<{ lang: string }> = ({ lang }) => (
       <li><strong>Lig Grafikleri ve Trend Analizi:</strong> Her lig için tarihsel güç ve ödül verilerini grafiklerle takip ederek piyasa trendlerini ve lig popülaritesini analiz edebilirsiniz.</li>
     </ul>
 
+    <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>Kazanç Hesaplaması Nasıl Çalışır?</h3>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
+      RollerCoin'de kazancınızı belirleyen temel formül oldukça basittir: <strong>Kazancınız = (Sizin Gücünüz / Toplam Lig Gücü) × Blok Ödülü</strong>. Ancak bu basit formülün arkasında karmaşık değişkenler yatar. Her coin için farklı blok süreleri, her lig için farklı ödül çarpanları ve sürekli değişen ağ gücü bu hesaplamayı manuel yapmayı neredeyse imkansız kılar. Hesaplayıcımız tüm bu değişkenleri otomatik olarak API'den çeker ve saniyeler içinde size günlük, haftalık ve aylık kazanç tahminlerini USD karşılığıyla sunar.
+    </p>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginTop: '10px' }}>
+      Ayrıca hesaplayıcı, her coin için anlık lig gücü dağılımını gösterir. Bu, bir coinde ne kadar rekabet olduğunu ve ödülünüzün diğer oyuncular arasında nasıl bölündüğünü görmenizi sağlar. Yüksek güçlü bir ligte az rekabetçi bir coin, düşük güçlü bir ligte popüler bir coinden daha karlı olabilir — hesaplayıcı bu tür stratejik kararlar vermenize yardımcı olur.
+    </p>
+
+    <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>Birleştirme ve Etkinlik Araçları</h3>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
+      Kazanç hesaplamanın ötesinde, platformumuz madenci birleştirme tariflerini analiz eden bir <strong>Merge Hesaplayıcısı</strong> ve Progression Event bütçenizi planlamanıza yardımcı olan bir <strong>Etkinlik Hesaplayıcısı</strong> sunar. Merge aracı, Forge seviyenize göre indirimli bileşen hesabı yapar ve pazar yeri fiyatlarıyla gerçek maliyetleri ortaya koyar. Etkinlik aracı ise her seviyedeki ödülleri, gerekli RLT miktarını ve çarpan maliyetlerini detaylı şekilde gösterir.
+    </p>
+
     <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>Stratejinizi Geliştirin</h3>
     <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
       Zirveye oynamak sadece matematik yapmakla olmaz. RollerCoin pazar yerindeki arbitraj fırsatlarından (Marketplace), Koleksiyon Bonusu mantığına (Collection Bonus) kadar tüm detayları anlattığımız ansiklopedik kütüphanemizi okuyarak bir adım öne geçin. Deneyimli oyuncuların onlarca Ph/s güç biriktirmesinin arkasındaki stratejileri, F2P (ücretsiz oyuncu) olarak sıfırdan nasıl başlanacağını ve etkinlik dönemlerinde RLT'nizi en verimli nasıl kullanacağınızı öğrenin.
@@ -30,6 +43,7 @@ const SeoArticleTR: React.FC<{ lang: string }> = ({ lang }) => (
       <Link to={`/${lang}/guides/calculation-logic`} className="btn-primary" style={{ padding: '10px 18px' }}>Hesaplama Mantığını Öğren →</Link>
       <Link to={`/${lang}/guides/mining-power`} className="btn-secondary" style={{ padding: '10px 18px' }}>Hash Gücü Taktiklerini Oku →</Link>
       <Link to={`/${lang}/guides/f2p-strategy`} className="btn-secondary" style={{ padding: '10px 18px' }}>F2P Rehberini Oku →</Link>
+      <Link to={`/${lang}/faq`} className="btn-secondary" style={{ padding: '10px 18px' }}>Sıkça Sorulan Sorular →</Link>
     </div>
   </article>
 );
@@ -53,6 +67,19 @@ const SeoArticleEN: React.FC<{ lang: string }> = ({ lang }) => (
       <li><strong>League Charts &amp; Trend Analysis:</strong> Track historical power and payout data for each league with interactive charts to analyze market trends and league popularity over time.</li>
     </ul>
 
+    <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>How Does the Earnings Calculation Work?</h3>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
+      The fundamental formula behind RollerCoin mining is straightforward: <strong>Your Earnings = (Your Power / Total League Power) × Block Reward</strong>. However, multiple complex variables lie behind this simple equation. Different block durations for each coin, different reward multipliers for each league, and constantly shifting network power make manual calculation nearly impossible. Our calculator automatically fetches all these variables from the API and presents your daily, weekly, and monthly earning estimates with USD equivalents in seconds.
+    </p>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginTop: '10px' }}>
+      Additionally, the calculator shows the real-time league power distribution for each coin. This lets you see how competitive a coin is and how your rewards are split among other players. A less competitive coin in a high-power league could be more profitable than a popular coin in a lower league — the calculator helps you make such strategic decisions.
+    </p>
+
+    <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>Merge and Event Tools</h3>
+    <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
+      Beyond earnings calculation, our platform offers a <strong>Merge Calculator</strong> that analyzes miner crafting recipes and an <strong>Event Calculator</strong> that helps you plan your Progression Event budget. The merge tool applies Forge-level discounts to component requirements and factors in marketplace prices for accurate total cost estimation. The event tool details rewards at each tier, required RLT amounts, and multiplier costs so you can plan your spending before the event begins.
+    </p>
+
     <h3 style={{ marginTop: '25px', fontSize: '18px', color: 'var(--text-primary)' }}>Master Your Strategy</h3>
     <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>
       Conquering the leaderboards requires more than just basic math. Stay ahead by reading our encyclopedic deep-dives into Marketplace arbitrage opportunities, exact Collection Bonus configurations, and Free-to-Play persistence. Learn the strategies behind how experienced players accumulate dozens of Ph/s of power, how to start from zero as an F2P player, and how to deploy your RLT most efficiently during event seasons.
@@ -62,6 +89,7 @@ const SeoArticleEN: React.FC<{ lang: string }> = ({ lang }) => (
       <Link to={`/${lang}/guides/calculation-logic`} className="btn-primary" style={{ padding: '10px 18px' }}>Learn The Technical Logic →</Link>
       <Link to={`/${lang}/guides/mining-power`} className="btn-secondary" style={{ padding: '10px 18px' }}>Read Power Building Tactics →</Link>
       <Link to={`/${lang}/guides/f2p-strategy`} className="btn-secondary" style={{ padding: '10px 18px' }}>Read F2P Guide →</Link>
+      <Link to={`/${lang}/faq`} className="btn-secondary" style={{ padding: '10px 18px' }}>Frequently Asked Questions →</Link>
     </div>
   </article>
 );

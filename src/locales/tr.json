@@ -67,7 +67,31 @@
             "q8": "8. 'Mevcut Güç' ile 'Maksimum Güç' arasındaki fark nedir?",
             "a8": "'Mevcut Güç' (Current Power) TÜM güç kaynaklarını içerir: Madenciler, Raflar, Oyunlar (mini-oyun gücü), Geçici Güç, Freon ve Bonuslar. Bu, blok ödülü hesaplamalarında kullanılan toplam güçtür. 'Maksimum Güç' (Max Power / League Power) ise sadece Madenci + Raf + Bonus gücünü içerir ve hangi ligde olduğunuzu belirler. Oyun, Geçici ve Freon gücü lig atamanızı ETKİLEMEZ ancak madencilik kazancınızı artırır.",
             "q9": "9. Bu hesaplayıcıyı mobil cihazlarda kullanabilir miyim?",
-            "a9": "Evet, hesaplayıcı tamamen responsive (duyarlı) tasarıma sahiptir ve Chrome, Safari ve Firefox dahil tüm modern mobil tarayıcılarda sorunsuz çalışır. Arayüz, küçük ekranlara otomatik uyum sağlayarak dokunma dostu kontroller sunar. Ayrıca, ana ekranınıza Progressive Web App (PWA) olarak kurarak hızlı erişim sağlayabilirsiniz."
+            "a9": "Evet, hesaplayıcı tamamen responsive (duyarlı) tasarıma sahiptir ve Chrome, Safari ve Firefox dahil tüm modern mobil tarayıcılarda sorunsuz çalışır. Arayüz, küçük ekranlara otomatik uyum sağlayarak dokunma dostu kontroller sunar. Ayrıca, ana ekranınıza Progressive Web App (PWA) olarak kurarak hızlı erişim sağlayabilirsiniz.",
+            "q10": "10. Lig Grafikleri nedir ve nasıl kullanılır?",
+            "a10": "Lig Grafikleri, her lig ve kripto para kombinasyonu için tarihsel güç ve blok ödül trendlerini gösterir. 7 gün, 30 gün veya tüm zamanlar olarak filtreleyebilirsiniz. Bu, örneğin bir ligin gücü sürekli artıyorsa bireysel ödül payınızın orantılı olarak azalacağını anlamanıza yardımcı olur. Bu verileri hangi ligi hedefleyeceğinize veya ne zaman coin değiştireceğinize karar vermek için kullanın.",
+            "q11": "11. Birleştirme Hesaplayıcısı nasıl çalışır?",
+            "a11": "Birleştirme Hesaplayıcısı, RollerCoin'in crafting sistemindeki tüm madenci birleştirme tariflerini gösterir. Her tarif ortaya çıkan madenciyi, gücünü, bonus yüzdesini, RLT maliyetini ve gerekli parçaları gösterir. Forge seviyenizi (1-5) ayarlayarak doğru bileşen indirimini uygulayabilir, toplu hesaplama için merge sayısını ayarlayabilir ve pazar yerinden gerçek bileşen fiyatlarını girerek doğru toplam maliyet tahmini alabilirsiniz.",
+            "q12": "12. Progression Event nedir ve etkinlik hesaplayıcısı nasıl yardımcı olur?",
+            "a12": "Progression Event'ler, RollerCoin'de RLT harcayarak (pazar yeri takası veya doğrudan dönüşüm yoluyla) puan kazandığınız ve her seviyede özel ödüller açtığınız sınırlı süreli etkinliklerdir. Etkinlik hesaplayıcımız tüm ödül katmanlarını, seviye başına RLT maliyetini, çarpan hesaplamalarını ve kutu açma ücretlerini gösterir. Etkinlik başlamadan önce bütçenizi planlamanıza yardımcı olur.",
+            "q13": "13. Hesaplayıcı hangi kripto paraları destekler?",
+            "a13": "Hesaplayıcı RollerCoin'deki tüm kazılabilir kripto paraları destekler: Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Dogecoin (DOGE), BNB, Litecoin (LTC), XRP, Tron (TRX) ve POL (Polygon/MATIC). Oyun içi token kazançlarını da hesaplar: RLT, RST ve HMT. USDT kazançları gösterilir ancak stablecoin olduğu için fiyatı sabit $1'dır. ALGO ve USDT dışındaki tüm coinler çekim zamanlayıcısında görünür.",
+            "q14": "14. 'Blok Süresi' nedir ve neden önemlidir?",
+            "a14": "Blok Süresi, her kripto para için art arda kazılan bloklar arasındaki saniye sayısıdır. Varsayılan yaklaşık 600 saniyedir (10 dakika) ancak coine göre değişir. Daha kısa blok süreleri saat başına daha fazla blok ve dolayısıyla daha sık (ama daha küçük) ödüller anlamına gelir. Hesaplayıcı mevcut blok sürelerini API'den otomatik çeker, ancak Ayarlar'dan manuel moda geçerek kendiniz değiştirebilirsiniz.",
+            "q15": "15. Coin fiyatları neden borsalardan farklı görünüyor?",
+            "a15": "Fiyatlar varsayılan olarak Binance API'den çekilir (yedek olarak CoinGecko). Farklı borsalar arasındaki küçük fiyat farklılıkları normaldir. Binance bölgenizde engelleniyorsa Ayarlar'dan CoinGecko'ya geçebilirsiniz. Fiyat yalnızca USD karşılığı sütunu için kullanılır — gerçek kripto kazancınız hangi fiyat kaynağı seçilirse seçilsin aynı kalır.",
+            "q16": "16. Hesaplayıcıyı PWA (Progressive Web App) olarak nasıl kurarım?",
+            "a16": "Chrome'da (masaüstü veya mobil) adres çubuğundaki yükleme simgesini veya tarayıcı menüsündeki 'Ana Ekrana Ekle' seçeneğini kullanın. Safari'de (iOS) paylaş butonuna dokunup 'Ana Ekrana Ekle'yi seçin. Kurulduktan sonra hesaplayıcı yerel bir uygulama gibi açılır, daha hızlı yüklenir ve service worker sayesinde sınırlı bağlantıda bile çalışır.",
+            "q17": "17. Hesaplayıcı oyun içi gerçek kazançlarla ne kadar uyumlu?",
+            "a17": "Hesaplayıcı, RollerCoin API'sinden anlık verilerle yakın bir tahmin sunar. Ancak gerçek kazançlar biraz farklı olabilir çünkü: (1) ağ gücü oyuncular katılıp ayrıldıkça sürekli değişir, (2) blok süreleri ortalama etrafında dalgalanır, (3) kısa süreli sunucu bakımları olabilir. En doğru sonuçlar için 'Yenile' butonuyla sık sık taze veri çekin.",
+            "q18": "18. Oyun Tokenleri (RLT, RST, HMT) nedir ve neden ayrı gösteriliyor?",
+            "a18": "Oyun tokenleri, harici piyasa fiyatı olmayan oyun içi para birimleridir. RLT (RollerToken) pazar yeri alışverişleri, etkinlik katılımı ve madenci birleştirme için kullanılır. RST ikincil bir oyun tokenidir. HMT belirli oyun içi mekanikler için kullanılır. Borsalarda gerçek dünya USD değeri olmadığı için kripto paralardan ayrı bir sekmede gösterilirler. Blok ödülleri ve kazanç oranları yine aynı formülle hesaplanır.",
+            "q19": "19. Koleksiyon Bonusu nedir ve kazançları nasıl etkiler?",
+            "a19": "Koleksiyon Bonusu, koleksiyonunuzdaki benzersiz (farklı model) madencilere göre toplam madenci gücünüze uygulanan bir yüzde çarpanıdır. Sahip olduğunuz her farklı madenci modeli, bonus yüzdesini kümülatif bir toplama ekler. Örneğin, %1, %2, %1.5, %0.5 ve %3 bonuslu 5 benzersiz madenciyniz varsa toplam koleksiyon bonusunuz %8 olur. Bu %8, ham madenci gücünüze uygulanarak 'bedava' ekstra hash gücü sağlar.",
+            "q20": "20. Bu site kişisel verilerimi veya RollerCoin giriş bilgilerimi topluyor mu?",
+            "a20": "Hayır. Herhangi bir veritabanımız yoktur ve hiçbir kişisel bilgi saklamayız. RollerCoin kullanıcı adınız yalnızca oyunun API'sinden kamuya açık profil verilerini çekmek için kullanılır — şifrenizi veya giriş bilgilerinizi asla istemez veya işlemeyiz. Tüm hesaplamalar tarayıcınızda (client-side) gerçekleşir. Yerel olarak (tarayıcınızın LocalStorage'ında) saklanan tek veri, dil tercihi, lig seçimi ve önbelleğe alınmış hesaplama sonuçları gibi tercihlerinizdir.",
+            "q21": "21. Günlük Bonus Görevleri nedir?",
+            "a21": "Günlük Bonus Görevleri, RollerCoin'de tamamlandığında ek ödüller sunan günlük zorluklardır. Aracımız mevcut aktif görevi açıklaması, gerekli eylemi, ödül türü ve Sezon XP bonusu dahil olmak üzere getirir ve görüntüler. Geçmiş görevleri ve ödüllerini takip etmek için görev geçmişini de görüntüleyebilirsiniz."
         },
         "guides": {
             "title": "RollerCoin Strateji Rehberleri",
@@ -116,7 +140,9 @@
         "loading": "Grafik verileri yükleniyor...",
         "fetchError": "Grafik verileri yüklenemedi",
         "backToCalc": "Hesaplayıcıya Dön",
-        "date": "Tarih"
+        "date": "Tarih",
+        "seoTitle": "RollerCoin Lig Grafikleri Nedir?",
+        "seoContent": "Lig Grafikleri, RollerCoin'deki her lig için madencilik gücü ve blok ödül trendlerinin tarihsel bir görünümünü sunar. Bu grafikleri analiz ederek oyuncular, ağ rekabetinin ne zaman arttığını veya azaldığını tespit edebilir ve hangi coinleri kazacakları konusunda stratejik kararlar alabilirler. Grafik iki temel metriği çizer: sol eksendeki Ortalama Güç (Gh/s) zaman içindeki toplam ağ hash oranını, sağ eksendeki Ortalama Ödül ise seçilen kripto para cinsinden blok ödüllerini gösterir. Belirli zaman dilimlerine yakınlaştırmak veya tüm zamanların verisini görüntülemek için tarih aralığı filtrelerini kullanın."
     },
     "app": {
         "title": "RollerCoin Kazanç Hesaplayıcı",
@@ -410,6 +436,8 @@
         "partPricesDesc": "Pazar yerindeki anlık parça fiyatlarını girerek merge maliyetlerini daha isabetli hesaplayabilirsiniz. Boş bıraktığınız parçalar için API verisi kullanılır.",
         "clearAll": "Sıfırla",
         "save": "Kaydet",
+        "seoTitle": "RollerCoin Birleştirme ve Crafting Sistemi",
+        "seoContent": "RollerCoin'deki Birleştirme sistemi (Crafting olarak da bilinir), oyunculara çeşitli nadirliklerdeki mutasyon bileşenlerini (Hashboard, Fan ve Wire) birleştirerek yeni madenciler oluşturma veya mevcut madencileri daha yüksek seviyelere yükseltme imkanı tanır. Her birleştirme tarifinin sabit bir RLT maliyeti ve bileşen gereksinimleri vardır. Forge seviyesi (1-5) bileşen miktarlarında giderek daha büyük indirimler sağlar, bu nedenle pahalı birleştirmeler denemeden önce Forge'unuzu yükseltmeniz önemlidir. Birleştirme Hesaplayıcımız oyundaki tüm mevcut tarifleri çeker ve bileşen pazar yeri fiyatları dahil kesin maliyetleri hesaplamanıza olanak tanır.",
         "forgeLevel": "Forge Seviyesi",
         "mergeCount": "Adet"
     },

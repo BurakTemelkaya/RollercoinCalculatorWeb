@@ -1065,6 +1065,12 @@ export default function MergePage() {
                     </div>
                 </div>
             )}
+
+            {/* SEO Content Section */}
+            <article className="static-content seo-article-container" style={{ padding: '24px', backgroundColor: 'var(--surface-50)', borderRadius: '12px', marginTop: '32px' }}>
+                <h2 style={{ borderBottom: 'none', marginBottom: '12px', color: 'var(--primary-400)', fontSize: '18px' }}>{t('merge.seoTitle')}</h2>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.7' }}>{t('merge.seoContent')}</p>
+            </article>
         </div>
     );
 }

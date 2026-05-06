@@ -6,7 +6,24 @@ export default function FaqPage() {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
 
-  const faqItems = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'];
+  const faqItems = [
+    'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9',
+    'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21'
+  ];
+
+  // Build Schema.org FAQPage structured data
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map((item) => ({
+      "@type": "Question",
+      "name": t(`pages.faq.${item}`),
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": t(`pages.faq.a${item.slice(1)}`)
+      }
+    }))
+  };
 
   return (
     <div className="static-page-container">
@@ -14,6 +31,7 @@ export default function FaqPage() {
         <title>{t('pages.faq.title')} | {t('app.title')}</title>
         <meta name="description" content={t('seo.description')} />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/faq`} />
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
       <div className="static-back-link">

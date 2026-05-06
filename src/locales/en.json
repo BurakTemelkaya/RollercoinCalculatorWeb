@@ -52,7 +52,31 @@
             "q8": "8. What is the difference between 'Current Power' and 'Max Power'?",
             "a8": "'Current Power' includes ALL power sources: Miners, Racks, Games (mini-game power), Temporary Power, Freon, and Bonuses. This is the total power used for block reward calculations. 'Max Power' (or League Power) only includes Miners + Racks + Bonus power and determines which league you belong to. Games, Temporary, and Freon power do NOT affect your league placement but do increase your mining earnings.",
             "q9": "9. Can I use this calculator on mobile devices?",
-            "a9": "Yes, the calculator is fully responsive and works on all modern mobile browsers including Chrome, Safari, and Firefox. The interface automatically adapts to smaller screens with touch-friendly controls. You can also install it as a Progressive Web App (PWA) on your home screen for quick access."
+            "a9": "Yes, the calculator is fully responsive and works on all modern mobile browsers including Chrome, Safari, and Firefox. The interface automatically adapts to smaller screens with touch-friendly controls. You can also install it as a Progressive Web App (PWA) on your home screen for quick access.",
+            "q10": "10. What are League Charts and how do I use them?",
+            "a10": "League Charts show the historical trend of average network power and block payout for each league over time. You can select any league and cryptocurrency combination, then filter by date range (7 days, 30 days, or all time). This helps you identify patterns — for example, if a league's power is steadily increasing, your individual share of rewards will decrease proportionally. Use this data to decide which league to target or when to switch coins.",
+            "q11": "11. How does the Merge Calculator work?",
+            "a11": "The Merge Calculator displays all available miner merge recipes from RollerCoin's crafting system. Each recipe shows the resulting miner, its power, bonus percentage, RLT cost, and required parts. You can set your Forge level (1-5) to apply the correct component discount, adjust merge count for bulk calculations, and set custom marketplace prices for components to get accurate total cost estimates. The tool helps you decide whether a merge is worth the investment before spending your RLT.",
+            "q12": "12. What is a Progression Event and how does the event calculator help?",
+            "a12": "Progression Events are limited-time events in RollerCoin where you earn points by spending RLT (through marketplace trades or direct exchange) to unlock exclusive rewards at each level. Our event calculator shows all reward tiers, the RLT cost per level, multiplier calculations, and box opening costs. It helps you plan your budget before the event starts so you can decide how many levels you can afford and whether the rewards justify the investment.",
+            "q13": "13. What cryptocurrencies does the calculator support?",
+            "a13": "The calculator supports all mineable cryptocurrencies in RollerCoin: Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Dogecoin (DOGE), BNB, Litecoin (LTC), XRP, Tron (TRX), and POL (Polygon/MATIC). It also calculates in-game token earnings for RLT, RST, and HMT. USDT earnings are shown but since it's a stablecoin, its price is fixed at $1. All coins except ALGO and USDT appear in the withdrawal timer since they can be withdrawn from the game.",
+            "q14": "14. What is 'Block Duration' and why does it matter?",
+            "a14": "Block Duration (or Block Time) is the number of seconds between consecutive blocks being mined for each cryptocurrency. The default is approximately 600 seconds (10 minutes), but it varies by coin and can change over time. Shorter block times mean more blocks per hour, which means more frequent (but smaller) rewards. The calculator fetches current block durations from the API automatically, but you can switch to manual mode in Settings to override them.",
+            "q15": "15. Why do some coin prices show differently than on exchanges?",
+            "a15": "Prices are fetched from Binance API by default (with CoinGecko as a fallback option). Minor differences from other exchanges are normal due to slight price variations across platforms. If Binance is blocked in your region, you can switch to CoinGecko in the Settings modal. The price is used only for the USD equivalent column — your actual crypto earnings remain the same regardless of which price source is selected.",
+            "q16": "16. How do I install the calculator as a PWA (Progressive Web App)?",
+            "a16": "On Chrome (desktop or mobile), look for the install icon in the address bar or the 'Add to Home Screen' option in the browser menu. On Safari (iOS), tap the share button and select 'Add to Home Screen'. Once installed, the calculator opens like a native app, loads faster, and works even with limited connectivity since the service worker caches essential assets.",
+            "q17": "17. How accurate is the calculator compared to actual in-game earnings?",
+            "a17": "The calculator provides a close estimate based on real-time data from RollerCoin's API. However, actual earnings can vary slightly because: (1) network power changes constantly as players join/leave, (2) block times fluctuate around the average, (3) there may be brief server-side maintenance periods. For the most accurate results, fetch fresh data frequently using the 'Refresh' button.",
+            "q18": "18. What are Game Tokens (RLT, RST, HMT) and why are they shown separately?",
+            "a18": "Game tokens are in-game currencies with no external market price. RLT (RollerToken) is used for marketplace purchases, event participation, and miner crafting. RST is a secondary game token. HMT is used for specific in-game mechanics. Since they have no real-world USD value on exchanges, they are displayed in a separate tab from cryptocurrencies. Their block rewards and earning rates are still calculated using the same formula.",
+            "q19": "19. What is Collection Bonus and how does it affect earnings?",
+            "a19": "Collection Bonus is a percentage multiplier applied to your total miner power based on the unique miners in your collection. Each distinct miner model you own adds its bonus percentage to a cumulative total. For example, if you have 5 unique miners with bonuses of 1%, 2%, 1.5%, 0.5%, and 3%, your total collection bonus is 8%. This 8% is applied to your raw miner power to give you 'free' extra hash power. The Power Simulator accounts for this when you add new miners.",
+            "q20": "20. Does this site collect my personal data or RollerCoin credentials?",
+            "a20": "No. We do not have any database and do not store any personal information. Your RollerCoin username is only used to fetch publicly available profile data from the game's API — we never ask for or handle your password or login credentials. All calculations happen client-side in your browser. The only data stored locally (in your browser's LocalStorage) are your preferences like language, league selection, and cached calculation results.",
+            "q21": "21. What are Daily Bonus Quests?",
+            "a21": "Daily Bonus Quests are daily challenges in RollerCoin that offer additional rewards when completed. Our tool fetches and displays the current active quest including its description, required action, reward type, and Season XP bonus. You can also view quest history to track past quests and their rewards."
         },
         "guides": {
             "title": "RollerCoin Strategy Guides",
@@ -115,7 +139,9 @@
         "loading": "Loading chart data...",
         "fetchError": "Failed to load chart data",
         "backToCalc": "Back to Calculator",
-        "date": "Date"
+        "date": "Date",
+        "seoTitle": "What Are RollerCoin League Charts?",
+        "seoContent": "League Charts provide a historical overview of mining power and block payout trends for each league in RollerCoin. By analyzing these graphs, players can identify when network competition is increasing or decreasing, helping them make strategic decisions about which coins to mine. The chart plots two key metrics: Average Power (Gh/s) on the left axis showing total network hash rate over time, and Average Payout on the right axis showing block rewards in the selected cryptocurrency. Use the date range filters to zoom into specific time periods or view all-time data. This information is invaluable for long-term mining strategy optimization."
     },
     "app": {
         "title": "Rollercoin Calculator",
@@ -409,6 +435,8 @@
         "partPricesDesc": "Enter the current part prices from the marketplace to calculate merge costs more accurately. For parts left blank, API data will be used.",
         "clearAll": "Clear All",
         "save": "Save",
+        "seoTitle": "Understanding RollerCoin's Merge & Crafting System",
+        "seoContent": "The Merge system (also known as Crafting) in RollerCoin allows players to combine mutation components — Hashboards, Fans, and Wires of various rarities — to create new miners or upgrade existing ones to higher levels. Each merge recipe has a fixed RLT cost plus component requirements. The Forge level (1-5) provides progressively larger discounts on component quantities, making it essential to upgrade your Forge before attempting expensive merges. Our Merge Calculator fetches all available recipes from the game and lets you calculate exact costs including component marketplace prices, helping you determine whether a merge is more cost-effective than buying the miner directly from the marketplace. Use the search and sort features to find the best value merges for your budget.",
         "forgeLevel": "Forge Level",
         "mergeCount": "Count"
     },
