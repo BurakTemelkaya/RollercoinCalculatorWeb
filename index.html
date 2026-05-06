@@ -5,6 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Redirect trailing-slash URLs to prevent duplicate pages in search engines -->
+  <script>
+    (function () {
+      var p = window.location.pathname;
+      if (p.length > 1 && p.endsWith('/')) {
+        window.location.replace(p.slice(0, -1) + window.location.search + window.location.hash);
+      }
+    })();
+  </script>
+
   <!-- Primary SEO -->
   <title>Rollercoin Calculator | Earnings & Withdrawal Calculator</title>
   <meta name="description"
@@ -87,7 +97,7 @@
   <script>
     window.AdManager = {
         loadAd: function(containerId, aadsId, aadsW, aadsH, adsterraKey, adsterraW, adsterraH) {
-            if (navigator.userAgent.includes('ReactSnap')) return;
+
             const container = document.getElementById(containerId);
             if (!container) return;
 
@@ -238,7 +248,7 @@
   <script type="module" src="/src/main.tsx"></script>
   <script>
     // Service Worker: forces fresh index.html on navigation, auto-reloads on new deploy
-    if ('serviceWorker' in navigator && navigator.userAgent.indexOf('ReactSnap') === -1) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').then(function (reg) {
         reg.addEventListener('updatefound', function () {
           var newWorker = reg.installing;

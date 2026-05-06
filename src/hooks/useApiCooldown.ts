@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 export const API_CACHE_KEY = 'rollercoin_web_api_last_fetch';
-const CACHE_COOLDOWN_MS = 15 * 1000;
+const CACHE_COOLDOWN_MS = 10 * 1000;
 
 export function useApiCooldown() {
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
