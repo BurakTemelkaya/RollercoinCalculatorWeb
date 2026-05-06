@@ -24,6 +24,7 @@ export default defineConfig({
           'vendor-html2canvas': ['html2canvas'],
           'vendor-radix': ['@radix-ui/react-select'],
           'vendor-helmet': ['react-helmet-async'],
+          'vendor-chartjs': ['chart.js', 'react-chartjs-2'],
         }
       }
     }

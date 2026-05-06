@@ -20,32 +20,52 @@ import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
 import { NAV_ICONS } from './components/MainLayout';
 
+// Seamless update: when a deploy removes old JS chunks, the dynamic import fails.
+// This wrapper catches that error and does a single transparent reload so the user
+// gets the new version without any prompts — just like YouTube / Google.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lazyWithRetry(importFn: () => Promise<{ default: React.ComponentType<any> }>) {
+  return React.lazy(() =>
+    importFn().catch(() => {
+      // Prevent infinite reload loop with a sessionStorage flag
+      const reloadKey = 'rollercoin_chunk_reload';
+      if (!sessionStorage.getItem(reloadKey)) {
+        sessionStorage.setItem(reloadKey, '1');
+        window.location.reload();
+      }
+      // Return a no-op component so TypeScript is happy (won't actually render)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { default: (() => null) as React.ComponentType<any> };
+    })
+  );
+}
+
 // Lazy load complex components to improve initial load and shorten critical request chains
-const WithdrawTimer = React.lazy(() => import('./components/WithdrawTimer'));
-const PowerSimulator = React.lazy(() => import('./components/PowerSimulator'));
-const SettingsModal = React.lazy(() => import('./components/SettingsModal'));
-const ColumnSettingsModal = React.lazy(() => import('./components/ColumnSettingsModal'));
-const ProgressionEvent = React.lazy(() => import('./components/ProgressionEvent'));
-const ProgressionEventHistory = React.lazy(() => import('./components/ProgressionEventHistory'));
-const AboutPage = React.lazy(() => import('./components/AboutPage'));
-const PrivacyPage = React.lazy(() => import('./components/PrivacyPage'));
-const FaqPage = React.lazy(() => import('./components/FaqPage'));
-const GuidesPage = React.lazy(() => import('./components/GuidesPage'));
-const F2PGuide = React.lazy(() => import('./components/guides/F2PGuide'));
-const BonusPowerGuide = React.lazy(() => import('./components/guides/BonusPowerGuide'));
-const MarketplaceArbitrageGuide = React.lazy(() => import('./components/guides/MarketplaceArbitrageGuide'));
-const MiningPowerGuide = React.lazy(() => import('./components/guides/MiningPowerGuide'));
-const CalculationLogicGuide = React.lazy(() => import('./components/guides/CalculationLogicGuide'));
-const SupportPage = React.lazy(() => import('./components/SupportPage'));
-const LeagueChart = React.lazy(() => import('./components/LeagueChart'));
-const BlogPage = React.lazy(() => import('./components/BlogPage'));
-const WhatIsRollercoin = React.lazy(() => import('./components/blog/WhatIsRollercoin'));
-const LeagueSystemExplained = React.lazy(() => import('./components/blog/LeagueSystemExplained'));
-const MarketplaceTradingGuide = React.lazy(() => import('./components/blog/MarketplaceTradingGuide'));
-const MostProfitableCoin = React.lazy(() => import('./components/blog/MostProfitableCoin'));
-const BeginnersCompleteGuide = React.lazy(() => import('./components/blog/BeginnersCompleteGuide'));
-const MergePage = React.lazy(() => import('./components/MergePage'));
-const DailyBonusQuestHistory = React.lazy(() => import('./components/DailyBonusQuestHistory'));
+const WithdrawTimer = lazyWithRetry(() => import('./components/WithdrawTimer'));
+const PowerSimulator = lazyWithRetry(() => import('./components/PowerSimulator'));
+const SettingsModal = lazyWithRetry(() => import('./components/SettingsModal'));
+const ColumnSettingsModal = lazyWithRetry(() => import('./components/ColumnSettingsModal'));
+const ProgressionEvent = lazyWithRetry(() => import('./components/ProgressionEvent'));
+const ProgressionEventHistory = lazyWithRetry(() => import('./components/ProgressionEventHistory'));
+const AboutPage = lazyWithRetry(() => import('./components/AboutPage'));
+const PrivacyPage = lazyWithRetry(() => import('./components/PrivacyPage'));
+const FaqPage = lazyWithRetry(() => import('./components/FaqPage'));
+const GuidesPage = lazyWithRetry(() => import('./components/GuidesPage'));
+const F2PGuide = lazyWithRetry(() => import('./components/guides/F2PGuide'));
+const BonusPowerGuide = lazyWithRetry(() => import('./components/guides/BonusPowerGuide'));
+const MarketplaceArbitrageGuide = lazyWithRetry(() => import('./components/guides/MarketplaceArbitrageGuide'));
+const MiningPowerGuide = lazyWithRetry(() => import('./components/guides/MiningPowerGuide'));
+const CalculationLogicGuide = lazyWithRetry(() => import('./components/guides/CalculationLogicGuide'));
+const SupportPage = lazyWithRetry(() => import('./components/SupportPage'));
+const LeagueChart = lazyWithRetry(() => import('./components/LeagueChart'));
+const BlogPage = lazyWithRetry(() => import('./components/BlogPage'));
+const WhatIsRollercoin = lazyWithRetry(() => import('./components/blog/WhatIsRollercoin'));
+const LeagueSystemExplained = lazyWithRetry(() => import('./components/blog/LeagueSystemExplained'));
+const MarketplaceTradingGuide = lazyWithRetry(() => import('./components/blog/MarketplaceTradingGuide'));
+const MostProfitableCoin = lazyWithRetry(() => import('./components/blog/MostProfitableCoin'));
+const BeginnersCompleteGuide = lazyWithRetry(() => import('./components/blog/BeginnersCompleteGuide'));
+const MergePage = lazyWithRetry(() => import('./components/MergePage'));
+const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -297,7 +317,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260506.061705';
+  const CURRENT_CACHE_VERSION = '20260506.063518';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -703,17 +723,17 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
           isOpen={columnModalOpen}
           onClose={() => setColumnModalOpen(false)}
           visibleColumns={visibleColumns}
-          onVisibleColumnsChange={(newCols) => {
+          onVisibleColumnsChange={(newCols: Set<TableColumnType>) => {
             setVisibleColumns(newCols);
             localStorage.setItem(STORAGE_KEYS.TABLE_COLUMNS, JSON.stringify([...newCols]));
           }}
           customPeriodDays={customPeriodDays}
           customPeriodHours={customPeriodHours}
-          onCustomPeriodDaysChange={(days) => {
+          onCustomPeriodDaysChange={(days: number) => {
             setCustomPeriodDays(days);
             localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_DAYS, days.toString());
           }}
-          onCustomPeriodHoursChange={(hours) => {
+          onCustomPeriodHoursChange={(hours: number) => {
             setCustomPeriodHours(hours);
             localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_HOURS, hours.toString());
           }}

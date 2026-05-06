@@ -42,6 +42,9 @@ function normalizeInitialUrl() {
 
 normalizeInitialUrl()
 
+// Clear chunk reload flag on successful boot so future deploys can trigger it again
+sessionStorage.removeItem('rollercoin_chunk_reload');
+
 const container = document.getElementById('root')!
 
 createRoot(container).render(
