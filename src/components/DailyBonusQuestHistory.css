@@ -1,41 +1,83 @@
 /* ===== Daily Bonus Quest History Page ===== */
 
 .dbqh-container {
+    width: 100%;
     max-width: 900px;
     margin: 0 auto;
 }
 
+/* Header — matches ProgressionEventHistory layout */
 .dbqh-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 24px;
+    flex-wrap: wrap;
 }
 
-.dbqh-header-left,
+.dbqh-header-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .dbqh-header-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+}
+
+.dbqh-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #ff7b00, #cc4400);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    transition: all 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.dbqh-back-btn:hover {
+    background: linear-gradient(135deg, #ff9433, #e65c00);
+    border-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 6px 15px rgba(204, 68, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+.dbqh-back-btn:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+    margin-top: 2px;
 }
 
 .dbqh-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text-primary, #e2e8f0);
     margin: 0;
     text-align: center;
+    flex: 1;
+    min-width: 180px;
 }
 
 .dbqh-count {
     font-size: 13px;
     color: var(--text-secondary, #94a3b8);
     background: rgba(255, 255, 255, 0.04);
-    padding: 4px 12px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm, 8px);
     border: 1px solid rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
 }
 
 /* Loading & Error */
@@ -52,10 +94,10 @@
     color: var(--text-secondary, #94a3b8);
 }
 
-/* Grid */
+/* Grid — 2 columns on desktop */
 .dbqh-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
 
@@ -173,10 +215,23 @@
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+    .dbqh-grid {
+        grid-template-columns: 1fr;
+    }
+
     .dbqh-header {
         flex-direction: column;
+        align-items: stretch;
         text-align: center;
+    }
+
+    .dbqh-header-left {
+        justify-content: center;
+    }
+
+    .dbqh-header-right {
+        justify-content: center;
     }
 
     .dbqh-card {

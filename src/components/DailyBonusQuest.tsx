@@ -103,8 +103,8 @@ export default function DailyBonusQuest() {
                 <span className="dbq-tag">BONUS</span>
                 <Link
                     to={`/${lang}/daily-quests`}
-                    className="dbq-history-btn"
-                    title={t('dailyQuest.questHistory')}
+                    className="dbq-history-btn dbq-tooltip"
+                    data-full={t('dailyQuest.questHistory')}
                 >
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" />
@@ -126,7 +126,7 @@ export default function DailyBonusQuest() {
                 <div className="dbq-info">
                     <div className="dbq-title-row">
                         <span className="dbq-title">{title}</span>
-                        <span className="dbq-info-tooltip" title={description}>
+                        <span className="dbq-info-tooltip dbq-tooltip" data-full={description}>
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
                             </svg>

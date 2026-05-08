@@ -10,6 +10,7 @@ import type { PaginatedResponse } from '../types/pagination';
 import xpIcon from '../assets/items/xp.png';
 import Pagination from './Pagination';
 import './DailyBonusQuestHistory.css';
+import './DailyBonusQuest.css';
 
 const PAGE_SIZE = 10;
 
@@ -34,6 +35,23 @@ function resolveTitle(title: string, quest: DailyBonusQuest): string {
     const additionalData = normalizeAdditionalData(quest.additionalData);
     return resolveQuestTemplate(title, quest, {
         rewardPlaceholder: '...',
+        additionalData,
+        formatOptions: { fallbackDivisor: 1e6 }
+    });
+}
+
+function resolveDescription(description: string, quest: DailyBonusQuest): string {
+    const additionalData = normalizeAdditionalData(quest.additionalData);
+    // Build a simple reward summary for description
+    const rewardSummary = quest.dailyBonusQuestRewards.map(r => {
+        if (r.type === 'season_xp') return `${r.amount} Season XP`;
+        if (r.type === 'money' && r.currency) {
+            return `${formatAmountWithFallback(r.amount, r.currency.name)} ${r.currency.name}`;
+        }
+        return '';
+    }).filter(Boolean).join(' + ');
+    return resolveQuestTemplate(description, quest, {
+        rewardSummary,
         additionalData,
         formatOptions: { fallbackDivisor: 1e6 }
     });
@@ -79,7 +97,7 @@ export default function DailyBonusQuestHistory() {
             {/* Header */}
             <div className="dbqh-header">
                 <div className="dbqh-header-left">
-                    <Link to={`/${lang}`} className="pe-header-back-btn">
+                    <Link to={`/${lang}`} className="dbqh-back-btn">
                         {t('event.backToCalc')}
                     </Link>
                 </div>
@@ -131,6 +149,11 @@ export default function DailyBonusQuestHistory() {
                                     <div className="dbqh-card-header">
                                         <span className="dbq-tag">BONUS</span>
                                         <span className="dbqh-card-title">{title}</span>
+                                        <span className="dbq-info-tooltip dbq-tooltip" data-full={resolveDescription(quest.description, quest)}>
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                                            </svg>
+                                        </span>
                                         {isFirst && (
                                             <span className="dbqh-badge-latest">{t('event.latest')}</span>
                                         )}

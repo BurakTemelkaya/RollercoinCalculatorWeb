@@ -317,7 +317,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260507.210142';
+  const CURRENT_CACHE_VERSION = '20260508.043619';
 
   // Load from localStorage on mount
   useEffect(() => {

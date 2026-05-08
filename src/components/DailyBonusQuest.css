@@ -15,7 +15,7 @@
         0 0 12px rgba(45, 216, 208, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.03);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .dbq-card::before {
@@ -26,6 +26,8 @@
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(45, 216, 208, 0.3), transparent);
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
 }
 
 .dbq-card.dbq-loading {
@@ -130,6 +132,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    overflow: visible;
 }
 
 .dbq-title-row {
@@ -137,6 +140,8 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    overflow: visible;
+    max-width: 100%;
 }
 
 .dbq-title {
@@ -159,6 +164,61 @@
 
 .dbq-info-tooltip:hover {
     color: #2dd8d0;
+}
+
+/* Styled tooltip popup (matches earning-crypto-tooltip pattern) */
+.dbq-tooltip {
+    position: relative;
+    outline: none;
+}
+
+.dbq-tooltip::after {
+    content: attr(data-full);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-tertiary, #1e293b);
+    border: 1px solid rgba(45, 216, 208, 0.4);
+    color: var(--text-primary, #e2e8f0);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: normal;
+    max-width: 320px;
+    width: max-content;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 130;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    text-align: left;
+}
+
+/* Right-aligned elements: shift tooltip left so it doesn't overflow */
+.dbq-history-btn.dbq-tooltip::after {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+@media (hover: hover) {
+    .dbq-tooltip:hover::after {
+        opacity: 1;
+    }
+}
+
+@media (hover: none) {
+    .dbq-tooltip:hover::after {
+        opacity: 0;
+    }
+
+    .dbq-tooltip:focus::after,
+    .dbq-tooltip:active::after {
+        opacity: 1;
+    }
 }
 
 /* Action Buttons */
