@@ -203,7 +203,7 @@
     <div style="padding-top: 0; padding-bottom: 0;">
       <div
         style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
-        <div
+        <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
           <div id="left-side-ad" style="width: 160px; height: 600px;"></div>
           <script>
@@ -219,7 +219,7 @@
     <div style="padding-top: 0; padding-bottom: 0;">
       <div
         style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
-        <div
+        <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
           <iframe data-aa="2429727"
             src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe"
@@ -278,11 +278,78 @@
       }
     }
 
+    /* Side ad containers stay visible when ads are blocked — content is replaced with support links */
+
+    /* Support link fallback styles for side ads (160x600 ad space) */
+    .ad-support-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 0;
+      width: 160px;
+      height: 600px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+    }
+
+    .ad-support-fallback .fallback-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .ad-support-fallback a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 140px;
+      padding: 10px 8px;
+      background: rgba(30, 36, 51, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 10px;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .ad-support-fallback a:hover {
+      background: rgba(37, 43, 59, 0.95);
+      border-color: rgba(99, 102, 241, 0.35);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .ad-support-fallback a img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .ad-support-fallback a span {
+      line-height: 1.2;
+    }
+
     /* Mobile: show bottom ad on small screens */
     @media (max-width: 1024px) {
       .aads-mobile-only {
         display: block;
       }
+    }
+
+    /* Hide mobile ads when blocked */
+    body.ads-blocked .aads-mobile-only {
+      display: none !important;
     }
   </style>
   <script type="module" src="/src/main.tsx"></script>
@@ -291,6 +358,22 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');
     }
+
+    // Ad-blocker detection
+    // Sets 'ads-blocked' class on body — React components (SideAdFallback) handle the UI.
+    (function() {
+      var testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
+      setTimeout(function() {
+        fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
+          .then(function() {
+            // Resources accessible — no ad-blocker
+          })
+          .catch(function() {
+            // Fetch blocked — ad-blocker detected
+            document.body.classList.add('ads-blocked');
+          });
+      }, 1000);
+    })();
   </script>
 
 </body>

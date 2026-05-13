@@ -4,11 +4,9 @@ import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import './i18n'
 import App from './App.tsx'
-
 import { BrowserRouter } from 'react-router-dom'
 
 function normalizeInitialUrl() {
-  // Suppress expected console errors during react-snap prerendering for a clean build output
   if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
     console.error = () => {};
   }
@@ -18,7 +16,6 @@ function normalizeInitialUrl() {
   let search = l.search
   let hash = l.hash
 
-  // Restore clean URL when arriving from 404.html redirect (/?/path format)
   if (search && search.indexOf('?/') === 0) {
     const decoded = search
       .slice(1)
@@ -33,6 +30,11 @@ function normalizeInitialUrl() {
     hash = restoredUrl.hash
   }
 
+  // Trailing slash kaldır (root "/" hariç)
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    pathname = pathname.replace(/\/+$/, '');
+  }
+
   const current = l.pathname + l.search + l.hash
   const target = pathname + search + hash
   if (target !== current) {
@@ -42,11 +44,13 @@ function normalizeInitialUrl() {
 
 normalizeInitialUrl()
 
-// Clear chunk reload flag on successful boot so future deploys can trigger it again
 sessionStorage.removeItem('rollercoin_chunk_reload');
 
 const container = document.getElementById('root')!
 
+// Pre-rendered HTML sadece SEO crawlerlar için kullanılır.
+// Hydration yerine createRoot kullanarak React #418 hatasını önlüyoruz.
+// Crawlerlar JS çalıştırmadığı için statik HTML'i zaten okuyabilir.
 createRoot(container).render(
   <StrictMode>
     <HelmetProvider>
@@ -55,5 +59,4 @@ createRoot(container).render(
       </BrowserRouter>
     </HelmetProvider>
   </StrictMode>
-)
-
+);

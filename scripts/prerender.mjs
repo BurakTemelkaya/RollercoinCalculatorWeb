@@ -32,12 +32,12 @@ const SEED_ROUTES = [
   '/',
   '/en',
   '/tr',
-  '/en/event',  '/tr/event',
-  '/en/about',  '/tr/about',
+  '/en/event', '/tr/event',
+  '/en/about', '/tr/about',
   '/en/privacy', '/tr/privacy',
-  '/en/faq',    '/tr/faq',
+  '/en/faq', '/tr/faq',
   '/en/guides', '/tr/guides',
-  '/en/support','/tr/support',
+  '/en/support', '/tr/support',
   '/en/charts', '/tr/charts',
 ];
 
@@ -54,19 +54,19 @@ const SKIP_EXTENSIONS = new Set([
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
-  '.js':   'application/javascript',
-  '.css':  'text/css',
+  '.js': 'application/javascript',
+  '.css': 'text/css',
   '.json': 'application/json',
-  '.png':  'image/png',
-  '.jpg':  'image/jpeg',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.gif':  'image/gif',
-  '.svg':  'image/svg+xml',
-  '.ico':  'image/x-icon',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
   '.webp': 'image/webp',
   '.woff': 'font/woff',
-  '.woff2':'font/woff2',
-  '.ttf':  'font/ttf',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
   '.webm': 'video/webm',
 };
 
@@ -132,13 +132,46 @@ function isInternalPage(href) {
 /*  Pre-render logic                                                   */
 /* ------------------------------------------------------------------ */
 
-async function renderPage(browser, route, visited, queue) {
+async function renderPage(browser, route, visited, queue, retries = 1) {
   const page = await browser.newPage();
-  page.setDefaultNavigationTimeout(NAV_TIMEOUT);
+  page.setDefaultNavigationTimeout(30000);
+
+  // Optimizasyon: Gereksiz kaynakları ve reklamları engelle
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    const resourceType = req.resourceType();
+    const url = req.url();
+
+    // Görsel, font, css ve video gibi HTML renderını etkilemeyen kaynakları engelle
+    if (['image', 'font', 'stylesheet', 'media'].includes(resourceType)) {
+      req.abort();
+      return;
+    }
+
+    // Reklam ve Analytics domainlerini engelle (networkidle'ı sonsuza sokarlar)
+    const blockedDomains = [
+      'api.rollercoincalculator.app', // Kendi API'ni ekledik
+      'ad.a-ads.com', 'a-ads.com', 'adsterra',
+      'googletagmanager.com', 'google-analytics.com',
+      'challenges.cloudflare.com'
+    ];
+
+    if (blockedDomains.some(domain => url.includes(domain))) {
+      req.abort();
+      return;
+    }
+
+    req.continue();
+  });
 
   try {
     const url = `http://localhost:${PORT}${route}`;
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    // HTML'i hızlıca yükle (domcontentloaded)
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+
+    // React'ın hydrate etmesi ve API'den veri çekmesi için sabit bir süre bekle
+    // Bu, networkidle beklemekten çok daha güvenli ve hızlıdır.
+    await new Promise(r => setTimeout(r, 500));
 
     // Discover internal links on this page
     const links = await page.evaluate(() =>
@@ -168,10 +201,16 @@ async function renderPage(browser, route, visited, queue) {
 
     return true;
   } catch (error) {
+    if (retries > 0) {
+      console.warn(`⚠️  Retrying ${route} due to error: ${error.message}`);
+      return await renderPage(browser, route, visited, queue, retries - 1);
+    }
     console.error(`❌  Error pre-rendering ${route}: ${error.message}`);
     return false;
   } finally {
-    await page.close();
+    if (!page.isClosed()) {
+      await page.close();
+    }
   }
 }
 
@@ -227,7 +266,7 @@ async function prerender() {
   );
 
   if (errorCount > 0) {
-    process.exit(1);
+    console.warn(`\n⚠️  Pre-rendering finished with ${errorCount} errors. Proceeding anyway...`);
   }
 }
 

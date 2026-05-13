@@ -1,59 +1,68 @@
-name: Deploy to GitHub Pages
+name: Deploy Rollercoin Frontend to VDS via GHCR
 
 on:
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: ["main"] # Frontend branch'in 'main' ise böyle kalmalı
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
-  # Build job
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Kodu Cek
+        uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      # 1. ADIM: GHCR'a Giriş Yap
+      - name: GHCR Giris
+        uses: docker/login-action@v3
         with:
-          node-version: "20"
-          cache: 'npm'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm ci
+      # Kullanıcı adını küçük harfe çevir (Docker tag gereksinimi)
+      - name: Kullanici adini kucuk harfe cevir
+        run: echo "REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >>${GITHUB_ENV}
 
-      - name: Build
-        run: npm run build
-
-      - name: Copy config files
-        run: cp _config.yml dist/ && cp public/.nojekyll dist/
-
-      - name: upload artifact
-        uses: actions/upload-pages-artifact@v5
+      # 2. ADIM: Docker İmajını Build Al ve GHCR'a Pushla
+      - name: Build ve Push
+        uses: docker/build-push-action@v5
         with:
-          path: ./dist
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ env.REPO_OWNER }}/rollercoin-frontend:latest
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      # 3. ADIM: VDS'e SSH ile Bağlan ve Güncelle
+      - name: VDS Deploy (SSH)
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          REPO_OWNER: ${{ env.REPO_OWNER }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        with:
+          host: ${{ secrets.VDS_IP }}
+          username: ${{ secrets.VDS_USER }} # DİKKAT: Backend'deki gibi 'USERNAME' yaptık!
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: REPO_OWNER, GH_PAT
+          script: |
+            # 1. GHCR'a giriş yap
+            echo "$GH_PAT" | docker login ghcr.io -u "$REPO_OWNER" --password-stdin
+            
+            # 2. Proje klasörüne git (Dizin adını kontrol et!)
+            cd /home/app/RollercoinCalculatorWeb
+            
+            # 3. Frontend imajını güncellemek için IMAGE_TAG oluştur (opsiyonel ama sağlıklı)
+            echo "FRONTEND_IMAGE_TAG=ghcr.io/$REPO_OWNER/rollercoin-frontend:latest" > .env.frontend
+            
+            # 4. Yeni imajı çek
+            docker pull ghcr.io/$REPO_OWNER/rollercoin-frontend:latest
+            
+            # 5. Sadece frontend servisini zorla yeniden yarat (Warp veya Backend etkilenmez)
+            docker compose up -d --force-recreate rollercoin_frontend
+            
+            # 6. Kullanılmayan eski frontend imajlarını sil
+            docker image prune -f

@@ -456,5 +456,8 @@
         "totalQuests": "{{count}} görev",
         "viewDetails": "Detayları Gör",
         "noQuests": "Görev bulunamadı."
+    },
+    "ads": {
+        "supportUs": "☕ Bizi Destekleyin — Referanslar & Bağışlar"
     }
 }

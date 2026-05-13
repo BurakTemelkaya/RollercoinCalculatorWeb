@@ -50,6 +50,11 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 /* Custom Scrollbar */
@@ -142,6 +147,41 @@ body {
 
 .top-ad-wrapper {
   flex-shrink: 0;
+}
+
+/* Support link fallback for top ad when ads are blocked */
+.top-ad-support-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 20px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 191, 36, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.top-ad-support-link:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(251, 191, 36, 0.15));
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+.top-ad-support-icon {
+  font-size: 18px;
+}
+
+.top-ad-support-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 1200px) {

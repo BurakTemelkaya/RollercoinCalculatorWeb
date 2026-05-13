@@ -1,0 +1,15 @@
+services:
+  rollercoin_frontend:
+    container_name: rollercoin_frontend
+    # Artik build almıyoruz, hazır imajı kullanıyoruz:
+    image: ghcr.io/BurakTemelkaya/rollercoin-frontend:latest
+    restart: always
+    networks:
+      - global-rollercoin-network
+    # Gerekirse port yönlendirmesi (Nginx 80 kullanıyor)
+    # ports:
+    #   - "80:80"
+
+networks:
+  global-rollercoin-network:
+    external: true

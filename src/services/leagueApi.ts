@@ -19,7 +19,8 @@ import { CURRENCY_MAP } from '../data/leagues';
  */
 export async function fetchLeaguesFromApi(): Promise<ApiLeaguesResponse> {
     const url = getApiUrl('leagues');
-    return apiGet<ApiLeaguesResponse>(url);
+    const data = await apiGet<ApiLeaguesResponse>(url);
+    return data;
 }
 
 /**
