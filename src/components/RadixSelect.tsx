@@ -71,11 +71,10 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                                         src={selectedOption.icon}
                                         alt={selectedOption.iconAlt || selectedOption.label}
                                         style={{ width: 20, height: 'auto', objectFit: 'contain', borderRadius: '2px' }}
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.onerror = null;
-                                            target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                                        }}
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.style.display = 'none';
+                                                    }}
                                     />
                                 )}
                                 <span>{selectedOption.label}</span>
@@ -117,8 +116,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                                                     style={{ width: 20, height: 'auto', objectFit: 'contain', borderRadius: '2px' }}
                                                     onError={(e) => {
                                                         const target = e.target as HTMLImageElement;
-                                                        target.onerror = null;
-                                                        target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                                        target.style.display = 'none';
                                                     }}
                                                 />
                                             )}

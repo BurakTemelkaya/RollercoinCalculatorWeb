@@ -142,8 +142,10 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     const resourceType = req.resourceType();
     const url = req.url();
 
-    // Görsel, font, css ve video gibi HTML renderını etkilemeyen kaynakları engelle
-    if (['image', 'font', 'stylesheet', 'media'].includes(resourceType)) {
+    // Görsel, font ve video gibi HTML renderını etkilemeyen kaynakları engelle
+    // DİKKAT: 'stylesheet' engellenmemeli! Vite dynamic import'ları CSS dosyalarını bekler, 
+    // yüklenemezse hata fırlatır ve App.tsx'teki reload döngüsünü tetikler.
+    if (['image', 'font', 'media'].includes(resourceType)) {
       req.abort();
       return;
     }

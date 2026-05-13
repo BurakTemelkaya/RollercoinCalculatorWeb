@@ -1855,6 +1855,22 @@ a:hover {
   transform: scale(1.1);
 }
 
+/* Crowdin Link */
+.crowdin-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.25s ease;
+  margin-left: 12px;
+}
+
+.crowdin-link:hover {
+  color: #1a73e8; /* Crowdin blue ish or just generic blue */
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}
+
 /* Nav Icons & Animated Coffee */
 .nav-icon {
   flex-shrink: 0;
