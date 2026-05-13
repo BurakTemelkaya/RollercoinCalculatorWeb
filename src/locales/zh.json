@@ -149,8 +149,8 @@
         "powerBadge": "算力",
         "footerText": "数据基于手动输入。请访问 rollercoin.com 获取最新数据。",
         "footerLink": "Rollercoin 收益计算器",
-        "joinCommunity": "JOIN THE COMMUNITY",
-        "disclaimer": "Rollercoin Calculator is an independent project and is not officially affiliated with RollerCoin."
+        "joinCommunity": "加入社区",
+        "disclaimer": "Rollercoin Calculator 是一个独立项目，与 RollerCoin 没有官方附属关系。"
     },
     "tabs": {
         "earnings": "收益计算器",
