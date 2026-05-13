@@ -2,11 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import trFlag from '../assets/flags/tr.svg';
-import gbFlag from '../assets/flags/gb.svg';
 import appLogo from '../assets/logo.png';
 import TurnstileProvider from './TurnstileProvider';
 import SideAdFallback from './SideAdFallback';
+import RadixSelect, { SelectOption } from './RadixSelect';
+
+const SUPPORTED_LANGUAGES: SelectOption[] = [
+  { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
+  { value: 'tr', label: 'Türkçe', icon: 'https://flagcdn.com/w20/tr.png' },
+  { value: 'zh', label: 'Chinese Simplified', icon: 'https://flagcdn.com/w20/cn.png' },
+  { value: 'fr', label: 'Français', icon: 'https://flagcdn.com/w20/fr.png' },
+  { value: 'id', label: 'Bahasa Indonesia', icon: 'https://flagcdn.com/w20/id.png' },
+  { value: 'pt', label: 'Português', icon: 'https://flagcdn.com/w20/pt.png' },
+  { value: 'ru', label: 'Русский', icon: 'https://flagcdn.com/w20/ru.png' },
+  { value: 'es', label: 'Español', icon: 'https://flagcdn.com/w20/es.png' },
+];
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
 
@@ -31,13 +41,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   // Extract lang from path part 1, fallback to i18n
   const langFromPath = location.pathname.split('/')[1];
-  const lang = (langFromPath === 'tr' || langFromPath === 'en') ? langFromPath : i18n.language;
+  const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
+  const lang = isValidLang ? langFromPath : i18n.language;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Sync language with URL
   useEffect(() => {
-    if (lang && (lang === 'tr' || lang === 'en')) {
+    if (lang && SUPPORTED_LANGUAGES.some(l => l.value === lang)) {
       if (i18n.language !== lang) {
         i18n.changeLanguage(lang);
       }
@@ -136,22 +147,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
                 <div className="header-actions">
                   <div className="lang-switcher">
-                    <button
-                      className={`lang-btn ${i18n.language === 'tr' ? 'active' : ''}`}
-                      onClick={() => changeLanguage('tr')}
-                      title="Türkçe"
-                    >
-                      <img src={trFlag} alt="TR" className="flag-icon" />
-                      <span className="lang-text">Türkçe</span>
-                    </button>
-                    <button
-                      className={`lang-btn ${i18n.language === 'en' ? 'active' : ''}`}
-                      onClick={() => changeLanguage('en')}
-                      title="English"
-                    >
-                      <img src={gbFlag} alt="EN" className="flag-icon" />
-                      <span className="lang-text">English</span>
-                    </button>
+                    <RadixSelect
+                        value={lang}
+                        onValueChange={(newLang) => changeLanguage(newLang)}
+                        options={SUPPORTED_LANGUAGES}
+                        placeholder="Language"
+                        showSelectedIcon={true}
+                    />
                   </div>
                   <a
                     href="https://github.com/BurakTemelkaya/RollercoinCalculatorWeb"

@@ -98,20 +98,22 @@ const TAB_ORDER: Record<Tab, number> = {
 import Notification from './components/Notification';
 import LeaguePowerPartition from './components/LeaguePowerPartition';
 
+const SUPPORTED_LANGS = ['en', 'tr', 'zh', 'fr', 'id', 'pt', 'ru', 'es'];
+
 function AutoRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check localStorage first
     const savedLang = localStorage.getItem('rollercoin_web_language');
-    if (savedLang && (savedLang === 'tr' || savedLang === 'en')) {
+    if (savedLang && SUPPORTED_LANGS.includes(savedLang)) {
       navigate(`/${savedLang}`, { replace: true });
       return;
     }
 
     // Otherwise detect from browser
     const browserLang = navigator.language.split('-')[0];
-    const targetLang = browserLang === 'tr' ? 'tr' : 'en';
+    const targetLang = SUPPORTED_LANGS.includes(browserLang) ? browserLang : 'en';
     navigate(`/${targetLang}`, { replace: true });
   }, [navigate]);
 
@@ -126,7 +128,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
   // Force language sync with URL parameter on mount and param change
   useEffect(() => {
-    if (lang && (lang === 'tr' || lang === 'en')) {
+    if (lang && SUPPORTED_LANGS.includes(lang)) {
       if (i18n.language !== lang) {
         i18n.changeLanguage(lang);
       }
@@ -317,7 +319,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260513.175517';
+  const CURRENT_CACHE_VERSION = '20260513.183758';
 
   // Load from localStorage on mount
   useEffect(() => {

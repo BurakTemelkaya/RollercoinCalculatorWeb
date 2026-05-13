@@ -4846,3 +4846,11 @@ a:hover {
     font-size: 24px;
   }
 }
+
+/* Prevent Radix Select from shifting the layout when opened */
+html body,
+html body[data-scroll-locked] {
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}

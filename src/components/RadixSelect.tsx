@@ -70,7 +70,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                                     <img
                                         src={selectedOption.icon}
                                         alt={selectedOption.iconAlt || selectedOption.label}
-                                        style={{ width: 20, height: 20 }}
+                                        style={{ width: 20, height: 'auto', objectFit: 'contain', borderRadius: '2px' }}
                                         onError={(e) => {
                                             const target = e.target as HTMLImageElement;
                                             target.onerror = null;
@@ -114,7 +114,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                                                 <img
                                                     src={option.icon}
                                                     alt={option.iconAlt || option.label}
-                                                    style={{ width: 20, height: 20 }}
+                                                    style={{ width: 20, height: 'auto', objectFit: 'contain', borderRadius: '2px' }}
                                                     onError={(e) => {
                                                         const target = e.target as HTMLImageElement;
                                                         target.onerror = null;
