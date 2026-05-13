@@ -90,6 +90,30 @@
   color: #4DB8FF;
 }
 
+.footer-contact {
+  margin-top: -8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.contact-label {
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.contact-email {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.contact-email:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
 .footer-disclaimer {
   color: var(--text-muted);
   font-size: 12px;

@@ -40,6 +40,17 @@ export default function Footer() {
           </a>
         </div>
 
+        <div className="footer-contact">
+          <span className="contact-label">{t('app.contactUs')}:</span>
+          <a href="mailto:support@rollercoincalculator.app" className="contact-email">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', verticalAlign: 'text-top' }}>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            support@rollercoincalculator.app
+          </a>
+        </div>
+
         <p className="footer-disclaimer">
           {t('app.footerText')}
           <br />

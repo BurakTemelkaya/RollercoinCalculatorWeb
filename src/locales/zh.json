@@ -150,6 +150,7 @@
         "footerText": "数据基于手动输入。请访问 rollercoin.com 获取最新数据。",
         "footerLink": "Rollercoin 收益计算器",
         "joinCommunity": "加入社区",
+        "contactUs": "联系",
         "disclaimer": "Rollercoin Calculator 是一个独立项目，与 RollerCoin 没有官方附属关系。"
     },
     "tabs": {
