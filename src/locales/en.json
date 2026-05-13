@@ -455,5 +455,8 @@
         "totalQuests": "{{count}} quests",
         "viewDetails": "View Details",
         "noQuests": "No quests found."
+    },
+    "ads": {
+        "supportUs": "☕ Support Us — Referrals & Donations"
     }
 }
