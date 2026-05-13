@@ -148,7 +148,9 @@
         "powerWithUnit": "Power: {{power}} {{unit}}/s",
         "powerBadge": "Power",
         "footerText": "Data is based on manual input. Visit rollercoin.com for current values.",
-        "footerLink": "Rollercoin Earnings Calculator - Web Version"
+        "footerLink": "Rollercoin Earnings Calculator - Web Version",
+        "joinCommunity": "JOIN THE COMMUNITY",
+        "disclaimer": "Rollercoin Calculator is an independent project and is not officially affiliated with RollerCoin."
     },
     "tabs": {
         "earnings": "Earnings Calculator",

@@ -11,7 +11,7 @@ export default function Footer() {
     <div className="premium-footer-wrapper">
       <div className="premium-footer">
         <div className="footer-badge">
-          JOIN THE COMMUNITY
+          {t('app.joinCommunity')}
         </div>
 
         <div className="social-links-container">
@@ -43,7 +43,7 @@ export default function Footer() {
         <p className="footer-disclaimer">
           {t('app.footerText')}
           <br />
-          Rollercoin Calculator is an independent project and is not officially affiliated with RollerCoin.
+          {t('app.disclaimer')}
         </p>
 
         <div className="footer-links">

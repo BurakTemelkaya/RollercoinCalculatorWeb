@@ -148,7 +148,9 @@
         "powerWithUnit": "Poder: {{power}} {{unit}}/s",
         "powerBadge": "Poder",
         "footerText": "Dados baseados em entrada manual. Visite rollercoin.com.",
-        "footerLink": "Calculadora de Ganhos Rollercoin"
+        "footerLink": "Calculadora de Ganhos Rollercoin",
+        "joinCommunity": "JUNTE-SE À COMUNIDADE",
+        "disclaimer": "Rollercoin Calculator é um projeto independente e não é oficialmente afiliado ao RollerCoin."
     },
     "tabs": {
         "earnings": "Ganhos",

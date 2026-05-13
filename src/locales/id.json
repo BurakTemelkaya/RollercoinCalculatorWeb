@@ -148,7 +148,9 @@
         "powerWithUnit": "Kekuatan: {{power}} {{unit}}/s",
         "powerBadge": "Kekuatan",
         "footerText": "Data didasarkan pada masukan manual.",
-        "footerLink": "Kalkulator Rollercoin"
+        "footerLink": "Kalkulator Rollercoin",
+        "joinCommunity": "BERGABUNGLAH DENGAN KOMUNITAS",
+        "disclaimer": "Rollercoin Calculator adalah proyek independen dan tidak berafiliasi secara resmi dengan RollerCoin."
     },
     "tabs": {
         "earnings": "Penghasilan",

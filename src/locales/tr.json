@@ -149,7 +149,9 @@
         "powerWithUnit": "Gücünüz: {{power}} {{unit}}/s",
         "powerBadge": "Gücünüz",
         "footerText": "Veriler manuel girişe dayanmaktadır. Güncel değerler için rollercoin.com adresini ziyaret edin.",
-        "footerLink": "RollerCoin Kazanç Hesaplayıcı"
+        "footerLink": "RollerCoin Kazanç Hesaplayıcı",
+        "joinCommunity": "TOPLULUĞA KATILIN",
+        "disclaimer": "Rollercoin Calculator bağımsız bir projedir ve RollerCoin ile resmi bir bağlantısı yoktur."
     },
     "tabs": {
         "earnings": "Kazanç Hesaplayıcı",

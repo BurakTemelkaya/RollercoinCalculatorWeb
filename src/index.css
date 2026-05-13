@@ -236,7 +236,7 @@ a:hover {
   flex-wrap: wrap;
   gap: 8px;
   position: relative;
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -854,7 +854,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
   animation: fadeIn 0.2s ease;
   overflow: hidden;
 }
@@ -3691,7 +3691,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
   backdrop-filter: blur(5px);
   padding: 16px;
 }
