@@ -217,6 +217,38 @@
     /* Background is provided by .lc-presets-slider */
 }
 
+/* Year selector inside preset */
+.lc-preset-year {
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.lc-year-select {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    padding: 8px 4px;
+    width: 100%;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align-last: center;
+}
+
+.lc-year-select option {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
 /* Date Pickers Section */
 .lc-date-section {
     display: flex;

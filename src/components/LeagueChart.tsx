@@ -86,7 +86,32 @@ export default function LeagueChart() {
     const [loading, setLoading] = useState(false);
     const [leaguesLoading, setLeaguesLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [activePreset, setActivePreset] = useState<'all' | '7d' | '30d'>('all');
+    const [activePreset, setActivePreset] = useState<'year' | '7d' | '30d'>('year');
+    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+
+    // Available years for the year picker (from 2026 to current year, descending)
+    const availableYears = useMemo(() => {
+        const currentYear = new Date().getFullYear();
+        const years: number[] = [];
+        for (let y = currentYear; y >= 2026; y--) {
+            years.push(y);
+        }
+        return years;
+    }, []);
+
+    // Apply year dates when year preset is active
+    useEffect(() => {
+        if (activePreset === 'year') {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const yearStart = `${selectedYear}-01-01`;
+            const yearEnd = selectedYear === currentYear
+                ? now.toISOString().split('T')[0]
+                : `${selectedYear}-12-31`;
+            setStartDate(yearStart);
+            setEndDate(yearEnd);
+        }
+    }, [activePreset, selectedYear]);
 
     // Chart ref
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -528,16 +553,24 @@ export default function LeagueChart() {
                             <div
                                 className="lc-presets-slider"
                                 style={{
-                                    transform: `translateX(calc(${activePreset === 'all' ? 0 : activePreset === '7d' ? 1 : 2} * (100% + 4px)))`
+                                    transform: `translateX(calc(${activePreset === 'year' ? 0 : activePreset === '7d' ? 1 : 2} * (100% + 4px)))`
                                 }}
                             />
-                            <button
-                                className={`lc-preset-btn ${activePreset === 'all' ? 'active' : ''}`}
-                                onClick={() => {
-                                    setActivePreset('all');
-                                    setStartDate('');
-                                    setEndDate('');
-                                }}>{t('charts.allTime')}</button>
+                            <div className={`lc-preset-btn lc-preset-year ${activePreset === 'year' ? 'active' : ''}`}>
+                                <select
+                                    className="lc-year-select"
+                                    value={selectedYear}
+                                    onChange={(e) => {
+                                        setSelectedYear(Number(e.target.value));
+                                        setActivePreset('year');
+                                    }}
+                                    onClick={() => setActivePreset('year')}
+                                >
+                                    {availableYears.map(y => (
+                                        <option key={y} value={y}>{y}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <button
                                 className={`lc-preset-btn ${activePreset === '7d' ? 'active' : ''}`}
                                 onClick={() => {
