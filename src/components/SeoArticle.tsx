@@ -2,10 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-
 const SeoArticle: React.FC = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language || 'en';
@@ -13,7 +9,7 @@ const SeoArticle: React.FC = () => {
   return (
     <article className="seo-article-container static-content" style={{ padding: '30px', backgroundColor: 'var(--surface-50)', borderRadius: '12px', marginTop: '40px' }}>
       <h2 style={{ borderBottom: 'none', marginBottom: '15px', color: 'var(--primary-400)' }}>{t('seoArticle.title')}</h2>
-      
+
       <p style={{ fontSize: '15px', color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: t('seoArticle.p1') }} />
       <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginTop: '10px' }} dangerouslySetInnerHTML={{ __html: t('seoArticle.p2') }} />
 
