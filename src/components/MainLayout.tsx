@@ -86,7 +86,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     if (adsBlocked) return; // Don't load ads if blocked
     const timer = setTimeout(() => {
       if ((window as any).AdManager) {
-        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50, '21bf0654ac3ca0059c5d930d8ff532c8', 320, 50);
+        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
       }
     }, 100);
     return () => clearTimeout(timer);
