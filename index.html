@@ -133,7 +133,8 @@
 </head>
 
 <body>
-  <!-- Global Ad Manager -->
+  <!-- [ADS DISABLED] To re-enable ads, uncomment the blocks below -->
+  <!--
   <script>
     window.AdManager = {
         loadAd: function(containerId, aadsId, w, h) {
@@ -143,43 +144,11 @@
         }
     };
   </script>
-
-  <!-- Top Banner Ad moved to MainLayout.tsx -->
+  -->
 
   <div id="root"></div>
 
-  <!-- Desktop Left Sticky (AADS first, Adsterra fallback) -->
-  <div class="desktop-side-ad" style="position: absolute; z-index: 99999; pointer-events: none;">
-    <div style="padding-top: 0; padding-bottom: 0;">
-      <div
-        style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
-        <div id="left-side-ad-container"
-          style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <div id="left-side-ad" style="width: 160px; height: 600px;"></div>
-          <script>
-            window.AdManager.loadAd('left-side-ad', '2429727', 160, 600);
-          </script>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Desktop Right Sticky (A-Ads) -->
-  <div class="desktop-side-ad" style="position: absolute; z-index: 99999; pointer-events: none;">
-    <div style="padding-top: 0; padding-bottom: 0;">
-      <div
-        style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
-        <div id="right-side-ad-container"
-          style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <iframe data-aa="2429727"
-            src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe"
-            style="border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin: 0 auto"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AADS Mobile Bottom Sticky (unit 2429728) -->
+  <!-- [ADS DISABLED] Mobile Bottom Sticky
   <div class="aads-mobile-only" style="position: fixed; z-index: 99999; bottom: 0; left: 0; right: 0;">
     <input autocomplete="off" type="checkbox" id="aadsstickymo0tbc19" hidden />
     <div class="mobile-ad-container"
@@ -204,10 +173,10 @@
       }
     </style>
   </div>
+  -->
 
-  <!-- Responsive Visibility -->
+  <!-- [ADS DISABLED] Responsive ad visibility styles
   <style>
-    /* Default: hide side ads on mobile */
     .desktop-side-ad {
       display: none;
     }
@@ -216,7 +185,6 @@
       display: none;
     }
 
-    /* Desktop: show side ads at 1025px+ and push content inward */
     @media (min-width: 1025px) {
       .desktop-side-ad {
         display: block;
@@ -228,80 +196,17 @@
       }
     }
 
-    /* Side ad containers stay visible when ads are blocked — content is replaced with support links */
-
-    /* Support link fallback styles for side ads (160x600 ad space) */
-    .ad-support-fallback {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 0;
-      width: 160px;
-      height: 600px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      box-sizing: border-box;
-    }
-
-    .ad-support-fallback .fallback-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #a0aec0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      text-align: center;
-    }
-
-    .ad-support-fallback a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      width: 140px;
-      padding: 10px 8px;
-      background: rgba(30, 36, 51, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.12);
-      border-radius: 10px;
-      color: #cbd5e1;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.2s;
-      text-align: center;
-    }
-
-    .ad-support-fallback a:hover {
-      background: rgba(37, 43, 59, 0.95);
-      border-color: rgba(99, 102, 241, 0.35);
-      color: #fff;
-      transform: translateY(-1px);
-    }
-
-    .ad-support-fallback a img {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .ad-support-fallback a span {
-      line-height: 1.2;
-    }
-
-    /* Mobile: show bottom ad on small screens */
     @media (max-width: 1024px) {
       .aads-mobile-only {
         display: block;
       }
     }
 
-    /* Hide mobile ads when blocked */
     body.ads-blocked .aads-mobile-only {
       display: none !important;
     }
   </style>
+  -->
   <script type="module" src="/src/main.tsx"></script>
   <script>
     // Service Worker: silent registration, no user prompts
@@ -309,8 +214,8 @@
       navigator.serviceWorker.register('/sw.js');
     }
 
-    // Ad-blocker detection
-    // Sets 'ads-blocked' class on body — React components (SideAdFallback) handle the UI.
+    // [ADS DISABLED] Ad-blocker detection — uncomment when re-enabling ads
+    /*
     (function() {
       var testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
       setTimeout(function() {
@@ -324,6 +229,7 @@
           });
       }, 1000);
     })();
+    */
   </script>
 
 </body>

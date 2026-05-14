@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import appLogo from '../assets/logo.png';
 import TurnstileProvider from './TurnstileProvider';
-import SideAdFallback from './SideAdFallback';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 
@@ -58,39 +57,33 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
   }, [lang, i18n]);
 
-  // Load Top Banner Ad (Always use 320x50 to fit next to quest card)
-  const [adsBlocked, setAdsBlocked] = useState(false);
-
-  useEffect(() => {
-    // Check for ad-blocker detection class set by index.html script
-    const checkAdsBlocked = () => {
-      if (document.body.classList.contains('ads-blocked')) {
-        setAdsBlocked(true);
-      }
-    };
-
-    // Initial check after a delay (fetch detection starts at 1s, completes by ~1.5s)
-    const timer = setTimeout(checkAdsBlocked, 2000);
-
-    // Also observe body class changes
-    const observer = new MutationObserver(() => checkAdsBlocked());
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (adsBlocked) return; // Don't load ads if blocked
-    const timer = setTimeout(() => {
-      if ((window as any).AdManager) {
-        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [location.pathname, adsBlocked]);
+  // [ADS DISABLED] Top Banner Ad loading — uncomment when re-enabling ads
+  // const [adsBlocked, setAdsBlocked] = useState(false);
+  //
+  // useEffect(() => {
+  //   const checkAdsBlocked = () => {
+  //     if (document.body.classList.contains('ads-blocked')) {
+  //       setAdsBlocked(true);
+  //     }
+  //   };
+  //   const timer = setTimeout(checkAdsBlocked, 2000);
+  //   const observer = new MutationObserver(() => checkAdsBlocked());
+  //   observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  //   return () => {
+  //     clearTimeout(timer);
+  //     observer.disconnect();
+  //   };
+  // }, []);
+  //
+  // useEffect(() => {
+  //   if (adsBlocked) return;
+  //   const timer = setTimeout(() => {
+  //     if ((window as any).AdManager) {
+  //       (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
+  //     }
+  //   }, 100);
+  //   return () => clearTimeout(timer);
+  // }, [location.pathname, adsBlocked]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -188,9 +181,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <React.Suspense fallback={null}>
                 <DailyBonusQuest />
               </React.Suspense>
+              {/* [ADS DISABLED] Top Banner Ad — uncomment when re-enabling ads
               {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}></div>
               )}
+              */}
             </div>
 
             {/* Main Content */}
@@ -203,9 +198,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
       </div>
-
-      {/* Side ad fallback: render support links via portals when ads are blocked */}
-      {adsBlocked && <SideAdFallback />}
     </div>
   );
 }
