@@ -355,23 +355,20 @@ export default function ProgressionEvent() {
         loadEvent();
     }, [t, eventId]);
 
-    // Test for ad-blocker by attempting to load external resource
+    // Ad-blocker detection (syncs with global class added by index.html)
     useEffect(() => {
-        const testAdBlocker = async () => {
-            try {
-                const testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
-                await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' });
-                // If we get here without error, external resources are accessible
-                setAdBlockWarning(false);
-            } catch (err) {
-                console.warn('External resource blocked - possible ad-blocker detected:', err);
+        const checkAdsBlocked = () => {
+            if (document.body.classList.contains('ads-blocked')) {
                 setAdBlockWarning(true);
             }
         };
-
-        // Delay test slightly to avoid interfering with main data load
-        const timer = setTimeout(testAdBlocker, 1000);
-        return () => clearTimeout(timer);
+        const timer = setTimeout(checkAdsBlocked, 2000);
+        const observer = new MutationObserver(() => checkAdsBlocked());
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        return () => {
+            clearTimeout(timer);
+            observer.disconnect();
+        };
     }, []);
 
     // Calculate total event rewards summary

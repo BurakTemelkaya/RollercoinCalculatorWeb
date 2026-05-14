@@ -57,33 +57,33 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
   }, [lang, i18n]);
 
-  // [ADS DISABLED] Top Banner Ad loading — uncomment when re-enabling ads
-  // const [adsBlocked, setAdsBlocked] = useState(false);
-  //
-  // useEffect(() => {
-  //   const checkAdsBlocked = () => {
-  //     if (document.body.classList.contains('ads-blocked')) {
-  //       setAdsBlocked(true);
-  //     }
-  //   };
-  //   const timer = setTimeout(checkAdsBlocked, 2000);
-  //   const observer = new MutationObserver(() => checkAdsBlocked());
-  //   observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  //   return () => {
-  //     clearTimeout(timer);
-  //     observer.disconnect();
-  //   };
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (adsBlocked) return;
-  //   const timer = setTimeout(() => {
-  //     if ((window as any).AdManager) {
-  //       (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
-  //     }
-  //   }, 100);
-  //   return () => clearTimeout(timer);
-  // }, [location.pathname, adsBlocked]);
+  // Ad-blocker detection & top banner ad loading
+  const [adsBlocked, setAdsBlocked] = useState(false);
+
+  useEffect(() => {
+    const checkAdsBlocked = () => {
+      if (document.body.classList.contains('ads-blocked')) {
+        setAdsBlocked(true);
+      }
+    };
+    const timer = setTimeout(checkAdsBlocked, 2000);
+    const observer = new MutationObserver(() => checkAdsBlocked());
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (adsBlocked) return;
+    const timer = setTimeout(() => {
+      if ((window as any).AdManager) {
+        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [location.pathname, adsBlocked]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -181,11 +181,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <React.Suspense fallback={null}>
                 <DailyBonusQuest />
               </React.Suspense>
-              {/* [ADS DISABLED] Top Banner Ad — uncomment when re-enabling ads
               {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}></div>
               )}
-              */}
+              {adsBlocked && (
+                <div className="adblocker-notice">
+                  <p>{t('ads.blockerNotice')}</p>
+                  <Link to={`/${i18n.language}/support`} className="adblocker-support-link">
+                    ☕ {t('ads.supportLink')}
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Main Content */}

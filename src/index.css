@@ -184,6 +184,47 @@ html {
   text-overflow: ellipsis;
 }
 
+/* Adblocker Notice */
+.adblocker-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 320px;
+  max-width: 100%;
+  padding: 10px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px dashed rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.adblocker-notice p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.adblocker-support-link {
+  font-weight: 600;
+  color: var(--warning);
+  text-decoration: none;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adblocker-support-link:hover {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fbbf24;
+}
+
 @media (min-width: 1200px) {
   .top-banner-row {
     flex-direction: row;

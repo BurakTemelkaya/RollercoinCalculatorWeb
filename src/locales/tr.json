@@ -461,6 +461,30 @@
         "noQuests": "Görev bulunamadı."
     },
     "ads": {
-        "supportUs": "☕ Bizi Destekleyin — Referanslar & Bağışlar"
+        "supportUs": "☕ Bizi Destekleyin — Referanslar & Bağışlar",
+        "blockerNotice": "Reklam engelleyici kullandığınızı fark ettik. Sitemizin giderlerini karşılayabilmek için reklam gelirlerine ihtiyaç duyuyoruz. Eğer sitemizi desteklemek isterseniz, destek sayfamızdan referans linklerimizi kullanabilir veya kripto bağışı yapabilirsiniz.",
+        "supportLink": "Destek Sayfası"
+    },
+    "seoArticle": {
+        "title": "RollerCoin Kazanç Hesaplayıcı Nedir?",
+        "p1": "RollerCoin ekosisteminde elde edeceğiniz kazancın miktarını anlık olarak belirleyen temel unsur, oyunun karmaşık kriptografik matematik altyapısıdır. Hesaplayıcımız, bireysel hash gücünüz, seçtiğiniz kripto paranın toplam ağ gücü ve havuzun o anki blok ödülü arasındaki matematiksel ilişkiyi kullanarak size <strong>Binance API üzerinden saniyelik kur bilgileriyle</strong> en doğru net kazancı sunar.",
+        "p2": "Profesyonel hesaplayıcımız, oyunun sunduğu tüm kripto para birimlerini (Bitcoin, Ethereum, Solana, Dogecoin, BNB, Litecoin, XRP, Tron ve POL) destekler. Ayrıca RLT, RST ve HMT gibi oyun içi tokenler için de blok başına kazancınızı anlık olarak hesaplar. Hesaplama motoru, her bir kripto para için blok süresini (block duration), lig çarpanlarını ve ağ zorluk seviyesini dikkate alarak mümkün olan en yüksek doğrulukta sonuçlar ortaya koyar.",
+        "h_why": "Neden Bu Aracı Kullanmalısınız?",
+        "li1": "<strong>Canlı Piyasa Fiyatları:</strong> Statik ve eski veriler yerine, Binance borsasından canlı çekilen Bitcoin (BTC), Ethereum (ETH), Doge (DOGE) ve diğer kripto fiyatlarıyla milisaniyelik USD karşılığınızı görürsünüz.",
+        "li2": "<strong>Lig (League) Sistemi Entegrasyonu:</strong> Kazancınıza eklenen Lig bonus çarpanlarını ağ üzerinden analiz ederek gizli blok havuzu yüzdelerini hesaba katar.",
+        "li3": "<strong>Kapsamlı Çekim Simülasyonu:</strong> Mevcut bakiyenizi (Current Balance) girdiğinizde, minimum çekim (Withdrawal) eşiğine tam olarak kaç gün ve saat içerisinde ulaşacağınızı sizin için hesaplar.",
+        "li4": "<strong>Güç Simülatörü:</strong> Yeni bir madenci veya raf satın almayı planlıyorsanız, satın almadan önce yeni donanımın mevcut kazancınızı ne kadar artıracağını simüle edebilirsiniz. Bu sayede karlı olmayan madenci yatırımlarından kaçınırsınız.",
+        "li5": "<strong>Lig Grafikleri ve Trend Analizi:</strong> Her lig için tarihsel güç ve ödül verilerini grafiklerle takip ederek piyasa trendlerini ve lig popülaritesini analiz edebilirsiniz.",
+        "h_how": "Kazanç Hesaplaması Nasıl Çalışır?",
+        "p3": "RollerCoin'de kazancınızı belirleyen temel formül oldukça basittir: <strong>Kazancınız = (Sizin Gücünüz / Toplam Lig Gücü) × Blok Ödülü</strong>. Ancak bu basit formülün arkasında karmaşık değişkenler yatar. Her coin için farklı blok süreleri, her lig için farklı ödül çarpanları ve sürekli değişen ağ gücü bu hesaplamayı manuel yapmayı neredeyse imkansız kılar. Hesaplayıcımız tüm bu değişkenleri otomatik olarak API'den çeker ve saniyeler içinde size günlük, haftalık ve aylık kazanç tahminlerini USD karşılığıyla sunar.",
+        "p4": "Ayrıca hesaplayıcı, her coin için anlık lig gücü dağılımını gösterir. Bu, bir coinde ne kadar rekabet olduğunu ve ödülünüzün diğer oyuncular arasında nasıl bölündüğünü görmenizi sağlar. Yüksek güçlü bir ligte az rekabetçi bir coin, düşük güçlü bir ligte popüler bir coinden daha karlı olabilir — hesaplayıcı bu tür stratejik kararlar vermenize yardımcı olur.",
+        "h_tools": "Birleştirme ve Etkinlik Araçları",
+        "p5": "Kazanç hesaplamanın ötesinde, platformumuz madenci birleştirme tariflerini analiz eden bir <strong>Merge Hesaplayıcısı</strong> ve Progression Event bütçenizi planlamanıza yardımcı olan bir <strong>Etkinlik Hesaplayıcısı</strong> sunar. Merge aracı, Forge seviyenize göre indirimli bileşen hesabı yapar ve pazar yeri fiyatlarıyla gerçek maliyetleri ortaya koyar. Etkinlik aracı ise her seviyedeki ödülleri, gerekli RLT miktarını ve çarpan maliyetlerini detaylı şekilde gösterir.",
+        "h_strategy": "Stratejinizi Geliştirin",
+        "p6": "Zirveye oynamak sadece matematik yapmakla olmaz. RollerCoin pazar yerindeki arbitraj fırsatlarından (Marketplace), Koleksiyon Bonusu mantığına (Collection Bonus) kadar tüm detayları anlattığımız ansiklopedik kütüphanemizi okuyarak bir adım öne geçin. Deneyimli oyuncuların onlarca Ph/s güç biriktirmesinin arkasındaki stratejileri, F2P (ücretsiz oyuncu) olarak sıfırdan nasıl başlanacağını ve etkinlik dönemlerinde RLT'nizi en verimli nasıl kullanacağınızı öğrenin.",
+        "btn1": "Hesaplama Mantığını Öğren →",
+        "btn2": "Hash Gücü Taktiklerini Oku →",
+        "btn3": "F2P Rehberini Oku →",
+        "btn4": "Sıkça Sorulan Sorular →"
     }
 }

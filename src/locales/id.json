@@ -460,6 +460,30 @@
         "noQuests": "Tidak ditemukan."
     },
     "ads": {
-        "supportUs": "☕ Dukung Kami"
+        "supportUs": "☕ Dukung Kami",
+        "blockerNotice": "Sepertinya Anda menggunakan pemblokir iklan. Kami bergantung pada pendapatan iklan untuk menutupi biaya situs. Jika Anda ingin mendukung kami, Anda dapat menggunakan tautan rujukan kami atau memberikan donasi kripto dari halaman dukungan kami.",
+        "supportLink": "Halaman Dukungan"
+    },
+    "seoArticle": {
+        "title": "Apa itu Kalkulator Penghasilan RollerCoin?",
+        "p1": "Faktor utama yang secara instan menentukan penghasilan Anda di ekosistem RollerCoin adalah infrastruktur matematika kriptografi game yang kompleks. Kalkulator kami menentukan ini dengan melihat kekuatan Anda, total kekuatan jaringan, dan hadiah blok langsung menggunakan <strong>Harga Pasar Langsung hingga detik ini melalui Binance API</strong>.",
+        "p2": "Kalkulator tingkat profesional kami mendukung setiap mata uang kripto yang ditawarkan oleh game, termasuk Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Dogecoin (DOGE), BNB, Litecoin (LTC), XRP, Tron (TRX), dan POL (Polygon). Ini juga memberikan penghasilan per blok waktu nyata untuk token dalam game seperti RLT, RST, dan HMT. Mesin perhitungan memperhitungkan durasi blok setiap koin, pengganda khusus liga, dan tingkat kesulitan jaringan untuk memberikan akurasi setinggi mungkin.",
+        "h_why": "Mengapa Memilih Kalkulator Kami?",
+        "li1": "<strong>Harga Pasar Langsung:</strong> Alih-alih data statis yang sudah usang, kami menarik nilai tukar langsung dari Binance untuk Bitcoin (BTC), Ethereum (ETH), Doge, dan lainnya untuk menunjukkan keuntungan USD Anda yang sebenarnya secara instan.",
+        "li2": "<strong>Integrasi Sistem Liga:</strong> Sepenuhnya menyimulasikan persentase pengganda tersembunyi yang ditambahkan ke distribusi kumpulan blok Anda berdasarkan tingkat liga permainan aktif Anda.",
+        "li3": "<strong>Pengatur Waktu Penarikan Presisi:</strong> Masukkan saldo koin Anda saat ini, dan mesin kami secara otomatis menyusun dengan tepat berapa hari dan jam tersisa hingga Anda mencapai ambang batas penarikan minimum.",
+        "li4": "<strong>Simulator Kekuatan:</strong> Berencana membeli penambang atau rak baru? Simulasikan akuisisi sebelum menggunakan RLT Anda untuk melihat dengan tepat berapa banyak penghasilan Anda akan meningkat. Ini mencegah investasi perangkat keras yang tidak menguntungkan.",
+        "li5": "<strong>Grafik Liga & Analisis Tren:</strong> Lacak riwayat data kekuatan dan pembayaran untuk setiap liga dengan grafik interaktif untuk menganalisis tren pasar dan popularitas liga dari waktu ke waktu.",
+        "h_how": "Bagaimana Cara Kerja Perhitungan Penghasilan?",
+        "p3": "Rumus dasar di balik penambangan RollerCoin sangat mudah: <strong>Penghasilan Anda = (Kekuatan Anda / Total Kekuatan Liga) × Hadiah Blok</strong>. Namun, banyak variabel kompleks berada di balik persamaan sederhana ini. Durasi blok yang berbeda untuk setiap koin, pengganda hadiah yang berbeda untuk setiap liga, dan kekuatan jaringan yang terus berubah membuat perhitungan manual hampir mustahil dilakukan. Kalkulator kami secara otomatis mengambil semua variabel ini dari API dan menyajikan perkiraan penghasilan harian, mingguan, dan bulanan Anda dengan nilai setara USD dalam hitungan detik.",
+        "p4": "Selain itu, kalkulator menunjukkan distribusi kekuatan liga waktu nyata untuk setiap koin. Ini memungkinkan Anda melihat seberapa kompetitif sebuah koin dan bagaimana hadiah Anda dibagi di antara pemain lain. Koin yang kurang kompetitif di liga berkekuatan tinggi bisa lebih menguntungkan daripada koin populer di liga yang lebih rendah — kalkulator membantu Anda membuat keputusan strategis semacam itu.",
+        "h_tools": "Alat Penggabungan dan Acara",
+        "p5": "Selain perhitungan penghasilan, platform kami menawarkan <strong>Kalkulator Penggabungan (Merge)</strong> yang menganalisis resep pembuatan penambang dan <strong>Kalkulator Acara</strong> yang membantu Anda merencanakan anggaran Progression Event Anda. Alat penggabungan menerapkan diskon tingkat Forge pada persyaratan komponen dan memperhitungkan harga pasar untuk perkiraan total biaya yang akurat. Alat acara merinci hadiah di setiap tingkat, jumlah RLT yang diperlukan, dan biaya pengganda sehingga Anda dapat merencanakan pengeluaran Anda sebelum acara dimulai.",
+        "h_strategy": "Kuasai Strategi Anda",
+        "p6": "Menaklukkan papan peringkat membutuhkan lebih dari sekadar matematika dasar. Tetap di depan dengan membaca penyelaman ensiklopedis kami ke dalam peluang arbitrase Marketplace, konfigurasi Bonus Koleksi yang tepat, dan ketekunan bermain gratis (F2P). Pelajari strategi di balik bagaimana pemain berpengalaman mengumpulkan puluhan Ph/s kekuatan, cara memulai dari nol sebagai pemain F2P, dan cara menggunakan RLT Anda dengan paling efisien selama musim acara.",
+        "btn1": "Pelajari Logika Teknis →",
+        "btn2": "Baca Taktik Kekuatan →",
+        "btn3": "Baca Panduan F2P →",
+        "btn4": "Pertanyaan yang Sering Diajukan →"
     }
 }

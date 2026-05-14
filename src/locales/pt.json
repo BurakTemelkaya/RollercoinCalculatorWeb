@@ -460,6 +460,30 @@
         "noQuests": "Nenhuma missão."
     },
     "ads": {
-        "supportUs": "☕ Apoie-nos — Referências e Doações"
+        "supportUs": "☕ Apoie-nos — Referências e Doações",
+        "blockerNotice": "Parece que você está usando um bloqueador de anúncios. Dependemos da receita de anúncios para cobrir as despesas do site. Se você quiser nos apoiar, pode usar nossos links de referência ou fazer uma doação de criptomoedas em nossa página de suporte.",
+        "supportLink": "Página de Suporte"
+    },
+    "seoArticle": {
+        "title": "O que é a Calculadora de Lucros do RollerCoin?",
+        "p1": "O fator central que dita instantaneamente seus ganhos dentro do ecossistema do RollerCoin é a complexa infraestrutura matemática criptográfica do jogo. Nossa calculadora determina isso observando seu poder, o poder total da rede e a recompensa do bloco ao vivo usando <strong>Preços de Mercado ao Vivo a cada segundo através da API da Binance</strong>.",
+        "p2": "Nossa calculadora de nível profissional suporta todas as criptomoedas oferecidas pelo jogo, incluindo Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Dogecoin (DOGE), BNB, Litecoin (LTC), XRP, Tron (TRX) e POL (Polygon). Também fornece ganhos por bloco em tempo real para tokens do jogo como RLT, RST e HMT. O motor de cálculo leva em consideração a duração do bloco de cada moeda, multiplicadores específicos da liga e a dificuldade da rede para fornecer a maior precisão possível.",
+        "h_why": "Por que Escolher Nossa Calculadora?",
+        "li1": "<strong>Preços de Mercado ao Vivo:</strong> Em vez de dados estáticos desatualizados, obtemos taxas de câmbio ao vivo da Binance para Bitcoin (BTC), Ethereum (ETH), Doge e muito mais para mostrar seus verdadeiros lucros em USD instantaneamente.",
+        "li2": "<strong>Integração com o Sistema de Ligas:</strong> Simula totalmente as porcentagens de multiplicadores ocultos adicionados às distribuições do seu pool de blocos com base no seu nível de liga ativo.",
+        "li3": "<strong>Temporizadores de Retirada de Precisão:</strong> Insira seu saldo atual de moedas e nosso motor estrutura automaticamente exatamente quantos dias e horas faltam para você atingir o limite mínimo de retirada.",
+        "li4": "<strong>Simulador de Poder:</strong> Planejando comprar um novo minerador ou rack? Simule a aquisição antes de comprometer seu RLT para ver exatamente quanto seus ganhos aumentarão. Isso evita investimentos em hardware não lucrativos.",
+        "li5": "<strong>Gráficos de Liga e Análise de Tendências:</strong> Acompanhe os dados históricos de poder e pagamento para cada liga com gráficos interativos para analisar as tendências do mercado e a popularidade da liga ao longo do tempo.",
+        "h_how": "Como Funciona o Cálculo de Ganhos?",
+        "p3": "A fórmula fundamental por trás da mineração do RollerCoin é simples: <strong>Seus Ganhos = (Seu Poder / Poder Total da Liga) × Recompensa do Bloco</strong>. No entanto, várias variáveis complexas estão por trás dessa simples equação. Diferentes durações de blocos para cada moeda, diferentes multiplicadores de recompensa para cada liga e poder de rede em constante mudança tornam o cálculo manual quase impossível. Nossa calculadora busca automaticamente todas essas variáveis da API e apresenta suas estimativas de ganhos diários, semanais e mensais com equivalentes em USD em segundos.",
+        "p4": "Além disso, a calculadora mostra a distribuição de poder da liga em tempo real para cada moeda. Isso permite que você veja o quão competitiva é uma moeda e como suas recompensas são divididas entre outros jogadores. Uma moeda menos competitiva em uma liga de alto poder pode ser mais lucrativa do que uma moeda popular em uma liga inferior — a calculadora ajuda você a tomar essas decisões estratégicas.",
+        "h_tools": "Ferramentas de Fusão e Eventos",
+        "p5": "Além do cálculo de ganhos, nossa plataforma oferece uma <strong>Calculadora de Fusão (Merge)</strong> que analisa as receitas de criação de mineradores e uma <strong>Calculadora de Eventos</strong> que ajuda você a planejar seu orçamento para o Evento de Progressão. A ferramenta de fusão aplica descontos de nível Forge aos requisitos de componentes e considera os preços de mercado para uma estimativa precisa do custo total. A ferramenta de evento detalha as recompensas em cada nível, as quantias de RLT necessárias e os custos do multiplicador para que você possa planejar seus gastos antes que o evento comece.",
+        "h_strategy": "Domine sua Estratégia",
+        "p6": "Conquistar as tabelas de classificação exige mais do que apenas matemática básica. Fique à frente lendo nossos mergulhos enciclopédicos em oportunidades de arbitragem do Marketplace, configurações exatas de Bônus de Coleção e persistência de jogador gratuito (F2P). Aprenda as estratégias de como jogadores experientes acumulam dezenas de Ph/s de poder, como começar do zero como um jogador F2P e como implantar seu RLT da maneira mais eficiente durante as temporadas de eventos.",
+        "btn1": "Aprenda a Lógica Técnica →",
+        "btn2": "Leia Táticas de Poder →",
+        "btn3": "Leia o Guia F2P →",
+        "btn4": "Perguntas Frequentes →"
     }
 }

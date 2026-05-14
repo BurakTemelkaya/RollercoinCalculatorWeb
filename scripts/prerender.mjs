@@ -159,7 +159,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     ];
 
     if (blockedDomains.some(domain => url.includes(domain))) {
-      req.abort();
+      req.respond({ status: 200, body: '' });
       return;
     }
 
@@ -221,11 +221,14 @@ async function prerender() {
 
   const browser = await puppeteer.launch({
     headless: true,
+    protocolTimeout: 300000, // 5 min — Docker builds can be slow
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
+      '--disable-extensions',
+      '--disable-background-networking',
     ],
   });
 
@@ -274,5 +277,6 @@ async function prerender() {
 
 prerender().catch((error) => {
   console.error('Pre-rendering failed:', error);
-  process.exit(1);
+  console.warn('⚠️  Continuing without pre-rendering — SPA fallback will be used.');
+  process.exit(0);
 });
