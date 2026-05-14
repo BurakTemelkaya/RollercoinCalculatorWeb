@@ -460,6 +460,30 @@
         "noQuests": "Görev bulunamadı."
     },
     "ads": {
-        "supportUs": "☕ Bizi Destekleyin — Referanslar & Bağışlar"
+        "supportUs": "☕ Bizi Destekleyin — Referanslar & Bağışlar",
+        "blockerNotice": "It looks like you're using an ad blocker. We rely on ad revenue to cover our site's expenses. If you'd like to support us, you can use our referral links or make a crypto donation from our support page.",
+        "supportLink": "Support Page"
+    },
+    "seoArticle": {
+        "title": "What is the RollerCoin Profit Calculator?",
+        "p1": "The core factor that instantly dictates your earnings within the RollerCoin ecosystem is the game's complex cryptographic math infrastructure. Our calculator determines this by looking at your power, total network power, and the live block reward using <strong>Live Market Prices down to the second via the Binance API</strong>.",
+        "p2": "Our professional-grade calculator supports every cryptocurrency offered by the game, including Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Dogecoin (DOGE), BNB, Litecoin (LTC), XRP, Tron (TRX), and POL (Polygon). It also provides real-time per-block earnings for in-game tokens like RLT, RST, and HMT. The calculation engine accounts for each coin's block duration, league-specific multipliers, and network difficulty to deliver the highest possible accuracy.",
+        "h_why": "Why Choose Our Calculator?",
+        "li1": "<strong>Live Market Prices:</strong> Instead of outdated static data, we pull live exchange rates from Binance for Bitcoin (BTC), Ethereum (ETH), Doge, and more to show your true USD profits instantly.",
+        "li2": "<strong>League System Integration:</strong> Fully simulates the hidden multiplier percentages added to your block pool distributions based on your active gaming league tier.",
+        "li3": "<strong>Precision Withdrawal Timers:</strong> Enter your current coin balance, and our engine automatically structures exactly how many days and hours are left until you reach the minimum withdrawal threshold.",
+        "li4": "<strong>Power Simulator:</strong> Planning to purchase a new miner or rack? Simulate the acquisition before committing your RLT to see exactly how much your earnings will increase. This prevents unprofitable hardware investments.",
+        "li5": "<strong>League Charts & Trend Analysis:</strong> Track historical power and payout data for each league with interactive charts to analyze market trends and league popularity over time.",
+        "h_how": "How Does the Earnings Calculation Work?",
+        "p3": "The fundamental formula behind RollerCoin mining is straightforward: <strong>Your Earnings = (Your Power / Total League Power) × Block Reward</strong>. However, multiple complex variables lie behind this simple equation. Different block durations for each coin, different reward multipliers for each league, and constantly shifting network power make manual calculation nearly impossible. Our calculator automatically fetches all these variables from the API and presents your daily, weekly, and monthly earning estimates with USD equivalents in seconds.",
+        "p4": "Additionally, the calculator shows the real-time league power distribution for each coin. This lets you see how competitive a coin is and how your rewards are split among other players. A less competitive coin in a high-power league could be more profitable than a popular coin in a lower league — the calculator helps you make such strategic decisions.",
+        "h_tools": "Merge and Event Tools",
+        "p5": "Beyond earnings calculation, our platform offers a <strong>Merge Calculator</strong> that analyzes miner crafting recipes and an <strong>Event Calculator</strong> that helps you plan your Progression Event budget. The merge tool applies Forge-level discounts to component requirements and factors in marketplace prices for accurate total cost estimation. The event tool details rewards at each tier, required RLT amounts, and multiplier costs so you can plan your spending before the event begins.",
+        "h_strategy": "Master Your Strategy",
+        "p6": "Conquering the leaderboards requires more than just basic math. Stay ahead by reading our encyclopedic deep-dives into Marketplace arbitrage opportunities, exact Collection Bonus configurations, and Free-to-Play persistence. Learn the strategies behind how experienced players accumulate dozens of Ph/s of power, how to start from zero as an F2P player, and how to deploy your RLT most efficiently during event seasons.",
+        "btn1": "Learn The Technical Logic →",
+        "btn2": "Read Power Building Tactics →",
+        "btn3": "Read F2P Guide →",
+        "btn4": "Frequently Asked Questions →"
     }
 }
