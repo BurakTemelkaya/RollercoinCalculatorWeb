@@ -220,19 +220,38 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         // Non-league power (does NOT affect league): Games, Temp Power
         // Games & Temp power inflate your total but don't help you advance leagues.
 
-        // --- Current State Base ---
-        // Fallback formula when typing manually:
-        let currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH - freonH;
+        // We calculate "hidden" backend offsets for Total Power to keep API precision without locking inputs.
+        let hiddenTotalOffset = 0;
 
+        if (fetchMode === 'username' && fetchedUser) {
+            const api = fetchedUser.userPowerResponseDto;
+            const apiMiners = api.miners || 0;
+            const apiGames = api.games || 0;
+            const apiRacks = api.racks || 0;
+            const apiTemp = api.temp || 0;
+
+            let apiBonusVal = 0;
+            if (api.bonus_percent !== undefined) {
+                apiBonusVal = api.bonus_percent / 100;
+            } else if ((apiMiners + apiGames) > 0) {
+                apiBonusVal = ((api.bonus || 0) / (apiMiners + apiGames)) * 100;
+            }
+
+            const apiFormulaTotal = ((apiMiners + apiGames) * (1 + apiBonusVal / 100) + apiRacks + apiTemp) * 1e9;
+            hiddenTotalOffset = (api.current_Power * 1e9) - apiFormulaTotal;
+        }
+
+        // --- Current State Base ---
+        // Calculate based on the visible input fields (which the user might have edited)
         const bonusBase = currentMinerBaseH + gamesH;
         let currentTotalPowerH = (bonusBase * (1 + currentBonusVal / 100)) + rackH + tempH;
+        
+        // Apply backend offset for Total Power
+        currentTotalPowerH += hiddenTotalOffset;
 
-        // If we fetched the exact API values, use them directly to guarantee 100% precision!
-        // (API contains unlisted inventory power & backend rounding offsets)
-        if (fetchMode === 'username' && fetchedUser) {
-            currentLeaguePowerH = (fetchedUser.userPowerResponseDto.max_Power || 0) * 1e9;
-            currentTotalPowerH = (fetchedUser.userPowerResponseDto.current_Power || 0) * 1e9;
-        }
+        // As requested by user: League Power = Total Power - Games - Temporary - Freon
+        let currentLeaguePowerH = currentTotalPowerH - gamesH - tempH - freonH;
+
 
         let addedMinersBaseH = 0;
         let addedMinersBonusVal = 0;
@@ -250,17 +269,15 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const totalAddedBaseH = addedMinersBaseH + previewMinerH;
         const totalAddedBonusVal = addedMinersBonusVal + previewBonusVal;
 
-        // --- New State (Calculated via Delta) ---
+        // --- New State (Calculated via Inputs + Offset) ---
         const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
+        const newAllMinersH = currentMinerBaseH + totalAddedBaseH;
         
-        // Exact Delta Formula to preserve baseline offsets:
-        // Delta = New Formula - Old Formula
-        const deltaLeaguePowerH = ((currentMinerBaseH + totalAddedBaseH) * (1 + newTotalBonusPercent / 100)) - (currentMinerBaseH * (1 + currentBonusVal / 100));
-        const newLeaguePowerH = currentLeaguePowerH + deltaLeaguePowerH;
+        const newBonusBaseH = newAllMinersH + gamesH;
+        let newTotalPowerH = (newBonusBaseH * (1 + newTotalBonusPercent / 100)) + rackH + tempH + hiddenTotalOffset;
 
-        const newBonusBaseH = currentMinerBaseH + totalAddedBaseH + gamesH;
-        const deltaTotalPowerH = (newBonusBaseH * (1 + newTotalBonusPercent / 100)) - (bonusBase * (1 + currentBonusVal / 100));
-        const newTotalPowerH = currentTotalPowerH + deltaTotalPowerH;
+        // League Power = Total Power - Games - Temporary - Freon
+        const newLeaguePowerH = newTotalPowerH - gamesH - tempH - freonH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;
