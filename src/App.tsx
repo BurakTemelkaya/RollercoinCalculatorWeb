@@ -319,7 +319,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260517.214052';
+  const CURRENT_CACHE_VERSION = '20260517.000820';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -854,6 +854,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         blockDurations={blockDurations}
                         customPeriodDays={customPeriodDays}
                         customPeriodHours={customPeriodHours}
+                        isActiveTab={activeTab === 'calculator'}
                       />
                       <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
                     </div>

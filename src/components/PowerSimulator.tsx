@@ -220,37 +220,64 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         // Non-league power (does NOT affect league): Games, Temp Power
         // Games & Temp power inflate your total but don't help you advance leagues.
 
-        // We calculate "hidden" backend offsets for Total Power to keep API precision without locking inputs.
+        // We calculate "hidden" backend offsets to keep API precision without locking inputs.
+        // E.g. inventory miners count towards max_Power but aren't in 'miners' field, 
+        // and 'Games' collection bonus must be perfectly isolated.
+        let hiddenLeagueOffset = 0;
         let hiddenTotalOffset = 0;
 
         if (fetchMode === 'username' && fetchedUser) {
             const api = fetchedUser.userPowerResponseDto;
-            const apiMiners = api.miners || 0;
-            const apiGames = api.games || 0;
-            const apiRacks = api.racks || 0;
-            const apiTemp = api.temp || 0;
+            
+            // To perfectly cancel out the rounding applied when populating the UI,
+            // we calculate the formula using the exact same rounded numbers the UI inputs have (.toFixed(3)).
+            const uiMiners = toBaseUnit({ 
+                value: parseFloat(autoScalePower((api.miners || 0) * 1e9).value.toFixed(3)), 
+                unit: autoScalePower((api.miners || 0) * 1e9).unit 
+            });
+            const uiGames = toBaseUnit({ 
+                value: parseFloat(autoScalePower((api.games || 0) * 1e9).value.toFixed(3)), 
+                unit: autoScalePower((api.games || 0) * 1e9).unit 
+            });
+            const uiRacks = toBaseUnit({ 
+                value: parseFloat(autoScalePower((api.racks || 0) * 1e9).value.toFixed(3)), 
+                unit: autoScalePower((api.racks || 0) * 1e9).unit 
+            });
+            const uiTemp = toBaseUnit({ 
+                value: parseFloat(autoScalePower((api.temp || 0) * 1e9).value.toFixed(3)), 
+                unit: autoScalePower((api.temp || 0) * 1e9).unit 
+            });
+            const uiFreon = toBaseUnit({ 
+                value: parseFloat(autoScalePower((api.freon || 0) * 1e9).value.toFixed(3)), 
+                unit: autoScalePower((api.freon || 0) * 1e9).unit 
+            });
 
-            let apiBonusVal = 0;
+            let rawBonusVal = 0;
             if (api.bonus_percent !== undefined) {
-                apiBonusVal = api.bonus_percent / 100;
-            } else if ((apiMiners + apiGames) > 0) {
-                apiBonusVal = ((api.bonus || 0) / (apiMiners + apiGames)) * 100;
+                rawBonusVal = api.bonus_percent / 100;
+            } else if (((api.miners || 0) + (api.games || 0)) > 0) {
+                rawBonusVal = ((api.bonus || 0) / ((api.miners || 0) + (api.games || 0))) * 100;
             }
+            const uiBonusVal = parseFloat(rawBonusVal.toFixed(4));
 
-            const apiFormulaTotal = ((apiMiners + apiGames) * (1 + apiBonusVal / 100) + apiRacks + apiTemp) * 1e9;
-            hiddenTotalOffset = (api.current_Power * 1e9) - apiFormulaTotal;
+            const uiFormulaLeague = uiMiners * (1 + uiBonusVal / 100) + uiRacks - uiFreon;
+            const uiFormulaTotal = (uiMiners + uiGames) * (1 + uiBonusVal / 100) + uiRacks + uiTemp;
+
+            hiddenLeagueOffset = (api.max_Power * 1e9) - uiFormulaLeague;
+            hiddenTotalOffset = (api.current_Power * 1e9) - uiFormulaTotal;
         }
 
         // --- Current State Base ---
         // Calculate based on the visible input fields (which the user might have edited)
+        let currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH - freonH;
+
         const bonusBase = currentMinerBaseH + gamesH;
         let currentTotalPowerH = (bonusBase * (1 + currentBonusVal / 100)) + rackH + tempH;
         
-        // Apply backend offset for Total Power
+        // Apply backend offsets so that if inputs match API exactly, the output matches API exactly.
+        // If inputs are edited, it correctly scales from the edit.
+        currentLeaguePowerH += hiddenLeagueOffset;
         currentTotalPowerH += hiddenTotalOffset;
-
-        // As requested by user: League Power = Total Power - Games - Temporary - Freon
-        let currentLeaguePowerH = currentTotalPowerH - gamesH - tempH - freonH;
 
 
         let addedMinersBaseH = 0;
@@ -273,11 +300,10 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
         const newAllMinersH = currentMinerBaseH + totalAddedBaseH;
         
+        const newLeaguePowerH = (newAllMinersH * (1 + newTotalBonusPercent / 100)) + rackH - freonH + hiddenLeagueOffset;
+
         const newBonusBaseH = newAllMinersH + gamesH;
         let newTotalPowerH = (newBonusBaseH * (1 + newTotalBonusPercent / 100)) + rackH + tempH + hiddenTotalOffset;
-
-        // League Power = Total Power - Games - Temporary - Freon
-        const newLeaguePowerH = newTotalPowerH - gamesH - tempH - freonH;
 
         const newTotalPower = autoScalePower(newTotalPowerH);
         const powerDiff = newTotalPowerH - currentTotalPowerH;

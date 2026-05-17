@@ -23,6 +23,7 @@ interface EarningsTableProps {
     blockDurations?: Record<string, number>;
     customPeriodDays: number;
     customPeriodHours: number;
+    isActiveTab?: boolean;
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
@@ -36,6 +37,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     blockDurations = {},
     customPeriodDays,
     customPeriodHours,
+    isActiveTab = true,
 }) => {
     const { t } = useTranslation();
     const tablesRef = useRef<HTMLDivElement>(null);
@@ -795,7 +797,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </div>
 
                     {/* Fixed sticky header clone - rendered via portal to escape overflow:hidden */}
-                    {showFixedHeader && headerWidths.length > 0 && createPortal(
+                    {isActiveTab && showFixedHeader && headerWidths.length > 0 && createPortal(
                         <div
                             className="fixed-thead-clone"
                             style={{
