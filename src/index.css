@@ -303,8 +303,8 @@ a:hover {
 }
 
 .app-main-logo {
-  width: 48px !important;
-  height: 48px !important;
+  width: 100px !important;
+  height: 100px !important;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
@@ -537,6 +537,7 @@ a:hover {
   .header-logo {
     order: 1;
     flex: 0 0 auto;
+    margin-left: 16px;
   }
 
   .header-actions {
@@ -561,8 +562,8 @@ a:hover {
   }
 
   .app-main-logo {
-    width: 42px !important;
-    height: 42px !important;
+    width: 56px !important;
+    height: 56px !important;
   }
 
   .main-content {
@@ -4910,4 +4911,4 @@ html body[data-scroll-locked] {
   overflow-y: scroll !important;
   padding-right: 0 !important;
   margin-right: 0 !important;
-}
+}

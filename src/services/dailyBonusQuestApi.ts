@@ -50,12 +50,43 @@ function normalizeDailyBonusQuestList(
  * Fetches today's daily bonus quest, or a specific quest by ID.
  */
 export async function fetchDailyBonusQuest(id?: string): Promise<DailyBonusQuest> {
+    const CACHE_KEY = 'rollercoin_web_daily_bonus_quest_cache';
+
+    if (!id) {
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (parsed.expiry && parsed.expiry > Date.now() && parsed.data) {
+                    return parsed.data;
+                }
+            }
+        } catch (e) {
+            console.warn('Failed to parse cached daily bonus quest', e);
+        }
+    }
+
     const base = '/api/DailyBonusQuest';
     const url = id
         ? buildApiUrl(`${base}?id=${encodeURIComponent(id)}`)
         : buildApiUrl(base);
     const data = await apiGet<DailyBonusQuest>(url);
-    return normalizeDailyBonusQuest(data);
+    const normalizedData = normalizeDailyBonusQuest(data);
+
+    if (!id) {
+        try {
+            const now = new Date();
+            const nextMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0));
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: normalizedData,
+                expiry: nextMidnight.getTime()
+            }));
+        } catch (e) {
+            console.warn('Failed to set cache for daily bonus quest', e);
+        }
+    }
+
+    return normalizedData;
 }
 
 /**

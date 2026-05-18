@@ -121,7 +121,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <div className="header-content">
                 <div className="header-logo">
                   <Link to={`/${i18n.language}`}>
-                    <img src={appLogo} alt="Logo" width="80" height="80" className="app-main-logo" />
+                    <img src={appLogo} alt="Logo" width="100" height="100" className="app-main-logo" />
                   </Link>
                 </div>
                 <div className="header-center">
