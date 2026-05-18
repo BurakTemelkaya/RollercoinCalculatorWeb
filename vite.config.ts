@@ -8,6 +8,7 @@ export default defineConfig({
   base: '/',
   build: {
     target: "es2015",
+    chunkSizeWarningLimit: 1000,
     // Disable inlining of SVGs as base64 for production builds
     assetsInlineLimit: (filePath) => {
       if (filePath.endsWith('.svg') || filePath.endsWith('.png')) {

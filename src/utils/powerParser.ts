@@ -137,14 +137,9 @@ export function powerRatio(userPower: HashPower, leaguePower: HashPower): number
     if (leagueBase === 0) return 1;
 
     // The user's power is supposed to be *part* of the league power.
-    // If we're doing a "what-if" scenario where the user applies their power 
-    // to a coin they aren't currently mining (or a coin with very low total power),
-    // the new total network power for that coin would be its existing power + the user's power.
-    if (userBase > leagueBase) {
-        return userBase / (leagueBase + userBase);
-    }
-
-    return userBase / leagueBase;
+    // If the data is slightly out of sync or user has more power than the network somehow,
+    // we clamp the ratio to 100% (1.0).
+    return Math.min(1, userBase / leagueBase);
 }
 
 

@@ -442,20 +442,15 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 newShare = 0;
             } else if (!isSimulatingAnything) {
                 // Default table behavior
-                if (allocatedUserBase > pureLeagueBase) {
-                    newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
-                } else {
-                    newShare = allocatedUserBase / pureLeagueBase;
-                }
+                newShare = Math.min(1, allocatedUserBase / pureLeagueBase);
             } else {
                 // Simulator is active
-                if (isTargeted || allocatedUserBase > pureLeagueBase) {
+                if (isTargeted) {
                     // Real targeted allocation! Explicitly entering a coin expands its pool.
                     newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
                 } else {
                     // Hypothetical row: display baseline profitability of the modified pool
-                    // without expanding it again with the hypothetical 100%.
-                    newShare = allocatedUserBase / pureLeagueBase;
+                    newShare = Math.min(1, allocatedUserBase / pureLeagueBase);
                 }
             }
 
