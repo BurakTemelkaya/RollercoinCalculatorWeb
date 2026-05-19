@@ -16,7 +16,7 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://rollercoincalculator.app/" />
+  <meta property="og:url" content="https://rollercoincalculator.app" />
   <meta property="og:title" content="Rollercoin Calculator | Earnings &amp; Withdrawal Calculator" />
   <meta property="og:description"
     content="Free Rollercoin earnings calculator. Calculate your daily, weekly, and monthly crypto mining rewards. BTC, ETH, DOGE, SOL and more." />
@@ -136,11 +136,11 @@
   <!-- Global Ad Manager (A-Ads only) -->
   <script>
     window.AdManager = {
-        loadAd: function(containerId, aadsId, w, h) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = '<iframe data-aa="' + aadsId + '" src="//ad.a-ads.com/' + aadsId + '/?size=' + w + 'x' + h + '&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:' + w + 'px; height:' + h + 'px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
-        }
+      loadAd: function (containerId, aadsId, w, h) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '<iframe data-aa="' + aadsId + '" src="//ad.a-ads.com/' + aadsId + '/?size=' + w + 'x' + h + '&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:' + w + 'px; height:' + h + 'px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
+      }
     };
   </script>
 
@@ -151,8 +151,7 @@
   <!-- Desktop Left Sticky (A-Ads) -->
   <div class="desktop-side-ad" style="position: absolute; z-index: 99999; pointer-events: none;">
     <div style="padding-top: 0; padding-bottom: 0;">
-      <div
-        style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
+      <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
           <div id="left-side-ad" style="width: 160px; height: 600px;"></div>
@@ -167,8 +166,7 @@
   <!-- Desktop Right Sticky (A-Ads) -->
   <div class="desktop-side-ad" style="position: absolute; z-index: 99999; pointer-events: none;">
     <div style="padding-top: 0; padding-bottom: 0;">
-      <div
-        style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
+      <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
         <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
           <iframe data-aa="2429727"
@@ -194,7 +192,7 @@
         </label>
         <div id="mobile-sticky-ad" style="width: 320px; height: 50px;"></div>
         <script>
-            window.AdManager.loadAd('mobile-sticky-ad', '2429728', 320, 50);
+          window.AdManager.loadAd('mobile-sticky-ad', '2429728', 320, 50);
         </script>
       </div>
     </div>
@@ -249,14 +247,14 @@
 
     // Ad-blocker detection
     // Sets 'ads-blocked' class on body — React components handle the UI.
-    (function() {
+    (function () {
       var testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
-      setTimeout(function() {
+      setTimeout(function () {
         fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
-          .then(function() {
+          .then(function () {
             // Resources accessible — no ad-blocker
           })
-          .catch(function() {
+          .catch(function () {
             // Fetch blocked — ad-blocker detected
             document.body.classList.add('ads-blocked');
           });
