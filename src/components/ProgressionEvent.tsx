@@ -232,7 +232,7 @@ function getRewardDisplay(
                     text: miner.name.en,
                     subText: `${formatPower(miner.power)} | ${bonusPct}%`,
                     imageUrl: getMinerImageUrl(miner.filename),
-                    level: miner.level,
+                    level: (miner.level || 0) + 1,
                 };
             }
             return { text: t('event.rewardTypes.miner'), subText: '' };
@@ -298,7 +298,18 @@ export default function ProgressionEvent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<EventTab>('rewards');
+    const [collapsedTabs, setCollapsedTabs] = useState<Set<EventTab>>(new Set(['multiplier']));
     const [adBlockWarning, setAdBlockWarning] = useState(false);
+
+    const handleTabChange = (newTab: EventTab) => {
+        if (newTab === activeTab) return;
+        const oldTab = activeTab;
+        setCollapsedTabs(prev => { const next = new Set(prev); next.delete(newTab); return next; });
+        setActiveTab(newTab);
+        setTimeout(() => {
+            setCollapsedTabs(prev => { const next = new Set(prev); next.add(oldTab); return next; });
+        }, 400);
+    };
 
     // Multiplier settings
     const [rltPrice, setRltPrice] = useState<number>(1.05);
@@ -477,6 +488,7 @@ export default function ProgressionEvent() {
 
     // Countdown timer
     const [timeLeft, setTimeLeft] = useState('');
+    const [isEnded, setIsEnded] = useState(false);
 
     useEffect(() => {
         if (!eventData) return;
@@ -487,10 +499,18 @@ export default function ProgressionEvent() {
             const diff = end - now;
 
             if (diff <= 0) {
-                setTimeLeft(t('event.ended'));
+                // Formatting dates safely based on localized strings, or fallback to current locale
+                const formatLang = lang === 'tr' ? 'tr-TR' : 'en-US';
+                const createdDateStr = eventData.createdDate
+                    ? new Date(eventData.createdDate).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', year: 'numeric' })
+                    : t('event.ended');
+                const endDateStr = new Date(eventData.endDate).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', year: 'numeric' });
+                setTimeLeft(`${createdDateStr} - ${endDateStr}`);
+                setIsEnded(true);
                 return;
             }
 
+            setIsEnded(false);
             const days = Math.floor(diff / 86400000);
             const hours = Math.floor((diff % 86400000) / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
@@ -547,6 +567,66 @@ export default function ProgressionEvent() {
 
     const { event, rewards, levels_config } = eventData.data;
 
+    const renderCards = () => (
+        <>
+            {/* Event Difficulty */}
+            <div className="pe-info-card">
+                <h3 className="pe-info-title">{t('event.eventDifficulty')}</h3>
+                <div className="pe-info-table">
+                    <div className="pe-info-row">
+                        <span>{t('event.multiplier')}</span>
+                        <span className="pe-info-value">{t('event.multiplierRate', { amount: dynamicConstants.MULTIPLIER_STEP_RLT })}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.multiplierDuration')}</span>
+                        <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.gameDifficulty')}</span>
+                        <span className="pe-info-value">{EVENT_CONSTANTS.GAME_DIFFICULTY}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.spend1Rlt')}</span>
+                        <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.marketplace')}</span>
+                        <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Total Event Rewards */}
+            {eventSummary && (
+                <div className="pe-info-card">
+                    <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
+                    <div className="pe-info-table">
+                        <div className="pe-info-row">
+                            <span>{t('event.minersPower')}</span>
+                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.totalMinerPower)}</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.minersBonus')}</span>
+                            <span className="pe-info-value pe-highlight">{(eventSummary.totalBonus / 100).toFixed(2)}%</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.tempPower')}</span>
+                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.tempPower)}</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.seasonExp')}</span>
+                            <span className="pe-info-value pe-highlight">{eventSummary.seasonExp} EXP</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>RST</span>
+                            <span className="pe-info-value pe-highlight">{eventSummary.rstAmount} RST</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+
     return (
         <div className="pe-container">
             {/* Ad-Blocker Warning */}
@@ -570,99 +650,48 @@ export default function ProgressionEvent() {
 
             {/* Event Header */}
             <div className="pe-header" style={{
-                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '150px',
+                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`
             }}>
-                <div className="pe-header-actions pe-header-left">
-                    <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
-                        <span className="pe-btn-label">{t('event.backToCalc')}</span>
-                    </Link>
-                    <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-                        <span className="pe-btn-label">{t('event.viewHistory')}</span>
-                    </Link>
+                <div className="pe-header-top-row">
+                    <div className="pe-header-actions pe-header-left">
+                        <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                            <span className="pe-btn-label">{t('event.backToCalc')}</span>
+                        </Link>
+                        <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                            <span className="pe-btn-label">{t('event.viewHistory')}</span>
+                        </Link>
+                    </div>
+
+                    <div className="pe-header-center">
+                        <div className="pe-header-time pe-time-mobile" title={isEnded ? timeLeft : `${t('event.leftTime')}: ${timeLeft}`} style={{ marginBottom: '12px' }}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            {!isEnded && <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>}
+                            <strong>{timeLeft}</strong>
+                        </div>
+                        <h2 className="pe-title">{event.title.en}</h2>
+                    </div>
+
+                    <div className="pe-header-actions pe-header-right pe-time-desktop">
+                        <div className="pe-header-time" title={isEnded ? timeLeft : `${t('event.leftTime')}: ${timeLeft}`}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            {!isEnded && <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>}
+                            <strong>{timeLeft}</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="pe-header-center">
-                    <div className="pe-header-time pe-time-mobile" title={`${t('event.leftTime')}: ${timeLeft}`} style={{ marginBottom: '12px' }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
-                        <strong>{timeLeft}</strong>
-                    </div>
-                    <h2 className="pe-title">{event.title.en}</h2>
-                </div>
-
-                <div className="pe-header-actions pe-header-right pe-time-desktop">
-                    <div className="pe-header-time" title={`${t('event.leftTime')}: ${timeLeft}`}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
-                        <strong>{timeLeft}</strong>
-                    </div>
+                {/* PC Cards inside the Banner */}
+                <div className="pe-header-cards-desktop">
+                    {renderCards()}
                 </div>
             </div>
 
             <div className="pe-layout">
-                {/* Left Sidebar - Event Info */}
-                <aside className="pe-sidebar">
-
-                    {/* Event Difficulty */}
-                    <div className="pe-info-card">
-                        <h3 className="pe-info-title">{t('event.eventDifficulty')}</h3>
-                        <div className="pe-info-table">
-                            <div className="pe-info-row">
-                                <span>{t('event.multiplier')}</span>
-                                <span className="pe-info-value">{t('event.multiplierRate', { amount: dynamicConstants.MULTIPLIER_STEP_RLT })}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.multiplierDuration')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.gameDifficulty')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.GAME_DIFFICULTY}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.spend1Rlt')}</span>
-                                <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.marketplace')}</span>
-                                <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Total Event Rewards */}
-                    {eventSummary && (
-                        <div className="pe-info-card">
-                            <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
-                            <div className="pe-info-table">
-                                <div className="pe-info-row">
-                                    <span>{t('event.minersPower')}</span>
-                                    <span className="pe-info-value pe-highlight">{formatPower(eventSummary.totalMinerPower)}</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.minersBonus')}</span>
-                                    <span className="pe-info-value pe-highlight">{(eventSummary.totalBonus / 100).toFixed(2)}%</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.tempPower')}</span>
-                                    <span className="pe-info-value pe-highlight">{formatPower(eventSummary.tempPower)}</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.seasonExp')}</span>
-                                    <span className="pe-info-value pe-highlight">{eventSummary.seasonExp} EXP</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>RST</span>
-                                    <span className="pe-info-value pe-highlight">{eventSummary.rstAmount} RST</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                {/* Left Sidebar - Mobile Only */}
+                <aside className="pe-sidebar pe-sidebar-mobile">
+                    {renderCards()}
                 </aside>
 
                 {/* Main Content */}
@@ -675,13 +704,13 @@ export default function ProgressionEvent() {
                         />
                         <button
                             className={`main-tab ${activeTab === 'rewards' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('rewards')}
+                            onClick={() => handleTabChange('rewards')}
                         >
                             {t('event.rewardsTab')}
                         </button>
                         <button
                             className={`main-tab ${activeTab === 'multiplier' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('multiplier')}
+                            onClick={() => handleTabChange('multiplier')}
                         >
                             {t('event.multiplierTab')}
                         </button>
@@ -694,7 +723,7 @@ export default function ProgressionEvent() {
                             style={{ transform: activeTab === 'rewards' ? 'translateX(0)' : 'translateX(-100%)' }}
                         >
                             {/* Rewards Table */}
-                            <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}`}>
+                            <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}${collapsedTabs.has('rewards') ? ' collapsed' : ''}`}>
                                 <div className="pe-table-container">
                                     <table className="pe-table">
                                         <thead>
@@ -801,7 +830,7 @@ export default function ProgressionEvent() {
                             </div>
 
                             {/* Multiplier Section */}
-                            <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}`}>
+                            <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}${collapsedTabs.has('multiplier') ? ' collapsed' : ''}`}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     {/* Controls Bar */}
                                     <div className="pe-controls-bar">

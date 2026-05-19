@@ -9,6 +9,7 @@ export interface ProgressionEventResponse {
   id: string;
   name: string;
   endDate: string;
+  createdDate?: string;
   data: string; // JSON string containing ProgressionEventData
   multiplierData?: string; // JSON string containing MultiplierData[]
   taskData?: string; // JSON string containing TaskData[]

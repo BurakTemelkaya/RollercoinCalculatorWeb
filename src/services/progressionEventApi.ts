@@ -13,6 +13,7 @@ export interface ParsedProgressionEvent {
     id: string;
     name: string;
     endDate: string;
+    createdDate?: string;
     data: ProgressionEventData;
     multiplierData?: MultiplierData[];
     taskData?: TaskData[];
@@ -44,10 +45,15 @@ function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedPro
         ? raw.endDate + 'Z'
         : raw.endDate;
 
+    const createdDate = raw.createdDate && !raw.createdDate.endsWith('Z') && !raw.createdDate.includes('+')
+        ? raw.createdDate + 'Z'
+        : raw.createdDate;
+
     return {
         id: raw.id,
         name: raw.name,
         endDate,
+        createdDate,
         data,
         multiplierData,
         taskData,
