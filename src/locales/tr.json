@@ -23,21 +23,6 @@
         "leaguePower": "Lig Gücü"
     },
     "pages": {
-        "privacy": {
-            "title": "Gizlilik Politikası",
-            "lastUpdated": "Son güncelleme: Mart 2026",
-            "intro": "RollerCoin Hesaplayıcı olarak gizliliğinize saygı duyuyor ve verilerinizi korumayı taahhüt ediyoruz.",
-            "s1_title": "1. Topladığımız Kişisel Veriler",
-            "s1_p": "Kişisel veri toplamıyoruz. Sitemizde hesap oluşturma, kayıt veya giriş yapma zorunluluğu yoktur. Adınız, e-posta adresiniz veya telefon numaranız gibi bilgiler saklanmaz.",
-            "s2_title": "2. Otomatik Olarak Toplanan Veriler",
-            "s2_p": "Sitemizi ziyaret ettiğinizde IP adresi (anonim), tarayıcı türü ve ziyaret zamanı gibi teknik veriler analiz amacıyla toplanabilir.",
-            "s3_title": "3. Çerezler (Cookies)",
-            "s3_p": "Sitemiz, Google Analytics ve Google AdSense gibi üçüncü taraf hizmetler aracılığıyla çerez kullanmaktadır. Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz.",
-            "s4_title": "4. Yerel Depolama (LocalStorage)",
-            "s4_p": "Hesaplama ayarlarınızı (dil tercihi, blok süreleri vb.) tarayıcınızın yerel depolama alanında saklıyoruz. Bu veriler yalnızca sizin cihazınızda bulunur.",
-            "s5_title": "5. İletişim",
-            "s5_p": "Herhangi bir soru için GitHub sayfasını ziyaret edebilirsiniz."
-        },
         "about": {
             "title": "Hakkımızda",
             "p1": "RollerCoin Kazanç Hesaplayıcı, RollerCoin oyuncularının stratejilerini optimize etmeleri için geliştirilmiş bağımsız bir analiz aracıdır.",
@@ -115,12 +100,26 @@
                 "rollerTap": "Rollertap ile tıklayarak ödül kazanıp kazandığınız ödülleri rollercoin hesabınıza aktarabilirsiniz.",
                 "solsiege": "Sol Siege, Solana üzerinde yerel olarak geliştirilmiş bir pasif otomatik savaş dalga savunma oyunudur.",
                 "mystNodes": "Kendi cihazınızda küçük bir düğüm (node) çalıştırarak kripto (MYST) geliri elde etmenize olanak tanıyan altyapı paylaşım projesi.",
-                "onlyFunds": "Telegram üzerinde görev ve oyun mantığı ile potansiyel airdrop ödülleri dağıtan kullanışlı bir mini uygulama.",
                 "grass": "İnternetini paylaş, $GRASS kazan! Grass ile pasif gelire hemen başla.",
                 "immutable": "Yeni nesil kripto oyunlarını keşfedip oynayarak kazanç elde edebileceğiniz lider bir Web3 oyun platformu.",
                 "honeygain": "Kullanılmayan internet bant genişliğinizi güvenli bir şekilde paylaşarak zahmetsizce pasif gelir elde edin.",
                 "freecash": "Oyun oynayarak, anket doldurarak ve uygulamaları test ederek kripto, hediye kartı ve nakit kazanın."
             }
+        },
+        "privacy": {
+            "title": "Gizlilik Politikası",
+            "lastUpdated": "Son güncelleme: Mart 2026",
+            "intro": "RollerCoin Hesaplayıcı olarak gizliliğinize saygı duyuyor ve verilerinizi korumayı taahhüt ediyoruz.",
+            "s1_title": "1. Topladığımız Kişisel Veriler",
+            "s1_p": "Kişisel veri toplamıyoruz. Sitemizde hesap oluşturma, kayıt veya giriş yapma zorunluluğu yoktur. Adınız, e-posta adresiniz veya telefon numaranız gibi bilgiler saklanmaz.",
+            "s2_title": "2. Otomatik Olarak Toplanan Veriler",
+            "s2_p": "Sitemizi ziyaret ettiğinizde IP adresi (anonim), tarayıcı türü ve ziyaret zamanı gibi teknik veriler analiz amacıyla toplanabilir.",
+            "s3_title": "3. Çerezler (Cookies)",
+            "s3_p": "Sitemiz, Google Analytics ve Google AdSense gibi üçüncü taraf hizmetler aracılığıyla çerez kullanmaktadır. Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz.",
+            "s4_title": "4. Yerel Depolama (LocalStorage)",
+            "s4_p": "Hesaplama ayarlarınızı (dil tercihi, blok süreleri vb.) tarayıcınızın yerel depolama alanında saklıyoruz. Bu veriler yalnızca sizin cihazınızda bulunur.",
+            "s5_title": "5. İletişim",
+            "s5_p": "Herhangi bir soru için GitHub sayfasını ziyaret edebilirsiniz."
         }
     },
     "charts": {
