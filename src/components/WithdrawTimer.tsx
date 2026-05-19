@@ -172,7 +172,7 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
         localStorage.setItem('rollercoin_web_withdraw_show_date', String(next));
     };
 
-    const dateLocale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
+    const dateLocale = i18n.language || 'en-US';
 
     return (
         <section className="withdraw-timer-section">

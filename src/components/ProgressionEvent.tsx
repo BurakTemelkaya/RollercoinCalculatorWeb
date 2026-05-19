@@ -76,6 +76,12 @@ function formatNumber(num: number): string {
     return Math.ceil(num).toLocaleString('en-US');
 }
 
+function formatPoints(num: number): string {
+    if (num >= 1000000) return parseFloat((num / 1000000).toFixed(2)) + 'M';
+    if (num >= 1000) return parseFloat((num / 1000).toFixed(2)) + 'K';
+    return num.toString();
+}
+
 function getMinerImageUrl(filename: string): string {
     return `https://static.rollercoin.com/static/img/market/miners/${filename}.gif?v=1`;
 }
@@ -500,7 +506,7 @@ export default function ProgressionEvent() {
 
             if (diff <= 0) {
                 // Formatting dates safely based on localized strings, or fallback to current locale
-                const formatLang = lang === 'tr' ? 'tr-TR' : 'en-US';
+                const formatLang = lang || 'en-US';
                 const createdDateStr = eventData.createdDate
                     ? new Date(eventData.createdDate).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', year: 'numeric' })
                     : t('event.ended');
@@ -748,14 +754,16 @@ export default function ProgressionEvent() {
                                                             <span className="pe-multiplier-badge">{level.level}</span>
                                                         </td>
                                                         <td className="pe-number-cell pe-total-cell">
-                                                            {formatNumber(level.required_xp)}
+                                                            <span className="pe-text-desktop">{formatNumber(level.required_xp)}</span>
+                                                            <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.required_xp)}>{formatPoints(level.required_xp)}</span>
                                                         </td>
                                                         <td className="pe-number-cell pe-boxes-cell" style={{ color: 'var(--accent-primary)' }}>
-                                                            {formatNumber(level.level_xp)} {t('event.pointsUnit')}
+                                                            <span className="pe-text-desktop">{formatNumber(level.level_xp)}</span>
+                                                            <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.level_xp)}>{formatPoints(level.level_xp)}</span>
                                                         </td>
                                                         <td className="pe-rewards-col">
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '280px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
-                                                                <div style={{ width: '96px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '240px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
+                                                                <div style={{ width: '64px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
                                                                     {display?.imageUrl ? (
                                                                         <div style={{ position: 'relative', display: 'inline-flex' }}>
                                                                             {(display?.level ?? 0) > 1 && (
@@ -772,7 +780,7 @@ export default function ProgressionEvent() {
                                                                             <img
                                                                                 src={display.imageUrl}
                                                                                 alt={display.text}
-                                                                                style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }}
+                                                                                style={{ maxWidth: '64px', maxHeight: '48px', objectFit: 'contain' }}
                                                                                 loading="lazy"
                                                                                 onError={(e) => {
                                                                                     const target = e.target as HTMLImageElement;
@@ -793,7 +801,7 @@ export default function ProgressionEvent() {
                                                                         <img
                                                                             src={display.localImage}
                                                                             alt={display.text}
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                                                                            style={{ width: '36px', height: '36px', objectFit: 'contain' }}
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;
@@ -804,7 +812,7 @@ export default function ProgressionEvent() {
                                                                         <img
                                                                             src={typeImage}
                                                                             alt={reward?.type || ''}
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                                                                            style={{ width: '36px', height: '36px', objectFit: 'contain' }}
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;
