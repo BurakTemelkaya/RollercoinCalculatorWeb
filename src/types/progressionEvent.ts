@@ -80,7 +80,7 @@ export interface ProgressionReward {
   title: LocalizedText;
   description: LocalizedText;
   range_count: { min: number; max: number };
-  item?: MinerItem | RackItem | UtilityItem | BatteryItem | MutationComponentItem | MysteryBoxItem;
+  item?: MinerItem | RackItem | UtilityItem | BatteryItem | MutationComponentItem | MysteryBoxItem | TrophyItem | HatItem;
 }
 
 export type RewardType =
@@ -92,7 +92,9 @@ export type RewardType =
   | 'rack'
   | 'utility_item'
   | 'mutation_component'
-  | 'mystery_box';
+  | 'mystery_box'
+  | 'trophy'
+  | 'hat';
 
 export interface MinerItem {
   _id: string;
@@ -154,6 +156,19 @@ export interface MysteryBoxItem {
     cover_url?: string;
     box_image_url?: string;
   };
+}
+
+export interface TrophyItem {
+  _id: string;
+  name: LocalizedText;
+  description: LocalizedText;
+  file_name: string;
+}
+
+export interface HatItem {
+  _id: string;
+  title: LocalizedText;
+  description: LocalizedText;
 }
 
 export interface LevelConfig {

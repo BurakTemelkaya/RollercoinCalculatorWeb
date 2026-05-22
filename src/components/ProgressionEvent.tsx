@@ -11,6 +11,8 @@ import type {
     UtilityItem,
     MutationComponentItem,
     MysteryBoxItem,
+    TrophyItem,
+    HatItem,
 } from '../types/progressionEvent';
 import {
     BOX_PRICE_OPTIONS,
@@ -193,7 +195,7 @@ const rewardTypeFallbackIcon = xpImg;
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; localImage?: string; level?: number } {
+): { text: string; subText: string; imageUrl?: string; localImage?: string; level?: number; scale?: number } {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -290,6 +292,32 @@ function getRewardDisplay(
                 imageUrl: boxImageUrl ?? undefined,
                 localImage: boxImageUrl ? undefined : getMysteryBoxLocalFallback(box, reward.title.en),
             };
+        }
+        case 'trophy': {
+            const trophy = reward.item as TrophyItem | undefined;
+            if (trophy) {
+                const name = trophy.name?.en ?? reward.title.en;
+                return {
+                    text: name,
+                    subText: '',
+                    imageUrl: `https://static.rollercoin.com/static/img/game/room/trophies/${trophy.file_name}.png?v=1.0.0`,
+                    scale: 1.6,
+                };
+            }
+            return { text: reward.title.en, subText: '' };
+        }
+        case 'hat': {
+            const hat = reward.item as HatItem | undefined;
+            if (hat) {
+                const name = hat.title?.en ?? reward.title.en;
+                return {
+                    text: name,
+                    subText: '',
+                    imageUrl: `https://static.rollercoin.com/static/img/market/hats/${hat._id}.png?v=1.0.0`,
+                    scale: 1.6,
+                };
+            }
+            return { text: reward.title.en, subText: '' };
         }
         default:
             return { text: reward.title.en, subText: '' };
@@ -762,8 +790,8 @@ export default function ProgressionEvent() {
                                                             <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.level_xp)}>{formatPoints(level.level_xp)}</span>
                                                         </td>
                                                         <td className="pe-rewards-col">
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '240px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
-                                                                <div style={{ width: '64px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+                                                            <div className="pe-reward-item-container">
+                                                                <div className="pe-reward-img-wrapper">
                                                                     {display?.imageUrl ? (
                                                                         <div style={{ position: 'relative', display: 'inline-flex' }}>
                                                                             {(display?.level ?? 0) > 1 && (
@@ -780,7 +808,8 @@ export default function ProgressionEvent() {
                                                                             <img
                                                                                 src={display.imageUrl}
                                                                                 alt={display.text}
-                                                                                style={{ maxWidth: '64px', maxHeight: '48px', objectFit: 'contain' }}
+                                                                                className="pe-reward-img-api"
+                                                                                style={display.scale ? { transform: `scale(${display.scale})` } : undefined}
                                                                                 loading="lazy"
                                                                                 onError={(e) => {
                                                                                     const target = e.target as HTMLImageElement;
@@ -801,7 +830,7 @@ export default function ProgressionEvent() {
                                                                         <img
                                                                             src={display.localImage}
                                                                             alt={display.text}
-                                                                            style={{ width: '36px', height: '36px', objectFit: 'contain' }}
+                                                                            className="pe-reward-img-local"
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;
@@ -812,7 +841,7 @@ export default function ProgressionEvent() {
                                                                         <img
                                                                             src={typeImage}
                                                                             alt={reward?.type || ''}
-                                                                            style={{ width: '36px', height: '36px', objectFit: 'contain' }}
+                                                                            className="pe-reward-img-local"
                                                                             loading="lazy"
                                                                             onError={(e) => {
                                                                                 const target = e.target as HTMLImageElement;

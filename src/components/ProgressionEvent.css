@@ -87,10 +87,19 @@
 .pe-header-cards-desktop .pe-info-card {
   flex: 1;
   max-width: 450px;
-  background: transparent;
-  backdrop-filter: none;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.pe-header-cards-desktop .pe-info-card:hover,
+.pe-header-cards-desktop .pe-info-card:active {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 /* Glassmorphism badges behind text */
@@ -105,7 +114,7 @@
 }
 
 .pe-header-cards-desktop .pe-info-title {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.25);
   color: #fff;
 }
 
@@ -114,8 +123,8 @@
 }
 
 .pe-header-cards-desktop .pe-info-row {
-  color: rgba(255, 255, 255, 0.85);
-  border-bottom-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-color: rgba(255, 255, 255, 0.25);
 }
 
 .pe-header-actions {
@@ -268,6 +277,14 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.pe-info-card:hover,
+.pe-info-card:active {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .pe-info-title {
@@ -966,5 +983,55 @@
   .pe-controls-bar {
     gap: 10px;
     padding: 10px 12px;
+  }
+}
+
+/* ===== REWARD IMAGE SIZES ===== */
+.pe-reward-item-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 240px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.pe-reward-img-wrapper {
+  width: 64px;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pe-reward-img-api {
+  max-width: 64px;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+.pe-reward-img-local {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+@media (min-width: 901px) {
+  .pe-reward-item-container {
+    width: 290px;
+  }
+  
+  .pe-reward-img-wrapper {
+    width: 96px;
+  }
+  
+  .pe-reward-img-api {
+    max-width: 96px;
+    max-height: 64px;
+  }
+  
+  .pe-reward-img-local {
+    width: 48px;
+    height: 48px;
   }
 }
