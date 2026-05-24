@@ -5,6 +5,7 @@ import './index.css'
 import './i18n'
 import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
 
 function normalizeInitialUrl() {
   if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
@@ -55,7 +56,9 @@ createRoot(container).render(
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
   </StrictMode>

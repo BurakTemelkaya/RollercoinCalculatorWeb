@@ -1,109 +1,185 @@
-import { useParams, Link } from 'react-router-dom';
+/**
+ * Blog Page (API-powered)
+ *
+ * Fetches blog list from the backend API filtered by language.
+ * Language IDs are resolved from the /api/Language endpoint.
+ * Replaces the old static blog listing.
+ */
+
+import { useState, useEffect, useCallback } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { fetchBlogList, fetchLanguages } from '../services/blogApi';
+import Pagination from './Pagination';
+import type { BlogListItem, Language } from '../types/blog';
+import './BlogPage.css';
 
-const BlogPageTR = () => {
-  const { lang } = useParams<{ lang: string }>();
-  return (
-    <div className="static-page-container">
-      <Helmet>
-        <title>RollerCoin Blog: Rehberler, İncelemeler ve Stratejiler | RollerCoin Hesaplayıcı</title>
-        <meta name="description" content="RollerCoin hakkında detaylı blog yazıları. Oyun incelemeleri, lig sistemi rehberi, marketplace ipuçları, karlılık analizi ve yeni başlayanlar için rehber." />
-        <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog`} />
-      </Helmet>
-      <div className="static-back-link">
-        <Link to={`/${lang}`}>← Hesaplayıcıya Dön</Link>
-      </div>
-      <article className="static-content guides-container">
-        <h1>RollerCoin Blog</h1>
-        <p>RollerCoin hakkında derinlemesine analizler, strateji önerileri ve güncel bilgiler. Oyunu daha iyi anlamak ve kazancınızı artırmak için blog yazılarımızı okuyun.</p>
-
-        <section className="guide-card" style={{ marginTop: '40px' }}>
-          <h2>🎮 RollerCoin Nedir? Kapsamlı İnceleme (2026)</h2>
-          <p>RollerCoin'in ne olduğu, nasıl çalıştığı, tarihi, güç kaynakları, desteklenen kripto paralar, F2P vs yatırımcı karşılaştırması, avantajlar/dezavantajlar ve gerçekçi kazanç beklentileri hakkında her şeyi öğrenin.</p>
-          <Link to={`/${lang}/blog/what-is-rollercoin`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Devamını Oku →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🏆 Lig Sistemi Nasıl Çalışır? Detaylı Rehber</h2>
-          <p>15 lig kademesi, güç eşikleri, Lig Gücü vs Mevcut Güç farkı, bağımsız ödül havuzları, blok ödülü dağıtım formülü ve lig atlama stratejileri hakkında kapsamlı bilgi.</p>
-          <Link to={`/${lang}/blog/league-system-explained`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Devamını Oku →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🛒 Marketplace Rehberi: Akıllı Alım-Satım İpuçları</h2>
-          <p>Güç/maliyet oranı hesaplama, bonus yüzdesi değerlendirme, parça birleştirme stratejisi, ROI hesabı ve sık yapılan hatalardan kaçınma ipuçları.</p>
-          <Link to={`/${lang}/blog/marketplace-trading-guide`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Devamını Oku →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>💰 Hangi Coini Kazmalıyım? Karlılık Analizi</h2>
-          <p>BTC, ETH, DOGE, SOL ve diğer coinlerin karşılaştırması. Blok ödülü, ağ gücü, piyasa fiyatı faktörleri ve hesaplayıcıyla karlılık analizi yapma rehberi.</p>
-          <Link to={`/${lang}/blog/most-profitable-coin`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Devamını Oku →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🚀 Yeni Başlayanlar İçin Adım Adım Rehber</h2>
-          <p>Hesap oluşturma, arayüz tanıma, mini-oyunlar, PC seviyesi, görevler, ilk madenci alımı, kazanç takibi ve 30 günlük aksiyon planı. RollerCoin'e yeni başlayanların okuması gereken tek rehber.</p>
-          <Link to={`/${lang}/blog/beginners-complete-guide`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Devamını Oku →</Link>
-        </section>
-      </article>
-    </div>
-  );
-};
-
-const BlogPageEN = () => {
-  const { lang } = useParams<{ lang: string }>();
-  const { t } = useTranslation();
-  return (
-    <div className="static-page-container">
-      <Helmet>
-        <title>RollerCoin Blog: Guides, Reviews & Strategies | RollerCoin Calculator</title>
-        <meta name="description" content="In-depth blog posts about RollerCoin. Game reviews, league system guide, marketplace tips, profitability analysis, and beginner's guide." />
-        <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog`} />
-      </Helmet>
-      <div className="static-back-link">
-        <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
-      </div>
-      <article className="static-content guides-container">
-        <h1>RollerCoin Blog</h1>
-        <p>In-depth analyses, strategy recommendations, and up-to-date information about RollerCoin. Read our blog posts to better understand the game and maximize your earnings.</p>
-
-        <section className="guide-card" style={{ marginTop: '40px' }}>
-          <h2>🎮 What is RollerCoin? Comprehensive Review (2026)</h2>
-          <p>Learn everything about what RollerCoin is, how it works, its history, power sources, supported cryptocurrencies, F2P vs investor comparison, pros/cons, and realistic earning expectations.</p>
-          <Link to={`/${lang}/blog/what-is-rollercoin`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Read More →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🏆 How Does the League System Work? Detailed Guide</h2>
-          <p>Comprehensive coverage of 15 league tiers, power thresholds, League Power vs Current Power, independent reward pools, block reward distribution formula, and league advancement strategies.</p>
-          <Link to={`/${lang}/blog/league-system-explained`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Read More →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🛒 Marketplace Guide: Smart Trading Tips</h2>
-          <p>Power-to-cost ratio calculations, bonus percentage evaluation, part merging strategy, ROI calculations, and tips for avoiding common mistakes.</p>
-          <Link to={`/${lang}/blog/marketplace-trading-guide`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Read More →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>💰 Which Coin Should You Mine? Profitability Analysis</h2>
-          <p>Comparison of BTC, ETH, DOGE, SOL, and other coins. Block rewards, network power, market price factors, and using our calculator for profitability analysis.</p>
-          <Link to={`/${lang}/blog/most-profitable-coin`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Read More →</Link>
-        </section>
-
-        <section className="guide-card" style={{ marginTop: '30px' }}>
-          <h2>🚀 Beginner's Complete Step-by-Step Guide</h2>
-          <p>Account creation, interface overview, mini-games, PC levels, quests, first miner purchase, earnings tracking, and a 30-day action plan. The one guide every RollerCoin newbie needs to read.</p>
-          <Link to={`/${lang}/blog/beginners-complete-guide`} className="btn-primary" style={{ display: 'inline-block', marginTop: '10px' }}>Read More →</Link>
-        </section>
-      </article>
-    </div>
-  );
-};
+const PAGE_SIZE = 9;
 
 export default function BlogPage() {
   const { lang } = useParams<{ lang: string }>();
-  return lang === 'tr' ? <BlogPageTR /> : <BlogPageEN />;
+  const { t } = useTranslation();
+
+  const [blogs, setBlogs] = useState<BlogListItem[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [hasPrevious, setHasPrevious] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Resolve language ID from the current app language
+  const getLanguageId = useCallback((): number | null => {
+    if (languages.length === 0) return null;
+    const match = languages.find(
+      (l) => l.code.toLowerCase() === (lang || 'en').toLowerCase()
+    );
+    return match?.id ?? languages[0]?.id ?? null;
+  }, [languages, lang]);
+
+  // Fetch languages first
+  useEffect(() => {
+    let cancelled = false;
+    fetchLanguages()
+      .then((data) => {
+        if (!cancelled) setLanguages(data);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch languages:', err);
+        if (!cancelled) setError(t('blog.loadError'));
+      });
+    return () => { cancelled = true; };
+  }, [t]);
+
+  // Fetch blog list when language or page changes
+  useEffect(() => {
+    const languageId = getLanguageId();
+    if (languageId === null) return;
+
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+
+    fetchBlogList(languageId, currentPage, PAGE_SIZE)
+      .then((data) => {
+        if (!cancelled) {
+          setBlogs(data.items || []);
+          setTotalPages(data.pages || 0);
+          setHasPrevious(data.hasPrevious ?? false);
+          setHasNext(data.hasNext ?? false);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch blogs:', err);
+        if (!cancelled) setError(t('blog.loadError'));
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [getLanguageId, currentPage, t]);
+
+  // Reset page when language changes
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [lang]);
+
+  const formatDate = (dateStr: string) => {
+    try {
+      return new Date(dateStr).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  return (
+    <div className="blog-page">
+      <Helmet>
+        <title>{t('blog.title')} | Rollercoin Calculator</title>
+        <meta
+          name="description"
+          content={t('blog.seoDescription')}
+        />
+        <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog`} />
+      </Helmet>
+
+      <div className="blog-header">
+        <div className="static-back-link">
+          <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
+        </div>
+        <h1>{t('blog.title')}</h1>
+        <p className="blog-description">{t('blog.description')}</p>
+      </div>
+
+      {isLoading && (
+        <div className="blog-loading">
+          <span className="spinner" />
+          <p>{t('blog.loading')}</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="blog-error">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && blogs.length === 0 && (
+        <div className="blog-empty">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <p>{t('blog.noBlogs')}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && blogs.length > 0 && (
+        <>
+          <div className="blog-grid">
+            {blogs.map((blog) => (
+              <Link
+                key={blog.id}
+                to={`/${lang}/blog/${blog.slug}`}
+                className="blog-card"
+              >
+                {blog.thumbnailImageUrl && (
+                  <div className="blog-card-thumbnail">
+                    <img
+                      src={blog.thumbnailImageUrl}
+                      alt={blog.title}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className="blog-card-body">
+                  <h2 className="blog-card-title">{blog.title}</h2>
+                  <time className="blog-card-date" dateTime={blog.createdDate}>
+                    {formatDate(blog.createdDate)}
+                  </time>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              hasPrevious={hasPrevious}
+              hasNext={hasNext}
+              onPageChange={setCurrentPage}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
 }

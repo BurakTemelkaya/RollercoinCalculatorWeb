@@ -6,6 +6,7 @@ import appLogo from '../assets/logo.png';
 import TurnstileProvider from './TurnstileProvider';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
+import { useAuth } from '../contexts/AuthContext';
 
 const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
@@ -43,6 +44,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const langFromPath = location.pathname.split('/')[1];
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
+
+  const { isAuthenticated, isAdmin, user, logout } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -149,6 +152,29 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         showSelectedIcon={true}
                     />
                   </div>
+
+                  {/* Auth Buttons */}
+                  <div className="auth-header-btns desktop-only">
+                    {isAuthenticated ? (
+                      <>
+                        {isAdmin && (
+                          <Link to={`/${lang}/admin/blogs`} className="header-auth-btn admin-link" title="Admin">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
+                          </Link>
+                        )}
+                        <span className="header-user-email" title={user?.email}>{user?.email?.split('@')[0]}</span>
+                        <button className="header-auth-btn logout-btn" onClick={logout} title={t('auth.logout')}>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                        </button>
+                      </>
+                    ) : (
+                      <Link to={`/${lang}/login`} className="header-auth-btn login-link">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
+                        {t('auth.login')}
+                      </Link>
+                    )}
+                  </div>
+
                   <button
                     className="hamburger-btn mobile-only"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -172,6 +198,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
+                  <div className="mobile-auth-divider" />
+                  {isAuthenticated ? (
+                    <>
+                      {isAdmin && (
+                        <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/admin/blogs`} className="mobile-nav-link">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
+                          {t('admin.title')}
+                        </Link>
+                      )}
+                      <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="mobile-nav-link mobile-logout-btn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                        {t('auth.logout')} ({user?.email?.split('@')[0]})
+                      </button>
+                    </>
+                  ) : (
+                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/login`} className="mobile-nav-link">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
+                      {t('auth.login')}
+                    </Link>
+                  )}
                 </div>
               </div>
             </header>

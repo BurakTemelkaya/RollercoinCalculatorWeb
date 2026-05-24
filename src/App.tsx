@@ -59,13 +59,14 @@ const CalculationLogicGuide = lazyWithRetry(() => import('./components/guides/Ca
 const SupportPage = lazyWithRetry(() => import('./components/SupportPage'));
 const LeagueChart = lazyWithRetry(() => import('./components/LeagueChart'));
 const BlogPage = lazyWithRetry(() => import('./components/BlogPage'));
-const WhatIsRollercoin = lazyWithRetry(() => import('./components/blog/WhatIsRollercoin'));
-const LeagueSystemExplained = lazyWithRetry(() => import('./components/blog/LeagueSystemExplained'));
-const MarketplaceTradingGuide = lazyWithRetry(() => import('./components/blog/MarketplaceTradingGuide'));
-const MostProfitableCoin = lazyWithRetry(() => import('./components/blog/MostProfitableCoin'));
-const BeginnersCompleteGuide = lazyWithRetry(() => import('./components/blog/BeginnersCompleteGuide'));
+const BlogDetailPage = lazyWithRetry(() => import('./components/BlogDetailPage'));
+const LoginPage = lazyWithRetry(() => import('./components/auth/LoginPage'));
+const RegisterPage = lazyWithRetry(() => import('./components/auth/RegisterPage'));
+const AdminBlogList = lazyWithRetry(() => import('./components/admin/AdminBlogList'));
+const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const MergePage = lazyWithRetry(() => import('./components/MergePage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
+const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -319,7 +320,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260522.211553';
+  const CURRENT_CACHE_VERSION = '20260524.014333';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -918,11 +919,12 @@ function App() {
         <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
         <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
         <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
-        <Route path="/:lang/blog/what-is-rollercoin" element={<React.Suspense fallback={null}><WhatIsRollercoin /></React.Suspense>} />
-        <Route path="/:lang/blog/league-system-explained" element={<React.Suspense fallback={null}><LeagueSystemExplained /></React.Suspense>} />
-        <Route path="/:lang/blog/marketplace-trading-guide" element={<React.Suspense fallback={null}><MarketplaceTradingGuide /></React.Suspense>} />
-        <Route path="/:lang/blog/most-profitable-coin" element={<React.Suspense fallback={null}><MostProfitableCoin /></React.Suspense>} />
-        <Route path="/:lang/blog/beginners-complete-guide" element={<React.Suspense fallback={null}><BeginnersCompleteGuide /></React.Suspense>} />
+        <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />
+        <Route path="/:lang/login" element={<React.Suspense fallback={null}><LoginPage /></React.Suspense>} />
+        <Route path="/:lang/register" element={<React.Suspense fallback={null}><RegisterPage /></React.Suspense>} />
+        <Route path="/:lang/admin/blogs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </MainLayout>
