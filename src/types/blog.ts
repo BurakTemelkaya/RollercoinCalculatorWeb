@@ -7,16 +7,40 @@ export interface Language {
   nativeName: string;
 }
 
-/** Blog list item returned from GET /api/Blog */
+export const ReviewStatus = {
+  Pending: 0,
+  Approved: 1,
+  Rejected: 2,
+  RevisionRequested: 3
+} as const;
+
+export type ReviewStatus = typeof ReviewStatus[keyof typeof ReviewStatus];
+
+export const BlogCommentReviewStatus = {
+  Pending: 0,
+  Approved: 1,
+  Rejected: 2
+} as const;
+
+export type BlogCommentReviewStatus = typeof BlogCommentReviewStatus[keyof typeof BlogCommentReviewStatus];
+
+/** Blog list item returned from GET /api/Blog or get-admin-blogs */
 export interface BlogListItem {
   id: string;
   thumbnailImageUrl: string;
   creatorUserId: string;
+  creatorUser?: CreatorUser;
   mainLanguageId?: number | null;
-  title: string;
-  slug: string;
+  title?: string; // Present in public list
+  slug?: string; // Present in public list
   createdDate: string;
   updatedDate?: string | null;
+  status?: ReviewStatus; // Present in admin list
+  blogContents?: { // Present in admin list
+    languageId: number;
+    title: string;
+    slug: string;
+  }[];
 }
 
 /** Paginated blog list response */
@@ -42,11 +66,19 @@ export interface BlogContentDto {
   updatedDate?: string | null;
 }
 
+export interface CreatorUser {
+  id: string;
+  name?: string;
+  email?: string;
+  createdDate?: string;
+}
+
 /** Full blog detail returned from get-by-slug */
 export interface BlogDetail {
   id: string;
   thumbnailImageUrl: string;
   creatorUserId: string;
+  creatorUser?: CreatorUser;
   mainLanguageId?: number | null;
   blogContent: BlogContentDto;
   createdDate: string;
@@ -77,11 +109,6 @@ export interface UpdateBlogDto {
   blogContents: BlogContentDto[];
 }
 
-/** Payload for deleting a blog */
-export interface DeleteBlogCommand {
-  blogId: string;
-  creatorUserId: string;
-}
 
 /** Image upload response */
 export interface ImageUploadResponse {

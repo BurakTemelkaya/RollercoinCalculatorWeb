@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import BlogComments from './BlogComments';
 import { fetchBlogBySlug, fetchLanguages } from '../services/blogApi';
 import type { BlogDetail, Language } from '../types/blog';
 import './BlogPage.css';
@@ -177,6 +178,20 @@ export default function BlogDetailPage() {
             </time>
           )}
         </div>
+
+        {blog.creatorUser && (
+          <div className="blog-author-info" style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124, 58, 237, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', fontWeight: 'bold' }}>
+              {(blog.creatorUser.name || blog.creatorUser.email || 'A')?.[0]?.toUpperCase()}
+            </div>
+            <div>
+              <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{blog.creatorUser.name || blog.creatorUser.email?.split('@')[0] || 'Unknown Author'}</div>
+              <Link to={`/${lang}/author/${blog.creatorUser.id}`} style={{ fontSize: '0.85rem', color: '#a78bfa', textDecoration: 'none' }}>
+                {t('blog.viewAuthorPosts')} →
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="blog-content">
@@ -184,6 +199,8 @@ export default function BlogDetailPage() {
           {content.content}
         </ReactMarkdown>
       </div>
+
+      <BlogComments blogId={blog.id} languageId={content.languageId} lang={lang || 'en'} />
     </div>
   );
 }

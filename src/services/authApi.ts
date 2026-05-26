@@ -29,6 +29,7 @@ export async function login(dto: UserForLoginDto): Promise<LoginResponse> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
     credentials: 'include', // for httpOnly refresh token cookie
+    requiresTurnstile: true,
   });
   return response.json() as Promise<LoginResponse>;
 }
@@ -44,6 +45,7 @@ export async function register(dto: UserForRegisterDto): Promise<LoginResponse> 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
     credentials: 'include',
+    requiresTurnstile: true,
   });
   return response.json() as Promise<LoginResponse>;
 }
@@ -63,12 +65,14 @@ export async function refreshToken(): Promise<AccessToken> {
 
 /**
  * Revoke the current refresh token (logout server-side).
- * If no token is provided, backend reads it from the httpOnly cookie.
+ * Send an empty string body to satisfy [FromBody] so it falls back to the cookie.
  */
 export async function revokeToken(): Promise<void> {
   const url = buildApiUrl(`${AUTH_BASE}/RevokeToken`);
   await apiFetch(url, {
     method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: '""',
     credentials: 'include',
   });
 }

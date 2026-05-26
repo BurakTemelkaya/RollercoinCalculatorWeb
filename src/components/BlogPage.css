@@ -5,7 +5,9 @@
 
 /* --- Blog List Page --- */
 .blog-page {
-  padding: 0 0 40px;
+  padding: 0 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .blog-header {
@@ -126,8 +128,8 @@
 
 /* --- Blog Detail Page --- */
 .blog-detail-page {
-  padding: 0 0 40px;
-  max-width: 800px;
+  padding: 0 20px 40px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -332,8 +334,11 @@
 }
 
 /* --- Admin Blog --- */
-.admin-blog-page {
-  padding: 0 0 40px;
+.admin-blog-page,
+.blog-editor-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
 }
 
 .admin-blog-header {

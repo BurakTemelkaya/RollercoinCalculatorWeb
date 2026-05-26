@@ -135,7 +135,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
                     <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
                     <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
-                    <Link to={`/${i18n.language}/guides`} className="nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
                     <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
                     <Link to={`/${i18n.language}/faq`} className="nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
                     <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
@@ -158,12 +157,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     {isAuthenticated ? (
                       <>
                         {isAdmin && (
-                          <Link to={`/${lang}/admin/blogs`} className="header-auth-btn admin-link" title="Admin">
+                          <Link to={`/${lang}/admin/blogs`} className="header-auth-btn admin-link" title={t('nav.adminPanel')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', width: 32, height: 32, borderRadius: '50%', textDecoration: 'none', padding: 0 }}>
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
                           </Link>
                         )}
-                        <span className="header-user-email" title={user?.email}>{user?.email?.split('@')[0]}</span>
-                        <button className="header-auth-btn logout-btn" onClick={logout} title={t('auth.logout')}>
+                        <Link to={`/${lang}/my-blogs`} className="header-auth-btn user-link" title={t('nav.userPanel')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', background: 'rgba(124, 58, 237, 0.1)', width: 32, height: 32, borderRadius: '50%', textDecoration: 'none', padding: 0 }}>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        </Link>
+                        <button className="header-auth-btn logout-btn" onClick={logout} title={t('auth.logout')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', padding: 0 }}>
                           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                         </button>
                       </>

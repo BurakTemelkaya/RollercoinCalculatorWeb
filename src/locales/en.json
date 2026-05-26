@@ -10,7 +10,10 @@
         "charts": "Charts",
         "events": "Events",
         "merges": "Merges",
-        "blog": "Blog"
+        "blog": "Blog",
+        "adminPanel": "Admin Panel",
+        "userPanel": "User Panel",
+        "myBlogs": "My Blogs"
     },
     "lpp": {
         "title": "League Power Partition",
@@ -509,7 +512,8 @@
         "sessionExpired": "Session expired. Please log in again.",
         "emailPlaceholder": "your@email.com",
         "passwordPlaceholder": "Enter your password",
-        "confirmPasswordPlaceholder": "Re-enter your password"
+        "confirmPasswordPlaceholder": "Re-enter your password",
+        "turnstileRequired": "Please complete the security verification."
     },
     "blog": {
         "title": "Blog",
@@ -522,7 +526,23 @@
         "notFound": "Blog post not found.",
         "publishedAt": "Published",
         "updatedAt": "Updated",
-        "readMore": "Read More"
+        "viewAuthorPosts": "View author's other posts",
+        "authorPosts": "Posts by {{author}}",
+        "allAuthorPosts": "All posts written by this author.",
+        "myBlogsDesc": "All the posts you have written.",
+        "readMore": "Read More",
+        "comments": "Comments",
+        "commentsLoadError": "An error occurred while loading comments.",
+        "commentAuthorName": "Your Name",
+        "authorNamePlaceholder": "Enter your name...",
+        "writeComment": "Write a Comment",
+        "commentPlaceholder": "Share your thoughts...",
+        "commentSuccess": "Your comment has been submitted and is pending approval.",
+        "submitting": "Submitting...",
+        "submitComment": "Submit",
+        "loginToComment": "Please log in to leave a comment.",
+        "commentSubmitError": "Failed to submit comment. Please try again.",
+        "noComments": "No comments yet. Be the first to comment!"
     },
     "admin": {
         "title": "Admin Panel",
@@ -554,6 +574,27 @@
         "fillAtLeastOne": "Please fill in at least one language content.",
         "saveError": "Failed to save blog post.",
         "blogCreated": "Blog post created successfully!",
-        "blogUpdated": "Blog post updated successfully!"
+        "blogUpdated": "Blog post updated successfully!",
+        "manageBlogs": "Manage Blogs",
+        "manageComments": "Manage Comments",
+        "manageCommentsDesc": "Approve or reject pending comments.",
+        "noComments": "No comments found.",
+        "filterByStatus": "Filter by Status:",
+        "all": "All",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "author": "Author",
+        "content": "Content",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions",
+        "approve": "Approve",
+        "reject": "Reject",
+        "createNewBlog": "Create New Blog",
+        "edit": "Edit",
+        "livePreview": "Live Preview",
+        "thumbnailRequired": "A thumbnail image is required.",
+        "mainLanguageRequired": "Main language selection is required."
     }
 }

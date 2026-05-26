@@ -4999,3 +4999,15 @@ html body[data-scroll-locked] {
   color: #f87171;
   width: 100%;
 }
+
+/* Global ad hider for Dashboard panels */
+body.hide-global-ads .desktop-side-ad,
+body.hide-global-ads .aads-mobile-only {
+  display: none !important;
+}
+@media (min-width: 1025px) {
+  body.hide-global-ads #root {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

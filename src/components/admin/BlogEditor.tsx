@@ -9,7 +9,12 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import MDEditor from '@uiw/react-md-editor';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import { useDropzone } from 'react-dropzone';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   fetchLanguages,
@@ -35,7 +40,6 @@ export default function BlogEditor() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, getValidToken } = useAuth();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const contentFileInputRef = useRef<HTMLInputElement>(null);
 
   const isEditMode = !!editSlug;
@@ -50,7 +54,14 @@ export default function BlogEditor() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Hide global ads for dashboard panels
+  useEffect(() => {
+    document.body.classList.add('hide-global-ads');
+    return () => document.body.classList.remove('hide-global-ads');
+  }, []);
 
   // Load languages
   useEffect(() => {
@@ -203,8 +214,8 @@ export default function BlogEditor() {
       }
       const result = await uploadBlogImage(file, token);
       if (result.isSuccess) {
-        const imageMarkdown = `![image](${result.url})`;
-        updateContent('content', (activeContent?.content || '') + '\n' + imageMarkdown + '\n');
+        const imageHtml = `<img src="${result.url}" alt="image" />`;
+        updateContent('content', (activeContent?.content || '') + '<br/>' + imageHtml + '<br/>');
       } else {
         setError(t('admin.uploadError'));
       }
@@ -224,6 +235,16 @@ export default function BlogEditor() {
     const filledContents = contents.filter((c) => c.title.trim() && c.content.trim() && c.slug.trim());
     if (filledContents.length === 0) {
       setError(t('admin.fillAtLeastOne'));
+      return;
+    }
+    
+    if (!mainLanguageId) {
+      setError(t('admin.mainLanguageRequired', 'Ana dil seçimi zorunludur.'));
+      return;
+    }
+    
+    if (!thumbnailUrl) {
+      setError(t('admin.thumbnailRequired', 'Ana resim (thumbnail) yüklemek zorunludur.'));
       return;
     }
 
@@ -283,6 +304,16 @@ export default function BlogEditor() {
     }
   };
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        handleThumbnailUpload(acceptedFiles[0]);
+      }
+    },
+    accept: { 'image/*': [] },
+    multiple: false,
+  });
+
   if (isLoading) {
     return (
       <div className="blog-editor-page">
@@ -330,48 +361,37 @@ export default function BlogEditor() {
         {/* Thumbnail */}
         <div className="editor-field">
           <label>{t('admin.blogThumbnail')}</label>
-          <div className="editor-thumbnail-section">
-            <div className="editor-thumbnail-preview">
+          <div className="editor-thumbnail-section" {...getRootProps()} style={{ cursor: 'pointer', position: 'relative', border: isDragActive ? '2px dashed #8b5cf6' : '1px solid rgba(255,255,255,0.1)', padding: 16, borderRadius: 12, background: isDragActive ? 'rgba(139, 92, 246, 0.1)' : 'rgba(15, 15, 30, 0.5)', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <input {...getInputProps()} />
+            <div className="editor-thumbnail-preview" style={{ width: '100%', height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'rgba(0,0,0,0.2)', borderRadius: 8, overflow: 'hidden' }}>
               {thumbnailUrl ? (
-                <img src={thumbnailUrl} alt="Thumbnail" />
+                <img src={thumbnailUrl} alt="Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#64748b', gap: 8 }}>
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                    {isDragActive ? 'Resmi buraya bırakın...' : 'Resim yüklemek için tıklayın veya sürükleyin'}
+                  </p>
+                </div>
               )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <button
-                type="button"
-                className="editor-upload-btn"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
-              >
-                {isUploading ? (
-                  <><span className="spinner" style={{ width: 14, height: 14 }} /> {t('admin.uploading')}</>
-                ) : (
-                  <>{t('admin.uploadImage')}</>
-                )}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleThumbnailUpload(file);
-                  e.target.value = '';
-                }}
-              />
+            {isUploading && (
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}>
+                <span className="spinner" style={{ width: 24, height: 24 }} />
+              </div>
+            )}
+            <div style={{ width: '100%', marginTop: 8 }} onClick={(e) => e.stopPropagation()}>
               <input
                 type="text"
                 value={thumbnailUrl}
                 onChange={(e) => setThumbnailUrl(e.target.value)}
                 placeholder={t('admin.thumbnailUrlPlaceholder')}
                 style={{
+                  width: '100%',
                   padding: '8px 12px',
                   background: 'rgba(15, 15, 30, 0.5)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -379,6 +399,7 @@ export default function BlogEditor() {
                   color: '#e2e8f0',
                   fontSize: '0.8rem',
                   fontFamily: 'inherit',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
@@ -478,13 +499,35 @@ export default function BlogEditor() {
                   }}
                 />
               </label>
-              <MDEditor
-                value={activeContent.content}
-                onChange={(val) => updateContent('content', val || '')}
-                height={500}
-                preview="live"
-                visibleDragbar={true}
-              />
+              <div className="quill-editor-container">
+                <ReactQuill
+                  theme="snow"
+                  value={activeContent.content}
+                  onChange={(val) => updateContent('content', val || '')}
+                  style={{ height: '400px', marginBottom: '50px', background: 'rgba(255,255,255,0.02)', color: '#fff' }}
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      ['link', 'image', 'video'],
+                      ['clean'],
+                    ],
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Live Preview */}
+            <div className="editor-field" style={{ marginTop: '60px' }}>
+              <label style={{ color: '#a78bfa', fontWeight: 600, borderBottom: '1px solid rgba(167, 139, 250, 0.2)', paddingBottom: '8px', marginBottom: '16px' }}>
+                👁️ {t('admin.livePreview', 'Canlı Önizleme')}
+              </label>
+              <div className="blog-content" style={{ padding: '20px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', minHeight: '150px' }}>
+                <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+                  {activeContent.content || '*İçerik bekleniyor...*'}
+                </ReactMarkdown>
+              </div>
             </div>
           </>
         )}

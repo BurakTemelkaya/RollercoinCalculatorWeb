@@ -10,10 +10,11 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
-import { fetchBlogList, fetchLanguages, deleteBlog } from '../../services/blogApi';
+import { fetchAdminBlogList, fetchLanguages, deleteBlog } from '../../services/blogApi';
 import Pagination from '../Pagination';
-import type { BlogListItem, Language } from '../../types/blog';
+import { type BlogListItem, type Language, ReviewStatus } from '../../types/blog';
 import '../BlogPage.css';
+import AdminNavigation from './AdminNavigation';
 
 const PAGE_SIZE = 20;
 
@@ -35,6 +36,12 @@ export default function AdminBlogList() {
   const [deleteTarget, setDeleteTarget] = useState<BlogListItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Hide global ads for dashboard panels
+  useEffect(() => {
+    document.body.classList.add('hide-global-ads');
+    return () => document.body.classList.remove('hide-global-ads');
+  }, []);
+
   // Fetch languages
   useEffect(() => {
     fetchLanguages()
@@ -52,11 +59,17 @@ export default function AdminBlogList() {
 
   // Fetch blogs
   const loadBlogs = useCallback(async () => {
-    if (selectedLangId === null) return;
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchBlogList(selectedLangId, currentPage, PAGE_SIZE);
+      const token = await getValidToken();
+      if (!token) {
+        setError(t('auth.sessionExpired'));
+        setIsLoading(false);
+        return;
+      }
+      
+      const data = await fetchAdminBlogList(token, currentPage, PAGE_SIZE);
       setBlogs(data.items || []);
       setTotalPages(data.pages || 0);
       setHasPrevious(data.hasPrevious ?? false);
@@ -67,7 +80,7 @@ export default function AdminBlogList() {
     } finally {
       setIsLoading(false);
     }
-  }, [selectedLangId, currentPage, t]);
+  }, [getValidToken, currentPage, t]);
 
   useEffect(() => {
     loadBlogs();
@@ -85,10 +98,7 @@ export default function AdminBlogList() {
         return;
       }
 
-      await deleteBlog(
-        { blogId: deleteTarget.id, creatorUserId: user.userId },
-        token
-      );
+      await deleteBlog(deleteTarget.id, token);
 
       setDeleteTarget(null);
       await loadBlogs(); // Refresh list
@@ -115,15 +125,17 @@ export default function AdminBlogList() {
   return (
     <div className="admin-blog-page">
       <Helmet>
-        <title>{t('admin.blogs')} | Admin</title>
+        <title>{t('admin.manageBlogs')} | Admin</title>
       </Helmet>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
       </div>
 
+      <AdminNavigation />
+
       <div className="admin-blog-header">
-        <h1>{t('admin.blogs')}</h1>
+        <h1>{t('admin.manageBlogs')}</h1>
         <div className="admin-blog-actions">
           {languages.length > 0 && (
             <select
@@ -176,12 +188,22 @@ export default function AdminBlogList() {
               <tr>
                 <th style={{ width: 60 }}></th>
                 <th>{t('admin.blogTitle')}</th>
+                <th style={{ width: 120 }}>Status</th>
                 <th style={{ width: 140 }}>{t('blog.publishedAt')}</th>
                 <th style={{ width: 160 }}>{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody>
-              {blogs.map((blog) => (
+              {blogs.map((blog) => {
+                // Find title and slug for selected language, fallback to first available
+                let content = blog.blogContents?.find(c => c.languageId === selectedLangId);
+                if (!content && blog.blogContents && blog.blogContents.length > 0) {
+                  content = blog.blogContents[0];
+                }
+                const title = content?.title || 'Untitled';
+                const slug = content?.slug || blog.id;
+                
+                return (
                 <tr key={blog.id}>
                   <td>
                     {blog.thumbnailImageUrl ? (
@@ -196,18 +218,24 @@ export default function AdminBlogList() {
                   </td>
                   <td>
                     <Link
-                      to={`/${lang}/blog/${blog.slug}`}
+                      to={`/${lang}/blog/${slug}`}
                       style={{ color: '#e2e8f0', textDecoration: 'none' }}
                     >
-                      {blog.title}
+                      {title}
                     </Link>
+                  </td>
+                  <td>
+                    {blog.status === ReviewStatus.Approved && <span style={{ color: '#22c55e', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(34,197,94,0.1)', borderRadius: 12 }}>Approved</span>}
+                    {blog.status === ReviewStatus.Pending && <span style={{ color: '#eab308', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(234,179,8,0.1)', borderRadius: 12 }}>Pending</span>}
+                    {blog.status === ReviewStatus.Rejected && <span style={{ color: '#ef4444', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(239,68,68,0.1)', borderRadius: 12 }}>Rejected</span>}
+                    {blog.status === ReviewStatus.RevisionRequested && <span style={{ color: '#f97316', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(249,115,22,0.1)', borderRadius: 12 }}>Revision</span>}
                   </td>
                   <td>{formatDate(blog.createdDate)}</td>
                   <td>
                     <div className="admin-blog-actions-cell">
                       <button
                         className="admin-btn-edit"
-                        onClick={() => navigate(`/${lang}/admin/blogs/edit/${blog.slug}`)}
+                        onClick={() => navigate(`/${lang}/admin/blogs/edit/${slug}`)}
                       >
                         {t('admin.editBlog')}
                       </button>
@@ -220,7 +248,7 @@ export default function AdminBlogList() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
 

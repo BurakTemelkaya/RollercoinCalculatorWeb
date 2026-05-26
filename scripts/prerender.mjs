@@ -36,7 +36,6 @@ const SEED_ROUTES = [
   '/en/about', '/tr/about',
   '/en/privacy', '/tr/privacy',
   '/en/faq', '/tr/faq',
-  '/en/guides', '/tr/guides',
   '/en/support', '/tr/support',
   '/en/charts', '/tr/charts',
 ];
@@ -122,6 +121,10 @@ function normalise(route) {
 /** Return true if the link looks like an internal page route. */
 function isInternalPage(href) {
   if (!href || !href.startsWith('/') || href.startsWith('//')) return false;
+  
+  // Exclude dynamic routes and admin/user panels from crawling
+  if (href.includes('/blog/') || href.includes('/author/') || href.includes('/admin') || href.includes('/my-blogs')) return false;
+
   const clean = href.split('?')[0].split('#')[0];
   const ext = clean.split('.').pop();
   if (SKIP_EXTENSIONS.has(ext)) return false;

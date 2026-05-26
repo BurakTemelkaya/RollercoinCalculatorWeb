@@ -32,13 +32,17 @@ export class ApiError extends Error {
     }
 }
 
+export interface ApiFetchOptions extends RequestInit {
+    requiresTurnstile?: boolean;
+}
+
 /**
  * Low-level fetch wrapper that handles common error patterns.
  * Returns the raw Response object for custom processing.
  *
  * @throws ApiError on non-ok responses (with detail parsing for JSON error bodies)
  */
-export async function apiFetch(url: string, options?: RequestInit): Promise<Response> {
+export async function apiFetch(url: string, options?: ApiFetchOptions): Promise<Response> {
     try {
         // Skip API calls during react-snap to prevent 30,000ms timeouts
         if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {
@@ -55,8 +59,7 @@ export async function apiFetch(url: string, options?: RequestInit): Promise<Resp
         const headers = new Headers(options?.headers);
         headers.set('Accept-Language', acceptLanguage);
 
-        const method = options?.method?.toUpperCase() || 'GET';
-        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+        if (options?.requiresTurnstile) {
             const turnstileToken = await getTurnstileToken();
             headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
         }

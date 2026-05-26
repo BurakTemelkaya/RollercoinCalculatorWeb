@@ -20,6 +20,7 @@ export default function RegisterPage() {
   const { register } = useAuth();
 
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +31,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
 
-    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (!email.trim() || !name.trim() || !password.trim() || !confirmPassword.trim()) {
       setError(t('auth.fillAllFields'));
       return;
     }
@@ -47,7 +48,7 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
     try {
-      await register({ email: email.trim(), password });
+      await register({ name: name.trim(), email: email.trim(), password });
       navigate(`/${lang || 'en'}`, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
@@ -114,6 +115,26 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('auth.emailPlaceholder')}
                 autoComplete="email"
+                required
+                disabled={isSubmitting}
+              />
+            </div>
+          </div>
+
+          <div className="auth-field">
+            <label htmlFor="register-name">{t('auth.name')}</label>
+            <div className="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" className="auth-input-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <input
+                id="register-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t('auth.namePlaceholder')}
+                autoComplete="name"
                 required
                 disabled={isSubmitting}
               />

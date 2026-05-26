@@ -10,7 +10,10 @@
         "charts": "Grafikler",
         "events": "Etkinlikler",
         "merges": "Birleştirme",
-        "blog": "Blog"
+        "blog": "Blog",
+        "adminPanel": "Admin Paneli",
+        "userPanel": "Kullanıcı Paneli",
+        "myBlogs": "Bloglarım"
     },
     "lpp": {
         "title": "Lig Güç Dağılımı",
@@ -510,7 +513,8 @@
         "sessionExpired": "Oturum süresi doldu. Lütfen tekrar giriş yapın.",
         "emailPlaceholder": "email@adresiniz.com",
         "passwordPlaceholder": "Şifrenizi girin",
-        "confirmPasswordPlaceholder": "Şifrenizi tekrar girin"
+        "confirmPasswordPlaceholder": "Şifrenizi tekrar girin",
+        "turnstileRequired": "Lütfen güvenlik doğrulamasını tamamlayın."
     },
     "blog": {
         "title": "Blog",
@@ -523,7 +527,23 @@
         "notFound": "Blog yazısı bulunamadı.",
         "publishedAt": "Yayınlanma",
         "updatedAt": "Güncelleme",
-        "readMore": "Devamını Oku"
+        "viewAuthorPosts": "Yazarın diğer yazılarını görüntüle",
+        "authorPosts": "{{author}}'nin Yazıları",
+        "allAuthorPosts": "Bu yazarın yazdığı tüm gönderiler.",
+        "myBlogsDesc": "Yazdığınız tüm gönderiler.",
+        "readMore": "Devamını Oku",
+        "comments": "Yorumlar",
+        "commentsLoadError": "Yorumlar yüklenirken bir hata oluştu.",
+        "commentAuthorName": "Adınız",
+        "authorNamePlaceholder": "Adınızı girin...",
+        "writeComment": "Yorum Yaz",
+        "commentPlaceholder": "Düşüncelerinizi paylaşın...",
+        "commentSuccess": "Yorumunuz başarıyla gönderildi ve onay bekliyor.",
+        "submitting": "Gönderiliyor...",
+        "submitComment": "Gönder",
+        "loginToComment": "Yorum yapmak için lütfen giriş yapın.",
+        "commentSubmitError": "Yorum gönderilemedi. Lütfen tekrar deneyin.",
+        "noComments": "Henüz yorum yapılmamış. İlk yorumu siz yapın!"
     },
     "admin": {
         "title": "Admin Paneli",
@@ -555,6 +575,26 @@
         "fillAtLeastOne": "Lütfen en az bir dilde içerik doldurun.",
         "saveError": "Blog yazısı kaydedilemedi.",
         "blogCreated": "Blog yazısı başarıyla oluşturuldu!",
-        "blogUpdated": "Blog yazısı başarıyla güncellendi!"
+        "blogUpdated": "Blog yazısı başarıyla güncellendi!",
+        "manageBlogs": "Blogları Yönet",
+        "manageComments": "Yorumları Yönet",
+        "manageCommentsDesc": "Bekleyen yorumları onayla veya reddet.",
+        "noComments": "Yorum bulunamadı.",
+        "filterByStatus": "Duruma Göre Filtrele:",
+        "all": "Tümü",
+        "pending": "Bekleyen",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi",
+        "author": "Yazar",
+        "content": "İçerik",
+        "status": "Durum",
+        "date": "Tarih",
+        "approve": "Onayla",
+        "reject": "Reddet",
+        "createNewBlog": "Yeni Blog Ekle",
+        "edit": "Düzenle",
+        "livePreview": "Canlı Önizleme",
+        "thumbnailRequired": "Ana resim (thumbnail) yüklemek zorunludur.",
+        "mainLanguageRequired": "Ana dil seçimi zorunludur."
     }
 }
