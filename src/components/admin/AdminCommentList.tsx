@@ -6,14 +6,14 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { buildApiUrl } from '../../config/api';
 import { apiFetch } from '../../services/apiClient';
 import Pagination from '../Pagination';
 import { BlogCommentReviewStatus } from '../../types/blog';
-import AdminNavigation from './AdminNavigation';
+import DashboardLayout from '../DashboardLayout';
 import '../BlogPage.css';
 
 const PAGE_SIZE = 20;
@@ -41,6 +41,7 @@ interface CommentListResponse {
 }
 
 export default function AdminCommentList() {
+  const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
   const { user, getValidToken } = useAuth();
 
@@ -151,12 +152,7 @@ export default function AdminCommentList() {
   };
 
   return (
-    <div className="blog-page" data-color-mode="dark">
-      <Helmet>
-        <title>{t('admin.manageComments')} | Admin</title>
-      </Helmet>
-
-      <AdminNavigation />
+    <DashboardLayout title={t('admin.manageComments')} isAdmin={true}>
 
       <div className="blog-header">
         <h1>{t('admin.manageComments')}</h1>
@@ -208,7 +204,7 @@ export default function AdminCommentList() {
             <thead>
               <tr>
                 <th style={{ width: 120 }}>{t('admin.author')}</th>
-                <th style={{ width: 200 }}>{t('admin.blogTitle', 'Blog')}</th>
+                <th style={{ width: 200 }}>{t('admin.blogTitle', 'Blog Title')}</th>
                 <th>{t('admin.content')}</th>
                 <th style={{ width: 100 }}>{t('admin.status')}</th>
                 <th style={{ width: 140 }}>{t('admin.date')}</th>
@@ -220,9 +216,22 @@ export default function AdminCommentList() {
                 <tr key={comment.id}>
                   <td>{comment.authorName}</td>
                   <td>
-                    <div style={{ maxHeight: 60, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', color: '#a78bfa', fontSize: '0.9rem' }}>
+                    <Link 
+                      to={`/${lang}/admin/blogs/detail/${comment.blogId}`}
+                      style={{ 
+                        display: '-webkit-box', 
+                        maxHeight: 60, 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        WebkitLineClamp: 2, 
+                        WebkitBoxOrient: 'vertical', 
+                        color: '#a78bfa', 
+                        fontSize: '0.9rem',
+                        textDecoration: 'none'
+                      }}
+                    >
                       {comment.blogContentTitle || 'Belirtilmedi'}
-                    </div>
+                    </Link>
                   </td>
                   <td>
                     <div style={{ maxHeight: 60, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
@@ -274,6 +283,6 @@ export default function AdminCommentList() {
           )}
         </>
       )}
-    </div>
+    </DashboardLayout>
   );
 }

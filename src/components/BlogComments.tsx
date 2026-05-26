@@ -11,7 +11,7 @@ interface BlogCommentsProps {
 
 export default function BlogComments({ blogId, languageId, lang }: BlogCommentsProps) {
   const { t } = useTranslation();
-  const { user, getValidToken } = useAuth();
+  const { getValidToken, user } = useAuth();
   
   const [comments, setComments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);

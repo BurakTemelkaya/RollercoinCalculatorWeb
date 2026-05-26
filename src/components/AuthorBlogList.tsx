@@ -82,8 +82,8 @@ export default function AuthorBlogList() {
     });
   };
 
-  const authorName = blogs.length > 0 && blogs[0].creatorUser 
-    ? (blogs[0].creatorUser.name || blogs[0].creatorUser.email?.split('@')[0] || 'Author')
+  const authorName = blogs.length > 0 
+    ? (blogs[0].creatorUserName || blogs[0].creatorUser?.name || 'Author')
     : 'Author';
 
   return (
@@ -94,7 +94,7 @@ export default function AuthorBlogList() {
 
       <div className="blog-header">
         <h1>{t('blog.authorPosts', { author: authorName })}</h1>
-        <p className="blog-description">{t('blog.allAuthorPosts')}</p>
+        <p className="blog-description">{t('blog.allAuthorPosts', { author: authorName })}</p>
         <div style={{ marginTop: 16 }}>
           <Link to={`/${lang}/blog`} style={{ color: '#a78bfa', textDecoration: 'none' }}>
             ← {t('blog.backToBlog')}
@@ -142,9 +142,15 @@ export default function AuthorBlogList() {
                 )}
                 <div className="blog-card-body">
                   <h2 className="blog-card-title">{blog.title}</h2>
-                  <time className="blog-card-date" dateTime={blog.createdDate}>
-                    {formatDate(blog.createdDate)}
-                  </time>
+                  <div className="blog-card-meta">
+                    <div className="blog-card-author" style={{ margin: 0 }}>
+                      {blog.creatorUserName || blog.creatorUser?.name || 'Author'}
+                    </div>
+                    <span style={{ color: '#64748b', fontSize: '0.8rem' }}>•</span>
+                    <time className="blog-card-date" dateTime={blog.createdDate} style={{ margin: 0 }}>
+                      {formatDate(blog.createdDate)}
+                    </time>
+                  </div>
                 </div>
               </Link>
             ))}

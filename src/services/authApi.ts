@@ -67,11 +67,14 @@ export async function refreshToken(): Promise<AccessToken> {
  * Revoke the current refresh token (logout server-side).
  * Send an empty string body to satisfy [FromBody] so it falls back to the cookie.
  */
-export async function revokeToken(): Promise<void> {
+export async function revokeToken(token: string): Promise<void> {
   const url = buildApiUrl(`${AUTH_BASE}/RevokeToken`);
   await apiFetch(url, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    },
     body: '""',
     credentials: 'include',
   });

@@ -1,20 +1,19 @@
 /**
  * Admin Blog List Page
  *
- * Displays all blog posts with edit/delete actions.
- * Requires admin role. Filtered by language.
+ * Displays all blog posts with edit/delete/review actions.
+ * Requires admin role. Filtered by status.
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchAdminBlogList, fetchLanguages, deleteBlog } from '../../services/blogApi';
 import Pagination from '../Pagination';
 import { type BlogListItem, type Language, ReviewStatus } from '../../types/blog';
+import DashboardLayout from '../DashboardLayout';
 import '../BlogPage.css';
-import AdminNavigation from './AdminNavigation';
 
 const PAGE_SIZE = 20;
 
@@ -35,6 +34,7 @@ export default function AdminBlogList() {
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<BlogListItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<'' | ReviewStatus>('');
 
   // Hide global ads for dashboard panels
   useEffect(() => {
@@ -47,7 +47,6 @@ export default function AdminBlogList() {
     fetchLanguages()
       .then((data) => {
         setLanguages(data);
-        // Set default language based on current app language
         const match = data.find((l) => l.code.toLowerCase() === (lang || 'en').toLowerCase());
         setSelectedLangId(match?.id ?? data[0]?.id ?? null);
       })
@@ -101,7 +100,7 @@ export default function AdminBlogList() {
       await deleteBlog(deleteTarget.id, token);
 
       setDeleteTarget(null);
-      await loadBlogs(); // Refresh list
+      await loadBlogs();
     } catch (err) {
       console.error('Failed to delete blog:', err);
       setError(t('admin.deleteError'));
@@ -109,6 +108,8 @@ export default function AdminBlogList() {
       setIsDeleting(false);
     }
   };
+
+
 
   const formatDate = (dateStr: string) => {
     try {
@@ -122,17 +123,13 @@ export default function AdminBlogList() {
     }
   };
 
+  // Filter blogs by status client-side (the API may not support status filtering yet)
+  const filteredBlogs = statusFilter === ''
+    ? blogs
+    : blogs.filter((b) => b.status === statusFilter);
+
   return (
-    <div className="admin-blog-page">
-      <Helmet>
-        <title>{t('admin.manageBlogs')} | Admin</title>
-      </Helmet>
-
-      <div className="static-back-link">
-        <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
-      </div>
-
-      <AdminNavigation />
+    <DashboardLayout title={t('admin.manageBlogs')} isAdmin={true}>
 
       <div className="admin-blog-header">
         <h1>{t('admin.manageBlogs')}</h1>
@@ -166,6 +163,39 @@ export default function AdminBlogList() {
         </div>
       </div>
 
+      {/* Status Filter */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+        {[
+          { value: '' as const, label: t('admin.all') },
+          { value: ReviewStatus.Pending, label: t('admin.pending') },
+          { value: ReviewStatus.Approved, label: t('admin.approved') },
+          { value: ReviewStatus.Rejected, label: t('admin.rejected') },
+        ].map((opt) => (
+          <button
+            key={String(opt.value)}
+            onClick={() => { setStatusFilter(opt.value); setCurrentPage(0); }}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 20,
+              border: statusFilter === opt.value
+                ? '1px solid rgba(124, 58, 237, 0.5)'
+                : '1px solid rgba(255,255,255,0.1)',
+              background: statusFilter === opt.value
+                ? 'rgba(124, 58, 237, 0.15)'
+                : 'rgba(15, 15, 30, 0.4)',
+              color: statusFilter === opt.value ? '#c4b5fd' : '#94a3b8',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: statusFilter === opt.value ? 600 : 500,
+              fontFamily: 'inherit',
+              transition: 'all 0.2s',
+            }}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
       {error && (
         <div className="blog-error" style={{ marginBottom: 20 }}>
           <p>{error}</p>
@@ -177,7 +207,7 @@ export default function AdminBlogList() {
           <span className="spinner" />
           <p>{t('blog.loading')}</p>
         </div>
-      ) : blogs.length === 0 ? (
+      ) : filteredBlogs.length === 0 ? (
         <div className="blog-empty">
           <p>{t('blog.noBlogs')}</p>
         </div>
@@ -188,20 +218,20 @@ export default function AdminBlogList() {
               <tr>
                 <th style={{ width: 60 }}></th>
                 <th>{t('admin.blogTitle')}</th>
-                <th style={{ width: 120 }}>Status</th>
+                <th>{t('admin.author', 'Author')}</th>
+                <th style={{ width: 120 }}>{t('admin.status')}</th>
                 <th style={{ width: 140 }}>{t('blog.publishedAt')}</th>
-                <th style={{ width: 160 }}>{t('admin.actions')}</th>
+                <th style={{ width: 280 }}>{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody>
-              {blogs.map((blog) => {
-                // Find title and slug for selected language, fallback to first available
+              {filteredBlogs.map((blog) => {
                 let content = blog.blogContents?.find(c => c.languageId === selectedLangId);
                 if (!content && blog.blogContents && blog.blogContents.length > 0) {
                   content = blog.blogContents[0];
                 }
-                const title = content?.title || 'Untitled';
-                const slug = content?.slug || blog.id;
+                const title = content?.title || blog.title || 'Untitled';
+                const slug = content?.slug || blog.slug || blog.id;
                 
                 return (
                 <tr key={blog.id}>
@@ -224,18 +254,26 @@ export default function AdminBlogList() {
                       {title}
                     </Link>
                   </td>
+                  <td>{blog.creatorUserName || blog.creatorUser?.name || 'Unknown'}</td>
                   <td>
-                    {blog.status === ReviewStatus.Approved && <span style={{ color: '#22c55e', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(34,197,94,0.1)', borderRadius: 12 }}>Approved</span>}
-                    {blog.status === ReviewStatus.Pending && <span style={{ color: '#eab308', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(234,179,8,0.1)', borderRadius: 12 }}>Pending</span>}
-                    {blog.status === ReviewStatus.Rejected && <span style={{ color: '#ef4444', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(239,68,68,0.1)', borderRadius: 12 }}>Rejected</span>}
+                    {blog.status === ReviewStatus.Approved && <span style={{ color: '#22c55e', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(34,197,94,0.1)', borderRadius: 12 }}>{t('admin.approved')}</span>}
+                    {blog.status === ReviewStatus.Pending && <span style={{ color: '#eab308', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(234,179,8,0.1)', borderRadius: 12 }}>{t('admin.pending')}</span>}
+                    {blog.status === ReviewStatus.Rejected && <span style={{ color: '#ef4444', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(239,68,68,0.1)', borderRadius: 12 }}>{t('admin.rejected')}</span>}
                     {blog.status === ReviewStatus.RevisionRequested && <span style={{ color: '#f97316', fontSize: '0.8rem', padding: '2px 8px', background: 'rgba(249,115,22,0.1)', borderRadius: 12 }}>Revision</span>}
                   </td>
                   <td>{formatDate(blog.createdDate)}</td>
                   <td>
-                    <div className="admin-blog-actions-cell">
+                    <div className="admin-blog-actions-cell" style={{ gap: 6 }}>
                       <button
                         className="admin-btn-edit"
-                        onClick={() => navigate(`/${lang}/admin/blogs/edit/${slug}`)}
+                        style={{ background: 'rgba(56,189,248,0.15)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.3)' }}
+                        onClick={() => navigate(`/${lang}/admin/blogs/detail/${blog.id}`)}
+                      >
+                        {t('admin.review', 'Review')}
+                      </button>
+                      <button
+                        className="admin-btn-edit"
+                        onClick={() => navigate(`/${lang}/admin/blogs/edit/${blog.id}`)}
                       >
                         {t('admin.editBlog')}
                       </button>
@@ -297,6 +335,6 @@ export default function AdminBlogList() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardLayout>
   );
 }

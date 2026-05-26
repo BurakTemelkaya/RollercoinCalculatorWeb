@@ -14,6 +14,8 @@ import type {
   CreateBlogDto,
   UpdateBlogDto,
   ImageUploadResponse,
+  ReviewStatus,
+  AdminBlogDetail,
 } from '../types/blog';
 
 let cachedLanguages: Language[] | null = null;
@@ -80,6 +82,37 @@ export async function fetchBlogsByUserId(
 }
 
 /**
+ * Fetch paginated blog list for the logged-in creator.
+ * Uses get-blogs-by-creator endpoint which returns status, approvedDate etc.
+ */
+export async function fetchBlogsByCreator(
+  creatorId: string,
+  token: string,
+  pageIndex: number = 0,
+  pageSize: number = 10,
+  reviewStatus?: ReviewStatus
+): Promise<BlogListResponse> {
+  const params = new URLSearchParams({
+    CreatorId: creatorId,
+    'PageRequest.PageIndex': String(pageIndex),
+    'PageRequest.PageSize': String(pageSize),
+  });
+
+  if (reviewStatus !== undefined && reviewStatus !== null) {
+    params.append('ReviewStatus', String(reviewStatus));
+  }
+
+  const url = buildApiUrl(`/api/Blog/get-blogs-by-creator?${params.toString()}`);
+  const response = await apiFetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json() as Promise<BlogListResponse>;
+}
+
+/**
  * Fetch a single blog post by its slug.
  */
 export async function fetchBlogBySlug(slug: string): Promise<BlogDetail> {
@@ -110,6 +143,111 @@ export async function fetchAdminBlogList(
     },
   });
   return response.json() as Promise<BlogListResponse>;
+}
+
+/**
+ * Fetch a single blog post by ID for admin panel.
+ */
+export async function fetchAdminBlogById(blogId: string, token: string): Promise<AdminBlogDetail> {
+  const params = new URLSearchParams({ BlogId: blogId });
+  const url = buildApiUrl(`/api/Blog/get-admin-by-id?${params.toString()}`);
+  const response = await apiFetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json() as Promise<AdminBlogDetail>;
+}
+
+/**
+ * Create a blog review (approve/reject with note). Requires admin token.
+ * POST /api/BlogReview
+ */
+export async function createBlogReview(
+  blogId: string,
+  status: ReviewStatus,
+  reviewNote: string,
+  token: string
+): Promise<void> {
+  const url = buildApiUrl('/api/BlogReview');
+  await apiFetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      CreateBlogReview: {
+        BlogId: blogId,
+        Status: status,
+        ReviewNote: reviewNote || null,
+      }
+    }),
+  });
+}
+
+/**
+ * Fetch admin blog review list. Requires admin token.
+ * GET /api/BlogReview (PageRequest + optional Status)
+ */
+export async function fetchAdminBlogReviews(
+  token: string,
+  status?: number,
+  pageIndex: number = 0,
+  pageSize: number = 20
+): Promise<any> {
+  const params = new URLSearchParams({
+    'PageRequest.PageIndex': String(pageIndex),
+    'PageRequest.PageSize': String(pageSize),
+  });
+  if (status !== undefined && status !== null) params.append('Status', String(status));
+
+  const url = buildApiUrl(`/api/BlogReview?${params.toString()}`);
+  const response = await apiFetch(url, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.json();
+}
+
+/**
+ * Fetch admin blog reviews filtered by blog ID. Requires admin token.
+ * GET /api/BlogReview/get-admin-blog-reviews/{blogId}
+ */
+export async function fetchAdminBlogReviewsByBlogId(
+  blogId: string,
+  token: string,
+  pageIndex: number = 0,
+  pageSize: number = 20
+): Promise<any> {
+  const params = new URLSearchParams({
+    'PageRequest.PageIndex': String(pageIndex),
+    'PageRequest.PageSize': String(pageSize),
+  });
+
+  const url = buildApiUrl(`/api/BlogReview/get-admin-blog-reviews/${blogId}?${params.toString()}`);
+  const response = await apiFetch(url, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.json();
+}
+
+/**
+ * Fetch blog reviews by blog ID (for logged-in user).
+ * GET /api/BlogReview/user-blog-reviews/{blogId}
+ */
+export async function fetchUserBlogReviewsByBlogId(
+  blogId: string,
+  token: string
+): Promise<any> {
+  const url = buildApiUrl(`/api/BlogReview/user-blog-reviews/${blogId}`);
+  const response = await apiFetch(url, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.json();
 }
 
 /**

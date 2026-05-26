@@ -529,7 +529,7 @@
         "updatedAt": "Güncelleme",
         "viewAuthorPosts": "Yazarın diğer yazılarını görüntüle",
         "authorPosts": "{{author}}'nin Yazıları",
-        "allAuthorPosts": "Bu yazarın yazdığı tüm gönderiler.",
+        "allAuthorPosts": "{{author}} tarafından yazılan tüm gönderiler.",
         "myBlogsDesc": "Yazdığınız tüm gönderiler.",
         "readMore": "Devamını Oku",
         "comments": "Yorumlar",

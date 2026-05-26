@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill-new';
@@ -19,6 +19,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import {
   fetchLanguages,
   fetchBlogBySlug,
+  fetchAdminBlogById,
   createBlog,
   updateBlog,
   uploadBlogImage,
@@ -43,6 +44,8 @@ export default function BlogEditor() {
   const contentFileInputRef = useRef<HTMLInputElement>(null);
 
   const isEditMode = !!editSlug;
+  const location = useLocation();
+  const isAdminEdit = isEditMode && location.pathname.includes('/admin/');
 
   const [languages, setLanguages] = useState<Language[]>([]);
   const [activeLangId, setActiveLangId] = useState<number | null>(null);
@@ -56,6 +59,7 @@ export default function BlogEditor() {
   const [error, setError] = useState<string | null>(null);
 
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
   // Hide global ads for dashboard panels
   useEffect(() => {
@@ -77,7 +81,7 @@ export default function BlogEditor() {
       .catch(console.error);
   }, [lang]);
 
-  // Load existing blog data in edit mode — directly by slug
+  // Load existing blog data in edit mode
   useEffect(() => {
     if (!isEditMode || !editSlug) {
       if (!isEditMode) setIsLoading(false);
@@ -87,38 +91,65 @@ export default function BlogEditor() {
     const loadBlog = async () => {
       setIsLoading(true);
       try {
-        const blog = await fetchBlogBySlug(editSlug);
-
-        setEditBlogId(blog.id);
-        setThumbnailUrl(blog.thumbnailImageUrl || '');
-        setMainLanguageId(blog.mainLanguageId ?? null);
-
-        // For each available language, fetch the content by its slug
-        const entries: ContentEntry[] = [];
-
-        for (const al of (blog.availableLanguages || [])) {
-          try {
-            const langBlog = al.slug === editSlug ? blog : await fetchBlogBySlug(al.slug);
-            const bc = langBlog.blogContent;
-            if (bc) {
-              entries.push({
-                id: bc.id,
-                title: bc.title,
-                content: bc.content,
-                slug: bc.slug,
-                languageId: bc.languageId,
-                thumbnailImageUrl: bc.thumbnailImageUrl,
-              });
-            }
-          } catch {
-            // Skip if content for this language can't be fetched
+        if (isAdminEdit) {
+          // Admin edit: editSlug is actually a blog ID
+          const token = await getValidToken();
+          if (!token) {
+            setError(t('auth.sessionExpired'));
+            setIsLoading(false);
+            return;
           }
-        }
+          const adminBlog = await fetchAdminBlogById(editSlug, token);
 
-        setContents(entries);
+          setEditBlogId(adminBlog.id);
+          setThumbnailUrl(adminBlog.thumbnailImageUrl || '');
+          setMainLanguageId(adminBlog.mainLanguageId ?? null);
 
-        if (entries.length > 0) {
-          setActiveLangId(entries[0].languageId);
+          const entries: ContentEntry[] = (adminBlog.blogContents || []).map((bc) => ({
+            id: bc.id,
+            title: bc.title,
+            content: bc.content,
+            slug: bc.slug,
+            languageId: bc.languageId,
+            thumbnailImageUrl: bc.thumbnailImageUrl,
+          }));
+
+          setContents(entries);
+          if (entries.length > 0) {
+            setActiveLangId(entries[0].languageId);
+          }
+        } else {
+          // User edit: editSlug is a slug
+          const blog = await fetchBlogBySlug(editSlug);
+
+          setEditBlogId(blog.id);
+          setThumbnailUrl(blog.thumbnailImageUrl || '');
+          setMainLanguageId(blog.mainLanguageId ?? null);
+
+          const entries: ContentEntry[] = [];
+          for (const al of (blog.availableLanguages || [])) {
+            try {
+              const langBlog = al.slug === editSlug ? blog : await fetchBlogBySlug(al.slug);
+              const bc = langBlog.blogContent;
+              if (bc) {
+                entries.push({
+                  id: bc.id,
+                  title: bc.title,
+                  content: bc.content,
+                  slug: bc.slug,
+                  languageId: bc.languageId,
+                  thumbnailImageUrl: bc.thumbnailImageUrl,
+                });
+              }
+            } catch {
+              // Skip if content for this language can't be fetched
+            }
+          }
+
+          setContents(entries);
+          if (entries.length > 0) {
+            setActiveLangId(entries[0].languageId);
+          }
         }
       } catch (err) {
         console.error('Failed to load blog:', err);
@@ -129,7 +160,7 @@ export default function BlogEditor() {
     };
 
     loadBlog();
-  }, [isEditMode, editSlug, t]);
+  }, [isEditMode, editSlug, isAdminEdit, t, getValidToken]);
 
   // Ensure all languages have a content entry (empty for new ones).
   // Runs after languages load (create mode) or after blog loads (edit mode).
@@ -279,7 +310,7 @@ export default function BlogEditor() {
           },
           token
         );
-        setSuccessMsg(t('admin.blogUpdated'));
+        setShowUpdatePopup(true);
       } else {
         await createBlog(
           {
@@ -290,11 +321,15 @@ export default function BlogEditor() {
           },
           token
         );
-        setSuccessMsg(t('admin.blogCreated'));
-        // Navigate to blog list after creation
-        setTimeout(() => {
-          navigate(`/${lang}/admin/blogs`);
-        }, 1500);
+        
+        const isAdminPath = location.pathname.includes('/admin/');
+        if (isAdminPath) {
+          setSuccessMsg(t('admin.blogCreated', 'Blog eklendi.'));
+          setTimeout(() => navigate(`/${lang}/admin/blogs`), 1500);
+        } else {
+          setSuccessMsg(t('author.blogCreatedPending', 'Blogunuz eklendi, admin kontrolünden sonra yayınlanacaktır.'));
+          setTimeout(() => navigate(`/${lang}/my-blogs`), 2500);
+        }
       }
     } catch (err) {
       console.error('Failed to save blog:', err);
@@ -555,6 +590,46 @@ export default function BlogEditor() {
           </button>
         </div>
       </div>
+
+      {showUpdatePopup && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.7)', zIndex: 9999,
+          display: 'flex', justifyContent: 'center', alignItems: 'center'
+        }}>
+          <div style={{
+            background: '#1e293b', padding: '24px 32px', borderRadius: 12,
+            border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
+          }}>
+            <h3 style={{ color: '#22c55e', margin: '0 0 16px', fontSize: '1.25rem' }}>
+              ✅ {t('admin.blogUpdated', 'Blog güncellendi!')}
+            </h3>
+            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 24 }}>
+              <button
+                onClick={() => setShowUpdatePopup(false)}
+                style={{
+                  padding: '8px 16px', background: 'rgba(255,255,255,0.1)',
+                  color: '#e2e8f0', border: 'none', borderRadius: 8, cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {t('admin.stayOnPage', 'Sayfada Kal')}
+              </button>
+              <button
+                onClick={() => navigate(location.pathname.includes('/admin/') ? `/${lang}/admin/blogs` : `/${lang}/my-blogs`)}
+                style={{
+                  padding: '8px 16px', background: '#3b82f6',
+                  color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {t('admin.returnToList', 'Blog Listesine Dön')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

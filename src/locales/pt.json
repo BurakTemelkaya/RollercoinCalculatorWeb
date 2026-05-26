@@ -10,7 +10,8 @@
         "charts": "Gráficos",
         "events": "Eventos",
         "merges": "Fusões",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Meus Blogs"
     },
     "lpp": {
         "title": "Divisão de Poder da Liga",
@@ -485,5 +486,42 @@
         "btn2": "Leia Táticas de Poder →",
         "btn3": "Leia o Guia F2P →",
         "btn4": "Perguntas Frequentes →"
+    },
+    "blog": {
+        "myBlogsDesc": "Todas as postagens que você escreveu."
+    },
+    "author": {
+        "blogCreatedPending": "Seu blog foi enviado e está aguardando aprovação do administrador."
+    },
+    "admin": {
+        "createNewBlog": "Criar Novo Blog",
+        "all": "Todos",
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "edit": "Editar",
+        "createBlog": "Novo Blog",
+        "editBlog": "Editar Blog",
+        "blogThumbnail": "Miniatura",
+        "thumbnailUrlPlaceholder": "Ou cole a URL da imagem...",
+        "mainLanguage": "Idioma Principal",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "blogCreated": "Blog criado com sucesso!",
+        "blogUpdated": "Blog atualizado com sucesso!",
+        "uploadImage": "Enviar Imagem",
+        "uploading": "Enviando...",
+        "insertImage": "Inserir Imagem",
+        "uploadError": "Falha ao enviar imagem.",
+        "fillAtLeastOne": "Por favor, preencha pelo menos um idioma.",
+        "mainLanguageRequired": "A seleção do idioma principal é obrigatória.",
+        "thumbnailRequired": "Uma imagem em miniatura é obrigatória.",
+        "saveError": "Falha ao salvar o blog.",
+        "blogTitle": "Título",
+        "blogContent": "Conteúdo",
+        "blogSlug": "Slug da URL",
+        "autoSlug": "Auto",
+        "titlePlaceholder": "Insira o título do blog...",
+        "slugPlaceholder": "slug-amigavel"
     }
 }

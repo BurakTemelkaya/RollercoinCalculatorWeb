@@ -179,14 +179,14 @@ export default function BlogDetailPage() {
           )}
         </div>
 
-        {blog.creatorUser && (
+        {(blog.creatorUser || blog.creatorUserName) && (
           <div className="blog-author-info" style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124, 58, 237, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', fontWeight: 'bold' }}>
-              {(blog.creatorUser.name || blog.creatorUser.email || 'A')?.[0]?.toUpperCase()}
+              {(blog.creatorUserName || blog.creatorUser?.name || 'A')?.[0]?.toUpperCase()}
             </div>
             <div>
-              <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{blog.creatorUser.name || blog.creatorUser.email?.split('@')[0] || 'Unknown Author'}</div>
-              <Link to={`/${lang}/author/${blog.creatorUser.id}`} style={{ fontSize: '0.85rem', color: '#a78bfa', textDecoration: 'none' }}>
+              <div style={{ color: '#e2e8f0', fontWeight: 600 }}>{blog.creatorUserName || blog.creatorUser?.name || 'Unknown Author'}</div>
+              <Link to={`/${lang}/author/${blog.creatorUserId}`} style={{ fontSize: '0.85rem', color: '#a78bfa', textDecoration: 'none' }}>
                 {t('blog.viewAuthorPosts')} →
               </Link>
             </div>

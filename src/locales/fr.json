@@ -10,7 +10,8 @@
         "charts": "Graphiques",
         "events": "Événements",
         "merges": "Fusions",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Mes Blogs"
     },
     "lpp": {
         "title": "Répartition de la Puissance",
@@ -485,5 +486,42 @@
         "btn2": "Lire les Tactiques de Puissance →",
         "btn3": "Lire le Guide F2P →",
         "btn4": "Foire Aux Questions →"
+    },
+    "blog": {
+        "myBlogsDesc": "Tous les articles que vous avez écrits."
+    },
+    "author": {
+        "blogCreatedPending": "Votre blog a été soumis et est en attente d'approbation."
+    },
+    "admin": {
+        "createNewBlog": "Créer un Nouveau Blog",
+        "all": "Tous",
+        "pending": "En attente",
+        "approved": "Approuvé",
+        "rejected": "Rejeté",
+        "edit": "Modifier",
+        "createBlog": "Nouveau Blog",
+        "editBlog": "Modifier le Blog",
+        "blogThumbnail": "Miniature",
+        "thumbnailUrlPlaceholder": "Ou collez l'URL de l'image...",
+        "mainLanguage": "Langue Principale",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "blogCreated": "Blog créé avec succès !",
+        "blogUpdated": "Blog mis à jour avec succès !",
+        "uploadImage": "Télécharger une Image",
+        "uploading": "Téléchargement...",
+        "insertImage": "Insérer une Image",
+        "uploadError": "Échec du téléchargement.",
+        "fillAtLeastOne": "Veuillez remplir au moins une langue.",
+        "mainLanguageRequired": "La sélection de la langue principale est requise.",
+        "thumbnailRequired": "Une image miniature est requise.",
+        "saveError": "Échec de l'enregistrement.",
+        "blogTitle": "Titre",
+        "blogContent": "Contenu",
+        "blogSlug": "Slug de l'URL",
+        "autoSlug": "Auto",
+        "titlePlaceholder": "Entrez le titre du blog...",
+        "slugPlaceholder": "slug-url-convivial"
     }
 }

@@ -161,9 +161,15 @@ export default function BlogPage() {
                 )}
                 <div className="blog-card-body">
                   <h2 className="blog-card-title">{blog.title}</h2>
-                  <time className="blog-card-date" dateTime={blog.createdDate}>
-                    {formatDate(blog.createdDate)}
-                  </time>
+                  <div className="blog-card-meta">
+                    <div className="blog-card-author" style={{ margin: 0 }}>
+                      {blog.creatorUserName || blog.creatorUser?.name || 'Author'}
+                    </div>
+                    <span style={{ color: '#64748b', fontSize: '0.8rem' }}>•</span>
+                    <time className="blog-card-date" dateTime={blog.createdDate} style={{ margin: 0 }}>
+                      {formatDate(blog.createdDate)}
+                    </time>
+                  </div>
                 </div>
               </Link>
             ))}

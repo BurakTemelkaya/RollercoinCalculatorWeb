@@ -8,7 +8,7 @@ import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
 
-const SUPPORTED_LANGUAGES: SelectOption[] = [
+export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
   { value: 'tr', label: 'Türkçe', icon: 'https://flagcdn.com/w20/tr.png' },
   { value: 'zh', label: 'Chinese Simplified', icon: 'https://flagcdn.com/w20/cn.png' },
@@ -45,7 +45,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
 
-  const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -210,7 +210,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                       )}
                       <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="mobile-nav-link mobile-logout-btn">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
-                        {t('auth.logout')} ({user?.email?.split('@')[0]})
+                        {t('auth.logout')} {user?.email ? `(${user.email.split('@')[0]})` : ''}
                       </button>
                     </>
                   ) : (

@@ -10,7 +10,8 @@
         "charts": "图表",
         "events": "活动",
         "merges": "合成",
-        "blog": "博客"
+        "blog": "博客",
+        "myBlogs": "我的博客"
     },
     "lpp": {
         "title": "联赛算力分配",
@@ -485,5 +486,42 @@
         "btn2": "阅读算力战术 →",
         "btn3": "阅读 F2P 指南 →",
         "btn4": "常见问题解答 →"
+    },
+    "blog": {
+        "myBlogsDesc": "您写的所有文章。"
+    },
+    "author": {
+        "blogCreatedPending": "您的博客已提交，正在等待管理员批准。"
+    },
+    "admin": {
+        "createNewBlog": "创建新博客",
+        "all": "全部",
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "edit": "编辑",
+        "createBlog": "新博客",
+        "editBlog": "编辑博客",
+        "blogThumbnail": "缩略图",
+        "thumbnailUrlPlaceholder": "或粘贴图像 URL...",
+        "mainLanguage": "主要语言",
+        "save": "保存",
+        "saving": "保存中...",
+        "blogCreated": "博客创建成功！",
+        "blogUpdated": "博客更新成功！",
+        "uploadImage": "上传图片",
+        "uploading": "上传中...",
+        "insertImage": "插入图片",
+        "uploadError": "图片上传失败。",
+        "fillAtLeastOne": "请至少填写一种语言。",
+        "mainLanguageRequired": "必须选择主要语言。",
+        "thumbnailRequired": "必须提供缩略图。",
+        "saveError": "博客保存失败。",
+        "blogTitle": "标题",
+        "blogContent": "内容",
+        "blogSlug": "URL 别名",
+        "autoSlug": "自动",
+        "titlePlaceholder": "输入博客标题...",
+        "slugPlaceholder": "url-friendly"
     }
 }

@@ -29,6 +29,7 @@ export interface BlogListItem {
   id: string;
   thumbnailImageUrl: string;
   creatorUserId: string;
+  creatorUserName?: string;
   creatorUser?: CreatorUser;
   mainLanguageId?: number | null;
   title?: string; // Present in public list
@@ -41,6 +42,7 @@ export interface BlogListItem {
     title: string;
     slug: string;
   }[];
+  approvedDate?: string | null;
 }
 
 /** Paginated blog list response */
@@ -78,6 +80,7 @@ export interface BlogDetail {
   id: string;
   thumbnailImageUrl: string;
   creatorUserId: string;
+  creatorUserName?: string;
   creatorUser?: CreatorUser;
   mainLanguageId?: number | null;
   blogContent: BlogContentDto;
@@ -109,6 +112,38 @@ export interface UpdateBlogDto {
   blogContents: BlogContentDto[];
 }
 
+/** Admin blog content detail (from get-admin-by-id) */
+export interface AdminBlogContentDto {
+  id: string;
+  thumbnailImageUrl?: string | null;
+  title: string;
+  content: string;
+  slug: string;
+  languageId: number;
+  language?: { id: number; code: string; name: string; nativeName: string };
+  blogId: string;
+  createdDate: string;
+  updatedDate?: string | null;
+  deletedDate?: string | null;
+}
+
+/** Full admin blog detail (from get-admin-by-id) */
+export interface AdminBlogDetail {
+  id: string;
+  thumbnailImageUrl: string;
+  creatorUserId: string;
+  creatorUser?: CreatorUser;
+  blogContents: AdminBlogContentDto[];
+  mainLanguageId: number;
+  approvedUser?: CreatorUser | null;
+  approvedUserId?: string | null;
+  approvedDate?: string | null;
+  createdDate: string;
+  updatedDate?: string | null;
+  deletedDate?: string | null;
+  status?: ReviewStatus;
+}
+
 
 /** Image upload response */
 export interface ImageUploadResponse {
@@ -117,4 +152,35 @@ export interface ImageUploadResponse {
   errorCode: string | null;
   size: number;
   contentType: string;
+}
+
+/** Blog review DTO for creating reviews */
+export interface CreateBlogReviewDto {
+  reviewNote?: string;
+  status: ReviewStatus;
+  reviewerUserId?: string;
+  blogId: string;
+}
+
+/** Blog review list item (admin view) */
+export interface BlogReviewListDto {
+  id: string;
+  reviewNote?: string;
+  status: ReviewStatus;
+  reviewerUserId: string;
+  reviewerUser?: CreatorUser;
+  blogId: string;
+  createdDate: string;
+  updatedDate?: string | null;
+  deletedDate?: string | null;
+}
+
+/** Blog review by blog ID (user view) */
+export interface BlogReviewByBlogIdDto {
+  id: string;
+  reviewNote?: string;
+  status: ReviewStatus;
+  blogId: string;
+  createdDate: string;
+  updatedDate?: string | null;
 }

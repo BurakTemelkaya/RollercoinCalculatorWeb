@@ -59,7 +59,40 @@ export async function apiFetch(url: string, options?: ApiFetchOptions): Promise<
         const headers = new Headers(options?.headers);
         headers.set('Accept-Language', acceptLanguage);
 
-        if (options?.requiresTurnstile) {
+        let requiresTurnstile = options?.requiresTurnstile;
+        
+        // If turnstile is requested, check if the current user is an Admin
+        // Admins bypass turnstile entirely.
+        if (requiresTurnstile) {
+            try {
+                // Try to extract token from Authorization header first, fallback to localStorage
+                let token = '';
+                const authHeader = headers.get('Authorization');
+                if (authHeader && authHeader.startsWith('Bearer ')) {
+                    token = authHeader.substring(7);
+                } else {
+                    token = localStorage.getItem('rollercoin_web_access_token') || '';
+                }
+
+                if (token) {
+                    const payloadB64 = token.split('.')[1];
+                    if (payloadB64) {
+                        const payloadStr = atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/'));
+                        const payload = JSON.parse(payloadStr);
+                        const roles = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+                        const rolesArray = Array.isArray(roles) ? roles : roles ? [roles] : [];
+                        
+                        if (rolesArray.includes('Admin')) {
+                            requiresTurnstile = false;
+                        }
+                    }
+                }
+            } catch (e) {
+                // Ignore parsing errors, fallback to requiring turnstile
+            }
+        }
+
+        if (requiresTurnstile) {
             const turnstileToken = await getTurnstileToken();
             headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
         }

@@ -10,7 +10,8 @@
         "charts": "Графики",
         "events": "События",
         "merges": "Крафт",
-        "blog": "Блог"
+        "blog": "Блог",
+        "myBlogs": "Мои Блоги"
     },
     "lpp": {
         "title": "Распределение мощности лиги",
@@ -485,5 +486,42 @@
         "btn2": "Читать тактику мощности →",
         "btn3": "Читать гайд F2P →",
         "btn4": "Часто задаваемые вопросы →"
+    },
+    "blog": {
+        "myBlogsDesc": "Все посты, которые вы написали."
+    },
+    "author": {
+        "blogCreatedPending": "Ваш блог был отправлен и ожидает одобрения администратора."
+    },
+    "admin": {
+        "createNewBlog": "Создать Новый Блог",
+        "all": "Все",
+        "pending": "В ожидании",
+        "approved": "Одобрено",
+        "rejected": "Отклонено",
+        "edit": "Редактировать",
+        "createBlog": "Новый Блог",
+        "editBlog": "Редактировать Блог",
+        "blogThumbnail": "Миниатюра",
+        "thumbnailUrlPlaceholder": "Или вставьте URL картинки...",
+        "mainLanguage": "Основной Язык",
+        "save": "Сохранить",
+        "saving": "Сохранение...",
+        "blogCreated": "Блог успешно создан!",
+        "blogUpdated": "Блог успешно обновлен!",
+        "uploadImage": "Загрузить Изображение",
+        "uploading": "Загрузка...",
+        "insertImage": "Вставить Изображение",
+        "uploadError": "Ошибка загрузки.",
+        "fillAtLeastOne": "Пожалуйста, заполните хотя бы один язык.",
+        "mainLanguageRequired": "Необходимо выбрать основной язык.",
+        "thumbnailRequired": "Требуется изображение миниатюры.",
+        "saveError": "Ошибка при сохранении.",
+        "blogTitle": "Заголовок",
+        "blogContent": "Содержание",
+        "blogSlug": "URL-адрес (Slug)",
+        "autoSlug": "Авто",
+        "titlePlaceholder": "Введите заголовок...",
+        "slugPlaceholder": "url-druzhelyubnyy"
     }
 }

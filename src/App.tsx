@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate, Link, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -57,7 +57,9 @@ const BlogDetailPage = lazyWithRetry(() => import('./components/BlogDetailPage')
 const LoginPage = lazyWithRetry(() => import('./components/auth/LoginPage'));
 const RegisterPage = lazyWithRetry(() => import('./components/auth/RegisterPage'));
 const AdminBlogList = lazyWithRetry(() => import('./components/admin/AdminBlogList'));
+const AdminBlogDetailPage = lazyWithRetry(() => import('./components/admin/AdminBlogDetailPage'));
 const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCommentList'));
+const AdminReviewList = lazyWithRetry(() => import('./components/admin/AdminReviewList'));
 const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
@@ -317,7 +319,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260526.043221';
+  const CURRENT_CACHE_VERSION = '20260526.020356';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -901,9 +903,22 @@ function MainLayoutWrapper() {
   );
 }
 
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const isDashboard = location.pathname.includes('/admin/') || location.pathname.includes('/my-blogs');
+    (window as any)['ga-disable-G-VNK3N77NB2'] = isDashboard;
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   return (
-    <Routes>
+    <>
+      <AnalyticsTracker />
+      <Routes>
       <Route element={<MainLayoutWrapper />}>
         <Route path="/" element={<AutoRedirect />} />
         <Route path="/:lang" element={<CalculatorArea />} />
@@ -931,10 +946,13 @@ function App() {
       <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
       
       <Route path="/:lang/admin/blogs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/blogs/detail/:blogId" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogDetailPage /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
     </Routes>
+    </>
   );
 }
 

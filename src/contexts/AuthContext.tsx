@@ -187,12 +187,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const logout = useCallback(async () => {
     try {
-      await apiRevokeToken();
+      if (accessToken) {
+        await apiRevokeToken(accessToken);
+      }
     } catch {
       // Ignore revoke errors, still clear local session
     }
     clearSession();
-  }, [clearSession]);
+    window.location.href = '/';
+  }, [clearSession, accessToken]);
 
   /**
    * Get a valid access token, refreshing if necessary.

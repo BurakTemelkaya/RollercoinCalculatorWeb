@@ -10,7 +10,8 @@
         "charts": "Grafik",
         "events": "Acara",
         "merges": "Gabungan",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Blog Saya"
     },
     "lpp": {
         "title": "Pembagian Kekuatan Liga",
@@ -485,5 +486,42 @@
         "btn2": "Baca Taktik Kekuatan →",
         "btn3": "Baca Panduan F2P →",
         "btn4": "Pertanyaan yang Sering Diajukan →"
+    },
+    "blog": {
+        "myBlogsDesc": "Semua postingan yang telah Anda tulis."
+    },
+    "author": {
+        "blogCreatedPending": "Blog Anda telah dikirim dan menunggu persetujuan admin."
+    },
+    "admin": {
+        "createNewBlog": "Buat Blog Baru",
+        "all": "Semua",
+        "pending": "Tertunda",
+        "approved": "Disetujui",
+        "rejected": "Ditolak",
+        "edit": "Edit",
+        "createBlog": "Blog Baru",
+        "editBlog": "Edit Blog",
+        "blogThumbnail": "Gambar Mini",
+        "thumbnailUrlPlaceholder": "Atau tempel URL gambar...",
+        "mainLanguage": "Bahasa Utama",
+        "save": "Simpan",
+        "saving": "Menyimpan...",
+        "blogCreated": "Blog berhasil dibuat!",
+        "blogUpdated": "Blog berhasil diperbarui!",
+        "uploadImage": "Unggah Gambar",
+        "uploading": "Mengunggah...",
+        "insertImage": "Sisipkan Gambar",
+        "uploadError": "Gagal mengunggah gambar.",
+        "fillAtLeastOne": "Harap isi setidaknya satu bahasa.",
+        "mainLanguageRequired": "Pilihan bahasa utama diperlukan.",
+        "thumbnailRequired": "Gambar mini diperlukan.",
+        "saveError": "Gagal menyimpan blog.",
+        "blogTitle": "Judul",
+        "blogContent": "Konten",
+        "blogSlug": "Slug URL",
+        "autoSlug": "Otomatis",
+        "titlePlaceholder": "Masukkan judul blog...",
+        "slugPlaceholder": "slug-url-ramah"
     }
 }
