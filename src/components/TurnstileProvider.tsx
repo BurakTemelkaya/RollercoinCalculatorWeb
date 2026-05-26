@@ -65,12 +65,16 @@ export default function TurnstileProvider() {
                 position: 'fixed',
                 inset: 0,
                 zIndex: 200000,
-                display: isBlocking ? 'flex' : 'none',
+                display: 'flex',
+                visibility: isBlocking ? 'visible' : 'hidden',
+                opacity: isBlocking ? 1 : 0,
+                pointerEvents: isBlocking ? 'auto' : 'none',
+                transition: 'opacity 0.2s ease, visibility 0.2s ease',
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '24px',
                 background: 'rgba(10, 12, 20, 0.86)',
-                backdropFilter: 'blur(4px)',
+                backdropFilter: isBlocking ? 'blur(4px)' : 'none',
             }}
         >
             <div
