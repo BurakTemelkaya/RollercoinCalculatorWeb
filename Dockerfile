@@ -17,8 +17,9 @@ RUN npm install
 
 COPY . .
 
-# 1. API URL'ini yazıyoruz
-RUN echo "VITE_API_URL=https://api.rollercoincalculator.app" > .env.production
+# 1. API URL'ini set et (mevcut .env.production icindeki diger degiskenleri koru)
+ARG VITE_API_URL=https://api.rollercoincalculator.app
+RUN sed -i "s|^VITE_API_URL=.*$|VITE_API_URL=${VITE_API_URL}|" .env.production
 
 # 2. Versiyonu güncelle (App.tsx ve sw.js değişir) - Build'den önce olmalı!
 RUN node scripts/bump-version.js

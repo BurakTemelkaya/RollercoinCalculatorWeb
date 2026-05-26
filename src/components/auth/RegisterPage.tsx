@@ -5,7 +5,7 @@
  * Premium glassmorphism design matching LoginPage.
  */
 
-import { useState, useRef, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
