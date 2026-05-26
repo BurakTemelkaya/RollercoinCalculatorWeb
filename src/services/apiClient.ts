@@ -1,4 +1,4 @@
-import { getTurnstileToken, invalidateTurnstileToken, TURNSTILE_HEADER_NAME } from './turnstile';
+const TURNSTILE_HEADER_NAME = 'cf-turnstile-response';
 
 /**
  * Centralized API Client
@@ -33,7 +33,7 @@ export class ApiError extends Error {
 }
 
 export interface ApiFetchOptions extends RequestInit {
-    requiresTurnstile?: boolean;
+    turnstileToken?: string;
 }
 
 /**
@@ -59,42 +59,8 @@ export async function apiFetch(url: string, options?: ApiFetchOptions): Promise<
         const headers = new Headers(options?.headers);
         headers.set('Accept-Language', acceptLanguage);
 
-        let requiresTurnstile = options?.requiresTurnstile;
-        
-        // If turnstile is requested, check if the current user is an Admin
-        // Admins bypass turnstile entirely.
-        if (requiresTurnstile) {
-            try {
-                // Try to extract token from Authorization header first, fallback to localStorage
-                let token = '';
-                const authHeader = headers.get('Authorization');
-                if (authHeader && authHeader.startsWith('Bearer ')) {
-                    token = authHeader.substring(7);
-                } else {
-                    token = localStorage.getItem('rollercoin_web_access_token') || '';
-                }
-
-                if (token) {
-                    const payloadB64 = token.split('.')[1];
-                    if (payloadB64) {
-                        const payloadStr = atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/'));
-                        const payload = JSON.parse(payloadStr);
-                        const roles = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-                        const rolesArray = Array.isArray(roles) ? roles : roles ? [roles] : [];
-                        
-                        if (rolesArray.includes('Admin')) {
-                            requiresTurnstile = false;
-                        }
-                    }
-                }
-            } catch (e) {
-                // Ignore parsing errors, fallback to requiring turnstile
-            }
-        }
-
-        if (requiresTurnstile) {
-            const turnstileToken = await getTurnstileToken();
-            headers.set(TURNSTILE_HEADER_NAME, turnstileToken || '');
+        if (options?.turnstileToken) {
+            headers.set(TURNSTILE_HEADER_NAME, options.turnstileToken);
         }
 
         const response = await fetch(url, {
@@ -103,9 +69,6 @@ export async function apiFetch(url: string, options?: ApiFetchOptions): Promise<
         });
 
         if (!response.ok) {
-            if (response.status === 403) {
-                invalidateTurnstileToken();
-            }
             if (response.status === 429) {
                 throw new ApiError(429, 'Too Many Requests');
             }

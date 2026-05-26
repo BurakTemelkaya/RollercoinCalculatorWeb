@@ -5,12 +5,13 @@
  * Premium glassmorphism design matching LoginPage.
  */
 
-import { useState, type FormEvent } from 'react';
+import { useState, useRef, type FormEvent } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApiError } from '../../services/apiClient';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import './AuthPages.css';
 
 export default function RegisterPage() {
@@ -26,6 +27,10 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
+  const hasSiteKey = siteKey.trim().length > 0;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,9 +51,14 @@ export default function RegisterPage() {
       return;
     }
 
+    if (hasSiteKey && !turnstileToken) {
+      setError(t('input.errors.turnstileFailed'));
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await register({ name: name.trim(), email: email.trim(), password });
+      await register({ name: name.trim(), email: email.trim(), password }, turnstileToken);
       navigate(`/${lang || 'en'}`, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
@@ -62,6 +72,8 @@ export default function RegisterPage() {
       } else {
         setError(t('auth.registerError'));
       }
+      setTurnstileToken('');
+      turnstileRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -194,7 +206,21 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+          {hasSiteKey && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={siteKey}
+                onSuccess={setTurnstileToken}
+                options={{
+                  theme: 'dark',
+                  size: 'normal',
+                }}
+              />
+            </div>
+          )}
+
+          <button type="submit" className="auth-submit-btn" disabled={isSubmitting || (hasSiteKey && !turnstileToken)}>
             {isSubmitting ? (
               <>
                 <span className="spinner" style={{ width: 16, height: 16 }} />

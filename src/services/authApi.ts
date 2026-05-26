@@ -22,14 +22,14 @@ const AUTH_BASE = '/api/Auth';
  * Login with email and password.
  * Turnstile token is automatically attached by apiFetch for POST requests.
  */
-export async function login(dto: UserForLoginDto): Promise<LoginResponse> {
+export async function login(dto: UserForLoginDto, turnstileToken: string): Promise<LoginResponse> {
   const url = buildApiUrl(`${AUTH_BASE}/Login`);
   const response = await apiFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
     credentials: 'include', // for httpOnly refresh token cookie
-    requiresTurnstile: true,
+    turnstileToken,
   });
   return response.json() as Promise<LoginResponse>;
 }
@@ -38,14 +38,14 @@ export async function login(dto: UserForLoginDto): Promise<LoginResponse> {
  * Register a new user account.
  * Returns the same LoginResponse format as login.
  */
-export async function register(dto: UserForRegisterDto): Promise<LoginResponse> {
+export async function register(dto: UserForRegisterDto, turnstileToken: string): Promise<LoginResponse> {
   const url = buildApiUrl(`${AUTH_BASE}/Register`);
   const response = await apiFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
     credentials: 'include',
-    requiresTurnstile: true,
+    turnstileToken,
   });
   return response.json() as Promise<LoginResponse>;
 }

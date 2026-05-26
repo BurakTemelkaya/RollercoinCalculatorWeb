@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import appLogo from '../assets/logo.png';
-import TurnstileProvider from './TurnstileProvider';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
@@ -103,7 +102,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="app-layout">
-      <TurnstileProvider />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">

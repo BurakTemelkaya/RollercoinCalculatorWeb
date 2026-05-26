@@ -262,7 +262,6 @@ export async function createBlog(dto: CreateBlogDto, token: string): Promise<voi
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ createBlogDto: dto }),
-    requiresTurnstile: true,
   });
 }
 
@@ -278,7 +277,6 @@ export async function updateBlog(dto: UpdateBlogDto, token: string): Promise<voi
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ blog: dto }),
-    requiresTurnstile: true,
   });
 }
 
@@ -310,7 +308,6 @@ export async function uploadBlogImage(file: File, token: string): Promise<ImageU
       Authorization: `Bearer ${token}`,
     },
     body: formData,
-    requiresTurnstile: true,
   });
 
   return response.json() as Promise<ImageUploadResponse>;
@@ -333,7 +330,7 @@ export async function fetchCommentsByBlogId(blogId: string, languageId: number, 
 /**
  * Create a new comment.
  */
-export async function createComment(blogId: string, authorName: string, content: string, languageId: number, authToken?: string): Promise<void> {
+export async function createComment(blogId: string, authorName: string, content: string, languageId: number, turnstileToken: string, authToken?: string): Promise<void> {
   const url = buildApiUrl('/api/BlogComment');
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -356,6 +353,6 @@ export async function createComment(blogId: string, authorName: string, content:
     method: 'POST',
     headers,
     body: JSON.stringify(payload),
-    requiresTurnstile: true,
+    turnstileToken,
   });
 }

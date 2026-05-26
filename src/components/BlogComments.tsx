@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { fetchCommentsByBlogId, createComment } from '../services/blogApi';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface BlogCommentsProps {
   blogId: string;
@@ -21,6 +22,10 @@ export default function BlogComments({ blogId, languageId, lang }: BlogCommentsP
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const turnstileRef = React.useRef<TurnstileInstance | null>(null);
+  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
+  const hasSiteKey = siteKey.trim().length > 0;
 
   const loadComments = useCallback(async () => {
     try {
@@ -50,11 +55,17 @@ export default function BlogComments({ blogId, languageId, lang }: BlogCommentsP
     e.preventDefault();
     if (!newComment.trim() || !authorName.trim()) return;
 
+    if (hasSiteKey && !turnstileToken) {
+      alert(t('input.errors.turnstileFailed', 'Lütfen güvenlik doğrulamasını tamamlayın.'));
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const authToken = await getValidToken();
-      await createComment(blogId, authorName.trim(), newComment, languageId, authToken || undefined);
+      await createComment(blogId, authorName.trim(), newComment, languageId, turnstileToken, authToken || undefined);
       setNewComment('');
+      setTurnstileToken(''); // Clear token so Turnstile re-renders/resets if needed
       setSubmitSuccess(true);
       // Wait a moment and reload comments
       setTimeout(() => {
@@ -64,6 +75,8 @@ export default function BlogComments({ blogId, languageId, lang }: BlogCommentsP
     } catch (err) {
       console.error('Comment creation failed:', err);
       alert(t('blog.commentSubmitError', 'Yorum gönderilemedi. Lütfen tekrar deneyin.'));
+      setTurnstileToken('');
+      turnstileRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -147,13 +160,27 @@ export default function BlogComments({ blogId, languageId, lang }: BlogCommentsP
             </div>
           )}
 
+          {hasSiteKey && (
+            <div style={{ marginBottom: '16px' }}>
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={siteKey}
+                onSuccess={setTurnstileToken}
+                options={{
+                  theme: 'dark',
+                  size: 'normal',
+                }}
+              />
+            </div>
+          )}
+
           <button 
             type="submit" 
-            disabled={isSubmitting || !newComment.trim() || !authorName.trim()}
+            disabled={isSubmitting || !newComment.trim() || !authorName.trim() || (hasSiteKey && !turnstileToken)}
             className="admin-create-btn"
             style={{
-              background: (isSubmitting || !newComment.trim() || !authorName.trim()) ? '#475569' : 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-              cursor: (isSubmitting || !newComment.trim() || !authorName.trim()) ? 'not-allowed' : 'pointer'
+              background: (isSubmitting || !newComment.trim() || !authorName.trim() || (hasSiteKey && !turnstileToken)) ? '#475569' : 'linear-gradient(135deg, #7c3aed, #3b82f6)',
+              cursor: (isSubmitting || !newComment.trim() || !authorName.trim() || (hasSiteKey && !turnstileToken)) ? 'not-allowed' : 'pointer'
             }}
           >
             {isSubmitting ? t('blog.submitting', 'Gönderiliyor...') : t('blog.submitComment', 'Gönder')}

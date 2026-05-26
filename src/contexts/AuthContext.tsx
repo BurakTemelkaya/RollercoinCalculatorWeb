@@ -25,8 +25,8 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
-  login: (dto: UserForLoginDto) => Promise<LoginResponse>;
-  register: (dto: UserForRegisterDto) => Promise<LoginResponse>;
+  login: (dto: UserForLoginDto, turnstileToken: string) => Promise<LoginResponse>;
+  register: (dto: UserForRegisterDto, turnstileToken: string) => Promise<LoginResponse>;
   logout: () => Promise<void>;
   getValidToken: () => Promise<string | null>;
 }
@@ -167,8 +167,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   /**
    * Login action.
    */
-  const login = useCallback(async (dto: UserForLoginDto): Promise<LoginResponse> => {
-    const response = await apiLogin(dto);
+  const login = useCallback(async (dto: UserForLoginDto, turnstileToken: string): Promise<LoginResponse> => {
+    const response = await apiLogin(dto, turnstileToken);
     setSession(response);
     return response;
   }, [setSession]);
@@ -176,8 +176,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   /**
    * Register action. Automatically logs in after successful registration.
    */
-  const register = useCallback(async (dto: UserForRegisterDto): Promise<LoginResponse> => {
-    const response = await apiRegister(dto);
+  const register = useCallback(async (dto: UserForRegisterDto, turnstileToken: string): Promise<LoginResponse> => {
+    const response = await apiRegister(dto, turnstileToken);
     setSession(response);
     return response;
   }, [setSession]);
