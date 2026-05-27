@@ -251,10 +251,42 @@ export async function fetchUserBlogReviewsByBlogId(
 }
 
 /**
- * Create a new blog post. Requires admin token.
+ * Create a new blog post (non-admin). Requires auth token and Turnstile.
  */
-export async function createBlog(dto: CreateBlogDto, token: string): Promise<void> {
+export async function createBlog(dto: CreateBlogDto, token: string, turnstileToken: string): Promise<void> {
   const url = buildApiUrl('/api/Blog');
+  await apiFetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ createBlogDto: dto }),
+    turnstileToken,
+  });
+}
+
+/**
+ * Update an existing blog post (non-admin). Requires auth token and Turnstile.
+ */
+export async function updateBlog(dto: UpdateBlogDto, token: string, turnstileToken: string): Promise<void> {
+  const url = buildApiUrl('/api/Blog');
+  await apiFetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ blog: dto }),
+    turnstileToken,
+  });
+}
+
+/**
+ * Create a new blog post as admin. Requires admin token, no Turnstile.
+ */
+export async function createBlogByAdmin(dto: CreateBlogDto, token: string): Promise<void> {
+  const url = buildApiUrl('/api/Blog/create-blog-by-admin');
   await apiFetch(url, {
     method: 'POST',
     headers: {
@@ -266,10 +298,10 @@ export async function createBlog(dto: CreateBlogDto, token: string): Promise<voi
 }
 
 /**
- * Update an existing blog post. Requires admin token.
+ * Update an existing blog post as admin. Requires admin token, no Turnstile.
  */
-export async function updateBlog(dto: UpdateBlogDto, token: string): Promise<void> {
-  const url = buildApiUrl('/api/Blog');
+export async function updateBlogByAdmin(dto: UpdateBlogDto, token: string): Promise<void> {
+  const url = buildApiUrl('/api/Blog/update-blog-by-admin');
   await apiFetch(url, {
     method: 'PUT',
     headers: {

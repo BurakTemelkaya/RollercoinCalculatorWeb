@@ -15,13 +15,17 @@ import { useDropzone } from 'react-dropzone';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { useAuth } from '../../contexts/AuthContext';
+import { ApiError } from '../../services/apiClient';
 import {
   fetchLanguages,
   fetchBlogBySlug,
   fetchAdminBlogById,
   createBlog,
+  createBlogByAdmin,
   updateBlog,
+  updateBlogByAdmin,
   uploadBlogImage,
 } from '../../services/blogApi';
 import type { Language, BlogContentDto } from '../../types/blog';
@@ -42,10 +46,15 @@ export default function BlogEditor() {
   const { t } = useTranslation();
   const { user, getValidToken } = useAuth();
   const contentFileInputRef = useRef<HTMLInputElement>(null);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
+  const hasSiteKey = siteKey.trim().length > 0;
 
   const isEditMode = !!editSlug;
   const location = useLocation();
-  const isAdminEdit = isEditMode && location.pathname.includes('/admin/');
+  const isAdminPath = location.pathname.includes('/admin/');
+  const isAdminEdit = isEditMode && isAdminPath;
+  const requiresTurnstile = !isAdminPath && hasSiteKey;
 
   const [languages, setLanguages] = useState<Language[]>([]);
   const [activeLangId, setActiveLangId] = useState<number | null>(null);
@@ -57,6 +66,7 @@ export default function BlogEditor() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
 
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
@@ -279,6 +289,11 @@ export default function BlogEditor() {
       return;
     }
 
+    if (requiresTurnstile && !turnstileToken) {
+      setError(t('input.errors.turnstileFailed'));
+      return;
+    }
+
     setIsSaving(true);
     setError(null);
     setSuccessMsg(null);
@@ -300,29 +315,55 @@ export default function BlogEditor() {
       }));
 
       if (isEditMode && editBlogId) {
-        await updateBlog(
-          {
-            id: editBlogId,
-            thumbnailImageUrl: thumbnailUrl,
-            creatorUserId: user.userId,
-            mainLanguageId,
-            blogContents,
-          },
-          token
-        );
+        if (isAdminPath) {
+          await updateBlogByAdmin(
+            {
+              id: editBlogId,
+              thumbnailImageUrl: thumbnailUrl,
+              creatorUserId: user.userId,
+              mainLanguageId,
+              blogContents,
+            },
+            token
+          );
+        } else {
+          await updateBlog(
+            {
+              id: editBlogId,
+              thumbnailImageUrl: thumbnailUrl,
+              creatorUserId: user.userId,
+              mainLanguageId,
+              blogContents,
+            },
+            token,
+            turnstileToken
+          );
+        }
         setShowUpdatePopup(true);
       } else {
-        await createBlog(
-          {
-            thumbnailImageUrl: thumbnailUrl,
-            creatorUserId: user.userId,
-            mainLanguageId,
-            blogContents,
-          },
-          token
-        );
-        
-        const isAdminPath = location.pathname.includes('/admin/');
+        if (isAdminPath) {
+          await createBlogByAdmin(
+            {
+              thumbnailImageUrl: thumbnailUrl,
+              creatorUserId: user.userId,
+              mainLanguageId,
+              blogContents,
+            },
+            token
+          );
+        } else {
+          await createBlog(
+            {
+              thumbnailImageUrl: thumbnailUrl,
+              creatorUserId: user.userId,
+              mainLanguageId,
+              blogContents,
+            },
+            token,
+            turnstileToken
+          );
+        }
+
         if (isAdminPath) {
           setSuccessMsg(t('admin.blogCreated', 'Blog eklendi.'));
           setTimeout(() => navigate(`/${lang}/admin/blogs`), 1500);
@@ -331,9 +372,27 @@ export default function BlogEditor() {
           setTimeout(() => navigate(`/${lang}/my-blogs`), 2500);
         }
       }
+      if (requiresTurnstile) {
+        setTurnstileToken('');
+        turnstileRef.current?.reset();
+      }
     } catch (err) {
       console.error('Failed to save blog:', err);
-      setError(t('admin.saveError'));
+      if (err instanceof ApiError) {
+        if (err.isRateLimit) {
+          setError(t('input.errors.tooManyRequests'));
+        } else if (err.isForbidden && requiresTurnstile) {
+          setError(t('input.errors.turnstileFailed'));
+        } else {
+          setError(err.detail || t('admin.saveError'));
+        }
+      } else {
+        setError(t('admin.saveError'));
+      }
+      if (requiresTurnstile) {
+        setTurnstileToken('');
+        turnstileRef.current?.reset();
+      }
     } finally {
       setIsSaving(false);
     }
@@ -567,6 +626,20 @@ export default function BlogEditor() {
           </>
         )}
 
+        {requiresTurnstile && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={siteKey}
+              onSuccess={setTurnstileToken}
+              options={{
+                theme: 'dark',
+                size: 'normal',
+              }}
+            />
+          </div>
+        )}
+
         {/* Actions */}
         <div className="editor-actions">
           <button
@@ -580,7 +653,7 @@ export default function BlogEditor() {
             type="button"
             className="editor-save-btn"
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={isSaving || (requiresTurnstile && !turnstileToken)}
           >
             {isSaving ? (
               <><span className="spinner" style={{ width: 14, height: 14 }} /> {t('admin.saving')}</>
