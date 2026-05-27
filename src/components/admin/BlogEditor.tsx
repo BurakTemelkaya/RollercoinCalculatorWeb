@@ -597,7 +597,11 @@ export default function BlogEditor() {
                 <ReactQuill
                   theme="snow"
                   value={activeContent.content}
-                  onChange={(val) => updateContent('content', val || '')}
+                  onChange={(val, _delta, source) => {
+                    if (source === 'user') {
+                      updateContent('content', val || '');
+                    }
+                  }}
                   style={{ height: '400px', marginBottom: '50px', background: 'rgba(255,255,255,0.02)', color: '#fff' }}
                   modules={{
                     toolbar: [
