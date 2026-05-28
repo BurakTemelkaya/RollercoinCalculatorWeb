@@ -594,6 +594,19 @@
         "edit": "Edit",
         "livePreview": "Live Preview",
         "thumbnailRequired": "A thumbnail image is required.",
-        "mainLanguageRequired": "Main language selection is required."
+        "mainLanguageRequired": "Main language selection is required.",
+        "writeReview": "Write Review",
+        "reviewNote": "Review Note (Optional)",
+        "reviewNotePlaceholder": "Write why you are approving or rejecting...",
+        "submitReview": "Submit Review",
+        "blogDetail": "Blog Detail",
+        "fullscreen": "Fullscreen",
+        "existingReviews": "Existing Reviews",
+        "noReviews": "No reviews yet.",
+        "review": "Review",
+        "manageReviews": "Manage Reviews",
+        "newReview": "New Review",
+        "stayOnPage": "Stay on Page",
+        "returnToList": "Return to List"
     }
 }
