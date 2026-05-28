@@ -251,6 +251,14 @@ html {
   padding: 0 24px;
 }
 
+/* Main Content Wrapper */
+.main-content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 
 a {
   color: #818cf8;

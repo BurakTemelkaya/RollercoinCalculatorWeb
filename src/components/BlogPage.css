@@ -144,6 +144,8 @@
 .blog-detail-page {
   padding: 0 20px 40px;
   max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -251,6 +253,10 @@
   line-height: 1.8;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-x: auto; /* Enable horizontal scrolling for wide elements */
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .blog-content h1,
@@ -261,6 +267,8 @@
   margin-top: 2em;
   margin-bottom: 0.5em;
   line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .blog-content h1 { font-size: 1.8rem; }
