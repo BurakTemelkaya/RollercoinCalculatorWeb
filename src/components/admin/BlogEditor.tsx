@@ -6,8 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -16,6 +15,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import DashboardLayout from '../DashboardLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApiError } from '../../services/apiClient';
 import {
@@ -410,29 +410,28 @@ export default function BlogEditor() {
 
   if (isLoading) {
     return (
-      <div className="blog-editor-page">
+      <DashboardLayout title={t('blog.loading')} isAdmin={true}>
         <div className="blog-loading">
           <span className="spinner" />
           <p>{t('blog.loading')}</p>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="blog-editor-page" data-color-mode="dark">
-      <Helmet>
-        <title>{isEditMode ? t('admin.editBlog') : t('admin.createBlog')} | Admin</title>
-      </Helmet>
+    <DashboardLayout 
+      title={isEditMode ? t('admin.editBlog') : t('admin.createBlog')} 
+      isAdmin={true}
+    >
+      <div className="blog-editor-page" data-color-mode="dark" style={{ padding: 0 }}>
+        <div className="static-back-link" style={{ marginBottom: 16 }}>
+          <Link to={`/${lang}/admin/blogs`}>← {t('admin.manageBlogs')}</Link>
+        </div>
+        <h1 style={{ marginTop: 0 }}>{isEditMode ? t('admin.editBlog') : t('admin.createBlog')}</h1>
 
-      <div className="static-back-link">
-        <Link to={`/${lang}/admin/blogs`}>← {t('admin.blogs')}</Link>
-      </div>
-
-      <h1>{isEditMode ? t('admin.editBlog') : t('admin.createBlog')}</h1>
-
-      {error && (
-        <div className="blog-error" style={{ marginBottom: 20 }}>
+        {error && (
+          <div className="blog-error" style={{ marginBottom: 20 }}>
           <p>{error}</p>
         </div>
       )}
@@ -708,5 +707,6 @@ export default function BlogEditor() {
         </div>
       )}
     </div>
+  </DashboardLayout>
   );
 }

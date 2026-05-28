@@ -51,7 +51,7 @@ export default function BlogComments({ blogId, languageId, lang }: BlogCommentsP
     }
   }, [user, authorName]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newComment.trim() || !authorName.trim()) return;
 

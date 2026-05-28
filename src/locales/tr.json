@@ -595,6 +595,19 @@
         "edit": "Düzenle",
         "livePreview": "Canlı Önizleme",
         "thumbnailRequired": "Ana resim (thumbnail) yüklemek zorunludur.",
-        "mainLanguageRequired": "Ana dil seçimi zorunludur."
+        "mainLanguageRequired": "Ana dil seçimi zorunludur.",
+        "writeReview": "İnceleme Yaz",
+        "reviewNote": "İnceleme Notu (Opsiyonel)",
+        "reviewNotePlaceholder": "Neden onayladığınızı veya reddettiğinizi yazın...",
+        "submitReview": "İncelemeyi Gönder",
+        "blogDetail": "Blog Detayı",
+        "fullscreen": "Tam Ekran",
+        "existingReviews": "Mevcut İncelemeler",
+        "noReviews": "Henüz inceleme yapılmamış.",
+        "review": "İnceleme",
+        "manageReviews": "İncelemeleri Yönet",
+        "newReview": "Yeni İnceleme",
+        "stayOnPage": "Sayfada Kal",
+        "returnToList": "Listeye Dön"
     }
 }

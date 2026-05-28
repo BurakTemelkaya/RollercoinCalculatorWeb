@@ -147,7 +147,7 @@ export default function BlogPage() {
             {blogs.map((blog) => (
               <Link
                 key={blog.id}
-                to={`/${lang}/blog/${blog.slug}`}
+                to={`/${lang}/blog/${blog.blogContent?.slug || blog.slug}`}
                 className="blog-card"
               >
                 {blog.thumbnailImageUrl && (
@@ -160,7 +160,7 @@ export default function BlogPage() {
                   </div>
                 )}
                 <div className="blog-card-body">
-                  <h2 className="blog-card-title">{blog.title}</h2>
+                  <h2 className="blog-card-title">{blog.blogContent?.title || blog.title}</h2>
                   <div className="blog-card-meta">
                     <div className="blog-card-author" style={{ margin: 0 }}>
                       {blog.creatorUserName || blog.creatorUser?.name || 'Author'}

@@ -42,6 +42,10 @@ export interface BlogListItem {
     title: string;
     slug: string;
   }[];
+  blogContent?: { // Present in public list
+    title: string;
+    slug: string;
+  };
   approvedDate?: string | null;
 }
 

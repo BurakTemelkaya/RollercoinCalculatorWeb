@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, memo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -207,9 +207,11 @@ export default function AdminBlogDetailPage() {
     <DashboardLayout 
       title={t('admin.blogDetail', 'Blog Detail')} 
       isAdmin={true} 
-      adminBackTo={`/${lang}/admin/blogs`} 
-      adminBackLabel={t('admin.manageBlogs')}
     >
+      <div className="blog-editor-page" data-color-mode="dark" style={{ padding: 0 }}>
+        <div className="static-back-link" style={{ marginBottom: 16 }}>
+          <Link to={`/${lang}/admin/blogs`}>← {t('admin.manageBlogs')}</Link>
+        </div>
 
       {isLoading ? (
         <div className="blog-loading">
@@ -449,6 +451,7 @@ export default function AdminBlogDetailPage() {
           </div>
         </div>
       )}
+      </div>
     </DashboardLayout>
   );
 }

@@ -5,7 +5,7 @@
  * Premium glassmorphism design matching LoginPage.
  */
 
-import { useRef, useState, type FormEvent } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ export default function RegisterPage() {
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
   const hasSiteKey = siteKey.trim().length > 0;
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
