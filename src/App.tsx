@@ -60,6 +60,7 @@ const AdminBlogList = lazyWithRetry(() => import('./components/admin/AdminBlogLi
 const AdminBlogDetailPage = lazyWithRetry(() => import('./components/admin/AdminBlogDetailPage'));
 const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCommentList'));
 const AdminReviewList = lazyWithRetry(() => import('./components/admin/AdminReviewList'));
+const AdminRollercoinToken = lazyWithRetry(() => import('./components/admin/AdminRollercoinToken'));
 const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
@@ -319,7 +320,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260528.190609';
+  const CURRENT_CACHE_VERSION = '20260529.032357';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -949,6 +950,7 @@ function App() {
       <Route path="/:lang/admin/blogs/detail/:blogId" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogDetailPage /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
     </Routes>

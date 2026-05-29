@@ -94,8 +94,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const nowInSeconds = Math.floor(Date.now() / 1000);
+    const timeUntilExp = exp - nowInSeconds;
+    
     // Refresh 60 seconds before expiration
-    const delay = Math.max((exp - nowInSeconds - 60) * 1000, 0);
+    let delaySeconds = timeUntilExp - 60;
+    
+    // If the token is extremely short-lived (e.g. 1 minute for testing), 
+    // waiting 60s before expiration would mean delaying by 0s, causing an infinite loop.
+    // Instead, wait for 80% of the remaining time.
+    if (delaySeconds <= 0 && timeUntilExp > 0) {
+      delaySeconds = timeUntilExp * 0.8;
+    }
+
+    const delay = Math.max(delaySeconds * 1000, 0);
 
     refreshTimerRef.current = setTimeout(async () => {
       try {

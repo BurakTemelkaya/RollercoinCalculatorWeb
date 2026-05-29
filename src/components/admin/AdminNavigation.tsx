@@ -19,6 +19,7 @@ export default function AdminNavigation({ backTo, backLabel }: AdminNavigationPr
   const isBlogs = location.pathname.includes('/admin/blogs');
   const isComments = location.pathname.includes('/admin/comments');
   const isReviews = location.pathname.includes('/admin/reviews');
+  const isRollercoin = location.pathname.includes('/admin/rollercoin-account');
 
   const { logout } = useAuth();
 
@@ -72,6 +73,10 @@ export default function AdminNavigation({ backTo, backLabel }: AdminNavigationPr
       <Link to={`/${lang}/admin/comments`} style={tabStyle(isComments)}>
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
         {t('admin.manageComments')}
+      </Link>
+      <Link to={`/${lang}/admin/rollercoin-account`} style={tabStyle(isRollercoin)}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+        Rollercoin Hesabı
       </Link>
       
       <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
