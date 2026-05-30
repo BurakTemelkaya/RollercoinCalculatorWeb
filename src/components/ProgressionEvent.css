@@ -53,7 +53,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 250px;
+  min-height: 310px;
   box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
   background-size: cover;
   background-position: center;
@@ -796,11 +796,15 @@
 }
 
 .hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
 }
-.hide-scrollbar::-webkit-scrollbar { 
-  display: none; /* WebKit */
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* WebKit */
 }
 
 .pe-multiplier-badge {
@@ -1046,27 +1050,27 @@
   }
 
   .pe-reward-img-wrapper {
-    width: 34px;
+    width: 50px;
   }
 
   .pe-reward-img-api {
-    max-width: 34px;
-    max-height: 26px;
+    max-width: 50px;
+    max-height: 38px;
   }
 
   .pe-reward-img-local {
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
   }
 
   .pe-reward-icon-wrap {
-    width: 36px;
-    height: 24px;
+    width: 50px;
+    height: 30px;
   }
 
   .pe-reward-img {
-    max-width: 36px;
-    max-height: 20px;
+    max-width: 50px;
+    max-height: 30px;
   }
 
   .pe-reward-type-img {
@@ -1158,7 +1162,7 @@
     vertical-align: top;
   }
 
-  .pe-multiplier-table th > div {
+  .pe-multiplier-table th>div {
     width: 100%;
     gap: 4px !important;
   }
@@ -1319,9 +1323,9 @@
 
 /* Desktop discount sidebar (left of table) */
 .pe-discount-sidebar {
-  flex: 0 0 220px;
-  width: 220px;
-  min-width: 220px;
+  flex: 0 0 250px;
+  width: 250px;
+  min-width: 250px;
   position: sticky;
   top: 16px;
   height: var(--pe-table-max-height, calc(100vh - 200px));

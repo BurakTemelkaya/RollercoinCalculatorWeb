@@ -1051,6 +1051,82 @@ export default function ProgressionEvent() {
 
                             {/* Multiplier Section */}
                             <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}${collapsedTabs.has('multiplier') ? ' collapsed' : ''}`}>
+                                {/* Controls Bar (Full Width) */}
+                                <div className="pe-controls-bar" style={{ marginBottom: '16px' }}>
+                                    <div className="pe-control-group pe-filter-group">
+                                        <label className="pe-control-label">{t('event.filter')}</label>
+                                        <div className="pe-filter-inputs">
+                                            <input
+                                                type="number"
+                                                className="pe-filter-input"
+                                                value={filterMin}
+                                                onChange={(e) => {
+                                                    const v = parseInt(e.target.value);
+                                                    if (!isNaN(v) && v >= 1 && v <= filterMax) setFilterMin(v);
+                                                }}
+                                                min={1}
+                                                max={filterMax}
+                                            />
+                                            <span className="pe-filter-sep">—</span>
+                                            <input
+                                                type="number"
+                                                className="pe-filter-input"
+                                                value={filterMax}
+                                                onChange={(e) => {
+                                                    const v = parseInt(e.target.value);
+                                                    if (!isNaN(v) && v >= filterMin && v <= MAX_MULTIPLIER) setFilterMax(v);
+                                                }}
+                                                min={filterMin}
+                                                max={MAX_MULTIPLIER}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="pe-control-group">
+                                        <label className="pe-control-label">{t('event.chart')}</label>
+                                        <button
+                                            className={`pe-chart-toggle ${showChart ? 'active' : ''}`}
+                                            onClick={() => setShowChart(!showChart)}
+                                        >
+                                            📊
+                                        </button>
+                                    </div>
+                                    <div className="pe-control-group" style={{ justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600, height: '36px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={showMarketplace}
+                                                onChange={(e) => setShowMarketplace(e.target.checked)}
+                                                style={{ width: '16px', height: '16px', margin: 0, cursor: 'pointer' }}
+                                            />
+                                            {t('event.headers.marketTrade')} & {t('event.headers.fee')}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {/* Chart (Full Width) */}
+                                {showChart && (
+                                    <div className="pe-chart-container" style={{ marginBottom: '16px' }}>
+                                        <h4 className="pe-chart-title">{t('event.chartTitle')}</h4>
+                                        <div className="pe-chart">
+                                            {filteredData.map((row) => {
+                                                const barWidth = (row.boxes / chartMaxBoxes) * 100;
+                                                return (
+                                                    <div key={row.multiplier} className="pe-chart-row">
+                                                        <span className="pe-chart-label">x{row.multiplier}</span>
+                                                        <div className="pe-chart-bar-bg">
+                                                            <div
+                                                                className="pe-chart-bar"
+                                                                style={{ width: `${barWidth}%` }}
+                                                            />
+                                                        </div>
+                                                        <span className="pe-chart-value">{formatNumber(row.boxes)}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="pe-rewards-layout pe-rewards-layout--centered">
                                     {/* Desktop discount sidebar */}
                                     <aside className="pe-discount-sidebar" ref={sidebarRefMultiplier} style={{ visibility: showFixedSidebarMultiplier ? 'hidden' : 'visible' }}>
@@ -1060,84 +1136,9 @@ export default function ProgressionEvent() {
                                         </div>
                                     </aside>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minWidth: 0 }}>
-                                        {/* Controls Bar */}
-                                        <div className="pe-controls-bar">
-                                            <div className="pe-control-group pe-filter-group">
-                                                <label className="pe-control-label">{t('event.filter')}</label>
-                                                <div className="pe-filter-inputs">
-                                                    <input
-                                                        type="number"
-                                                        className="pe-filter-input"
-                                                        value={filterMin}
-                                                        onChange={(e) => {
-                                                            const v = parseInt(e.target.value);
-                                                            if (!isNaN(v) && v >= 1 && v <= filterMax) setFilterMin(v);
-                                                        }}
-                                                        min={1}
-                                                        max={filterMax}
-                                                    />
-                                                    <span className="pe-filter-sep">—</span>
-                                                    <input
-                                                        type="number"
-                                                        className="pe-filter-input"
-                                                        value={filterMax}
-                                                        onChange={(e) => {
-                                                            const v = parseInt(e.target.value);
-                                                            if (!isNaN(v) && v >= filterMin && v <= MAX_MULTIPLIER) setFilterMax(v);
-                                                        }}
-                                                        min={filterMin}
-                                                        max={MAX_MULTIPLIER}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="pe-control-group">
-                                                <label className="pe-control-label">{t('event.chart')}</label>
-                                                <button
-                                                    className={`pe-chart-toggle ${showChart ? 'active' : ''}`}
-                                                    onClick={() => setShowChart(!showChart)}
-                                                >
-                                                    📊
-                                                </button>
-                                            </div>
-                                            <div className="pe-control-group" style={{ justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
-                                                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600, height: '36px' }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={showMarketplace}
-                                                        onChange={(e) => setShowMarketplace(e.target.checked)}
-                                                        style={{ width: '16px', height: '16px', margin: 0, cursor: 'pointer' }}
-                                                    />
-                                                    {t('event.headers.marketTrade')} & {t('event.headers.fee')}
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        {/* Chart */}
-                                        {showChart && (
-                                            <div className="pe-chart-container">
-                                                <h4 className="pe-chart-title">{t('event.chartTitle')}</h4>
-                                                <div className="pe-chart">
-                                                    {filteredData.map((row) => {
-                                                        const barWidth = (row.boxes / chartMaxBoxes) * 100;
-                                                        return (
-                                                            <div key={row.multiplier} className="pe-chart-row">
-                                                                <span className="pe-chart-label">x{row.multiplier}</span>
-                                                                <div className="pe-chart-bar-bg">
-                                                                    <div
-                                                                        className="pe-chart-bar"
-                                                                        style={{ width: `${barWidth}%` }}
-                                                                    />
-                                                                </div>
-                                                                <span className="pe-chart-value">{formatNumber(row.boxes)}</span>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        )}
-
                                         {/* Table */}
                                         <div 
+
                                             className="pe-table-container" 
                                             ref={tableSectionMultiplierRef}
                                             onScroll={(e) => {
