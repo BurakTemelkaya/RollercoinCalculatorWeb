@@ -53,6 +53,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 250px;
   box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
   background-size: cover;
   background-position: center;
@@ -691,7 +692,8 @@
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  max-height: calc(100vh - 200px);
+  height: var(--pe-table-max-height, calc(100vh - 200px));
+  max-height: var(--pe-table-max-height, calc(100vh - 200px));
   overflow-y: auto;
   overflow-x: auto;
 }
@@ -699,6 +701,51 @@
 .pe-table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.pe-rewards-table {
+  min-width: 820px;
+}
+
+.pe-multiplier-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.pe-multiplier-select-list {
+  width: max(180px, var(--radix-select-trigger-width)) !important;
+  min-width: 180px;
+  max-width: min(320px, 92vw);
+}
+
+.pe-multiplier-table th {
+  padding: 6px 8px;
+  font-size: 11px;
+  white-space: normal;
+}
+
+.pe-multiplier-table td {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.pe-multiplier-table .pe-multiplier-cell {
+  width: 60px;
+}
+
+.pe-multiplier-table .pe-filter-input {
+  width: 56px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.pe-multiplier-table .pe-select-lg {
+  min-width: 120px;
+  width: 120px;
+  height: 30px !important;
+  font-size: 12px !important;
+  padding: 0 10px !important;
 }
 
 .pe-table th {
@@ -863,6 +910,30 @@
     flex: 1;
     min-width: 200px;
   }
+
+  .pe-multiplier-table th {
+    padding: 5px 6px;
+    font-size: 10px;
+  }
+
+  .pe-multiplier-table td {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+
+  .pe-multiplier-table .pe-filter-input {
+    width: 50px;
+    padding: 4px 5px;
+    font-size: 11px;
+  }
+
+  .pe-multiplier-table .pe-select-lg {
+    min-width: 100px;
+    width: 100px;
+    height: 28px !important;
+    font-size: 11px !important;
+    padding: 0 8px !important;
+  }
 }
 
 @media (max-width: 600px) {
@@ -973,6 +1044,35 @@
     font-size: 11px;
   }
 
+  .pe-multiplier-table {
+    min-width: 420px;
+  }
+
+  .pe-multiplier-table th:nth-child(1),
+  .pe-multiplier-table td:nth-child(1) {
+    width: 56px;
+  }
+
+  .pe-multiplier-table th:nth-child(2),
+  .pe-multiplier-table td:nth-child(2) {
+    width: 72px;
+  }
+
+  .pe-multiplier-table th:nth-child(3),
+  .pe-multiplier-table td:nth-child(3) {
+    width: 100px;
+  }
+
+  .pe-multiplier-table th:nth-child(4),
+  .pe-multiplier-table td:nth-child(4) {
+    width: 100px;
+  }
+
+  .pe-multiplier-table th:nth-child(5),
+  .pe-multiplier-table td:nth-child(5) {
+    width: 84px;
+  }
+
   .pe-sidebar-mobile {
     flex-direction: column;
   }
@@ -998,6 +1098,35 @@
     gap: 10px;
     padding: 10px 12px;
   }
+
+  .pe-multiplier-table th {
+    vertical-align: top;
+  }
+
+  .pe-multiplier-table th > div {
+    width: 100%;
+    gap: 4px !important;
+  }
+
+  .pe-multiplier-table .radix-select-wrapper {
+    width: 100%;
+  }
+
+  .pe-multiplier-table .pe-select-lg {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+    height: 26px !important;
+    font-size: 10px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pe-multiplier-table .pe-filter-input {
+    width: 100% !important;
+    min-width: 0;
+  }
 }
 
 /* ===== REWARD IMAGE SIZES ===== */
@@ -1005,7 +1134,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 240px;
+  width: 270px;
   max-width: 100%;
   margin: 0 auto;
   text-align: left;
@@ -1032,7 +1161,7 @@
 
 @media (min-width: 901px) {
   .pe-reward-item-container {
-    width: 290px;
+    width: 330px;
   }
 
   .pe-reward-img-wrapper {
@@ -1052,9 +1181,10 @@
 
 /* ===== REWARDS LAYOUT WITH DISCOUNT SIDEBAR ===== */
 .pe-rewards-layout {
+  --pe-table-max-height: calc(100vh - 170px);
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  gap: 12px;
+  align-items: stretch;
 }
 
 .pe-rewards-layout>.pe-table-container {
@@ -1064,10 +1194,42 @@
 
 /* Desktop discount sidebar (left of table) */
 .pe-discount-sidebar {
-  flex-shrink: 0;
+  flex: 0 0 220px;
   width: 220px;
+  min-width: 220px;
   position: sticky;
   top: 16px;
+  height: var(--pe-table-max-height, calc(100vh - 200px));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pe-sidebar-desktop-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+}
+
+.pe-rewards-layout--balanced .pe-sidebar-desktop-cards {
+  flex: 1;
+  justify-content: space-between;
+}
+
+.pe-rewards-layout--centered .pe-sidebar-desktop-cards {
+  flex: 1;
+  justify-content: center;
+}
+
+.pe-rewards-layout--centered {
+  align-items: center;
+}
+
+.pe-rewards-layout--centered .pe-discount-sidebar {
+  position: static;
+  height: auto;
+  align-self: center;
 }
 
 /* ===== DISCOUNT CARD ===== */

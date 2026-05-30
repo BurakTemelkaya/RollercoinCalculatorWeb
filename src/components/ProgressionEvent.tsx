@@ -852,7 +852,6 @@ export default function ProgressionEvent() {
 
                 {/* PC Cards inside the Banner */}
                 <div className="pe-header-cards-desktop">
-                    {renderCards()}
                 </div>
             </div>
 
@@ -893,13 +892,14 @@ export default function ProgressionEvent() {
                         >
                             {/* Rewards Table */}
                             <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}${collapsedTabs.has('rewards') ? ' collapsed' : ''}`}>
-                                <div className="pe-rewards-layout">
+                                <div className="pe-rewards-layout pe-rewards-layout--balanced">
                                     {/* Desktop discount sidebar */}
-                                    {currencyDiscounts.length > 0 && (
-                                        <aside className="pe-discount-sidebar" ref={sidebarRefRewards} style={{ visibility: showFixedSidebarRewards ? 'hidden' : 'visible' }}>
-                                            {renderDiscountCard()}
-                                        </aside>
-                                    )}
+                                    <aside className="pe-discount-sidebar" ref={sidebarRefRewards} style={{ visibility: showFixedSidebarRewards ? 'hidden' : 'visible' }}>
+                                        {renderDiscountCard()}
+                                        <div className="pe-sidebar-desktop-cards">
+                                            {renderCards()}
+                                        </div>
+                                    </aside>
                                     <div 
                                         className="pe-table-container" 
                                         ref={tableSectionRewardsRef}
@@ -1037,9 +1037,12 @@ export default function ProgressionEvent() {
                                     )}
 
                                     {/* Fixed sticky sidebar clone - Rewards */}
-                                    {activeTab === 'rewards' && showFixedSidebarRewards && currencyDiscounts.length > 0 && createPortal(
+                                    {activeTab === 'rewards' && showFixedSidebarRewards && createPortal(
                                         <aside className="pe-discount-sidebar" style={{ position: 'fixed', top: 16, left: sidebarLeftRewards, width: sidebarWidthRewards, zIndex: 99, margin: 0 }}>
                                             {renderDiscountCard()}
+                                            <div className="pe-sidebar-desktop-cards">
+                                                {renderCards()}
+                                            </div>
                                         </aside>,
                                         document.body
                                     )}
@@ -1048,13 +1051,14 @@ export default function ProgressionEvent() {
 
                             {/* Multiplier Section */}
                             <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}${collapsedTabs.has('multiplier') ? ' collapsed' : ''}`}>
-                                <div className="pe-rewards-layout">
+                                <div className="pe-rewards-layout pe-rewards-layout--centered">
                                     {/* Desktop discount sidebar */}
-                                    {currencyDiscounts.length > 0 && (
-                                        <aside className="pe-discount-sidebar" ref={sidebarRefMultiplier} style={{ visibility: showFixedSidebarMultiplier ? 'hidden' : 'visible' }}>
-                                            {renderDiscountCard()}
-                                        </aside>
-                                    )}
+                                    <aside className="pe-discount-sidebar" ref={sidebarRefMultiplier} style={{ visibility: showFixedSidebarMultiplier ? 'hidden' : 'visible' }}>
+                                        {renderDiscountCard()}
+                                        <div className="pe-sidebar-desktop-cards">
+                                            {renderCards()}
+                                        </div>
+                                    </aside>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minWidth: 0 }}>
                                         {/* Controls Bar */}
                                         <div className="pe-controls-bar">
@@ -1183,6 +1187,7 @@ export default function ProgressionEvent() {
                                                                             group: 'Standart'
                                                                         }))
                                                                     ]}
+                                                                    contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                     triggerClassName="pe-select pe-select-lg"
                                                                 />
                                                             </div>
@@ -1197,6 +1202,7 @@ export default function ProgressionEvent() {
                                                                         value: String(price),
                                                                         label: `${price} RLT`
                                                                     }))}
+                                                                    contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                     triggerClassName="pe-select pe-select-lg"
                                                                 />
                                                             </div>
@@ -1291,6 +1297,7 @@ export default function ProgressionEvent() {
                                                                                 group: 'Standart'
                                                                             }))
                                                                         ]}
+                                                                        contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                         triggerClassName="pe-select pe-select-lg"
                                                                     />
                                                                 </div>
@@ -1305,6 +1312,7 @@ export default function ProgressionEvent() {
                                                                             value: String(price),
                                                                             label: `${price} RLT`
                                                                         }))}
+                                                                        contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                         triggerClassName="pe-select pe-select-lg"
                                                                     />
                                                                 </div>
@@ -1318,9 +1326,12 @@ export default function ProgressionEvent() {
                                         )}
 
                                         {/* Fixed sticky sidebar clone - Multiplier */}
-                                        {activeTab === 'multiplier' && showFixedSidebarMultiplier && currencyDiscounts.length > 0 && createPortal(
+                                        {activeTab === 'multiplier' && showFixedSidebarMultiplier && createPortal(
                                             <aside className="pe-discount-sidebar" style={{ position: 'fixed', top: 16, left: sidebarLeftMultiplier, width: sidebarWidthMultiplier, zIndex: 99, margin: 0 }}>
                                                 {renderDiscountCard()}
+                                                <div className="pe-sidebar-desktop-cards">
+                                                    {renderCards()}
+                                                </div>
                                             </aside>,
                                             document.body
                                         )}
