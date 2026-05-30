@@ -691,13 +691,9 @@
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  /* removed overflow-x: auto to allow sticky headers to work on desktop */
-}
-
-@media (max-width: 900px) {
-  .pe-table-container {
-    overflow-x: auto;
-  }
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .pe-table {

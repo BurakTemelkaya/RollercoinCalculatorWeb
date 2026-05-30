@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -560,158 +560,38 @@ export default function ProgressionEvent() {
     // Sticky header state for Rewards Table
     const theadRewardsRef = useRef<HTMLTableSectionElement>(null);
     const tableSectionRewardsRef = useRef<HTMLDivElement>(null);
-    const [showFixedRewards, setShowFixedRewards] = useState(false);
-    const [headerWidthsRewards, setHeaderWidthsRewards] = useState<number[]>([]);
-    const [tableLeftRewards, setTableLeftRewards] = useState(0);
-    const [tableWidthRewards, setTableWidthRewards] = useState(0);
-    const [innerTableWidthRewards, setInnerTableWidthRewards] = useState(0);
+    const [showFixedRewards] = useState(false);
+    const [headerWidthsRewards] = useState<number[]>([]);
+    const [tableLeftRewards] = useState(0);
+    const [tableWidthRewards] = useState(0);
+    const [innerTableWidthRewards] = useState(0);
     const stickyContainerRewardsRef = useRef<HTMLDivElement>(null);
 
     // Sticky header state for Multiplier Table
     const theadMultiplierRef = useRef<HTMLTableSectionElement>(null);
     const tableSectionMultiplierRef = useRef<HTMLDivElement>(null);
-    const [showFixedMultiplier, setShowFixedMultiplier] = useState(false);
-    const [headerWidthsMultiplier, setHeaderWidthsMultiplier] = useState<number[]>([]);
-    const [tableLeftMultiplier, setTableLeftMultiplier] = useState(0);
-    const [tableWidthMultiplier, setTableWidthMultiplier] = useState(0);
-    const [innerTableWidthMultiplier, setInnerTableWidthMultiplier] = useState(0);
+    const [showFixedMultiplier] = useState(false);
+    const [headerWidthsMultiplier] = useState<number[]>([]);
+    const [tableLeftMultiplier] = useState(0);
+    const [tableWidthMultiplier] = useState(0);
+    const [innerTableWidthMultiplier] = useState(0);
     const stickyContainerMultiplierRef = useRef<HTMLDivElement>(null);
 
     // Sticky Sidebar state
     const sidebarRefRewards = useRef<HTMLElement>(null);
-    const [showFixedSidebarRewards, setShowFixedSidebarRewards] = useState(false);
-    const [sidebarLeftRewards, setSidebarLeftRewards] = useState(0);
-    const [sidebarWidthRewards, setSidebarWidthRewards] = useState(0);
+    const [showFixedSidebarRewards] = useState(false);
+    const [sidebarLeftRewards] = useState(0);
+    const [sidebarWidthRewards] = useState(0);
     
     const sidebarRefMultiplier = useRef<HTMLElement>(null);
-    const [showFixedSidebarMultiplier, setShowFixedSidebarMultiplier] = useState(false);
-    const [sidebarLeftMultiplier, setSidebarLeftMultiplier] = useState(0);
-    const [sidebarWidthMultiplier, setSidebarWidthMultiplier] = useState(0);
+    const [showFixedSidebarMultiplier] = useState(false);
+    const [sidebarLeftMultiplier] = useState(0);
+    const [sidebarWidthMultiplier] = useState(0);
 
-    const measureHeaders = useCallback(() => {
-        if (theadRewardsRef.current && tableSectionRewardsRef.current) {
-            const ths = theadRewardsRef.current.querySelectorAll('th');
-            setHeaderWidthsRewards(Array.from(ths).map(th => th.getBoundingClientRect().width));
-            const rect = tableSectionRewardsRef.current.getBoundingClientRect();
-            const innerRect = tableSectionRewardsRef.current.querySelector('table')?.getBoundingClientRect();
-            setTableLeftRewards(rect.left);
-            setTableWidthRewards(rect.width);
-            if (innerRect) setInnerTableWidthRewards(innerRect.width);
-        }
-        if (theadMultiplierRef.current && tableSectionMultiplierRef.current) {
-            const ths = theadMultiplierRef.current.querySelectorAll('th');
-            setHeaderWidthsMultiplier(Array.from(ths).map(th => th.getBoundingClientRect().width));
-            const rect = tableSectionMultiplierRef.current.getBoundingClientRect();
-            const innerRect = tableSectionMultiplierRef.current.querySelector('table')?.getBoundingClientRect();
-            setTableLeftMultiplier(rect.left);
-            setTableWidthMultiplier(rect.width);
-            if (innerRect) setInnerTableWidthMultiplier(innerRect.width);
-        }
-        if (sidebarRefRewards.current) {
-            const rect = sidebarRefRewards.current.getBoundingClientRect();
-            setSidebarLeftRewards(rect.left);
-            setSidebarWidthRewards(rect.width);
-        }
-        if (sidebarRefMultiplier.current) {
-            const rect = sidebarRefMultiplier.current.getBoundingClientRect();
-            setSidebarLeftMultiplier(rect.left);
-            setSidebarWidthMultiplier(rect.width);
-        }
-    }, []);
 
     useEffect(() => {
-        let rafId: number;
-        let lastShowRewards = false;
-        let lastShowMultiplier = false;
-        let lastShowSidebarRewards = false;
-        let lastShowSidebarMultiplier = false;
-
-        const handleScroll = () => {
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                if (activeTab === 'rewards' && theadRewardsRef.current && tableSectionRewardsRef.current) {
-                    const theadRect = theadRewardsRef.current.getBoundingClientRect();
-                    const sectionRect = tableSectionRewardsRef.current.getBoundingClientRect();
-                    const isVisible = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
-                    const shouldShow = isVisible && theadRect.bottom < 0 && sectionRect.bottom > 60;
-                    if (shouldShow !== lastShowRewards) {
-                        lastShowRewards = shouldShow;
-                        setShowFixedRewards(shouldShow);
-                    }
-                } else if (lastShowRewards) {
-                    lastShowRewards = false;
-                    setShowFixedRewards(false);
-                }
-
-                if (activeTab === 'multiplier' && theadMultiplierRef.current && tableSectionMultiplierRef.current) {
-                    const theadRect = theadMultiplierRef.current.getBoundingClientRect();
-                    const sectionRect = tableSectionMultiplierRef.current.getBoundingClientRect();
-                    const isVisible = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
-                    const shouldShow = isVisible && theadRect.bottom < 0 && sectionRect.bottom > 60;
-                    if (shouldShow !== lastShowMultiplier) {
-                        lastShowMultiplier = shouldShow;
-                        setShowFixedMultiplier(shouldShow);
-                    }
-                } else if (lastShowMultiplier) {
-                    lastShowMultiplier = false;
-                    setShowFixedMultiplier(false);
-                }
-
-                if (activeTab === 'rewards' && tableSectionRewardsRef.current) {
-                    const sectionRect = tableSectionRewardsRef.current.getBoundingClientRect();
-                    const isVisible = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
-                    const shouldShow = isVisible && sectionRect.top < 16 && sectionRect.bottom > 160;
-                    if (shouldShow !== lastShowSidebarRewards) {
-                        lastShowSidebarRewards = shouldShow;
-                        setShowFixedSidebarRewards(shouldShow);
-                    }
-                } else if (lastShowSidebarRewards) {
-                    lastShowSidebarRewards = false;
-                    setShowFixedSidebarRewards(false);
-                }
-
-                if (activeTab === 'multiplier' && tableSectionMultiplierRef.current) {
-                    const sectionRect = tableSectionMultiplierRef.current.getBoundingClientRect();
-                    const isVisible = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
-                    const shouldShow = isVisible && sectionRect.top < 16 && sectionRect.bottom > 160;
-                    if (shouldShow !== lastShowSidebarMultiplier) {
-                        lastShowSidebarMultiplier = shouldShow;
-                        setShowFixedSidebarMultiplier(shouldShow);
-                    }
-                } else if (lastShowSidebarMultiplier) {
-                    lastShowSidebarMultiplier = false;
-                    setShowFixedSidebarMultiplier(false);
-                }
-
-                // Scroll synchronization
-                if (activeTab === 'rewards' && tableSectionRewardsRef.current && stickyContainerRewardsRef.current) {
-                    if (stickyContainerRewardsRef.current.scrollLeft !== tableSectionRewardsRef.current.scrollLeft) {
-                        stickyContainerRewardsRef.current.scrollLeft = tableSectionRewardsRef.current.scrollLeft;
-                    }
-                }
-                if (activeTab === 'multiplier' && tableSectionMultiplierRef.current && stickyContainerMultiplierRef.current) {
-                    if (stickyContainerMultiplierRef.current.scrollLeft !== tableSectionMultiplierRef.current.scrollLeft) {
-                        stickyContainerMultiplierRef.current.scrollLeft = tableSectionMultiplierRef.current.scrollLeft;
-                    }
-                }
-
-                if (lastShowRewards || lastShowMultiplier || lastShowSidebarRewards || lastShowSidebarMultiplier) measureHeaders();
-            });
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        document.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('resize', handleScroll, { passive: true });
-        const timer = setTimeout(handleScroll, 200);
-
-        return () => {
-            cancelAnimationFrame(rafId);
-            window.removeEventListener('scroll', handleScroll);
-            document.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('resize', handleScroll);
-            clearTimeout(timer);
-        };
-    }, [activeTab, measureHeaders]);
+        // Scroll layout thrashing disabled
+    }, []);
 
     // Countdown timer
     const [timeLeft, setTimeLeft] = useState('');
