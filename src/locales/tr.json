@@ -391,7 +391,15 @@
         "totalEvents": "{{count}} etkinlik",
         "latest": "Güncel",
         "viewDetails": "Detayları Gör",
-        "noEvents": "Etkinlik bulunamadı."
+        "noEvents": "Etkinlik bulunamadı.",
+        "tokenDiscounts": "Token Discounts",
+        "discountAmount": "{{amount}}% Discount",
+        "discountExpires": "Expires: {{date}}",
+        "discountActive": "Active",
+        "discountExpired": "Expired",
+        "noDiscounts": "No active discounts",
+        "tokenDiscountGroup": "Token Discounts",
+        "discountEndsIn": "Ends in: {{time}}"
     },
     "pagination": {
         "previous": "Önceki",
