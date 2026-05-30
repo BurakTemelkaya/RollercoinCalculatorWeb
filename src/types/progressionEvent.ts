@@ -177,6 +177,16 @@ export interface LevelConfig {
   required_xp: number;
 }
 
+// Currency discount from backend API
+export interface CurrencyDiscount {
+    id: string;
+    currencyId: number;
+    amount: number;
+    createdDate: string;
+    endDate: string;
+    updatedDate: string | null;
+}
+
 // Box price options (fixed)
 export const BOX_PRICE_OPTIONS = [1.45, 3.45, 8.95] as const;
 

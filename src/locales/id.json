@@ -389,7 +389,15 @@
         "totalEvents": "{{count}} acara",
         "latest": "Terbaru",
         "viewDetails": "Detail",
-        "noEvents": "Tidak ada acara."
+        "noEvents": "Tidak ada acara.",
+        "tokenDiscounts": "Diskon Token",
+        "discountAmount": "Diskon {{amount}}%",
+        "discountExpires": "Berakhir: {{date}}",
+        "discountActive": "Aktif",
+        "discountExpired": "Berakhir",
+        "noDiscounts": "Tidak ada diskon aktif",
+        "tokenDiscountGroup": "Diskon Token",
+        "discountEndsIn": "Berakhir dalam: {{time}}"
     },
     "pagination": {
         "previous": "Sebelumnya",

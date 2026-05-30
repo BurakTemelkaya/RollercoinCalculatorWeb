@@ -389,7 +389,15 @@
         "totalEvents": "{{count}} événements",
         "latest": "Dernier",
         "viewDetails": "Détails",
-        "noEvents": "Aucun événement."
+        "noEvents": "Aucun événement.",
+        "tokenDiscounts": "Réductions de Jetons",
+        "discountAmount": "Réduction de {{amount}}%",
+        "discountExpires": "Expire : {{date}}",
+        "discountActive": "Actif",
+        "discountExpired": "Expiré",
+        "noDiscounts": "Aucune réduction active",
+        "tokenDiscountGroup": "Réductions de Jetons",
+        "discountEndsIn": "Se termine dans : {{time}}"
     },
     "pagination": {
         "previous": "Précédent",

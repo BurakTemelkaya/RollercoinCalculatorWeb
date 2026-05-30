@@ -389,7 +389,15 @@
         "totalEvents": "{{count}} eventos",
         "latest": "Último",
         "viewDetails": "Ver Detalhes",
-        "noEvents": "Nenhum evento encontrado."
+        "noEvents": "Nenhum evento encontrado.",
+        "tokenDiscounts": "Descontos de Tokens",
+        "discountAmount": "Desconto de {{amount}}%",
+        "discountExpires": "Expira: {{date}}",
+        "discountActive": "Ativo",
+        "discountExpired": "Expirado",
+        "noDiscounts": "Sem descontos ativos",
+        "tokenDiscountGroup": "Descontos de Tokens",
+        "discountEndsIn": "Termina em: {{time}}"
     },
     "pagination": {
         "previous": "Anterior",

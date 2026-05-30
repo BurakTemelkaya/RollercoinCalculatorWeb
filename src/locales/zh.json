@@ -389,7 +389,15 @@
         "totalEvents": "{{count}} 个活动",
         "latest": "最新",
         "viewDetails": "查看详情",
-        "noEvents": "未找到活动。"
+        "noEvents": "未找到活动。",
+        "tokenDiscounts": "代币折扣",
+        "discountAmount": "{{amount}}% 折扣",
+        "discountExpires": "到期: {{date}}",
+        "discountActive": "活动",
+        "discountExpired": "已过期",
+        "noDiscounts": "无有效折扣",
+        "tokenDiscountGroup": "代币折扣",
+        "discountEndsIn": "结束时间: {{time}}"
     },
     "pagination": {
         "previous": "上一页",

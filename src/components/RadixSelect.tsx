@@ -16,6 +16,7 @@ export interface SelectOption {
     icon?: string;            // URL to icon image
     iconAlt?: string;         // Alt text for icon
     disabled?: boolean;
+    group?: string;           // Group label for optgroup-like behavior
 }
 
 interface RadixSelectProps {
@@ -58,7 +59,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
 
             <Select.Root value={value} onValueChange={onValueChange} disabled={disabled}>
                 <Select.Trigger
-                    className={classNames(triggerClassName || 'custom-dropdown-trigger', { disabled })}
+                    className={classNames('custom-dropdown-trigger', triggerClassName, { disabled })}
                     aria-label={ariaLabel || placeholder}
                     style={{ ...(fullWidth ? { width: '100%', justifyContent: 'space-between' } : { justifyContent: 'space-between' }) }}
                 >
@@ -93,7 +94,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                         className={contentClassName || 'custom-dropdown-list-radix'}
                         position="popper"
                         sideOffset={5}
-                        style={{ zIndex }}
+                        style={{ zIndex, width: 'var(--radix-select-trigger-width)' }}
                     >
                         <Select.Viewport>
                             {options.length === 0 && emptyText ? (
@@ -101,29 +102,51 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                                     <Select.ItemText>{emptyText}</Select.ItemText>
                                 </Select.Item>
                             ) : (
-                                options.map(option => (
-                                    <Select.Item
-                                        key={option.value}
-                                        value={option.value}
-                                        className={classNames('custom-dropdown-item', { active: option.value === value })}
-                                        disabled={option.disabled}
-                                    >
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            {option.icon && (
-                                                <img
-                                                    src={option.icon}
-                                                    alt={option.iconAlt || option.label}
-                                                    style={{ width: 20, height: 'auto', objectFit: 'contain', borderRadius: '2px' }}
-                                                    onError={(e) => {
-                                                        const target = e.target as HTMLImageElement;
-                                                        target.style.display = 'none';
-                                                    }}
-                                                />
-                                            )}
-                                            <Select.ItemText>{option.label}</Select.ItemText>
-                                        </div>
-                                    </Select.Item>
-                                ))
+                                (() => {
+                                    const groups: Record<string, typeof options> = { '': [] };
+                                    options.forEach(opt => {
+                                        const g = opt.group || '';
+                                        if (!groups[g]) groups[g] = [];
+                                        groups[g].push(opt);
+                                    });
+
+                                    return Object.entries(groups).map(([groupName, groupOpts]) => {
+                                        if (groupOpts.length === 0) return null;
+                                        
+                                        const renderItems = () => groupOpts.map(option => (
+                                            <Select.Item
+                                                key={option.value}
+                                                value={option.value}
+                                                className={classNames('custom-dropdown-item', { active: option.value === value })}
+                                                disabled={option.disabled}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    {option.icon && (
+                                                        <img
+                                                            src={option.icon}
+                                                            alt={option.iconAlt || option.label}
+                                                            style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: '50%' }}
+                                                            onError={(e) => {
+                                                                const target = e.target as HTMLImageElement;
+                                                                target.style.display = 'none';
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <Select.ItemText>{option.label}</Select.ItemText>
+                                                </div>
+                                            </Select.Item>
+                                        ));
+
+                                        if (!groupName) return renderItems();
+
+                                        return (
+                                            <Select.Group key={groupName}>
+                                                <Select.Label className="custom-dropdown-label">{groupName}</Select.Label>
+                                                {renderItems()}
+                                            </Select.Group>
+                                        );
+                                    });
+                                })()
                             )}
                         </Select.Viewport>
                     </Select.Content>
