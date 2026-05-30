@@ -391,7 +391,15 @@
         "totalEvents": "{{count}} 个活动",
         "latest": "最新",
         "viewDetails": "查看详情",
-        "noEvents": "未找到活动。"
+        "noEvents": "未找到活动。",
+        "tokenDiscounts": "Token Discounts",
+        "discountAmount": "{{amount}}% Discount",
+        "discountExpires": "Expires: {{date}}",
+        "discountActive": "Active",
+        "discountExpired": "Expired",
+        "noDiscounts": "No active discounts",
+        "tokenDiscountGroup": "Token Discounts",
+        "discountEndsIn": "Ends in: {{time}}"
     },
     "pagination": {
         "previous": "上一页",
