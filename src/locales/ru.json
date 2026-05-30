@@ -391,7 +391,15 @@
         "totalEvents": "{{count}} событий",
         "latest": "Последнее",
         "viewDetails": "Детали",
-        "noEvents": "События не найдены."
+        "noEvents": "События не найдены.",
+        "tokenDiscounts": "Token Discounts",
+        "discountAmount": "{{amount}}% Discount",
+        "discountExpires": "Expires: {{date}}",
+        "discountActive": "Active",
+        "discountExpired": "Expired",
+        "noDiscounts": "No active discounts",
+        "tokenDiscountGroup": "Token Discounts",
+        "discountEndsIn": "Ends in: {{time}}"
     },
     "pagination": {
         "previous": "Назад",
