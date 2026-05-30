@@ -704,7 +704,13 @@
 }
 
 .pe-rewards-table {
-  min-width: 820px;
+  min-width: 0;
+}
+
+@media (min-width: 901px) {
+  .pe-rewards-table {
+    min-width: 820px;
+  }
 }
 
 .pe-multiplier-table {
@@ -1004,6 +1010,55 @@
     gap: 10px;
   }
 
+  .pe-rewards-table .pe-rewards-col {
+    width: 120px;
+    max-width: 120px;
+    white-space: normal;
+  }
+
+  .pe-rewards-table .pe-rewards-col * {
+    white-space: normal;
+  }
+
+  .pe-rewards-table {
+    table-layout: fixed;
+  }
+
+  .pe-rewards-table th:nth-child(1),
+  .pe-rewards-table td:nth-child(1) {
+    width: 42px;
+  }
+
+  .pe-rewards-table th:nth-child(2),
+  .pe-rewards-table td:nth-child(2) {
+    width: 58px;
+  }
+
+  .pe-rewards-table th:nth-child(3),
+  .pe-rewards-table td:nth-child(3) {
+    width: 58px;
+  }
+
+  .pe-reward-item-container {
+    width: 100%;
+    max-width: 120px;
+    gap: 6px;
+  }
+
+  .pe-reward-img-wrapper {
+    width: 34px;
+  }
+
+  .pe-reward-img-api {
+    max-width: 34px;
+    max-height: 26px;
+  }
+
+  .pe-reward-img-local {
+    width: 22px;
+    height: 22px;
+  }
+
   .pe-reward-icon-wrap {
     width: 36px;
     height: 24px;
@@ -1176,6 +1231,76 @@
   .pe-reward-img-local {
     width: 48px;
     height: 48px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pe-rewards-table {
+    table-layout: auto;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .pe-rewards-table th,
+  .pe-rewards-table td {
+    padding: 2px 2px;
+  }
+
+  .pe-rewards-table th:nth-child(1),
+  .pe-rewards-table td:nth-child(1) {
+    width: 26px;
+    min-width: 26px;
+  }
+
+  .pe-rewards-table th:nth-child(2),
+  .pe-rewards-table td:nth-child(2) {
+    width: 34px;
+    min-width: 34px;
+  }
+
+  .pe-rewards-table th:nth-child(3),
+  .pe-rewards-table td:nth-child(3) {
+    width: 34px;
+    min-width: 34px;
+  }
+
+  .pe-rewards-table .pe-rewards-col {
+    width: auto !important;
+    max-width: none !important;
+    white-space: normal !important;
+  }
+
+  .pe-rewards-table .pe-rewards-col * {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .pe-reward-item-container {
+    width: 100% !important;
+    max-width: none;
+    gap: 4px;
+  }
+
+  .pe-reward-img-wrapper {
+    width: 36px;
+  }
+
+  .pe-reward-img-api {
+    max-width: 36px;
+    max-height: 26px;
+  }
+
+  .pe-reward-img-local {
+    width: 26px;
+    height: 26px;
+  }
+
+  .pe-reward-name {
+    font-size: 9px;
+  }
+
+  .pe-reward-sub {
+    font-size: 10px;
   }
 }
 
