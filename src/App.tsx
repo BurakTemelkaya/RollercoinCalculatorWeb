@@ -61,12 +61,14 @@ const AdminBlogDetailPage = lazyWithRetry(() => import('./components/admin/Admin
 const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCommentList'));
 const AdminReviewList = lazyWithRetry(() => import('./components/admin/AdminReviewList'));
 const AdminRollercoinToken = lazyWithRetry(() => import('./components/admin/AdminRollercoinToken'));
+const AdminUserList = lazyWithRetry(() => import('./components/admin/AdminUserList'));
 const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
 const MergePage = lazyWithRetry(() => import('./components/MergePage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
+const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -320,7 +322,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260530.165639';
+  const CURRENT_CACHE_VERSION = '20260531.004444';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -942,6 +944,7 @@ function App() {
       </Route>
 
       {/* Dashboard Routes without MainLayout */}
+      <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
@@ -951,6 +954,7 @@ function App() {
       <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
     </Routes>

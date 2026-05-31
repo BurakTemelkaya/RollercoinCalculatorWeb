@@ -502,6 +502,8 @@
         "register": "Register",
         "logout": "Logout",
         "email": "Email",
+        "name": "Name",
+        "namePlaceholder": "Enter your name",
         "password": "Password",
         "confirmPassword": "Confirm Password",
         "loginTitle": "Sign In",

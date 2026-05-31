@@ -46,9 +46,63 @@ export interface AuthUser {
   exp: number;
 }
 
-export interface UpdatePasswordCommand {
+export interface UpdateUserPasswordCommand {
   userId?: string | null;
   existPassword: string;
   newPassword: string;
-  roles?: string[] | null;
 }
+
+export interface UpdateUserPasswordResponse {
+  userId: string;
+  updateDate: string;
+}
+
+export interface GetListOperationClaimDto {
+  id: string;
+  name: string;
+  createdDate: string;
+  updatedDate?: string | null;
+  deletedDate?: string | null;
+}
+
+export interface GetUserDto {
+  id: string;
+  name: string;
+  email: string;
+  createdDate: string;
+  updatedDate?: string | null;
+  deletedDate?: string | null;
+  userOperationClaims?: {
+    id: string;
+    userId: string;
+    operationClaimId: string;
+    operationClaim: GetListOperationClaimDto;
+    createdDate: string;
+    updatedDate?: string | null;
+    deletedDate?: string | null;
+  }[];
+}
+
+export interface CreateUserOperationClaimDto {
+  userId: string;
+  operationClaimId: string;
+}
+
+export interface CreateUserOperationClaimResponseDto {
+  id: string;
+  userId: string;
+  operationClaimId: string;
+}
+
+export interface DeleteUserOperationClaimDto {
+  userId: string;
+  operationClaimId: string;
+}
+
+export interface DeleteUserOperationClaimResponseDto {
+  id: string;
+  userId: string;
+  operationClaimId: string;
+  deletedDate: string;
+}
+

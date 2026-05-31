@@ -503,6 +503,8 @@
         "register": "Kayıt Ol",
         "logout": "Çıkış Yap",
         "email": "E-posta",
+        "name": "İsim",
+        "namePlaceholder": "İsminizi girin",
         "password": "Şifre",
         "confirmPassword": "Şifre Tekrarı",
         "loginTitle": "Giriş Yap",

@@ -242,6 +242,19 @@
     body.ads-blocked .aads-mobile-only {
       display: none !important;
     }
+
+    /* Dashboard / Admin Panel: Hide all global ads */
+    body.hide-global-ads .desktop-side-ad,
+    body.hide-global-ads .aads-mobile-only {
+      display: none !important;
+    }
+    
+    @media (min-width: 1025px) {
+      body.hide-global-ads #root {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
   </style>
   <script type="module" src="/src/main.tsx"></script>
   <script>
