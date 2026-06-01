@@ -1,19 +1,28 @@
 /**
  * Blog Editor Page
  *
- * Create or edit blog posts with rich markdown editor (@uiw/react-md-editor).
- * Supports multi-language content, image upload, and live preview.
+ * Create or edit blog posts with rich text editor (ReactQuill).
+ * Supports multi-language content, thumbnail upload, and content images.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ReactQuill from 'react-quill-new';
+import ReactQuill, { Quill } from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+// @ts-ignore
+import BlotFormatter from '@enzedonline/quill-blot-formatter2';
+import '@enzedonline/quill-blot-formatter2/dist/css/quill-blot-formatter2.css';
+// @ts-ignore
+import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
+
+if (Quill && !Quill.imports['modules/blotFormatter']) {
+  Quill.register('modules/blotFormatter', BlotFormatter);
+}
+if (Quill && !Quill.imports['modules/imageDropAndPaste']) {
+  Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
+}
 import { useDropzone } from 'react-dropzone';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import DashboardLayout from '../DashboardLayout';
 import { useAuth } from '../../contexts/AuthContext';
@@ -45,7 +54,7 @@ export default function BlogEditor() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, getValidToken } = useAuth();
-  const contentFileInputRef = useRef<HTMLInputElement>(null);
+  const quillRef = useRef<ReactQuill>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
   const hasSiteKey = siteKey.trim().length > 0;
@@ -255,8 +264,15 @@ export default function BlogEditor() {
       }
       const result = await uploadBlogImage(file, token);
       if (result.isSuccess) {
-        const imageHtml = `<img src="${result.url}" alt="image" />`;
-        updateContent('content', (activeContent?.content || '') + '<br/>' + imageHtml + '<br/>');
+        const editor = quillRef.current?.getEditor();
+        if (editor) {
+          const range = editor.getSelection(true) || { index: editor.getLength() };
+          editor.insertEmbed(range.index, 'image', result.url, 'user');
+          editor.setSelection(range.index + 1, 0);
+        } else {
+          const imageHtml = `<img src="${result.url}" alt="image" />`;
+          updateContent('content', (activeContent?.content || '') + '<br/>' + imageHtml + '<br/>');
+        }
       } else {
         setError(t('admin.uploadError'));
       }
@@ -267,6 +283,55 @@ export default function BlogEditor() {
       setIsUploading(false);
     }
   };
+
+  const uploadImageRef = useRef(handleContentImageUpload);
+  uploadImageRef.current = handleContentImageUpload;
+
+  const imageDropHandler = useCallback(function(this: any, _imageDataUrl: string, _type: string, imageData: any) {
+    const file = imageData.toFile();
+    if (file) {
+      uploadImageRef.current(file);
+    }
+  }, []);
+
+  const quillModules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ font: [] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ script: 'sub' }, { script: 'super' }],
+        ['blockquote', 'code-block'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+        [{ indent: '-1' }, { indent: '+1' }, { align: [] }],
+        ['link', 'image', 'video'],
+        ['clean'],
+      ],
+      handlers: {
+        image: function(this: any) {
+          const input = document.createElement('input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('accept', 'image/*');
+          input.click();
+
+          input.onchange = () => {
+            const file = input.files ? input.files[0] : null;
+            if (file) {
+              uploadImageRef.current(file);
+            }
+          };
+        }
+      }
+    },
+    blotFormatter: {
+      image: { allowAltTitleEdit: true, allowCompressor: true, imageOversizeProtection: true },
+      video: {}
+    },
+    imageDropAndPaste: {
+      handler: imageDropHandler
+    }
+  }), [imageDropHandler]);
 
   // Handle save
   const handleSave = async () => {
@@ -571,29 +636,96 @@ export default function BlogEditor() {
             <div className="editor-field">
               <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 {t('admin.blogContent')}
-                <button
-                  type="button"
-                  className="editor-upload-btn"
-                  style={{ textTransform: 'none', fontSize: '0.75rem', padding: '4px 10px' }}
-                  onClick={() => contentFileInputRef.current?.click()}
-                  disabled={isUploading}
-                >
-                  📷 {t('admin.insertImage')}
-                </button>
-                <input
-                  ref={contentFileInputRef}
-                  type="file"
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleContentImageUpload(file);
-                    e.target.value = '';
-                  }}
-                />
               </label>
-              <div className="quill-editor-container">
+              <style>{`
+                .admin-quill-wrapper .quill {
+                  background: rgba(30, 41, 59, 0.4) !important;
+                  border-radius: 8px !important;
+                  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+                  border: 1px solid rgba(167, 139, 250, 0.2) !important;
+                  display: flex !important;
+                  flex-direction: column !important;
+                  height: 600px !important;
+                  overflow: hidden !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow {
+                  border: none !important;
+                  border-bottom: 1px solid rgba(167, 139, 250, 0.2) !important;
+                  background: rgba(255, 255, 255, 0.08) !important;
+                  padding: 12px !important;
+                  border-top-left-radius: 8px !important;
+                  border-top-right-radius: 8px !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-stroke {
+                  stroke: #cbd5e1 !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-fill {
+                  fill: #cbd5e1 !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker {
+                  color: #cbd5e1 !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow button:hover .ql-stroke,
+                .admin-quill-wrapper .ql-toolbar.ql-snow button.ql-active .ql-stroke,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-stroke,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-item:hover .ql-stroke,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-item.ql-selected .ql-stroke {
+                  stroke: #a78bfa !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow button:hover .ql-fill,
+                .admin-quill-wrapper .ql-toolbar.ql-snow button.ql-active .ql-fill,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-label:hover .ql-fill,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-fill,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-item:hover .ql-fill,
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-item.ql-selected .ql-fill {
+                  fill: #a78bfa !important;
+                }
+                .admin-quill-wrapper .ql-toolbar.ql-snow .ql-picker-options {
+                  background: #1e293b !important;
+                  border: 1px solid rgba(167, 139, 250, 0.3) !important;
+                }
+                .admin-quill-wrapper .ql-container.ql-snow {
+                  border: none !important;
+                  font-family: inherit !important;
+                  font-size: 1.05rem !important;
+                  color: #f8fafc !important;
+                  flex: 1 !important;
+                  display: flex !important;
+                  flex-direction: column !important;
+                  overflow: hidden !important;
+                }
+                .admin-quill-wrapper .ql-editor {
+                  padding: 20px !important;
+                  flex: 1 !important;
+                  overflow-y: auto !important;
+                }
+                .admin-quill-wrapper .ql-editor [class^="ql-image-align-"] {
+                  display: flex !important;
+                  flex-wrap: wrap !important;
+                  width: var(--resize-width, auto);
+                  max-width: 100% !important;
+                }
+                .admin-quill-wrapper .ql-editor [class^="ql-image-align-"] > img {
+                  flex: 1 1 auto !important;
+                  z-index: 1 !important;
+                  width: 100%;
+                }
+                .admin-quill-wrapper .ql-editor .ql-image-align-left {
+                  margin: 0.5rem 1rem 0.5rem 0 !important;
+                  float: left !important;
+                }
+                .admin-quill-wrapper .ql-editor .ql-image-align-center {
+                  margin: 1rem auto !important;
+                }
+                .admin-quill-wrapper .ql-editor .ql-image-align-right {
+                  margin: 0.5rem 0 0.5rem 1rem !important;
+                  float: right !important;
+                }
+              `}</style>
+              <div className="admin-quill-wrapper">
                 <ReactQuill
+                  ref={quillRef}
                   theme="snow"
                   value={activeContent.content}
                   onChange={(val, _delta, source) => {
@@ -601,16 +733,8 @@ export default function BlogEditor() {
                       updateContent('content', val || '');
                     }
                   }}
-                  style={{ height: '400px', marginBottom: '50px', background: 'rgba(255,255,255,0.02)', color: '#fff' }}
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline', 'strike'],
-                      [{ list: 'ordered' }, { list: 'bullet' }],
-                      ['link', 'image', 'video'],
-                      ['clean'],
-                    ],
-                  }}
+                  style={{ marginBottom: '50px', color: '#fff' }}
+                  modules={quillModules}
                 />
               </div>
             </div>
@@ -621,9 +745,7 @@ export default function BlogEditor() {
                 👁️ {t('admin.livePreview', 'Canlı Önizleme')}
               </label>
               <div className="blog-content" style={{ padding: '20px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', minHeight: '150px' }}>
-                <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                  {activeContent.content || '*İçerik bekleniyor...*'}
-                </ReactMarkdown>
+                <div dangerouslySetInnerHTML={{ __html: activeContent.content || '<em>İçerik bekleniyor...</em>' }} />
               </div>
             </div>
           </>

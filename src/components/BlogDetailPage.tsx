@@ -1,8 +1,8 @@
 /**
  * Blog Detail Page
  *
- * Fetches a single blog post by slug and renders markdown content.
- * Uses react-markdown with rehype-raw for HTML support.
+ * Displays a single blog post using the active language.
+ * Uses dangerouslySetInnerHTML for HTML support.
  * Shows language switcher pills when the post is available in multiple languages.
  */
 
@@ -10,13 +10,11 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm';
 import BlogComments from './BlogComments';
 import { fetchBlogBySlug, fetchLanguages } from '../services/blogApi';
 import type { BlogDetail, Language } from '../types/blog';
 import './BlogPage.css';
+import '@enzedonline/quill-blot-formatter2/dist/css/quill-blot-formatter2.css';
 
 export default function BlogDetailPage() {
   const { lang, slug } = useParams<{ lang: string; slug: string }>();
@@ -195,9 +193,7 @@ export default function BlogDetailPage() {
       </div>
 
       <div className="blog-content">
-        <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-          {content.content}
-        </ReactMarkdown>
+        <div dangerouslySetInnerHTML={{ __html: content.content }} />
       </div>
 
       <BlogComments blogId={blog.id} languageId={content.languageId} lang={lang || 'en'} />
