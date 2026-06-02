@@ -1,17 +1,25 @@
 import { useParams, Link } from 'react-router-dom';
 
-import { Helmet } from 'react-helmet-async';
 
 const MarketplaceArbitrageGuideTR = () => {
   const { lang } = useParams<{ lang: string }>();
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>Marketplace Arbitrajı: Parça ve Madenci Ticareti ile RLT Kazanın</title>
         <meta name="description" content="RollerCoin Marketplace içinde yapabileceğiniz arbitraj hesaplamaları, Crafting mi Buying mi sorularının cevapları ve Parça ticareti detayları." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Marketplace Arbitrage Guide" />
+        <meta property="og:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Marketplace Arbitrage Guide" />
+        <meta name="twitter:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Rehberlere Dön</Link>
@@ -45,11 +53,20 @@ const MarketplaceArbitrageGuideEN = () => {
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>Marketplace Arbitrage: Multiplying RLT in RollerCoin</title>
         <meta name="description" content="Learn how to exploit the RollerCoin Marketplace to generate massive profits through Parts trading and Crafting vs. Buying strategies." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Marketplace Arbitrage Guide" />
+        <meta property="og:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Marketplace Arbitrage Guide" />
+        <meta name="twitter:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Back to Guides</Link>

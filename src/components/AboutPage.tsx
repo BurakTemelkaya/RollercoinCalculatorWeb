@@ -1,17 +1,21 @@
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 
 const AboutPageTR = () => {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>Hakkımızda - RollerCoin Kazanç Hesaplayıcı | Burak Temelkaya</title>
         <meta name="description" content="RollerCoin Kazanç Hesaplayıcısı, Burak Temelkaya tarafından tamamen oyuncu verimliliği ve topluluk faydası odaklı olarak geliştirilmiş bağımsız bir projedir." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/about`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/about`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
@@ -50,11 +54,16 @@ const AboutPageEN = () => {
   const { t } = useTranslation();
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>About Us - RollerCoin Profit Calculator | Burak Temelkaya</title>
         <meta name="description" content="The RollerCoin Profit Calculator is an independent project strictly focused on player efficiency and community utility, developed by Burak Temelkaya." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/about`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/about`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>

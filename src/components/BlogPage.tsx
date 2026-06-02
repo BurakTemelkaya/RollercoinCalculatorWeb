@@ -8,7 +8,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { fetchBlogList, fetchLanguages } from '../services/blogApi';
 import Pagination from './Pagination';
@@ -101,14 +100,23 @@ export default function BlogPage() {
 
   return (
     <div className="blog-page">
-      <Helmet>
-        <title>{t('blog.title')} | Rollercoin Calculator</title>
+      <>
+        <title>{`${t('blog.title')} | Rollercoin Calculator`}</title>
         <meta
           name="description"
           content={t('blog.seoDescription')}
         />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={t('blog.title') + " | Rollercoin Calculator"} />
+        <meta property="og:description" content={t('blog.seoDescription')} />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/blog`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={t('blog.title') + " | Rollercoin Calculator"} />
+        <meta name="twitter:description" content={t('blog.seoDescription')} />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="blog-header">
         <div className="static-back-link">

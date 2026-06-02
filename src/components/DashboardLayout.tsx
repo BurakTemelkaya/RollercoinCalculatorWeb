@@ -1,6 +1,5 @@
 import { ReactNode, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguageSwitcher } from '../hooks/useLanguageSwitcher';
@@ -44,9 +43,9 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
 
   return (
     <div className="dashboard-layout" style={{ display: 'flex', minHeight: '100vh', background: '#0f0f1e', color: '#fff' }} data-color-mode="dark">
-      <Helmet>
-        <title>{title} | Rollercoin Calculator</title>
-      </Helmet>
+      <>
+        <title>{`${title} | Rollercoin Calculator`}</title>
+      </>
 
       {/* Sidebar */}
       <aside style={{

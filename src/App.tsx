@@ -18,7 +18,7 @@ import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
-import { NAV_ICONS } from './components/MainLayout';
+import { NAV_ICONS } from './utils/icons';
 
 // Seamless update: when a deploy removes old JS chunks, the dynamic import fails.
 // This wrapper catches that error and does a single transparent reload so the user
@@ -322,7 +322,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260601.010630';
+  const CURRENT_CACHE_VERSION = '20260602.024814';
 
   // Load from localStorage on mount
   useEffect(() => {

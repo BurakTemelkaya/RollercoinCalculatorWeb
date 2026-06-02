@@ -78,6 +78,20 @@ export default function ProgressionEventHistory() {
 
     return (
         <div className="peh-container">
+            <>
+                <title>{`${t('event.eventHistory')} | RollerCoin Calculator`}</title>
+                <meta name="description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/event/history`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={`${t('event.eventHistory')} | RollerCoin Calculator`} />
+                <meta property="og:description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event/history`} />
+                <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${t('event.eventHistory')} | RollerCoin Calculator`} />
+                <meta name="twitter:description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
+                <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+            </>
             {/* Header */}
             <div className="peh-header">
                 <div className="peh-header-left">

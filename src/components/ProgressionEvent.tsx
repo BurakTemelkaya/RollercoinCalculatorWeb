@@ -797,6 +797,21 @@ export default function ProgressionEvent() {
 
     return (
         <div className="pe-container">
+            {/* Dynamic SEO for Progression Event */}
+            <>
+                <title>{`${event.title.en} | Rollercoin Calculator`}</title>
+                <meta name="description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/event`} />
+                <meta property="og:type" content="article" />
+                <meta property="og:title" content={`${event.title.en} | Rollercoin Calculator`} />
+                <meta property="og:description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event`} />
+                <meta property="og:image" content={`https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated}`} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${event.title.en} | Rollercoin Calculator`} />
+                <meta name="twitter:description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta name="twitter:image" content={`https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated}`} />
+            </>
             {/* Ad-Blocker Warning */}
             {adBlockWarning && (
                 <div style={{

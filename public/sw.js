@@ -1,5 +1,5 @@
 // Update this version whenever CURRENT_CACHE_VERSION changes in App.tsx
-const CACHE_VERSION = '20260601.010630';
+const CACHE_VERSION = '20260602.024814';
 const CACHE_NAME = `rollercoin-${CACHE_VERSION}`;
 
 self.addEventListener('install', () => {

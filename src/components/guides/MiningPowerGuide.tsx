@@ -1,16 +1,24 @@
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 const MiningPowerGuideTR = () => {
   const { lang } = useParams<{ lang: string }>();
   
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>Hash Gücü Nasıl Artırılır? 2026 Taktikleri | RollerCoin</title>
         <meta name="description" content="RollerCoin'de hash gücünüzü (Mining power) artırmanın 4 temel stratejisi. Marketplace, Event Pass, Crafting ve yatırım getirisi (ROI) taktikleri." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Mining Power Guide 2026" />
+        <meta property="og:description" content="Best strategies to increase hash power and double passive income." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Mining Power Guide 2026" />
+        <meta name="twitter:description" content="Best strategies to increase hash power and double passive income." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Rehberlere Dön</Link>
@@ -54,11 +62,20 @@ const MiningPowerGuideEN = () => {
   
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>How to Increase Mining Power? 2026 Strategies | RollerCoin</title>
         <meta name="description" content="4 fundamental strategies to increase your mining power in RollerCoin. Marketplace tactics, Event Pass rules, Collection Bonus scaling, and ROI maximization." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Mining Power Guide 2026" />
+        <meta property="og:description" content="Best strategies to increase hash power and double passive income." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Mining Power Guide 2026" />
+        <meta name="twitter:description" content="Best strategies to increase hash power and double passive income." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Back to Guides</Link>

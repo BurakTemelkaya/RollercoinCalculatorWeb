@@ -1,17 +1,25 @@
 import { useParams, Link } from 'react-router-dom';
 
-import { Helmet } from 'react-helmet-async';
 
 const F2PGuideTR = () => {
   const { lang } = useParams<{ lang: string }>();
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin F2P Rehberi: Sıfırdan Yatırımsız Kazanç Yolu</title>
         <meta name="description" content="RollerCoin'e dışarıdan reel para yatırmadan ciddi bir kazanç düzeyine ulaşmak için disiplinli bir günlük oyun rutini, PC Seviyesini koruma ve Reinvest (bileşik büyüme) stratejisi uygulayın." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin F2P Rehberi: Sıfırdan Yatırımsız Kazanç Yolu" />
+        <meta property="og:description" content="RollerCoin'e dışarıdan reel para yatırmadan ciddi bir kazanç düzeyine ulaşmak için strateji rehberi." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin F2P Rehberi" />
+        <meta name="twitter:description" content="Sıfırdan yatırımsız kazanç stratejisi." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Rehberlere Dön</Link>
@@ -52,11 +60,20 @@ const F2PGuideEN = () => {
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin F2P Guide: Free-to-Play Earning Path</title>
         <meta name="description" content="To reach a serious level of earnings in RollerCoin without investing real money, apply a disciplined daily gaming routine, maintain your PC Level, and use Reinvest strategies." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin F2P Guide: Free-to-Play Earning Path" />
+        <meta property="og:description" content="Reach serious earnings in RollerCoin without investing real money. Daily gaming routine, PC Level strategy, and Reinvest tips." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin F2P Guide" />
+        <meta name="twitter:description" content="Free-to-Play earning path strategy guide." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Back to Guides</Link>

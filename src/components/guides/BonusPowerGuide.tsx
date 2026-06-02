@@ -1,17 +1,25 @@
 import { useParams, Link } from 'react-router-dom';
 
-import { Helmet } from 'react-helmet-async';
 
 const BonusPowerGuideTR = () => {
   const { lang } = useParams<{ lang: string }>();
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin Bonus Power Rehberi: Neden Sadece Güç Yetmez?</title>
         <meta name="description" content="Koleksiyon Bonusu (Collection Bonus) mekaniği ile RollerCoin odanızın saf gücünü efor sarf etmeden hesaplayıcı üzerinden nasıl ikiye katlayabileceğinizi öğrenin." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/bonus-power`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Bonus Power Guide" />
+        <meta property="og:description" content="Why raw power is not enough and how Collection Bonus works." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/bonus-power`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Bonus Power Guide" />
+        <meta name="twitter:description" content="Why raw power is not enough and how Collection Bonus works." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Rehberlere Dön</Link>
@@ -41,11 +49,20 @@ const BonusPowerGuideEN = () => {
 
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin Bonus Power Guide: Why Raw Power Is Not Enough</title>
         <meta name="description" content="Discover how to effortlessly double your RollerCoin room's raw power via the Collection Bonus mechanic." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/bonus-power`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Bonus Power Guide" />
+        <meta property="og:description" content="Why raw power is not enough and how Collection Bonus works." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/bonus-power`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Bonus Power Guide" />
+        <meta name="twitter:description" content="Why raw power is not enough and how Collection Bonus works." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Back to Guides</Link>

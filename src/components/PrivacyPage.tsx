@@ -1,18 +1,22 @@
 
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 
 const PrivacyPageTR = () => {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>Gizlilik Politikası - RollerCoin Kazanç Hesaplayıcı</title>
         <meta name="description" content="rollercoincalculator.app veritabanı tutmaz. Sadece Analytics ve Google AdSense standart çerezlerini kullanır. Verileriniz güvendedir." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/privacy`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/privacy`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
@@ -56,11 +60,16 @@ const PrivacyPageEN = () => {
 
   return (
     <div className="static-page-container">
-      <Helmet>
-        <title>{t('pages.privacy.title')} | {t('app.title')}</title>
+      <>
+        <title>{`${t('pages.privacy.title')} | ${t('app.title')}`}</title>
         <meta name="description" content={t('seo.description')} />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/privacy`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/privacy`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>

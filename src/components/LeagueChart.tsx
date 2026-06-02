@@ -491,6 +491,20 @@ export default function LeagueChart() {
 
     return (
         <div className="lc-container">
+            <>
+                <title>{`${t('charts.title')} | RollerCoin Calculator`}</title>
+                <meta name="description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/league-chart`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={`${t('charts.title')} | RollerCoin Calculator`} />
+                <meta property="og:description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/league-chart`} />
+                <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${t('charts.title')} | RollerCoin Calculator`} />
+                <meta name="twitter:description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
+                <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+            </>
             {/* Header */}
             <div className="lc-header">
                 <Link to={`/${lang}`} className="lc-header-back-btn">

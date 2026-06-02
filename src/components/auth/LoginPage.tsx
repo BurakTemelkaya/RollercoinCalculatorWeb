@@ -7,7 +7,6 @@
 
 import React, { useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApiError } from '../../services/apiClient';
@@ -69,11 +68,11 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
-      <Helmet>
-        <title>{t('auth.loginTitle')} | Rollercoin Calculator</title>
+      <>
+        <title>{`${t('auth.loginTitle')} | Rollercoin Calculator`}</title>
         <meta name="description" content="Sign in to your Rollercoin Calculator account." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/login`} />
-      </Helmet>
+      </>
 
       <div className="auth-card">
         <div className="auth-card-header">

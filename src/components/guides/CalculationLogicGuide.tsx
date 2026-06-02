@@ -1,16 +1,24 @@
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 const CalculationLogicGuideTR = () => {
   const { lang } = useParams<{ lang: string }>();
   
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin Kazanç Hesaplama Mantığı ve Teknik Formül</title>
         <meta name="description" content="RollerCoin kripto kazanç hesaplama mantığı. Hash gücü, blok ödülü ve ağ paylaşım formülüyle ilgili teknik detaylar." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Calculation Logic and Formulas" />
+        <meta property="og:description" content="Network sharing logic, block rewards, and Binance API pricing." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Calculation Logic and Formulas" />
+        <meta name="twitter:description" content="Network sharing logic, block rewards, and Binance API pricing." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Rehberlere Dön</Link>
@@ -60,11 +68,20 @@ const CalculationLogicGuideEN = () => {
   
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin Profit Calculation Logic & Formulas</title>
         <meta name="description" content="Technical details about RollerCoin's crypto profit calculation system. Unveiling hash powers, network pools, League multipliers, and Binance API integrations." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="RollerCoin Calculation Logic and Formulas" />
+        <meta property="og:description" content="Network sharing logic, block rewards, and Binance API pricing." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Calculation Logic and Formulas" />
+        <meta name="twitter:description" content="Network sharing logic, block rewards, and Binance API pricing." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}/guides`}>← Back to Guides</Link>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { fetchBlogsByUserId, fetchLanguages } from '../services/blogApi';
 import type { BlogListItem, Language } from '../types/blog';
@@ -88,9 +87,9 @@ export default function AuthorBlogList() {
 
   return (
     <div className="blog-page" data-color-mode="dark">
-      <Helmet>
-        <title>{authorName}'s Blogs | Rollercoin Calculator</title>
-      </Helmet>
+      <>
+        <title>{`${authorName}'s Blogs | Rollercoin Calculator`}</title>
+      </>
 
       <div className="blog-header">
         <h1>{t('blog.authorPosts', { author: authorName })}</h1>

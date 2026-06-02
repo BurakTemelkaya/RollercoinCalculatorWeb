@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 import { REFERRAL_LINKS } from '../data/referrals';
 
 // Coin icons
@@ -45,11 +44,16 @@ export default function SupportPage() {
 
   return (
     <div className="static-page-container">
-      <Helmet>
-        <title>{t('pages.support.title')} | {t('app.title')}</title>
+      <>
+        <title>{`${t('pages.support.title')} | ${t('app.title')}`}</title>
         <meta name="description" content={t('seo.description')} />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/support`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/support`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>

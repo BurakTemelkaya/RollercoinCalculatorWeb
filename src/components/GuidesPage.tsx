@@ -1,17 +1,25 @@
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 
 const GuidesPageTR = () => {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
   return (
     <div className="static-page-container">
-      <Helmet>
+      <>
         <title>RollerCoin Rehberi: Stratejiler ve Taktikler - RollerCoin Hesaplayıcı</title>
         <meta name="description" content="Yeni Başlayanlar İçin RollerCoin Rehberi. Yatırımsız kazanç yolları, bonus güç hesaplamaları ve pazar yeri arbitraj taktikleriyle 2026 sezonunu domine edin." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="RollerCoin Rehberi: Stratejiler ve Taktikler" />
+        <meta property="og:description" content="Yeni Başlayanlar İçin RollerCoin Rehberi. Yatırımsız kazanç yolları, bonus güç hesaplamaları ve pazar yeri arbitraj taktikleri." />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="RollerCoin Rehberi: Stratejiler ve Taktikler" />
+        <meta name="twitter:description" content="Yeni Başlayanlar İçin RollerCoin Rehberi. Yatırımsız kazanç yolları ve ileri düzey stratejiler." />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>
@@ -61,11 +69,20 @@ const GuidesPageEN = () => {
 
   return (
     <div className="static-page-container">
-      <Helmet>
-        <title>{t('pages.guides.title')} | {t('app.title')}</title>
+      <>
+        <title>{`${t('pages.guides.title')} | ${t('app.title')}`}</title>
         <meta name="description" content={t('seo.description')} />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/guides`} />
-      </Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`${t('pages.guides.title')} | ${t('app.title')}`} />
+        <meta property="og:description" content={t('seo.description')} />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides`} />
+        <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${t('pages.guides.title')} | ${t('app.title')}`} />
+        <meta name="twitter:description" content={t('seo.description')} />
+        <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+      </>
 
       <div className="static-back-link">
         <Link to={`/${lang}`}>← {t('event.backToCalc')}</Link>

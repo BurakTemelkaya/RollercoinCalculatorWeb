@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../../contexts/AuthContext';
 import { getUserList } from '../../services/userApi';
 import { removeRoleFromUser } from '../../services/adminApi';
@@ -94,9 +93,9 @@ export default function AdminUserList() {
 
   return (
     <DashboardLayout title={t('admin.manageUsers', 'Kullanıcı Yönetimi')} isAdmin={true}>
-      <Helmet>
-        <title>{t('admin.manageUsers', 'Kullanıcı Yönetimi')} | Admin | Rollercoin Calculator</title>
-      </Helmet>
+      <>
+        <title>{`${t('admin.manageUsers', 'Kullanıcı Yönetimi')} | Admin | Rollercoin Calculator`}</title>
+      </>
       
       <div className="admin-content-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>

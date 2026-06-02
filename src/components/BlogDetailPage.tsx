@@ -8,7 +8,6 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import BlogComments from './BlogComments';
 import { fetchBlogBySlug, fetchLanguages } from '../services/blogApi';
@@ -120,11 +119,20 @@ export default function BlogDetailPage() {
 
   return (
     <div className="blog-detail-page">
-      <Helmet>
-        <title>{content.title} | Rollercoin Calculator</title>
+      <>
+        <title>{`${content.title} | Rollercoin Calculator`}</title>
         <meta name="description" content={content.content.substring(0, 160).replace(/[#*_\[\]]/g, '')} />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog/${slug}`} />
-      </Helmet>
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${content.title} | Rollercoin Calculator`} />
+        <meta property="og:description" content={content.content.substring(0, 160).replace(/[#*_\[\]<>/]/g, '')} />
+        <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/blog/${slug}`} />
+        <meta property="og:image" content={blog.thumbnailImageUrl || 'https://rollercoincalculator.app/icon.png'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${content.title} | Rollercoin Calculator`} />
+        <meta name="twitter:description" content={content.content.substring(0, 160).replace(/[#*_\[\]<>/]/g, '')} />
+        <meta name="twitter:image" content={blog.thumbnailImageUrl || 'https://rollercoincalculator.app/icon.png'} />
+      </>
 
       <div className="blog-detail-topbar">
         <div className="static-back-link">
