@@ -10,7 +10,8 @@
         "charts": "Gráficos",
         "events": "Eventos",
         "merges": "Fusões",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Meus Blogs"
     },
     "lpp": {
         "title": "Divisão de Poder da Liga",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} eventos",
         "latest": "Último",
         "viewDetails": "Ver Detalhes",
-        "noEvents": "Nenhum evento encontrado."
+        "noEvents": "Nenhum evento encontrado.",
+        "tokenDiscounts": "Descontos de Tokens",
+        "discountAmount": "Desconto de {{amount}}%",
+        "discountExpires": "Expira: {{date}}",
+        "discountActive": "Ativo",
+        "discountExpired": "Expirado",
+        "noDiscounts": "Sem descontos ativos",
+        "tokenDiscountGroup": "Descontos de Tokens",
+        "discountEndsIn": "Termina em: {{time}}"
     },
     "pagination": {
         "previous": "Anterior",
@@ -485,5 +494,70 @@
         "btn2": "Leia Táticas de Poder →",
         "btn3": "Leia o Guia F2P →",
         "btn4": "Perguntas Frequentes →"
+    },
+    "auth": {
+        "login": "Entrar",
+        "register": "Registrar",
+        "logout": "Sair",
+        "email": "E-mail",
+        "name": "Nome",
+        "namePlaceholder": "Digite seu nome",
+        "password": "Senha",
+        "confirmPassword": "Confirmar Senha",
+        "loginTitle": "Entrar",
+        "loginSubtitle": "Bem-vindo de volta! Insira suas credenciais para continuar.",
+        "registerTitle": "Criar Conta",
+        "registerSubtitle": "Junte-se a nós e comece a rastrear seus ganhos.",
+        "noAccount": "Não tem uma conta?",
+        "hasAccount": "Já tem uma conta?",
+        "loginError": "Falha no login. Verifique suas credenciais.",
+        "registerError": "Falha no registro. Tente novamente.",
+        "fillAllFields": "Por favor, preencha todos os campos.",
+        "passwordMismatch": "As senhas não coincidem.",
+        "passwordTooShort": "A senha deve ter pelo menos 6 caracteres.",
+        "loggingIn": "Entrando...",
+        "registering": "Criando conta...",
+        "sessionExpired": "Sessão expirada. Por favor, faça login novamente.",
+        "emailPlaceholder": "seu@email.com",
+        "passwordPlaceholder": "Digite sua senha",
+        "confirmPasswordPlaceholder": "Digite sua senha novamente",
+        "turnstileRequired": "Por favor, complete a verificação de segurança."
+    },
+    "blog": {
+        "myBlogsDesc": "Todas as postagens que você escreveu."
+    },
+    "author": {
+        "blogCreatedPending": "Seu blog foi enviado e está aguardando aprovação do administrador."
+    },
+    "admin": {
+        "createNewBlog": "Criar Novo Blog",
+        "all": "Todos",
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "edit": "Editar",
+        "createBlog": "Novo Blog",
+        "editBlog": "Editar Blog",
+        "blogThumbnail": "Miniatura",
+        "thumbnailUrlPlaceholder": "Ou cole a URL da imagem...",
+        "mainLanguage": "Idioma Principal",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "blogCreated": "Blog criado com sucesso!",
+        "blogUpdated": "Blog atualizado com sucesso!",
+        "uploadImage": "Enviar Imagem",
+        "uploading": "Enviando...",
+        "insertImage": "Inserir Imagem",
+        "uploadError": "Falha ao enviar imagem.",
+        "fillAtLeastOne": "Por favor, preencha pelo menos um idioma.",
+        "mainLanguageRequired": "A seleção do idioma principal é obrigatória.",
+        "thumbnailRequired": "Uma imagem em miniatura é obrigatória.",
+        "saveError": "Falha ao salvar o blog.",
+        "blogTitle": "Título",
+        "blogContent": "Conteúdo",
+        "blogSlug": "Slug da URL",
+        "autoSlug": "Auto",
+        "titlePlaceholder": "Insira o título do blog...",
+        "slugPlaceholder": "slug-amigavel"
     }
 }

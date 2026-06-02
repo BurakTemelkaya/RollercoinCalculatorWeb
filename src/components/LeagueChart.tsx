@@ -379,7 +379,7 @@ export default function LeagueChart() {
                                 const idx = tooltipItems[0].dataIndex;
                                 const d = chartData[idx];
                                 const date = new Date(d.date);
-                                return date.toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', {
+                                return date.toLocaleDateString(lang || 'en-US', {
                                     day: '2-digit',
                                     month: 'short',
                                     year: 'numeric',
@@ -650,7 +650,7 @@ export default function LeagueChart() {
                                     </h3>
                                 </div>
                                 <p className="lc-chart-subtitle" style={{ margin: 0 }}>
-                                    {t('charts.date')}: {new Date(chartData[0].date).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US')} – {new Date(chartData[chartData.length - 1].date).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US')}
+                                    {t('charts.date')}: {new Date(chartData[0].date).toLocaleDateString(lang || 'en-US')} – {new Date(chartData[chartData.length - 1].date).toLocaleDateString(lang || 'en-US')}
                                 </p>
                             </div>
                             {getCurrencyIcon(selectedCurrencyName) && (

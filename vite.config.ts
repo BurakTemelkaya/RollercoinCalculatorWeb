@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   // Custom domain için base path ayarı
   base: '/',
+  css: {
+    devSourcemap: false
+  },
   build: {
     target: "es2015",
     chunkSizeWarningLimit: 1000,
@@ -27,6 +30,15 @@ export default defineConfig({
           'vendor-helmet': ['react-helmet-async'],
           'vendor-chartjs': ['chart.js', 'react-chartjs-2'],
         }
+      }
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://localhost:7080',
+        changeOrigin: true,
+        secure: false
       }
     }
   }

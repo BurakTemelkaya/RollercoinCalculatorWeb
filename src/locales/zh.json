@@ -10,7 +10,8 @@
         "charts": "图表",
         "events": "活动",
         "merges": "合成",
-        "blog": "博客"
+        "blog": "博客",
+        "myBlogs": "我的博客"
     },
     "lpp": {
         "title": "联赛算力分配",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} 个活动",
         "latest": "最新",
         "viewDetails": "查看详情",
-        "noEvents": "未找到活动。"
+        "noEvents": "未找到活动。",
+        "tokenDiscounts": "代币折扣",
+        "discountAmount": "{{amount}}% 折扣",
+        "discountExpires": "到期: {{date}}",
+        "discountActive": "活动",
+        "discountExpired": "已过期",
+        "noDiscounts": "无有效折扣",
+        "tokenDiscountGroup": "代币折扣",
+        "discountEndsIn": "结束时间: {{time}}"
     },
     "pagination": {
         "previous": "上一页",
@@ -485,5 +494,70 @@
         "btn2": "阅读算力战术 →",
         "btn3": "阅读 F2P 指南 →",
         "btn4": "常见问题解答 →"
+    },
+    "auth": {
+        "login": "登录",
+        "register": "注册",
+        "logout": "退出",
+        "email": "电子邮件",
+        "name": "姓名",
+        "namePlaceholder": "输入您的姓名",
+        "password": "密码",
+        "confirmPassword": "确认密码",
+        "loginTitle": "登录",
+        "loginSubtitle": "欢迎回来！输入您的凭据以继续。",
+        "registerTitle": "创建账户",
+        "registerSubtitle": "加入我们开始追踪您的收益。",
+        "noAccount": "还没有账户？",
+        "hasAccount": "已经有账户？",
+        "loginError": "登录失败，请检查您的凭据。",
+        "registerError": "注册失败，请重试。",
+        "fillAllFields": "请填写所有字段。",
+        "passwordMismatch": "密码不匹配。",
+        "passwordTooShort": "密码至少需要6个字符。",
+        "loggingIn": "登录中...",
+        "registering": "创建账户中...",
+        "sessionExpired": "会话已过期，请重新登录。",
+        "emailPlaceholder": "您的@email.com",
+        "passwordPlaceholder": "输入密码",
+        "confirmPasswordPlaceholder": "再次输入密码",
+        "turnstileRequired": "请完成安全验证。"
+    },
+    "blog": {
+        "myBlogsDesc": "您写的所有文章。"
+    },
+    "author": {
+        "blogCreatedPending": "您的博客已提交，正在等待管理员批准。"
+    },
+    "admin": {
+        "createNewBlog": "创建新博客",
+        "all": "全部",
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "edit": "编辑",
+        "createBlog": "新博客",
+        "editBlog": "编辑博客",
+        "blogThumbnail": "缩略图",
+        "thumbnailUrlPlaceholder": "或粘贴图像 URL...",
+        "mainLanguage": "主要语言",
+        "save": "保存",
+        "saving": "保存中...",
+        "blogCreated": "博客创建成功！",
+        "blogUpdated": "博客更新成功！",
+        "uploadImage": "上传图片",
+        "uploading": "上传中...",
+        "insertImage": "插入图片",
+        "uploadError": "图片上传失败。",
+        "fillAtLeastOne": "请至少填写一种语言。",
+        "mainLanguageRequired": "必须选择主要语言。",
+        "thumbnailRequired": "必须提供缩略图。",
+        "saveError": "博客保存失败。",
+        "blogTitle": "标题",
+        "blogContent": "内容",
+        "blogSlug": "URL 别名",
+        "autoSlug": "自动",
+        "titlePlaceholder": "输入博客标题...",
+        "slugPlaceholder": "url-friendly"
     }
 }

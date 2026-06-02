@@ -9,6 +9,7 @@ export interface ProgressionEventResponse {
   id: string;
   name: string;
   endDate: string;
+  createdDate?: string;
   data: string; // JSON string containing ProgressionEventData
   multiplierData?: string; // JSON string containing MultiplierData[]
   taskData?: string; // JSON string containing TaskData[]
@@ -79,7 +80,7 @@ export interface ProgressionReward {
   title: LocalizedText;
   description: LocalizedText;
   range_count: { min: number; max: number };
-  item?: MinerItem | RackItem | UtilityItem | BatteryItem | MutationComponentItem | MysteryBoxItem;
+  item?: MinerItem | RackItem | UtilityItem | BatteryItem | MutationComponentItem | MysteryBoxItem | TrophyItem | HatItem;
 }
 
 export type RewardType =
@@ -91,7 +92,9 @@ export type RewardType =
   | 'rack'
   | 'utility_item'
   | 'mutation_component'
-  | 'mystery_box';
+  | 'mystery_box'
+  | 'trophy'
+  | 'hat';
 
 export interface MinerItem {
   _id: string;
@@ -155,10 +158,33 @@ export interface MysteryBoxItem {
   };
 }
 
+export interface TrophyItem {
+  _id: string;
+  name: LocalizedText;
+  description: LocalizedText;
+  file_name: string;
+}
+
+export interface HatItem {
+  _id: string;
+  title: LocalizedText;
+  description: LocalizedText;
+}
+
 export interface LevelConfig {
   level: number;
   level_xp: number;
   required_xp: number;
+}
+
+// Currency discount from backend API
+export interface CurrencyDiscount {
+    id: string;
+    currencyId: number;
+    amount: number;
+    createdDate: string;
+    endDate: string;
+    updatedDate: string | null;
 }
 
 // Box price options (fixed)

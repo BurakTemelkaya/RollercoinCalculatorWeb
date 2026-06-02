@@ -11,6 +11,11 @@
  * Gets the API base URL from environment variables
  */
 export function getApiBaseUrl(): string {
+  // If we are in development, use relative URL so Vite proxy handles it and browser sends SameSite cookies
+  if (import.meta.env.DEV) {
+    return '';
+  }
+
   const url = import.meta.env.VITE_API_URL;
 
   if (!url) {

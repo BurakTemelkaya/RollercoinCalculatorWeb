@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { fetchProgressionEvent, fetchProgressionEventById, type ParsedProgressionEvent } from '../services/progressionEventApi';
+import { fetchProgressionEvent, fetchProgressionEventById, fetchCurrencyDiscounts, type ParsedProgressionEvent } from '../services/progressionEventApi';
 import { extractEventIdFromSlug } from '../utils/slugUtils';
 import type {
     ProgressionReward,
@@ -11,13 +12,19 @@ import type {
     UtilityItem,
     MutationComponentItem,
     MysteryBoxItem,
+    TrophyItem,
+    HatItem,
+    CurrencyDiscount,
 } from '../types/progressionEvent';
 import {
     BOX_PRICE_OPTIONS,
     DISCOUNT_OPTIONS,
     EVENT_CONSTANTS,
 } from '../types/progressionEvent';
+import { CURRENCY_ID_MAP } from '../data/currencies';
+import { COIN_ICONS } from '../utils/constants';
 import { autoScalePower } from '../utils/powerParser';
+import RadixSelect from './RadixSelect';
 import './ProgressionEvent.css';
 
 import batteryImg from '../assets/items/battery.png';
@@ -74,6 +81,12 @@ function formatPower(powerGhs: number): string {
 
 function formatNumber(num: number): string {
     return Math.ceil(num).toLocaleString('en-US');
+}
+
+function formatPoints(num: number): string {
+    if (num >= 1000000) return parseFloat((num / 1000000).toFixed(2)) + 'M';
+    if (num >= 1000) return parseFloat((num / 1000).toFixed(2)) + 'K';
+    return num.toString();
 }
 
 function getMinerImageUrl(filename: string): string {
@@ -187,7 +200,7 @@ const rewardTypeFallbackIcon = xpImg;
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; localImage?: string; level?: number } {
+): { text: string; subText: string; imageUrl?: string; localImage?: string; level?: number; scale?: number } {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -232,7 +245,7 @@ function getRewardDisplay(
                     text: miner.name.en,
                     subText: `${formatPower(miner.power)} | ${bonusPct}%`,
                     imageUrl: getMinerImageUrl(miner.filename),
-                    level: miner.level,
+                    level: (miner.level || 0) + 1,
                 };
             }
             return { text: t('event.rewardTypes.miner'), subText: '' };
@@ -285,6 +298,32 @@ function getRewardDisplay(
                 localImage: boxImageUrl ? undefined : getMysteryBoxLocalFallback(box, reward.title.en),
             };
         }
+        case 'trophy': {
+            const trophy = reward.item as TrophyItem | undefined;
+            if (trophy) {
+                const name = trophy.name?.en ?? reward.title.en;
+                return {
+                    text: name,
+                    subText: '',
+                    imageUrl: `https://static.rollercoin.com/static/img/game/room/trophies/${trophy.file_name}.png?v=1.0.0`,
+                    scale: 1.6,
+                };
+            }
+            return { text: reward.title.en, subText: '' };
+        }
+        case 'hat': {
+            const hat = reward.item as HatItem | undefined;
+            if (hat) {
+                const name = hat.title?.en ?? reward.title.en;
+                return {
+                    text: name,
+                    subText: '',
+                    imageUrl: `https://static.rollercoin.com/static/img/market/hats/${hat._id}.png?v=1.0.0`,
+                    scale: 1.6,
+                };
+            }
+            return { text: reward.title.en, subText: '' };
+        }
         default:
             return { text: reward.title.en, subText: '' };
     }
@@ -298,7 +337,19 @@ export default function ProgressionEvent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<EventTab>('rewards');
+    const [collapsedTabs, setCollapsedTabs] = useState<Set<EventTab>>(new Set(['multiplier']));
     const [adBlockWarning, setAdBlockWarning] = useState(false);
+    const [currencyDiscounts, setCurrencyDiscounts] = useState<CurrencyDiscount[]>([]);
+
+    const handleTabChange = (newTab: EventTab) => {
+        if (newTab === activeTab) return;
+        const oldTab = activeTab;
+        setCollapsedTabs(prev => { const next = new Set(prev); next.delete(newTab); return next; });
+        setActiveTab(newTab);
+        setTimeout(() => {
+            setCollapsedTabs(prev => { const next = new Set(prev); next.add(oldTab); return next; });
+        }, 400);
+    };
 
     // Multiplier settings
     const [rltPrice, setRltPrice] = useState<number>(1.05);
@@ -354,6 +405,37 @@ export default function ProgressionEvent() {
 
         loadEvent();
     }, [t, eventId]);
+
+    // Fetch currency discounts when event data is available
+    useEffect(() => {
+        if (!eventData?.endDate) return;
+        const loadDiscounts = async () => {
+            try {
+                let rawStart: string;
+                if (eventData.createdDate) {
+                    rawStart = eventData.createdDate.replace(/Z$/, '');
+                } else {
+                    // Fallback: use endDate minus 14 days if createdDate is missing
+                    const endMs = new Date(eventData.endDate).getTime();
+                    rawStart = new Date(endMs - 14 * 86400000).toISOString().replace(/Z$/, '').split('.')[0];
+                }
+                // Subtract 1 day buffer — discounts may be created shortly before the event
+                const startMs = new Date(rawStart).getTime() - 86400000;
+                const startDate = new Date(startMs).toISOString().replace(/Z$/, '').split('.')[0];
+                const endDate = eventData.endDate.replace(/Z$/, '');
+                console.log('[CurrencyDiscount] Fetching discounts:', { startDate, endDate });
+                const discounts = await fetchCurrencyDiscounts(startDate, endDate);
+                console.log('[CurrencyDiscount] Received:', discounts);
+                setCurrencyDiscounts(discounts);
+                if (discounts.length > 0) {
+                    setDiscount(discounts[0].amount);
+                }
+            } catch (err) {
+                console.error('Failed to fetch currency discounts:', err);
+            }
+        };
+        loadDiscounts();
+    }, [eventData?.createdDate, eventData?.endDate]);
 
     // Ad-blocker detection (syncs with global class added by index.html)
     useEffect(() => {
@@ -475,8 +557,45 @@ export default function ProgressionEvent() {
         return filteredData[0].boxes; // x1 always has the most boxes
     }, [filteredData]);
 
+    // Sticky header state for Rewards Table
+    const theadRewardsRef = useRef<HTMLTableSectionElement>(null);
+    const tableSectionRewardsRef = useRef<HTMLDivElement>(null);
+    const [showFixedRewards] = useState(false);
+    const [headerWidthsRewards] = useState<number[]>([]);
+    const [tableLeftRewards] = useState(0);
+    const [tableWidthRewards] = useState(0);
+    const [innerTableWidthRewards] = useState(0);
+    const stickyContainerRewardsRef = useRef<HTMLDivElement>(null);
+
+    // Sticky header state for Multiplier Table
+    const theadMultiplierRef = useRef<HTMLTableSectionElement>(null);
+    const tableSectionMultiplierRef = useRef<HTMLDivElement>(null);
+    const [showFixedMultiplier] = useState(false);
+    const [headerWidthsMultiplier] = useState<number[]>([]);
+    const [tableLeftMultiplier] = useState(0);
+    const [tableWidthMultiplier] = useState(0);
+    const [innerTableWidthMultiplier] = useState(0);
+    const stickyContainerMultiplierRef = useRef<HTMLDivElement>(null);
+
+    // Sticky Sidebar state
+    const sidebarRefRewards = useRef<HTMLElement>(null);
+    const [showFixedSidebarRewards] = useState(false);
+    const [sidebarLeftRewards] = useState(0);
+    const [sidebarWidthRewards] = useState(0);
+    
+    const sidebarRefMultiplier = useRef<HTMLElement>(null);
+    const [showFixedSidebarMultiplier] = useState(false);
+    const [sidebarLeftMultiplier] = useState(0);
+    const [sidebarWidthMultiplier] = useState(0);
+
+
+    useEffect(() => {
+        // Scroll layout thrashing disabled
+    }, []);
+
     // Countdown timer
     const [timeLeft, setTimeLeft] = useState('');
+    const [isEnded, setIsEnded] = useState(false);
 
     useEffect(() => {
         if (!eventData) return;
@@ -487,10 +606,18 @@ export default function ProgressionEvent() {
             const diff = end - now;
 
             if (diff <= 0) {
-                setTimeLeft(t('event.ended'));
+                // Formatting dates safely based on localized strings, or fallback to current locale
+                const formatLang = lang || 'en-US';
+                const createdDateStr = eventData.createdDate
+                    ? new Date(eventData.createdDate).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', year: 'numeric' })
+                    : t('event.ended');
+                const endDateStr = new Date(eventData.endDate).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', year: 'numeric' });
+                setTimeLeft(`${createdDateStr} - ${endDateStr}`);
+                setIsEnded(true);
                 return;
             }
 
+            setIsEnded(false);
             const days = Math.floor(diff / 86400000);
             const hours = Math.floor((diff % 86400000) / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
@@ -547,6 +674,127 @@ export default function ProgressionEvent() {
 
     const { event, rewards, levels_config } = eventData.data;
 
+    const renderCards = () => (
+        <>
+            {/* Event Difficulty */}
+            <div className="pe-info-card">
+                <h3 className="pe-info-title">{t('event.eventDifficulty')}</h3>
+                <div className="pe-info-table">
+                    <div className="pe-info-row">
+                        <span>{t('event.multiplier')}</span>
+                        <span className="pe-info-value">{t('event.multiplierRate', { amount: dynamicConstants.MULTIPLIER_STEP_RLT })}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.multiplierDuration')}</span>
+                        <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.gameDifficulty')}</span>
+                        <span className="pe-info-value">{EVENT_CONSTANTS.GAME_DIFFICULTY}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.spend1Rlt')}</span>
+                        <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
+                    </div>
+                    <div className="pe-info-row">
+                        <span>{t('event.marketplace')}</span>
+                        <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Total Event Rewards */}
+            {eventSummary && (
+                <div className="pe-info-card">
+                    <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
+                    <div className="pe-info-table">
+                        <div className="pe-info-row">
+                            <span>{t('event.minersPower')}</span>
+                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.totalMinerPower)}</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.minersBonus')}</span>
+                            <span className="pe-info-value pe-highlight">{(eventSummary.totalBonus / 100).toFixed(2)}%</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.tempPower')}</span>
+                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.tempPower)}</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>{t('event.seasonExp')}</span>
+                            <span className="pe-info-value pe-highlight">{eventSummary.seasonExp} EXP</span>
+                        </div>
+                        <div className="pe-info-row">
+                            <span>RST</span>
+                            <span className="pe-info-value pe-highlight">{eventSummary.rstAmount} RST</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+
+    const renderDiscountCard = () => {
+        if (currencyDiscounts.length === 0) return null;
+        const now = Date.now();
+        const formatLang = lang || 'en-US';
+        return (
+            <div className="pe-info-card pe-discount-card">
+                <h3 className="pe-info-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                        <line x1="7" y1="7" x2="7.01" y2="7" />
+                    </svg>
+                    {t('event.tokenDiscounts')}
+                </h3>
+                <div className="pe-info-table">
+                    {currencyDiscounts.map((d) => {
+                        const currencyName = CURRENCY_ID_MAP[d.currencyId] ?? `ID:${d.currencyId}`;
+                        const icon = COIN_ICONS[currencyName];
+                        const discountEndUtc = d.endDate && !d.endDate.endsWith('Z') && !d.endDate.includes('+') ? d.endDate + 'Z' : d.endDate;
+                        const endMs = new Date(discountEndUtc).getTime();
+                        const isActive = endMs > now;
+
+                        // Calculate remaining time
+                        let timeText = t('event.discountExpired');
+                        if (isActive) {
+                            const diffMs = endMs - now;
+                            const diffDays = Math.floor(diffMs / 86400000);
+                            const diffHours = Math.floor((diffMs % 86400000) / 3600000);
+                            const diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+
+                            let timeStr = '';
+                            if (diffDays > 0) timeStr += `${diffDays}${t('event.daysShort')} `;
+                            if (diffHours > 0 || diffDays > 0) timeStr += `${diffHours}${t('event.hoursShort')} `;
+                            timeStr += `${diffMinutes}${t('event.minutesShort')}`;
+
+                            timeText = t('event.discountEndsIn', { time: timeStr.trim() });
+                        }
+
+                        const endDateStr = new Date(discountEndUtc).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+                        return (
+                            <div key={d.id} className={`pe-info-row pe-discount-row ${!isActive ? 'pe-discount-expired' : ''}`}>
+                                <span className="pe-discount-coin">
+                                    {icon && <img src={icon} alt={currencyName} className="pe-discount-coin-icon" />}
+                                    {currencyName}
+                                </span>
+                                <span className="pe-discount-details">
+                                    <span className={`pe-discount-badge ${isActive ? 'pe-discount-badge-active' : 'pe-discount-badge-expired'}`}>
+                                        %{d.amount}
+                                    </span>
+                                    <span className="pe-discount-date" title={endDateStr}>
+                                        {timeText}
+                                    </span>
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="pe-container">
             {/* Ad-Blocker Warning */}
@@ -570,99 +818,48 @@ export default function ProgressionEvent() {
 
             {/* Event Header */}
             <div className="pe-header" style={{
-                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '150px',
+                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`
             }}>
-                <div className="pe-header-actions pe-header-left">
-                    <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
-                        <span className="pe-btn-label">{t('event.backToCalc')}</span>
-                    </Link>
-                    <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-                        <span className="pe-btn-label">{t('event.viewHistory')}</span>
-                    </Link>
+                <div className="pe-header-top-row">
+                    <div className="pe-header-actions pe-header-left">
+                        <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                            <span className="pe-btn-label">{t('event.backToCalc')}</span>
+                        </Link>
+                        <Link to={`/${lang}/events`} className="pe-header-back-btn pe-header-history-btn" title={t('event.viewHistory')}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                            <span className="pe-btn-label">{t('event.viewHistory')}</span>
+                        </Link>
+                    </div>
+
+                    <div className="pe-header-center">
+                        <div className="pe-header-time pe-time-mobile" title={isEnded ? timeLeft : `${t('event.leftTime')}: ${timeLeft}`} style={{ marginBottom: '12px' }}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            {!isEnded && <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>}
+                            <strong>{timeLeft}</strong>
+                        </div>
+                        <h2 className="pe-title">{event.title.en}</h2>
+                    </div>
+
+                    <div className="pe-header-actions pe-header-right pe-time-desktop">
+                        <div className="pe-header-time" title={isEnded ? timeLeft : `${t('event.leftTime')}: ${timeLeft}`}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            {!isEnded && <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>}
+                            <strong>{timeLeft}</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="pe-header-center">
-                    <div className="pe-header-time pe-time-mobile" title={`${t('event.leftTime')}: ${timeLeft}`} style={{ marginBottom: '12px' }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
-                        <strong>{timeLeft}</strong>
-                    </div>
-                    <h2 className="pe-title">{event.title.en}</h2>
-                </div>
-
-                <div className="pe-header-actions pe-header-right pe-time-desktop">
-                    <div className="pe-header-time" title={`${t('event.leftTime')}: ${timeLeft}`}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                        <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>
-                        <strong>{timeLeft}</strong>
-                    </div>
+                {/* PC Cards inside the Banner */}
+                <div className="pe-header-cards-desktop">
                 </div>
             </div>
 
             <div className="pe-layout">
-                {/* Left Sidebar - Event Info */}
-                <aside className="pe-sidebar">
-
-                    {/* Event Difficulty */}
-                    <div className="pe-info-card">
-                        <h3 className="pe-info-title">{t('event.eventDifficulty')}</h3>
-                        <div className="pe-info-table">
-                            <div className="pe-info-row">
-                                <span>{t('event.multiplier')}</span>
-                                <span className="pe-info-value">{t('event.multiplierRate', { amount: dynamicConstants.MULTIPLIER_STEP_RLT })}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.multiplierDuration')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.gameDifficulty')}</span>
-                                <span className="pe-info-value">{EVENT_CONSTANTS.GAME_DIFFICULTY}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.spend1Rlt')}</span>
-                                <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
-                            </div>
-                            <div className="pe-info-row">
-                                <span>{t('event.marketplace')}</span>
-                                <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Total Event Rewards */}
-                    {eventSummary && (
-                        <div className="pe-info-card">
-                            <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
-                            <div className="pe-info-table">
-                                <div className="pe-info-row">
-                                    <span>{t('event.minersPower')}</span>
-                                    <span className="pe-info-value pe-highlight">{formatPower(eventSummary.totalMinerPower)}</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.minersBonus')}</span>
-                                    <span className="pe-info-value pe-highlight">{(eventSummary.totalBonus / 100).toFixed(2)}%</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.tempPower')}</span>
-                                    <span className="pe-info-value pe-highlight">{formatPower(eventSummary.tempPower)}</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>{t('event.seasonExp')}</span>
-                                    <span className="pe-info-value pe-highlight">{eventSummary.seasonExp} EXP</span>
-                                </div>
-                                <div className="pe-info-row">
-                                    <span>RST</span>
-                                    <span className="pe-info-value pe-highlight">{eventSummary.rstAmount} RST</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                {/* Left Sidebar - Mobile Only */}
+                <aside className="pe-sidebar pe-sidebar-mobile">
+                    {renderCards()}
+                    {renderDiscountCard()}
                 </aside>
 
                 {/* Main Content */}
@@ -675,13 +872,13 @@ export default function ProgressionEvent() {
                         />
                         <button
                             className={`main-tab ${activeTab === 'rewards' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('rewards')}
+                            onClick={() => handleTabChange('rewards')}
                         >
                             {t('event.rewardsTab')}
                         </button>
                         <button
                             className={`main-tab ${activeTab === 'multiplier' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('multiplier')}
+                            onClick={() => handleTabChange('multiplier')}
                         >
                             {t('event.multiplierTab')}
                         </button>
@@ -694,276 +891,451 @@ export default function ProgressionEvent() {
                             style={{ transform: activeTab === 'rewards' ? 'translateX(0)' : 'translateX(-100%)' }}
                         >
                             {/* Rewards Table */}
-                            <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}`}>
-                                <div className="pe-table-container">
-                                    <table className="pe-table">
-                                        <thead>
-                                            <tr>
-                                                <th>{t('event.headers.lvl')}</th>
-                                                <th>{t('event.headers.total')}</th>
-                                                <th>{t('event.headers.points')}</th>
-                                                <th className="pe-rewards-col">{t('event.headers.rewards')}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {levels_config.map((level: LevelConfig) => {
-                                                const reward = rewards.find(
-                                                    (r: ProgressionReward) => r.required_level === level.level
-                                                );
-                                                const display = reward ? getRewardDisplay(reward, t) : null;
-                                                const typeImage = reward ? getRewardTypeImage(reward.type) : null;
+                            <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}${collapsedTabs.has('rewards') ? ' collapsed' : ''}`}>
+                                <div className="pe-rewards-layout pe-rewards-layout--balanced">
+                                    {/* Desktop discount sidebar */}
+                                    <aside className="pe-discount-sidebar" ref={sidebarRefRewards} style={{ visibility: showFixedSidebarRewards ? 'hidden' : 'visible' }}>
+                                        {renderDiscountCard()}
+                                        <div className="pe-sidebar-desktop-cards">
+                                            {renderCards()}
+                                        </div>
+                                    </aside>
+                                    <div 
+                                        className="pe-table-container" 
+                                        ref={tableSectionRewardsRef}
+                                        onScroll={(e) => {
+                                            if (stickyContainerRewardsRef.current) {
+                                                stickyContainerRewardsRef.current.scrollLeft = e.currentTarget.scrollLeft;
+                                            }
+                                        }}
+                                    >
+                                        <table className="pe-table pe-rewards-table">
+                                            <thead ref={theadRewardsRef}>
+                                                <tr>
+                                                    <th>{t('event.headers.lvl')}</th>
+                                                    <th>{t('event.headers.total')}</th>
+                                                    <th>{t('event.headers.points')}</th>
+                                                    <th className="pe-rewards-col">{t('event.headers.rewards')}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {levels_config.map((level: LevelConfig) => {
+                                                    const reward = rewards.find(
+                                                        (r: ProgressionReward) => r.required_level === level.level
+                                                    );
+                                                    const display = reward ? getRewardDisplay(reward, t) : null;
+                                                    const typeImage = reward ? getRewardTypeImage(reward.type) : null;
 
-                                                return (
-                                                    <tr key={level.level} className="pe-multiplier-row">
-                                                        <td className="pe-number-cell pe-multiplier-cell">
-                                                            <span className="pe-multiplier-badge">{level.level}</span>
-                                                        </td>
-                                                        <td className="pe-number-cell pe-total-cell">
-                                                            {formatNumber(level.required_xp)}
-                                                        </td>
-                                                        <td className="pe-number-cell pe-boxes-cell" style={{ color: 'var(--accent-primary)' }}>
-                                                            {formatNumber(level.level_xp)} {t('event.pointsUnit')}
-                                                        </td>
-                                                        <td className="pe-rewards-col">
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '280px', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
-                                                                <div style={{ width: '96px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-                                                                    {display?.imageUrl ? (
-                                                                        <div style={{ position: 'relative', display: 'inline-flex' }}>
-                                                                            {(display?.level ?? 0) > 1 && (
+                                                    return (
+                                                        <tr key={level.level} className="pe-multiplier-row">
+                                                            <td className="pe-number-cell pe-multiplier-cell">
+                                                                <span className="pe-multiplier-badge">{level.level}</span>
+                                                            </td>
+                                                            <td className="pe-number-cell pe-total-cell">
+                                                                <span className="pe-text-desktop">{formatNumber(level.required_xp)}</span>
+                                                                <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.required_xp)}>{formatPoints(level.required_xp)}</span>
+                                                            </td>
+                                                            <td className="pe-number-cell pe-boxes-cell" style={{ color: 'var(--accent-primary)' }}>
+                                                                <span className="pe-text-desktop">{formatNumber(level.level_xp)}</span>
+                                                                <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.level_xp)}>{formatPoints(level.level_xp)}</span>
+                                                            </td>
+                                                            <td className="pe-rewards-col">
+                                                                <div className="pe-reward-item-container">
+                                                                    <div className="pe-reward-img-wrapper">
+                                                                        {display?.imageUrl ? (
+                                                                            <div style={{ position: 'relative', display: 'inline-flex' }}>
+                                                                                {(display?.level ?? 0) > 1 && (
+                                                                                    <img
+                                                                                        src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
+                                                                                        alt={`Level ${display.level}`}
+                                                                                        style={{ position: 'absolute', top: '0px', right: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
+                                                                                        onError={(e) => {
+                                                                                            const target = e.target as HTMLImageElement;
+                                                                                            target.style.display = 'none';
+                                                                                        }}
+                                                                                    />
+                                                                                )}
                                                                                 <img
-                                                                                    src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
-                                                                                    alt={`Level ${display.level}`}
-                                                                                    style={{ position: 'absolute', top: '0px', right: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
+                                                                                    src={display.imageUrl}
+                                                                                    alt={display.text}
+                                                                                    className="pe-reward-img-api"
+                                                                                    style={display.scale ? { transform: `scale(${display.scale})` } : undefined}
+                                                                                    loading="lazy"
                                                                                     onError={(e) => {
                                                                                         const target = e.target as HTMLImageElement;
                                                                                         target.style.display = 'none';
+                                                                                        // Show fallback text icon
+                                                                                        const parent = target.parentElement;
+                                                                                        if (parent && !parent.querySelector('span.fallback-icon')) {
+                                                                                            const span = document.createElement('span');
+                                                                                            span.className = 'fallback-icon';
+                                                                                            span.style.fontSize = '32px';
+                                                                                            span.textContent = '📦';
+                                                                                            parent.appendChild(span);
+                                                                                        }
                                                                                     }}
                                                                                 />
-                                                                            )}
+                                                                            </div>
+                                                                        ) : display?.localImage ? (
                                                                             <img
-                                                                                src={display.imageUrl}
+                                                                                src={display.localImage}
                                                                                 alt={display.text}
-                                                                                style={{ maxWidth: '96px', maxHeight: '64px', objectFit: 'contain' }}
+                                                                                className="pe-reward-img-local"
                                                                                 loading="lazy"
                                                                                 onError={(e) => {
                                                                                     const target = e.target as HTMLImageElement;
                                                                                     target.style.display = 'none';
-                                                                                    // Show fallback text icon
-                                                                                    const parent = target.parentElement;
-                                                                                    if (parent && !parent.querySelector('span.fallback-icon')) {
-                                                                                        const span = document.createElement('span');
-                                                                                        span.className = 'fallback-icon';
-                                                                                        span.style.fontSize = '32px';
-                                                                                        span.textContent = '📦';
-                                                                                        parent.appendChild(span);
-                                                                                    }
                                                                                 }}
                                                                             />
-                                                                        </div>
-                                                                    ) : display?.localImage ? (
-                                                                        <img
-                                                                            src={display.localImage}
-                                                                            alt={display.text}
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-                                                                            loading="lazy"
-                                                                            onError={(e) => {
-                                                                                const target = e.target as HTMLImageElement;
-                                                                                target.style.display = 'none';
-                                                                            }}
-                                                                        />
-                                                                    ) : typeImage ? (
-                                                                        <img
-                                                                            src={typeImage}
-                                                                            alt={reward?.type || ''}
-                                                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-                                                                            loading="lazy"
-                                                                            onError={(e) => {
-                                                                                const target = e.target as HTMLImageElement;
-                                                                                target.style.display = 'none';
-                                                                            }}
-                                                                        />
-                                                                    ) : (
-                                                                        <span style={{ fontSize: '32px' }}>🎁</span>
-                                                                    )}
+                                                                        ) : typeImage ? (
+                                                                            <img
+                                                                                src={typeImage}
+                                                                                alt={reward?.type || ''}
+                                                                                className="pe-reward-img-local"
+                                                                                loading="lazy"
+                                                                                onError={(e) => {
+                                                                                    const target = e.target as HTMLImageElement;
+                                                                                    target.style.display = 'none';
+                                                                                }}
+                                                                            />
+                                                                        ) : (
+                                                                            <span style={{ fontSize: '32px' }}>🎁</span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                                                        <span style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)' }}>{display?.text ?? '-'}</span>
+                                                                        <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{display?.subText ?? ''}</span>
+                                                                    </div>
                                                                 </div>
-                                                                <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                                                    <span style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)' }}>{display?.text ?? '-'}</span>
-                                                                    <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{display?.subText ?? ''}</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {/* Fixed sticky header clone - Rewards */}
+                                    {activeTab === 'rewards' && showFixedRewards && headerWidthsRewards.length > 0 && createPortal(
+                                        <div 
+                                            className="fixed-thead-clone" 
+                                            ref={stickyContainerRewardsRef}
+                                            style={{ position: 'fixed', top: 0, left: tableLeftRewards, width: tableWidthRewards, zIndex: 100, pointerEvents: 'none', overflowX: 'hidden' }}
+                                        >
+                                            <table className="pe-table pe-rewards-table" style={{ width: innerTableWidthRewards || '100%', margin: 0 }}>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={{ width: headerWidthsRewards[0], borderTop: 'none' }}>{t('event.headers.lvl')}</th>
+                                                        <th style={{ width: headerWidthsRewards[1], borderTop: 'none' }}>{t('event.headers.total')}</th>
+                                                        <th style={{ width: headerWidthsRewards[2], borderTop: 'none' }}>{t('event.headers.points')}</th>
+                                                        <th className="pe-rewards-col" style={{ width: headerWidthsRewards[3], borderTop: 'none' }}>{t('event.headers.rewards')}</th>
                                                     </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
+                                                </thead>
+                                            </table>
+                                        </div>,
+                                        document.body
+                                    )}
+
+                                    {/* Fixed sticky sidebar clone - Rewards */}
+                                    {activeTab === 'rewards' && showFixedSidebarRewards && createPortal(
+                                        <aside className="pe-discount-sidebar" style={{ position: 'fixed', top: 16, left: sidebarLeftRewards, width: sidebarWidthRewards, zIndex: 99, margin: 0 }}>
+                                            {renderDiscountCard()}
+                                            <div className="pe-sidebar-desktop-cards">
+                                                {renderCards()}
+                                            </div>
+                                        </aside>,
+                                        document.body
+                                    )}
                                 </div>
                             </div>
 
                             {/* Multiplier Section */}
-                            <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}`}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                    {/* Controls Bar */}
-                                    <div className="pe-controls-bar">
-                                        <div className="pe-control-group pe-filter-group">
-                                            <label className="pe-control-label">{t('event.filter')}</label>
-                                            <div className="pe-filter-inputs">
-                                                <input
-                                                    type="number"
-                                                    className="pe-filter-input"
-                                                    value={filterMin}
-                                                    onChange={(e) => {
-                                                        const v = parseInt(e.target.value);
-                                                        if (!isNaN(v) && v >= 1 && v <= filterMax) setFilterMin(v);
-                                                    }}
-                                                    min={1}
-                                                    max={filterMax}
-                                                />
-                                                <span className="pe-filter-sep">—</span>
-                                                <input
-                                                    type="number"
-                                                    className="pe-filter-input"
-                                                    value={filterMax}
-                                                    onChange={(e) => {
-                                                        const v = parseInt(e.target.value);
-                                                        if (!isNaN(v) && v >= filterMin && v <= MAX_MULTIPLIER) setFilterMax(v);
-                                                    }}
-                                                    min={filterMin}
-                                                    max={MAX_MULTIPLIER}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="pe-control-group">
-                                            <label className="pe-control-label">{t('event.chart')}</label>
-                                            <button
-                                                className={`pe-chart-toggle ${showChart ? 'active' : ''}`}
-                                                onClick={() => setShowChart(!showChart)}
-                                            >
-                                                📊
-                                            </button>
-                                        </div>
-                                        <div className="pe-control-group" style={{ justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600, height: '36px' }}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={showMarketplace}
-                                                    onChange={(e) => setShowMarketplace(e.target.checked)}
-                                                    style={{ width: '16px', height: '16px', margin: 0, cursor: 'pointer' }}
-                                                />
-                                                {t('event.headers.marketTrade')} & {t('event.headers.fee')}
-                                            </label>
+                            <div className={`tab-panel ${activeTab === 'multiplier' ? 'active' : ''}${collapsedTabs.has('multiplier') ? ' collapsed' : ''}`}>
+                                {/* Controls Bar (Full Width) */}
+                                <div className="pe-controls-bar" style={{ marginBottom: '16px' }}>
+                                    <div className="pe-control-group pe-filter-group">
+                                        <label className="pe-control-label">{t('event.filter')}</label>
+                                        <div className="pe-filter-inputs">
+                                            <input
+                                                type="number"
+                                                className="pe-filter-input"
+                                                value={filterMin}
+                                                onChange={(e) => {
+                                                    const v = parseInt(e.target.value);
+                                                    if (!isNaN(v) && v >= 1 && v <= filterMax) setFilterMin(v);
+                                                }}
+                                                min={1}
+                                                max={filterMax}
+                                            />
+                                            <span className="pe-filter-sep">—</span>
+                                            <input
+                                                type="number"
+                                                className="pe-filter-input"
+                                                value={filterMax}
+                                                onChange={(e) => {
+                                                    const v = parseInt(e.target.value);
+                                                    if (!isNaN(v) && v >= filterMin && v <= MAX_MULTIPLIER) setFilterMax(v);
+                                                }}
+                                                min={filterMin}
+                                                max={MAX_MULTIPLIER}
+                                            />
                                         </div>
                                     </div>
+                                    <div className="pe-control-group">
+                                        <label className="pe-control-label">{t('event.chart')}</label>
+                                        <button
+                                            className={`pe-chart-toggle ${showChart ? 'active' : ''}`}
+                                            onClick={() => setShowChart(!showChart)}
+                                        >
+                                            📊
+                                        </button>
+                                    </div>
+                                    <div className="pe-control-group" style={{ justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600, height: '36px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={showMarketplace}
+                                                onChange={(e) => setShowMarketplace(e.target.checked)}
+                                                style={{ width: '16px', height: '16px', margin: 0, cursor: 'pointer' }}
+                                            />
+                                            {t('event.headers.marketTrade')} & {t('event.headers.fee')}
+                                        </label>
+                                    </div>
+                                </div>
 
-                                    {/* Chart */}
-                                    {showChart && (
-                                        <div className="pe-chart-container">
-                                            <h4 className="pe-chart-title">{t('event.chartTitle')}</h4>
-                                            <div className="pe-chart">
-                                                {filteredData.map((row) => {
-                                                    const barWidth = (row.boxes / chartMaxBoxes) * 100;
-                                                    return (
-                                                        <div key={row.multiplier} className="pe-chart-row">
-                                                            <span className="pe-chart-label">x{row.multiplier}</span>
-                                                            <div className="pe-chart-bar-bg">
-                                                                <div
-                                                                    className="pe-chart-bar"
-                                                                    style={{ width: `${barWidth}%` }}
-                                                                />
-                                                            </div>
-                                                            <span className="pe-chart-value">{formatNumber(row.boxes)}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Table */}
-                                    <div className="pe-table-container">
-                                        <table className="pe-table pe-multiplier-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>{t('event.headers.multiplier')}</th>
-                                                    <th>
-                                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                                                            {t('event.headers.rltToBuy')}
-                                                            <input
-                                                                type="number"
-                                                                className="pe-filter-input"
-                                                                value={rltPrice}
-                                                                onChange={(e) => setRltPrice(Number(e.target.value))}
-                                                                step="0.01"
-                                                                min="0"
-                                                                style={{ width: '68px', padding: '4px 6px', fontSize: '13px', lineHeight: '1' }}
+                                {/* Chart (Full Width) */}
+                                {showChart && (
+                                    <div className="pe-chart-container" style={{ marginBottom: '16px' }}>
+                                        <h4 className="pe-chart-title">{t('event.chartTitle')}</h4>
+                                        <div className="pe-chart">
+                                            {filteredData.map((row) => {
+                                                const barWidth = (row.boxes / chartMaxBoxes) * 100;
+                                                return (
+                                                    <div key={row.multiplier} className="pe-chart-row">
+                                                        <span className="pe-chart-label">x{row.multiplier}</span>
+                                                        <div className="pe-chart-bar-bg">
+                                                            <div
+                                                                className="pe-chart-bar"
+                                                                style={{ width: `${barWidth}%` }}
                                                             />
                                                         </div>
-                                                    </th>
-                                                    <th>
-                                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                                                            {t('event.headers.discount')}
-                                                            <select
-                                                                className="pe-select"
-                                                                value={discount}
-                                                                onChange={(e) => setDiscount(Number(e.target.value))}
-                                                                style={{ padding: '4px 24px 4px 10px', fontSize: '13px', height: 'auto', lineHeight: '1' }}
-                                                            >
-                                                                {DISCOUNT_OPTIONS.map((d) => (
-                                                                    <option key={d} value={d}>{d}%</option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                    </th>
-                                                    <th>
-                                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                                                            {t('event.headers.boxesOf')}
-                                                            <select
-                                                                className="pe-select"
-                                                                value={boxPrice}
-                                                                onChange={(e) => setBoxPrice(Number(e.target.value))}
-                                                                style={{ padding: '4px 24px 4px 10px', fontSize: '13px', height: 'auto', lineHeight: '1' }}
-                                                            >
-                                                                {BOX_PRICE_OPTIONS.map((p) => (
-                                                                    <option key={p} value={p}>{p} RLT</option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                    </th>
-                                                    <th>{t('event.headers.totalCost')}</th>
-                                                    {showMarketplace && <th>{t('event.headers.marketTrade')}</th>}
-                                                    {showMarketplace && <th>{t('event.headers.fee')}</th>}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {filteredData.map((row) => (
-                                                    <tr key={row.multiplier} className="pe-multiplier-row">
-                                                        <td className="pe-multiplier-cell">
-                                                            <span className="pe-multiplier-badge">x{row.multiplier}</span>
-                                                        </td>
-                                                        <td className="pe-number-cell">{row.rltToBuy}</td>
-                                                        <td className="pe-number-cell pe-discount-cell">
-                                                            $ {row.discountPrice.toFixed(2)}
-                                                        </td>
-                                                        <td className="pe-number-cell pe-boxes-cell">
-                                                            {formatNumber(row.boxes)}
-                                                        </td>
-                                                        <td className="pe-number-cell pe-total-cell">
-                                                            {formatNumber(row.totalRltCost)}
-                                                        </td>
-                                                        {showMarketplace && (
-                                                            <td className="pe-number-cell">
-                                                                {formatNumber(row.marketTrade)}
-                                                            </td>
-                                                        )}
-                                                        {showMarketplace && (
-                                                            <td className="pe-number-cell pe-fee-cell">
-                                                                {formatNumber(row.fee)}
-                                                            </td>
-                                                        )}
+                                                        <span className="pe-chart-value">{formatNumber(row.boxes)}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="pe-rewards-layout pe-rewards-layout--centered">
+                                    {/* Desktop discount sidebar */}
+                                    <aside className="pe-discount-sidebar" ref={sidebarRefMultiplier} style={{ visibility: showFixedSidebarMultiplier ? 'hidden' : 'visible' }}>
+                                        {renderDiscountCard()}
+                                        <div className="pe-sidebar-desktop-cards">
+                                            {renderCards()}
+                                        </div>
+                                    </aside>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minWidth: 0 }}>
+                                        {/* Table */}
+                                        <div 
+
+                                            className="pe-table-container" 
+                                            ref={tableSectionMultiplierRef}
+                                            onScroll={(e) => {
+                                                if (stickyContainerMultiplierRef.current) {
+                                                    stickyContainerMultiplierRef.current.scrollLeft = e.currentTarget.scrollLeft;
+                                                }
+                                            }}
+                                        >
+                                            <table className="pe-table pe-multiplier-table">
+                                                <thead ref={theadMultiplierRef}>
+                                                    <tr>
+                                                        <th>{t('event.headers.multiplier')}</th>
+                                                        <th>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                {t('event.headers.rltToBuy')}
+                                                                <input
+                                                                    type="number"
+                                                                    className="pe-filter-input"
+                                                                    value={rltPrice}
+                                                                    onChange={(e) => setRltPrice(Number(e.target.value))}
+                                                                    step="0.01"
+                                                                    min="0"
+                                                                    style={{ width: '68px', padding: '4px 6px', fontSize: '13px', lineHeight: '1' }}
+                                                                />
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                {t('event.headers.discount')}
+                                                                <RadixSelect
+                                                                    value={String(discount || '')}
+                                                                    onValueChange={(val) => setDiscount(Number(val))}
+                                                                    placeholder={t('event.headers.discount')}
+                                                                    options={[
+                                                                        ...currencyDiscounts.map(cd => {
+                                                                            const coinName = CURRENCY_ID_MAP[cd.currencyId] ?? `ID:${cd.currencyId}`;
+                                                                            return {
+                                                                                value: String(cd.amount),
+                                                                                label: `${cd.amount}% (${coinName})`,
+                                                                                icon: COIN_ICONS[coinName] || '',
+                                                                                group: t('event.tokenDiscountGroup')
+                                                                            };
+                                                                        }),
+                                                                        ...DISCOUNT_OPTIONS.filter(d => !currencyDiscounts.some(cd => cd.amount === d)).map(d => ({
+                                                                            value: String(d),
+                                                                            label: `${d}%`,
+                                                                            group: 'Standart'
+                                                                        }))
+                                                                    ]}
+                                                                    contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
+                                                                    triggerClassName="pe-select pe-select-lg"
+                                                                />
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                {t('event.headers.boxesOf')}
+                                                                <RadixSelect
+                                                                    value={String(boxPrice)}
+                                                                    onValueChange={(val) => setBoxPrice(Number(val))}
+                                                                    options={BOX_PRICE_OPTIONS.map(price => ({
+                                                                        value: String(price),
+                                                                        label: `${price} RLT`
+                                                                    }))}
+                                                                    contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
+                                                                    triggerClassName="pe-select pe-select-lg"
+                                                                />
+                                                            </div>
+                                                        </th>
+                                                        <th>{t('event.headers.totalCost')}</th>
+                                                        {showMarketplace && <th>{t('event.headers.marketTrade')}</th>}
+                                                        {showMarketplace && <th>{t('event.headers.fee')}</th>}
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {filteredData.map((row) => (
+                                                        <tr key={row.multiplier} className="pe-multiplier-row">
+                                                            <td className="pe-multiplier-cell">
+                                                                <span className="pe-multiplier-badge">x{row.multiplier}</span>
+                                                            </td>
+                                                            <td className="pe-number-cell">{row.rltToBuy}</td>
+                                                            <td className="pe-number-cell pe-discount-cell">
+                                                                $ {row.discountPrice.toFixed(2)}
+                                                            </td>
+                                                            <td className="pe-number-cell pe-boxes-cell">
+                                                                {formatNumber(row.boxes)}
+                                                            </td>
+                                                            <td className="pe-number-cell pe-total-cell">
+                                                                {formatNumber(row.totalRltCost)}
+                                                            </td>
+                                                            {showMarketplace && (
+                                                                <td className="pe-number-cell">
+                                                                    {formatNumber(row.marketTrade)}
+                                                                </td>
+                                                            )}
+                                                            {showMarketplace && (
+                                                                <td className="pe-number-cell pe-fee-cell">
+                                                                    {formatNumber(row.fee)}
+                                                                </td>
+                                                            )}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        {/* Fixed sticky header clone - Multiplier */}
+                                        {activeTab === 'multiplier' && showFixedMultiplier && headerWidthsMultiplier.length > 0 && createPortal(
+                                            <div 
+                                                className="fixed-thead-clone hide-scrollbar" 
+                                                ref={stickyContainerMultiplierRef}
+                                                style={{ position: 'fixed', top: 0, left: tableLeftMultiplier, width: tableWidthMultiplier, zIndex: 100, overflowX: 'auto' }}
+                                                onScroll={(e) => {
+                                                    if (tableSectionMultiplierRef.current) {
+                                                        tableSectionMultiplierRef.current.scrollLeft = e.currentTarget.scrollLeft;
+                                                    }
+                                                }}
+                                            >
+                                                <table className="pe-table pe-multiplier-table" style={{ width: innerTableWidthMultiplier || '100%', margin: 0 }}>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style={{ width: headerWidthsMultiplier[0], borderTop: 'none' }}>{t('event.headers.multiplier')}</th>
+                                                            <th style={{ width: headerWidthsMultiplier[1], borderTop: 'none' }}>
+                                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                    {t('event.headers.rltToBuy')}
+                                                                    <input
+                                                                        type="number"
+                                                                        className="pe-filter-input"
+                                                                        value={rltPrice}
+                                                                        onChange={(e) => setRltPrice(Number(e.target.value))}
+                                                                        step="0.01"
+                                                                        min="0"
+                                                                        style={{ width: '68px', padding: '4px 6px', fontSize: '13px', lineHeight: '1' }}
+                                                                    />
+                                                                </div>
+                                                            </th>
+                                                            <th style={{ width: headerWidthsMultiplier[2], borderTop: 'none' }}>
+                                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                    {t('event.headers.discount')}
+                                                                    <RadixSelect
+                                                                        value={String(discount || '')}
+                                                                        onValueChange={(val) => setDiscount(Number(val))}
+                                                                        placeholder={t('event.headers.discount')}
+                                                                        options={[
+                                                                            ...currencyDiscounts.map(cd => {
+                                                                                const coinName = CURRENCY_ID_MAP[cd.currencyId] ?? `ID:${cd.currencyId}`;
+                                                                                return {
+                                                                                    value: String(cd.amount),
+                                                                                    label: `${cd.amount}% (${coinName})`,
+                                                                                    icon: COIN_ICONS[coinName] || '',
+                                                                                    group: t('event.tokenDiscountGroup')
+                                                                                };
+                                                                            }),
+                                                                            ...DISCOUNT_OPTIONS.filter(d => !currencyDiscounts.some(cd => cd.amount === d)).map(d => ({
+                                                                                value: String(d),
+                                                                                label: `${d}%`,
+                                                                                group: 'Standart'
+                                                                            }))
+                                                                        ]}
+                                                                        contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
+                                                                        triggerClassName="pe-select pe-select-lg"
+                                                                    />
+                                                                </div>
+                                                            </th>
+                                                            <th style={{ width: headerWidthsMultiplier[3], borderTop: 'none' }}>
+                                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                                                    {t('event.headers.boxesOf')}
+                                                                    <RadixSelect
+                                                                        value={String(boxPrice)}
+                                                                        onValueChange={(val) => setBoxPrice(Number(val))}
+                                                                        options={BOX_PRICE_OPTIONS.map(price => ({
+                                                                            value: String(price),
+                                                                            label: `${price} RLT`
+                                                                        }))}
+                                                                        contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
+                                                                        triggerClassName="pe-select pe-select-lg"
+                                                                    />
+                                                                </div>
+                                                            </th>
+                                                            <th style={{ width: headerWidthsMultiplier[4], borderTop: 'none' }}>{t('event.headers.totalCost')}</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>,
+                                            document.body
+                                        )}
+
+                                        {/* Fixed sticky sidebar clone - Multiplier */}
+                                        {activeTab === 'multiplier' && showFixedSidebarMultiplier && createPortal(
+                                            <aside className="pe-discount-sidebar" style={{ position: 'fixed', top: 16, left: sidebarLeftMultiplier, width: sidebarWidthMultiplier, zIndex: 99, margin: 0 }}>
+                                                {renderDiscountCard()}
+                                                <div className="pe-sidebar-desktop-cards">
+                                                    {renderCards()}
+                                                </div>
+                                            </aside>,
+                                            document.body
+                                        )}
                                     </div>
                                 </div>
                             </div>

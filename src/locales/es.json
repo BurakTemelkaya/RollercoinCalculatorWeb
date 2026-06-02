@@ -10,7 +10,8 @@
         "charts": "Gráficos",
         "events": "Eventos",
         "merges": "Fusiones",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Mis Blogs"
     },
     "lpp": {
         "title": "Partición de Poder de la Liga",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} eventos",
         "latest": "Último",
         "viewDetails": "Ver Detalles",
-        "noEvents": "No se encontraron eventos."
+        "noEvents": "No se encontraron eventos.",
+        "tokenDiscounts": "Descuentos de Tokens",
+        "discountAmount": "Descuento del {{amount}}%",
+        "discountExpires": "Expira: {{date}}",
+        "discountActive": "Activo",
+        "discountExpired": "Expirado",
+        "noDiscounts": "No hay descuentos activos",
+        "tokenDiscountGroup": "Descuentos de Tokens",
+        "discountEndsIn": "Termina en: {{time}}"
     },
     "pagination": {
         "previous": "Anterior",
@@ -485,5 +494,70 @@
         "btn2": "Lee Tácticas de Poder →",
         "btn3": "Lee Guía F2P →",
         "btn4": "Preguntas Frecuentes →"
+    },
+    "auth": {
+        "login": "Iniciar sesión",
+        "register": "Registrarse",
+        "logout": "Cerrar sesión",
+        "email": "Correo electrónico",
+        "name": "Nombre",
+        "namePlaceholder": "Ingresa tu nombre",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "loginTitle": "Iniciar sesión",
+        "loginSubtitle": "¡Bienvenido de nuevo! Ingresa tus credenciales para continuar.",
+        "registerTitle": "Crear Cuenta",
+        "registerSubtitle": "Únete a nosotros y comienza a rastrear tus ganancias.",
+        "noAccount": "¿No tienes una cuenta?",
+        "hasAccount": "¿Ya tienes una cuenta?",
+        "loginError": "Inicio de sesión fallido. Verifica tus credenciales.",
+        "registerError": "Registro fallido. Por favor intenta de nuevo.",
+        "fillAllFields": "Por favor completa todos los campos.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+        "loggingIn": "Iniciando sesión...",
+        "registering": "Creando cuenta...",
+        "sessionExpired": "Sesión expirada. Por favor, inicia sesión de nuevo.",
+        "emailPlaceholder": "tu@email.com",
+        "passwordPlaceholder": "Ingresa tu contraseña",
+        "confirmPasswordPlaceholder": "Vuelve a ingresar tu contraseña",
+        "turnstileRequired": "Por favor completa la verificación de seguridad."
+    },
+    "blog": {
+        "myBlogsDesc": "Todas las publicaciones que has escrito."
+    },
+    "author": {
+        "blogCreatedPending": "Tu blog ha sido enviado y está pendiente de aprobación por el administrador."
+    },
+    "admin": {
+        "createNewBlog": "Crear Nuevo Blog",
+        "all": "Todos",
+        "pending": "Pendiente",
+        "approved": "Aprobado",
+        "rejected": "Rechazado",
+        "edit": "Editar",
+        "createBlog": "Nuevo Blog",
+        "editBlog": "Editar Blog",
+        "blogThumbnail": "Miniatura",
+        "thumbnailUrlPlaceholder": "O pega la URL de la imagen...",
+        "mainLanguage": "Idioma Principal",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "blogCreated": "¡Blog creado exitosamente!",
+        "blogUpdated": "¡Blog actualizado exitosamente!",
+        "uploadImage": "Subir Imagen",
+        "uploading": "Subiendo...",
+        "insertImage": "Insertar Imagen",
+        "uploadError": "Fallo al subir la imagen.",
+        "fillAtLeastOne": "Por favor, llena al menos un idioma.",
+        "mainLanguageRequired": "Se requiere la selección del idioma principal.",
+        "thumbnailRequired": "Se requiere una imagen en miniatura.",
+        "saveError": "Fallo al guardar el blog.",
+        "blogTitle": "Título",
+        "blogContent": "Contenido",
+        "blogSlug": "Slug de URL",
+        "autoSlug": "Auto",
+        "titlePlaceholder": "Ingresa el título del blog...",
+        "slugPlaceholder": "url-amigable"
     }
 }

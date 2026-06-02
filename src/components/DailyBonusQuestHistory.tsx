@@ -67,7 +67,7 @@ export default function DailyBonusQuestHistory() {
     const [data, setData] = useState<PaginatedResponse<DailyBonusQuest> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const dateLocale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
+    const dateLocale = i18n.language || 'en-US';
 
     useEffect(() => {
         const load = async () => {

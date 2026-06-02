@@ -6,13 +6,14 @@
 
 import { buildApiUrl } from '../config/api';
 import { apiGet } from './apiClient';
-import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData, ProgressionEventListItem } from '../types/progressionEvent';
+import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData, ProgressionEventListItem, CurrencyDiscount } from '../types/progressionEvent';
 import type { PaginatedResponse } from '../types/pagination';
 
 export interface ParsedProgressionEvent {
     id: string;
     name: string;
     endDate: string;
+    createdDate?: string;
     data: ProgressionEventData;
     multiplierData?: MultiplierData[];
     taskData?: TaskData[];
@@ -44,10 +45,15 @@ function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedPro
         ? raw.endDate + 'Z'
         : raw.endDate;
 
+    const createdDate = raw.createdDate && !raw.createdDate.endsWith('Z') && !raw.createdDate.includes('+')
+        ? raw.createdDate + 'Z'
+        : raw.createdDate;
+
     return {
         id: raw.id,
         name: raw.name,
         endDate,
+        createdDate,
         data,
         multiplierData,
         taskData,
@@ -81,5 +87,21 @@ export async function fetchProgressionEventList(
 ): Promise<PaginatedResponse<ProgressionEventListItem>> {
     const url = buildApiUrl(`/api/ProgressionEvents/GetList?PageIndex=${pageIndex}&PageSize=${pageSize}`);
     return apiGet<PaginatedResponse<ProgressionEventListItem>>(url);
+}
+
+/**
+ * Fetches currency discounts for a given date range (typically the event's duration).
+ */
+export async function fetchCurrencyDiscounts(
+    startDate: string,
+    endDate: string
+): Promise<CurrencyDiscount[]> {
+    const params = new URLSearchParams({
+        StartDate: startDate,
+        EndDate: endDate,
+    });
+    const url = buildApiUrl(`/api/CurrencyDiscount?${params.toString()}`);
+    const response = await apiGet<PaginatedResponse<CurrencyDiscount>>(url);
+    return response.items;
 }
 

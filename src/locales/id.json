@@ -10,7 +10,8 @@
         "charts": "Grafik",
         "events": "Acara",
         "merges": "Gabungan",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Blog Saya"
     },
     "lpp": {
         "title": "Pembagian Kekuatan Liga",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} acara",
         "latest": "Terbaru",
         "viewDetails": "Detail",
-        "noEvents": "Tidak ada acara."
+        "noEvents": "Tidak ada acara.",
+        "tokenDiscounts": "Diskon Token",
+        "discountAmount": "Diskon {{amount}}%",
+        "discountExpires": "Berakhir: {{date}}",
+        "discountActive": "Aktif",
+        "discountExpired": "Berakhir",
+        "noDiscounts": "Tidak ada diskon aktif",
+        "tokenDiscountGroup": "Diskon Token",
+        "discountEndsIn": "Berakhir dalam: {{time}}"
     },
     "pagination": {
         "previous": "Sebelumnya",
@@ -485,5 +494,70 @@
         "btn2": "Baca Taktik Kekuatan →",
         "btn3": "Baca Panduan F2P →",
         "btn4": "Pertanyaan yang Sering Diajukan →"
+    },
+    "auth": {
+        "login": "Masuk",
+        "register": "Daftar",
+        "logout": "Keluar",
+        "email": "Email",
+        "name": "Nama",
+        "namePlaceholder": "Masukkan nama Anda",
+        "password": "Kata Sandi",
+        "confirmPassword": "Konfirmasi Kata Sandi",
+        "loginTitle": "Masuk",
+        "loginSubtitle": "Selamat datang kembali! Masukkan kredensial Anda untuk melanjutkan.",
+        "registerTitle": "Buat Akun",
+        "registerSubtitle": "Bergabunglah dengan kami dan mulai melacak penghasilan Anda.",
+        "noAccount": "Belum punya akun?",
+        "hasAccount": "Sudah punya akun?",
+        "loginError": "Gagal masuk. Silakan periksa kredensial Anda.",
+        "registerError": "Pendaftaran gagal. Silakan coba lagi.",
+        "fillAllFields": "Harap isi semua kolom.",
+        "passwordMismatch": "Kata sandi tidak cocok.",
+        "passwordTooShort": "Kata sandi minimal harus 6 karakter.",
+        "loggingIn": "Masuk...",
+        "registering": "Membuat akun...",
+        "sessionExpired": "Sesi berakhir. Silakan masuk kembali.",
+        "emailPlaceholder": "email@anda.com",
+        "passwordPlaceholder": "Masukkan kata sandi Anda",
+        "confirmPasswordPlaceholder": "Masukkan kembali kata sandi Anda",
+        "turnstileRequired": "Harap selesaikan verifikasi keamanan."
+    },
+    "blog": {
+        "myBlogsDesc": "Semua postingan yang telah Anda tulis."
+    },
+    "author": {
+        "blogCreatedPending": "Blog Anda telah dikirim dan menunggu persetujuan admin."
+    },
+    "admin": {
+        "createNewBlog": "Buat Blog Baru",
+        "all": "Semua",
+        "pending": "Tertunda",
+        "approved": "Disetujui",
+        "rejected": "Ditolak",
+        "edit": "Edit",
+        "createBlog": "Blog Baru",
+        "editBlog": "Edit Blog",
+        "blogThumbnail": "Gambar Mini",
+        "thumbnailUrlPlaceholder": "Atau tempel URL gambar...",
+        "mainLanguage": "Bahasa Utama",
+        "save": "Simpan",
+        "saving": "Menyimpan...",
+        "blogCreated": "Blog berhasil dibuat!",
+        "blogUpdated": "Blog berhasil diperbarui!",
+        "uploadImage": "Unggah Gambar",
+        "uploading": "Mengunggah...",
+        "insertImage": "Sisipkan Gambar",
+        "uploadError": "Gagal mengunggah gambar.",
+        "fillAtLeastOne": "Harap isi setidaknya satu bahasa.",
+        "mainLanguageRequired": "Pilihan bahasa utama diperlukan.",
+        "thumbnailRequired": "Gambar mini diperlukan.",
+        "saveError": "Gagal menyimpan blog.",
+        "blogTitle": "Judul",
+        "blogContent": "Konten",
+        "blogSlug": "Slug URL",
+        "autoSlug": "Otomatis",
+        "titlePlaceholder": "Masukkan judul blog...",
+        "slugPlaceholder": "slug-url-ramah"
     }
 }

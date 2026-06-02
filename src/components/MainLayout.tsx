@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import appLogo from '../assets/logo.png';
-import TurnstileProvider from './TurnstileProvider';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
+import { useAuth } from '../contexts/AuthContext';
 
-const SUPPORTED_LANGUAGES: SelectOption[] = [
+export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
   { value: 'tr', label: 'Türkçe', icon: 'https://flagcdn.com/w20/tr.png' },
   { value: 'zh', label: 'Chinese Simplified', icon: 'https://flagcdn.com/w20/cn.png' },
@@ -43,6 +43,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const langFromPath = location.pathname.split('/')[1];
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
+
+  const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -100,7 +102,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="app-layout">
-      <TurnstileProvider />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
@@ -132,7 +133,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
                     <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
                     <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
-                    <Link to={`/${i18n.language}/guides`} className="nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
                     <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
                     <Link to={`/${i18n.language}/faq`} className="nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
                     <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
@@ -149,6 +149,31 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         showSelectedIcon={true}
                     />
                   </div>
+
+                  {/* Auth Buttons */}
+                  <div className="auth-header-btns desktop-only">
+                    {isAuthenticated ? (
+                      <>
+                        {isAdmin && (
+                          <Link to={`/${lang}/admin/blogs`} className="header-auth-btn admin-link" title={t('nav.adminPanel')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', width: 32, height: 32, borderRadius: '50%', textDecoration: 'none', padding: 0 }}>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
+                          </Link>
+                        )}
+                        <Link to={`/${lang}/my-blogs`} className="header-auth-btn user-link" title={t('nav.userPanel')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', background: 'rgba(124, 58, 237, 0.1)', width: 32, height: 32, borderRadius: '50%', textDecoration: 'none', padding: 0 }}>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        </Link>
+                        <button className="header-auth-btn logout-btn" onClick={logout} title={t('auth.logout')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', padding: 0 }}>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                        </button>
+                      </>
+                    ) : (
+                      <Link to={`/${lang}/login`} className="header-auth-btn login-link">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
+                        {t('auth.login')}
+                      </Link>
+                    )}
+                  </div>
+
                   <button
                     className="hamburger-btn mobile-only"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -172,6 +197,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
                   <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
+                  <div className="mobile-auth-divider" />
+                  {isAuthenticated ? (
+                    <>
+                      {isAdmin && (
+                        <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/admin/blogs`} className="mobile-nav-link">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
+                          {t('admin.title')}
+                        </Link>
+                      )}
+                      <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="mobile-nav-link mobile-logout-btn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                        {t('auth.logout')} {user?.email ? `(${user.email.split('@')[0]})` : ''}
+                      </button>
+                    </>
+                  ) : (
+                    <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/login`} className="mobile-nav-link">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
+                      {t('auth.login')}
+                    </Link>
+                  )}
                 </div>
               </div>
             </header>

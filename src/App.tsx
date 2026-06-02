@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate, Link } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -50,22 +50,25 @@ const ProgressionEventHistory = lazyWithRetry(() => import('./components/Progres
 const AboutPage = lazyWithRetry(() => import('./components/AboutPage'));
 const PrivacyPage = lazyWithRetry(() => import('./components/PrivacyPage'));
 const FaqPage = lazyWithRetry(() => import('./components/FaqPage'));
-const GuidesPage = lazyWithRetry(() => import('./components/GuidesPage'));
-const F2PGuide = lazyWithRetry(() => import('./components/guides/F2PGuide'));
-const BonusPowerGuide = lazyWithRetry(() => import('./components/guides/BonusPowerGuide'));
-const MarketplaceArbitrageGuide = lazyWithRetry(() => import('./components/guides/MarketplaceArbitrageGuide'));
-const MiningPowerGuide = lazyWithRetry(() => import('./components/guides/MiningPowerGuide'));
-const CalculationLogicGuide = lazyWithRetry(() => import('./components/guides/CalculationLogicGuide'));
 const SupportPage = lazyWithRetry(() => import('./components/SupportPage'));
 const LeagueChart = lazyWithRetry(() => import('./components/LeagueChart'));
 const BlogPage = lazyWithRetry(() => import('./components/BlogPage'));
-const WhatIsRollercoin = lazyWithRetry(() => import('./components/blog/WhatIsRollercoin'));
-const LeagueSystemExplained = lazyWithRetry(() => import('./components/blog/LeagueSystemExplained'));
-const MarketplaceTradingGuide = lazyWithRetry(() => import('./components/blog/MarketplaceTradingGuide'));
-const MostProfitableCoin = lazyWithRetry(() => import('./components/blog/MostProfitableCoin'));
-const BeginnersCompleteGuide = lazyWithRetry(() => import('./components/blog/BeginnersCompleteGuide'));
+const BlogDetailPage = lazyWithRetry(() => import('./components/BlogDetailPage'));
+const LoginPage = lazyWithRetry(() => import('./components/auth/LoginPage'));
+const RegisterPage = lazyWithRetry(() => import('./components/auth/RegisterPage'));
+const AdminBlogList = lazyWithRetry(() => import('./components/admin/AdminBlogList'));
+const AdminBlogDetailPage = lazyWithRetry(() => import('./components/admin/AdminBlogDetailPage'));
+const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCommentList'));
+const AdminReviewList = lazyWithRetry(() => import('./components/admin/AdminReviewList'));
+const AdminRollercoinToken = lazyWithRetry(() => import('./components/admin/AdminRollercoinToken'));
+const AdminUserList = lazyWithRetry(() => import('./components/admin/AdminUserList'));
+const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
+const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
+const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
 const MergePage = lazyWithRetry(() => import('./components/MergePage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
+const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
+const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -319,7 +322,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260518.233956';
+  const CURRENT_CACHE_VERSION = '20260602.221931';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -895,10 +898,31 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   );
 }
 
-function App() {
+function MainLayoutWrapper() {
   return (
     <MainLayout>
+      <Outlet />
+    </MainLayout>
+  );
+}
+
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const isDashboard = location.pathname.includes('/admin/') || location.pathname.includes('/my-blogs');
+    (window as any)['ga-disable-G-VNK3N77NB2'] = isDashboard;
+  }, [location]);
+
+  return null;
+}
+
+function App() {
+  return (
+    <>
+      <AnalyticsTracker />
       <Routes>
+      <Route element={<MainLayoutWrapper />}>
         <Route path="/" element={<AutoRedirect />} />
         <Route path="/:lang" element={<CalculatorArea />} />
         <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
@@ -907,25 +931,34 @@ function App() {
         <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
         <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
         <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
-        <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
-        <Route path="/:lang/guides/f2p-strategy" element={<React.Suspense fallback={null}><F2PGuide /></React.Suspense>} />
-        <Route path="/:lang/guides/bonus-power" element={<React.Suspense fallback={null}><BonusPowerGuide /></React.Suspense>} />
-        <Route path="/:lang/guides/marketplace-arbitrage" element={<React.Suspense fallback={null}><MarketplaceArbitrageGuide /></React.Suspense>} />
-        <Route path="/:lang/guides/mining-power" element={<React.Suspense fallback={null}><MiningPowerGuide /></React.Suspense>} />
-        <Route path="/:lang/guides/calculation-logic" element={<React.Suspense fallback={null}><CalculationLogicGuide /></React.Suspense>} />
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
         <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
         <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
         <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
-        <Route path="/:lang/blog/what-is-rollercoin" element={<React.Suspense fallback={null}><WhatIsRollercoin /></React.Suspense>} />
-        <Route path="/:lang/blog/league-system-explained" element={<React.Suspense fallback={null}><LeagueSystemExplained /></React.Suspense>} />
-        <Route path="/:lang/blog/marketplace-trading-guide" element={<React.Suspense fallback={null}><MarketplaceTradingGuide /></React.Suspense>} />
-        <Route path="/:lang/blog/most-profitable-coin" element={<React.Suspense fallback={null}><MostProfitableCoin /></React.Suspense>} />
-        <Route path="/:lang/blog/beginners-complete-guide" element={<React.Suspense fallback={null}><BeginnersCompleteGuide /></React.Suspense>} />
+        <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />
+        <Route path="/:lang/author/:userId" element={<React.Suspense fallback={null}><AuthorBlogList /></React.Suspense>} />
+        <Route path="/:lang/login" element={<React.Suspense fallback={null}><LoginPage /></React.Suspense>} />
+        <Route path="/:lang/register" element={<React.Suspense fallback={null}><RegisterPage /></React.Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </MainLayout>
+      </Route>
+
+      {/* Dashboard Routes without MainLayout */}
+      <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
+      
+      <Route path="/:lang/admin/blogs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/blogs/detail/:blogId" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogDetailPage /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+    </Routes>
+    </>
   );
 }
 

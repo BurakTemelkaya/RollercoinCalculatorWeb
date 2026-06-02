@@ -135,11 +135,14 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             // Let's assume the API 'racks' field corresponds to flat Rack Power for now, 
             // or if it was included in base miners, we might need to separate it.
             // For now, let's just populate it if it exists distinct from miners.
-            if (fetchedUser.userPowerResponseDto.racks) {
-                const racksHashes = fetchedUser.userPowerResponseDto.racks * 1e9;
+            const racksRawGh = fetchedUser.userPowerResponseDto.racks || 0;
+            if (racksRawGh > 0) {
+                const racksHashes = racksRawGh * 1e9;
                 const racksScaled = autoScalePower(racksHashes);
                 setStatRackPower(racksScaled.value.toFixed(3));
                 setStatRackUnit(racksScaled.unit);
+            } else {
+                setStatRackPower('0');
             }
 
             // gamesRawGh already declared above

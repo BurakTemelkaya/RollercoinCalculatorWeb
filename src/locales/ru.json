@@ -10,7 +10,8 @@
         "charts": "Графики",
         "events": "События",
         "merges": "Крафт",
-        "blog": "Блог"
+        "blog": "Блог",
+        "myBlogs": "Мои Блоги"
     },
     "lpp": {
         "title": "Распределение мощности лиги",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} событий",
         "latest": "Последнее",
         "viewDetails": "Детали",
-        "noEvents": "События не найдены."
+        "noEvents": "События не найдены.",
+        "tokenDiscounts": "Скидки на Токены",
+        "discountAmount": "Скидка {{amount}}%",
+        "discountExpires": "Истекает: {{date}}",
+        "discountActive": "Активно",
+        "discountExpired": "Истекло",
+        "noDiscounts": "Нет активных скидок",
+        "tokenDiscountGroup": "Скидки на Токены",
+        "discountEndsIn": "Осталось: {{time}}"
     },
     "pagination": {
         "previous": "Назад",
@@ -485,5 +494,70 @@
         "btn2": "Читать тактику мощности →",
         "btn3": "Читать гайд F2P →",
         "btn4": "Часто задаваемые вопросы →"
+    },
+    "auth": {
+        "login": "Войти",
+        "register": "Регистрация",
+        "logout": "Выйти",
+        "email": "Эл. почта",
+        "name": "Имя",
+        "namePlaceholder": "Введите ваше имя",
+        "password": "Пароль",
+        "confirmPassword": "Подтвердите пароль",
+        "loginTitle": "Вход",
+        "loginSubtitle": "С возвращением! Введите свои учетные данные для продолжения.",
+        "registerTitle": "Создать аккаунт",
+        "registerSubtitle": "Присоединяйтесь к нам и начните отслеживать свои доходы.",
+        "noAccount": "Нет аккаунта?",
+        "hasAccount": "Уже есть аккаунт?",
+        "loginError": "Ошибка входа. Пожалуйста, проверьте ваши данные.",
+        "registerError": "Ошибка регистрации. Пожалуйста, попробуйте снова.",
+        "fillAllFields": "Пожалуйста, заполните все поля.",
+        "passwordMismatch": "Пароли не совпадают.",
+        "passwordTooShort": "Пароль должен содержать не менее 6 символов.",
+        "loggingIn": "Вход...",
+        "registering": "Создание аккаунта...",
+        "sessionExpired": "Сессия истекла. Пожалуйста, войдите снова.",
+        "emailPlaceholder": "ваш@email.com",
+        "passwordPlaceholder": "Введите пароль",
+        "confirmPasswordPlaceholder": "Введите пароль еще раз",
+        "turnstileRequired": "Пожалуйста, пройдите проверку безопасности."
+    },
+    "blog": {
+        "myBlogsDesc": "Все посты, которые вы написали."
+    },
+    "author": {
+        "blogCreatedPending": "Ваш блог был отправлен и ожидает одобрения администратора."
+    },
+    "admin": {
+        "createNewBlog": "Создать Новый Блог",
+        "all": "Все",
+        "pending": "В ожидании",
+        "approved": "Одобрено",
+        "rejected": "Отклонено",
+        "edit": "Редактировать",
+        "createBlog": "Новый Блог",
+        "editBlog": "Редактировать Блог",
+        "blogThumbnail": "Миниатюра",
+        "thumbnailUrlPlaceholder": "Или вставьте URL картинки...",
+        "mainLanguage": "Основной Язык",
+        "save": "Сохранить",
+        "saving": "Сохранение...",
+        "blogCreated": "Блог успешно создан!",
+        "blogUpdated": "Блог успешно обновлен!",
+        "uploadImage": "Загрузить Изображение",
+        "uploading": "Загрузка...",
+        "insertImage": "Вставить Изображение",
+        "uploadError": "Ошибка загрузки.",
+        "fillAtLeastOne": "Пожалуйста, заполните хотя бы один язык.",
+        "mainLanguageRequired": "Необходимо выбрать основной язык.",
+        "thumbnailRequired": "Требуется изображение миниатюры.",
+        "saveError": "Ошибка при сохранении.",
+        "blogTitle": "Заголовок",
+        "blogContent": "Содержание",
+        "blogSlug": "URL-адрес (Slug)",
+        "autoSlug": "Авто",
+        "titlePlaceholder": "Введите заголовок...",
+        "slugPlaceholder": "url-druzhelyubnyy"
     }
 }

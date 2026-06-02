@@ -51,7 +51,7 @@ export default function ProgressionEventHistory() {
     const [data, setData] = useState<PaginatedResponse<ProgressionEventListItem> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const dateLocale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
+    const dateLocale = i18n.language || 'en-US';
 
     useEffect(() => {
         const load = async () => {

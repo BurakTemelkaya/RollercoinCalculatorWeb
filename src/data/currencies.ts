@@ -177,3 +177,23 @@ export function getCurrencyConfig(codeOrName: string): CurrencyConfig | undefine
         c.balance_key === key
     );
 }
+
+/**
+ * Maps backend currency IDs to display names.
+ * These IDs correspond to the ApiCurrency.id field from league data.
+ */
+export const CURRENCY_ID_MAP: Record<number, string> = {
+    1: 'RLT',
+    2: 'RST',
+    3: 'BTC',
+    4: 'LTC',
+    5: 'BNB',
+    6: 'MATIC',
+    7: 'XRP',
+    8: 'DOGE',
+    9: 'ETH',
+    10: 'TRX',
+    11: 'SOL',
+    12: 'ALGO',
+    13: 'HMT',
+};

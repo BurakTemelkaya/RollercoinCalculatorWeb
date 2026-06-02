@@ -10,7 +10,8 @@
         "charts": "Graphiques",
         "events": "Événements",
         "merges": "Fusions",
-        "blog": "Blog"
+        "blog": "Blog",
+        "myBlogs": "Mes Blogs"
     },
     "lpp": {
         "title": "Répartition de la Puissance",
@@ -388,7 +389,15 @@
         "totalEvents": "{{count}} événements",
         "latest": "Dernier",
         "viewDetails": "Détails",
-        "noEvents": "Aucun événement."
+        "noEvents": "Aucun événement.",
+        "tokenDiscounts": "Réductions de Jetons",
+        "discountAmount": "Réduction de {{amount}}%",
+        "discountExpires": "Expire : {{date}}",
+        "discountActive": "Actif",
+        "discountExpired": "Expiré",
+        "noDiscounts": "Aucune réduction active",
+        "tokenDiscountGroup": "Réductions de Jetons",
+        "discountEndsIn": "Se termine dans : {{time}}"
     },
     "pagination": {
         "previous": "Précédent",
@@ -485,5 +494,70 @@
         "btn2": "Lire les Tactiques de Puissance →",
         "btn3": "Lire le Guide F2P →",
         "btn4": "Foire Aux Questions →"
+    },
+    "auth": {
+        "login": "Se connecter",
+        "register": "S'inscrire",
+        "logout": "Se déconnecter",
+        "email": "E-mail",
+        "name": "Nom",
+        "namePlaceholder": "Entrez votre nom",
+        "password": "Mot de passe",
+        "confirmPassword": "Confirmer le mot de passe",
+        "loginTitle": "Se connecter",
+        "loginSubtitle": "Bon retour ! Entrez vos identifiants pour continuer.",
+        "registerTitle": "Créer un compte",
+        "registerSubtitle": "Rejoignez-nous et commencez à suivre vos gains.",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "hasAccount": "Vous avez déjà un compte ?",
+        "loginError": "Échec de la connexion. Veuillez vérifier vos identifiants.",
+        "registerError": "Échec de l'inscription. Veuillez réessayer.",
+        "fillAllFields": "Veuillez remplir tous les champs.",
+        "passwordMismatch": "Les mots de passe ne correspondent pas.",
+        "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères.",
+        "loggingIn": "Connexion en cours...",
+        "registering": "Création du compte...",
+        "sessionExpired": "Session expirée. Veuillez vous reconnecter.",
+        "emailPlaceholder": "votre@email.com",
+        "passwordPlaceholder": "Entrez votre mot de passe",
+        "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+        "turnstileRequired": "Veuillez compléter la vérification de sécurité."
+    },
+    "blog": {
+        "myBlogsDesc": "Tous les articles que vous avez écrits."
+    },
+    "author": {
+        "blogCreatedPending": "Votre blog a été soumis et est en attente d'approbation."
+    },
+    "admin": {
+        "createNewBlog": "Créer un Nouveau Blog",
+        "all": "Tous",
+        "pending": "En attente",
+        "approved": "Approuvé",
+        "rejected": "Rejeté",
+        "edit": "Modifier",
+        "createBlog": "Nouveau Blog",
+        "editBlog": "Modifier le Blog",
+        "blogThumbnail": "Miniature",
+        "thumbnailUrlPlaceholder": "Ou collez l'URL de l'image...",
+        "mainLanguage": "Langue Principale",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "blogCreated": "Blog créé avec succès !",
+        "blogUpdated": "Blog mis à jour avec succès !",
+        "uploadImage": "Télécharger une Image",
+        "uploading": "Téléchargement...",
+        "insertImage": "Insérer une Image",
+        "uploadError": "Échec du téléchargement.",
+        "fillAtLeastOne": "Veuillez remplir au moins une langue.",
+        "mainLanguageRequired": "La sélection de la langue principale est requise.",
+        "thumbnailRequired": "Une image miniature est requise.",
+        "saveError": "Échec de l'enregistrement.",
+        "blogTitle": "Titre",
+        "blogContent": "Contenu",
+        "blogSlug": "Slug de l'URL",
+        "autoSlug": "Auto",
+        "titlePlaceholder": "Entrez le titre du blog...",
+        "slugPlaceholder": "slug-url-convivial"
     }
 }
