@@ -106,7 +106,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <meta property="og:description" content={t('seo.description')} />
               <meta property="og:url" content={currentUrl} />
               <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:card" content="summary" />
               <meta name="twitter:title" content={t('seo.title')} />
               <meta name="twitter:description" content={t('seo.description')} />
               <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

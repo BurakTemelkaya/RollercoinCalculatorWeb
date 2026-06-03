@@ -15,7 +15,7 @@ const MarketplaceArbitrageGuideTR = () => {
         <meta property="og:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Marketplace Arbitrage Guide" />
         <meta name="twitter:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
@@ -62,7 +62,7 @@ const MarketplaceArbitrageGuideEN = () => {
         <meta property="og:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/marketplace-arbitrage`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Marketplace Arbitrage Guide" />
         <meta name="twitter:description" content="Multiply RLT with smart marketplace trading and parts arbitrage." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

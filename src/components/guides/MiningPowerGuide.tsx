@@ -14,7 +14,7 @@ const MiningPowerGuideTR = () => {
         <meta property="og:description" content="Best strategies to increase hash power and double passive income." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Mining Power Guide 2026" />
         <meta name="twitter:description" content="Best strategies to increase hash power and double passive income." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
@@ -71,7 +71,7 @@ const MiningPowerGuideEN = () => {
         <meta property="og:description" content="Best strategies to increase hash power and double passive income." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/mining-power`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Mining Power Guide 2026" />
         <meta name="twitter:description" content="Best strategies to increase hash power and double passive income." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

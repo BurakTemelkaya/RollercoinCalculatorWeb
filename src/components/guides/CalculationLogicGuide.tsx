@@ -14,7 +14,7 @@ const CalculationLogicGuideTR = () => {
         <meta property="og:description" content="Network sharing logic, block rewards, and Binance API pricing." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Calculation Logic and Formulas" />
         <meta name="twitter:description" content="Network sharing logic, block rewards, and Binance API pricing." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
@@ -77,7 +77,7 @@ const CalculationLogicGuideEN = () => {
         <meta property="og:description" content="Network sharing logic, block rewards, and Binance API pricing." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/calculation-logic`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Calculation Logic and Formulas" />
         <meta name="twitter:description" content="Network sharing logic, block rewards, and Binance API pricing." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

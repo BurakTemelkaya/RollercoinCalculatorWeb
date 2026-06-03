@@ -87,7 +87,7 @@ export default function ProgressionEventHistory() {
                 <meta property="og:description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
                 <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event/history`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('event.eventHistory')} | RollerCoin Calculator`} />
                 <meta name="twitter:description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
                 <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

@@ -103,7 +103,7 @@ export default function DailyBonusQuestHistory() {
                 <meta property="og:description" content={t('dailyQuest.historyDesc', 'History of past RollerCoin Daily Bonus Quests')} />
                 <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/daily-quests`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('dailyQuest.questHistory')} | RollerCoin Calculator`} />
                 <meta name="twitter:description" content={t('dailyQuest.historyDesc', 'History of past RollerCoin Daily Bonus Quests')} />
                 <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

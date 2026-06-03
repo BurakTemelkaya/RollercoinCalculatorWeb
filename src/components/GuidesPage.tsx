@@ -15,7 +15,7 @@ const GuidesPageTR = () => {
         <meta property="og:description" content="Yeni Başlayanlar İçin RollerCoin Rehberi. Yatırımsız kazanç yolları, bonus güç hesaplamaları ve pazar yeri arbitraj taktikleri." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin Rehberi: Stratejiler ve Taktikler" />
         <meta name="twitter:description" content="Yeni Başlayanlar İçin RollerCoin Rehberi. Yatırımsız kazanç yolları ve ileri düzey stratejiler." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
@@ -78,7 +78,7 @@ const GuidesPageEN = () => {
         <meta property="og:description" content={t('seo.description')} />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${t('pages.guides.title')} | ${t('app.title')}`} />
         <meta name="twitter:description" content={t('seo.description')} />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

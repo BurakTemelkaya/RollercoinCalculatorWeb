@@ -399,7 +399,7 @@ export default function MergePage() {
                 <meta property="og:description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
                 <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/merge`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('merge.title')} | RollerCoin Calculator`} />
                 <meta name="twitter:description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
                 <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

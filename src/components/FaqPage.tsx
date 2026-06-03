@@ -33,7 +33,7 @@ export default function FaqPage() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/faq`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </>

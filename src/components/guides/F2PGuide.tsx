@@ -15,7 +15,7 @@ const F2PGuideTR = () => {
         <meta property="og:description" content="RollerCoin'e dışarıdan reel para yatırmadan ciddi bir kazanç düzeyine ulaşmak için strateji rehberi." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin F2P Rehberi" />
         <meta name="twitter:description" content="Sıfırdan yatırımsız kazanç stratejisi." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
@@ -69,7 +69,7 @@ const F2PGuideEN = () => {
         <meta property="og:description" content="Reach serious earnings in RollerCoin without investing real money. Daily gaming routine, PC Level strategy, and Reinvest tips." />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/guides/f2p-strategy`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="RollerCoin F2P Guide" />
         <meta name="twitter:description" content="Free-to-Play earning path strategy guide." />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

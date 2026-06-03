@@ -500,7 +500,7 @@ export default function LeagueChart() {
                 <meta property="og:description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
                 <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/league-chart`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('charts.title')} | RollerCoin Calculator`} />
                 <meta name="twitter:description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
                 <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />

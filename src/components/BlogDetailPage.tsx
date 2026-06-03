@@ -128,7 +128,7 @@ export default function BlogDetailPage() {
         <meta property="og:description" content={content.content.substring(0, 160).replace(/[#*_\[\]<>/]/g, '')} />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/blog/${slug}`} />
         <meta property="og:image" content={blog.thumbnailImageUrl || 'https://rollercoincalculator.app/icon.png'} />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${content.title} | Rollercoin Calculator`} />
         <meta name="twitter:description" content={content.content.substring(0, 160).replace(/[#*_\[\]<>/]/g, '')} />
         <meta name="twitter:image" content={blog.thumbnailImageUrl || 'https://rollercoincalculator.app/icon.png'} />

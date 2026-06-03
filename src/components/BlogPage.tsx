@@ -112,7 +112,7 @@ export default function BlogPage() {
         <meta property="og:description" content={t('blog.seoDescription')} />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/blog`} />
         <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={t('blog.title') + " | Rollercoin Calculator"} />
         <meta name="twitter:description" content={t('blog.seoDescription')} />
         <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
