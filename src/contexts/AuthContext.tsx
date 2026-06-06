@@ -29,6 +29,7 @@ interface AuthContextType {
   register: (dto: UserForRegisterDto, turnstileToken: string) => Promise<LoginResponse>;
   logout: () => Promise<void>;
   getValidToken: () => Promise<string | null>;
+  loginWithToken: (token: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -234,6 +235,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [accessToken, clearSession, scheduleRefresh]);
 
+  /**
+   * Login directly with an access token string (e.g. after password reset).
+   */
+  const loginWithToken = useCallback((token: string) => {
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    setAccessToken(token);
+    try {
+      const decoded = decodeJwt(token);
+      setUser(decoded);
+      scheduleRefresh(decoded.exp);
+    } catch (e) {
+      console.error('Failed to decode JWT:', e);
+      clearSession();
+    }
+  }, [scheduleRefresh, clearSession]);
+
   const value: AuthContextType = {
     user,
     accessToken,
@@ -244,6 +261,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     register,
     logout,
     getValidToken,
+    loginWithToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -14,6 +14,10 @@ import type {
   AccessToken,
   AuthUser,
   JWT_CLAIMS,
+  ForgotPasswordRequestDto,
+  ForgotPasswordResponse,
+  ForgotPasswordResetDto,
+  ForgotPasswordResetResponse,
 } from '../types/auth';
 
 const AUTH_BASE = '/api/Auth';
@@ -76,6 +80,38 @@ export async function revokeToken(token: string): Promise<void> {
     },
     credentials: 'include',
   });
+}
+
+/**
+ * Request a password reset code to be sent to the user's email.
+ * Returns creation and expiration timestamps for the reset code.
+ */
+export async function forgotPassword(dto: ForgotPasswordRequestDto, turnstileToken: string): Promise<ForgotPasswordResponse> {
+  const url = buildApiUrl(`${AUTH_BASE}/ForgotPassword`);
+  const response = await apiFetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dto),
+    turnstileToken,
+  });
+  return response.json() as Promise<ForgotPasswordResponse>;
+}
+
+/**
+ * Reset password using the code sent to email.
+ * Returns a new access token upon success (user is automatically logged in).
+ * Backend also sets a new refresh token cookie.
+ */
+export async function forgotPasswordReset(dto: ForgotPasswordResetDto, turnstileToken: string): Promise<ForgotPasswordResetResponse> {
+  const url = buildApiUrl(`${AUTH_BASE}/ForgotPasswordUpdate`);
+  const response = await apiFetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dto),
+    credentials: 'include', // for httpOnly refresh token cookie
+    turnstileToken,
+  });
+  return response.json() as Promise<ForgotPasswordResetResponse>;
 }
 
 /**

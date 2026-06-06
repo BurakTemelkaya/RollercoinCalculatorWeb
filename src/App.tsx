@@ -56,6 +56,7 @@ const BlogPage = lazyWithRetry(() => import('./components/BlogPage'));
 const BlogDetailPage = lazyWithRetry(() => import('./components/BlogDetailPage'));
 const LoginPage = lazyWithRetry(() => import('./components/auth/LoginPage'));
 const RegisterPage = lazyWithRetry(() => import('./components/auth/RegisterPage'));
+const ForgotPasswordPage = lazyWithRetry(() => import('./components/auth/ForgotPasswordPage'));
 const AdminBlogList = lazyWithRetry(() => import('./components/admin/AdminBlogList'));
 const AdminBlogDetailPage = lazyWithRetry(() => import('./components/admin/AdminBlogDetailPage'));
 const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCommentList'));
@@ -322,7 +323,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260603.033155';
+  const CURRENT_CACHE_VERSION = '20260606.213326';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -940,6 +941,7 @@ function App() {
         <Route path="/:lang/author/:userId" element={<React.Suspense fallback={null}><AuthorBlogList /></React.Suspense>} />
         <Route path="/:lang/login" element={<React.Suspense fallback={null}><LoginPage /></React.Suspense>} />
         <Route path="/:lang/register" element={<React.Suspense fallback={null}><RegisterPage /></React.Suspense>} />
+        <Route path="/:lang/forgot-password" element={<React.Suspense fallback={null}><ForgotPasswordPage /></React.Suspense>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
 

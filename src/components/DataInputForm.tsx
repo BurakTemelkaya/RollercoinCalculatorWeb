@@ -172,7 +172,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             // Match: https://rollercoin.com/p/USERNAME or /p/USERNAME/games etc
             const match = link.match(/\/p\/([^\/\s]+)/);
             if (match && match[1]) {
-                return match[1].toUpperCase();
+                return match[1];
             }
             return null;
         } catch {
@@ -269,345 +269,345 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
     return (
         <>
-        <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
-            <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
-                <div className="header-left">
-                    <span className="section-icon">⚙️</span>
-                    <h2 className="section-title">{t('input.title')}</h2>
-                </div>
+            <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
+                    <div className="header-left">
+                        <span className="section-icon">⚙️</span>
+                        <h2 className="section-title">{t('input.title')}</h2>
+                    </div>
 
-                {!isExpanded && currentCoins.length > 0 && (
-                    <div className="collapsed-summary">
-                        {(displayPower || currentUserPower) && (
-                            <div className="summary-chip power">
-                                <span className="chip-icon">⚡</span>
+                    {!isExpanded && currentCoins.length > 0 && (
+                        <div className="collapsed-summary">
+                            {(displayPower || currentUserPower) && (
+                                <div className="summary-chip power">
+                                    <span className="chip-icon">⚡</span>
+                                    <span className="chip-value">
+                                        {(displayPower || currentUserPower)!.value.toLocaleString(undefined, { maximumFractionDigits: 4 })} {(displayPower || currentUserPower)!.unit}/s
+                                    </span>
+                                </div>
+                            )}
+                            <div className="summary-chip league">
                                 <span className="chip-value">
-                                    {(displayPower || currentUserPower)!.value.toLocaleString(undefined, { maximumFractionDigits: 4 })} {(displayPower || currentUserPower)!.unit}/s
+                                    <img
+                                        src={getLeagueImage(currentLeague.id)}
+                                        className="league-icon-summary"
+                                        alt={`${currentLeague.name} League`}
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.onerror = null;
+                                            target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                                            target.style.display = 'none';
+                                        }}
+                                    />
+                                    {currentLeague.name}
                                 </span>
                             </div>
-                        )}
-                        <div className="summary-chip league">
-                            <span className="chip-value">
-                                <img
-                                    src={getLeagueImage(currentLeague.id)}
-                                    className="league-icon-summary"
-                                    alt={`${currentLeague.name} League`}
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement;
-                                        target.onerror = null;
-                                        target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                                        target.style.display = 'none';
-                                    }}
-                                />
-                                {currentLeague.name}
-                            </span>
+                            <div className="summary-chip success">
+                                <span className="chip-icon">📊</span>
+                                <span className="chip-value">{currentCoins.length} coins</span>
+                            </div>
                         </div>
-                        <div className="summary-chip success">
-                            <span className="chip-icon">📊</span>
-                            <span className="chip-value">{currentCoins.length} coins</span>
-                        </div>
+                    )}
+
+                    <div className={`header-arrow ${isExpanded ? 'rotated' : ''}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </div>
-                )}
-
-                <div className={`header-arrow ${isExpanded ? 'rotated' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
                 </div>
-            </div>
 
-            <div className={`accordion-wrapper ${isExpanded ? 'open' : ''}`}>
-                <div className="accordion-inner">
-                    <div className="input-content-padding">
-                        <div className="desktop-3-up">
-                            <div className="input-group">
-                                <div className="fetch-mode-selector">
-                                    <div
-                                        className="mode-tab-bg"
-                                        style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
-                                    />
-                                    <button
-                                        className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
-                                        onClick={() => setFetchMode('username')}
-                                    >
-                                        {t('input.byUsername')}
-                                    </button>
-                                    <button
-                                        className={`mode-tab ${fetchMode === 'power' ? 'active' : ''}`}
-                                        onClick={() => setFetchMode('power')}
-                                    >
-                                        {t('input.byPower')}
-                                    </button>
-                                </div>
+                <div className={`accordion-wrapper ${isExpanded ? 'open' : ''}`}>
+                    <div className="accordion-inner">
+                        <div className="input-content-padding">
+                            <div className="desktop-3-up">
+                                <div className="input-group">
+                                    <div className="fetch-mode-selector">
+                                        <div
+                                            className="mode-tab-bg"
+                                            style={{ transform: fetchMode === 'username' ? 'translateX(0)' : 'translateX(100%)' }}
+                                        />
+                                        <button
+                                            className={`mode-tab ${fetchMode === 'username' ? 'active' : ''}`}
+                                            onClick={() => setFetchMode('username')}
+                                        >
+                                            {t('input.byUsername')}
+                                        </button>
+                                        <button
+                                            className={`mode-tab ${fetchMode === 'power' ? 'active' : ''}`}
+                                            onClick={() => setFetchMode('power')}
+                                        >
+                                            {t('input.byPower')}
+                                        </button>
+                                    </div>
 
-                                <div className="api-fetch-row">
-                                    {fetchMode === 'username' ? (
-                                        <div className="username-input-with-help flex-grow-input" ref={tooltipRef}>
-                                            <input
-                                                type="text"
-                                                placeholder={t('input.usernamePlaceholder')}
-                                                value={localUserName}
-                                                onChange={(e) => setLocalUserName(e.target.value)}
-                                                onBlur={() => setGlobalUserName(localUserName)}
-                                                className="power-value-input"
-                                                onKeyDown={async (e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        await handleFetchAction();
-                                                    }
-                                                }}
-                                            />
-                                            <button
-                                                type="button"
-                                                className="username-help-btn"
-                                                aria-label={t('input.usernameHelpAria')}
-                                                onMouseEnter={() => {
-                                                    if (tooltipHoverTimerRef.current) {
-                                                        clearTimeout(tooltipHoverTimerRef.current);
-                                                    }
-                                                    tooltipHoverTimerRef.current = setTimeout(() => {
-                                                        setIsTooltipOpen(true);
-                                                    }, 2000);
-                                                }}
-                                                onMouseLeave={() => {
-                                                    if (tooltipHoverTimerRef.current) {
-                                                        clearTimeout(tooltipHoverTimerRef.current);
-                                                    }
-                                                }}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    if (tooltipHoverTimerRef.current) {
-                                                        clearTimeout(tooltipHoverTimerRef.current);
-                                                    }
-                                                    setIsTooltipOpen(!isTooltipOpen);
-                                                }}
-                                            >
-                                                ?
-                                            </button>
-                                            <div className={`username-help-tooltip ${isTooltipOpen ? 'open' : ''}`} role="tooltip">
-                                                {errorMessage && (
-                                                    <div style={{ 
-                                                        color: '#ef4444', 
-                                                        fontSize: '13px', 
-                                                        fontWeight: '600',
-                                                        marginBottom: '10px',
-                                                        padding: '8px 10px',
-                                                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                                        borderRadius: '4px'
-                                                    }}>
-                                                        ⚠️ {errorMessage}
-                                                    </div>
-                                                )}
-                                                <div className="help-title">{t('input.usernameHelpTitle')}</div>
-                                                <div className="help-text">{t('input.usernameHelpText')}</div>
-                                                <div 
-                                                    className="image-viewer-container"
+                                    <div className="api-fetch-row">
+                                        {fetchMode === 'username' ? (
+                                            <div className="username-input-with-help flex-grow-input" ref={tooltipRef}>
+                                                <input
+                                                    type="text"
+                                                    placeholder={t('input.usernamePlaceholder')}
+                                                    value={localUserName}
+                                                    onChange={(e) => setLocalUserName(e.target.value)}
+                                                    onBlur={() => setGlobalUserName(localUserName)}
+                                                    className="power-value-input"
+                                                    onKeyDown={async (e) => {
+                                                        if (e.key === 'Enter') {
+                                                            e.preventDefault();
+                                                            await handleFetchAction();
+                                                        }
+                                                    }}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="username-help-btn"
+                                                    aria-label={t('input.usernameHelpAria')}
+                                                    onMouseEnter={() => {
+                                                        if (tooltipHoverTimerRef.current) {
+                                                            clearTimeout(tooltipHoverTimerRef.current);
+                                                        }
+                                                        tooltipHoverTimerRef.current = setTimeout(() => {
+                                                            setIsTooltipOpen(true);
+                                                        }, 2000);
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        if (tooltipHoverTimerRef.current) {
+                                                            clearTimeout(tooltipHoverTimerRef.current);
+                                                        }
+                                                    }}
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
-                                                        setIsImageViewerOpen(true);
+                                                        if (tooltipHoverTimerRef.current) {
+                                                            clearTimeout(tooltipHoverTimerRef.current);
+                                                        }
+                                                        setIsTooltipOpen(!isTooltipOpen);
                                                     }}
-                                                    style={{ cursor: 'pointer', position: 'relative', display: 'inline-block', width: '100%' }}
                                                 >
-                                                    <img
-                                                        src={findUsernameImage}
-                                                        alt={t('input.usernameHelpPreviewTitle')}
-                                                        className="username-help-preview-image"
-                                                    />
-                                                    <div className="zoom-icon" style={{
-                                                        position: 'absolute',
-                                                        top: '50%',
-                                                        left: '50%',
-                                                        transform: 'translate(-50%, -50%)',
-                                                        fontSize: '36px',
-                                                        opacity: '0.5',
-                                                        transition: 'opacity 0.2s ease',
-                                                        pointerEvents: 'none',
-                                                        textShadow: '0 0 8px rgba(0,0,0,0.7)'
-                                                    }}>
-                                                        🔍
+                                                    ?
+                                                </button>
+                                                <div className={`username-help-tooltip ${isTooltipOpen ? 'open' : ''}`} role="tooltip">
+                                                    {errorMessage && (
+                                                        <div style={{
+                                                            color: '#ef4444',
+                                                            fontSize: '13px',
+                                                            fontWeight: '600',
+                                                            marginBottom: '10px',
+                                                            padding: '8px 10px',
+                                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                            borderRadius: '4px'
+                                                        }}>
+                                                            ⚠️ {errorMessage}
+                                                        </div>
+                                                    )}
+                                                    <div className="help-title">{t('input.usernameHelpTitle')}</div>
+                                                    <div className="help-text">{t('input.usernameHelpText')}</div>
+                                                    <div
+                                                        className="image-viewer-container"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            setIsImageViewerOpen(true);
+                                                        }}
+                                                        style={{ cursor: 'pointer', position: 'relative', display: 'inline-block', width: '100%' }}
+                                                    >
+                                                        <img
+                                                            src={findUsernameImage}
+                                                            alt={t('input.usernameHelpPreviewTitle')}
+                                                            className="username-help-preview-image"
+                                                        />
+                                                        <div className="zoom-icon" style={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
+                                                            fontSize: '36px',
+                                                            opacity: '0.5',
+                                                            transition: 'opacity 0.2s ease',
+                                                            pointerEvents: 'none',
+                                                            textShadow: '0 0 8px rgba(0,0,0,0.7)'
+                                                        }}>
+                                                            🔍
+                                                        </div>
+                                                    </div>
+
+                                                    <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                        <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                                                            {t('input.orPasteProfileLink')}
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder="https://rollercoin.com/p/YOUR_USERNAME"
+                                                            value={profileLinkInput}
+                                                            onChange={handleProfileLinkPaste}
+                                                            style={{
+                                                                padding: '8px 10px',
+                                                                background: 'var(--bg-primary)',
+                                                                border: '1px solid var(--border-color)',
+                                                                borderRadius: 'var(--radius-sm)',
+                                                                color: 'var(--text-primary)',
+                                                                fontSize: '12px',
+                                                            }}
+                                                            className="username-link-input"
+                                                        />
+                                                    </div>
+
+                                                    <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
+                                                        <a
+                                                            href="https://rollercoin.com/profile/personal-profile"
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="help-link"
+                                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                        >
+                                                            📂 {t('input.usernameHelpLink')}
+                                                        </a>
                                                     </div>
                                                 </div>
-                                                
-                                                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>
-                                                        {t('input.orPasteProfileLink')}
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="https://rollercoin.com/p/YOUR_USERNAME"
-                                                        value={profileLinkInput}
-                                                        onChange={handleProfileLinkPaste}
-                                                        style={{
-                                                            padding: '8px 10px',
-                                                            background: 'var(--bg-primary)',
-                                                            border: '1px solid var(--border-color)',
-                                                            borderRadius: 'var(--radius-sm)',
-                                                            color: 'var(--text-primary)',
-                                                            fontSize: '12px',
-                                                        }}
-                                                        className="username-link-input"
-                                                    />
-                                                </div>
-
-                                                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
-                                                    <a
-                                                        href="https://rollercoin.com/profile/personal-profile"
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="help-link"
-                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                                    >
-                                                        📂 {t('input.usernameHelpLink')}
-                                                    </a>
-                                                </div>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div className="power-input-container flex-grow-input">
-                                            <input
-                                                type="number"
-                                                placeholder="0"
-                                                value={powerValue}
-                                                onChange={(e) => setPowerValue(e.target.value)}
-                                                className="power-value-input"
-                                            />
-                                            <select
-                                                value={powerUnit}
-                                                onChange={(e) => setPowerUnit(e.target.value as PowerUnit)}
-                                                className="power-unit-select"
-                                            >
-                                                {units.map(u => <option key={u} value={u}>{u}</option>)}
-                                            </select>
-                                        </div>
-                                    )}
-
-                                    <button
-                                        className="fetch-btn"
-                                        onClick={handleFetchAction}
-                                        disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
-                                        title={t('input.fetchFromApi')}
-                                    >
-                                        {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
-                                            <span className="spinner small"></span>
-                                        ) : !canFetch ? (
-                                            <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
                                         ) : (
-                                            <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
+                                            <div className="power-input-container flex-grow-input">
+                                                <input
+                                                    type="number"
+                                                    placeholder="0"
+                                                    value={powerValue}
+                                                    onChange={(e) => setPowerValue(e.target.value)}
+                                                    className="power-value-input"
+                                                />
+                                                <select
+                                                    value={powerUnit}
+                                                    onChange={(e) => setPowerUnit(e.target.value as PowerUnit)}
+                                                    className="power-unit-select"
+                                                >
+                                                    {units.map(u => <option key={u} value={u}>{u}</option>)}
+                                                </select>
+                                            </div>
                                         )}
-                                        <span className="btn-text">
-                                            {currentCoins.length > 0 && canFetch ? t('input.fetchButton') : t('input.fetchAction')}
-                                        </span>
-                                    </button>
+
+                                        <button
+                                            className="fetch-btn"
+                                            onClick={handleFetchAction}
+                                            disabled={isFetchingUserLocal || isFetchingUser || isLoadingApi || (fetchMode === 'username' && !localUserName.trim()) || !canFetch}
+                                            title={t('input.fetchFromApi')}
+                                        >
+                                            {isFetchingUserLocal || isFetchingUser || isLoadingApi ? (
+                                                <span className="spinner small"></span>
+                                            ) : !canFetch ? (
+                                                <span className="cooldown-text">{Math.ceil(cooldownRemaining / 1000)}s</span>
+                                            ) : (
+                                                <span className="fetch-icon">{currentCoins.length > 0 ? '🔄' : '🚀'}</span>
+                                            )}
+                                            <span className="btn-text">
+                                                {currentCoins.length > 0 && canFetch ? t('input.fetchButton') : t('input.fetchAction')}
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="input-group">
-                                <label>{t('input.leagueSelect')}</label>
-                                <RadixSelect
-                                    value={currentLeague.id}
-                                    onValueChange={onLeagueChange}
-                                    disabled={isAutoLeague}
-                                    options={leaguesList.map(l => ({
-                                        value: l.id,
-                                        label: l.name,
-                                        icon: getLeagueImage(l.id),
-                                        iconAlt: `${l.name} League`
-                                    }))}
-                                    ariaLabel={t('input.leagueSelect')}
-                                    triggerClassName={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })}
-                                    showSelectedIcon={false}
-                                    fullWidth={true}
-                                />
-                            </div>
+                                <div className="input-group">
+                                    <label>{t('input.leagueSelect')}</label>
+                                    <RadixSelect
+                                        value={currentLeague.id}
+                                        onValueChange={onLeagueChange}
+                                        disabled={isAutoLeague}
+                                        options={leaguesList.map(l => ({
+                                            value: l.id,
+                                            label: l.name,
+                                            icon: getLeagueImage(l.id),
+                                            iconAlt: `${l.name} League`
+                                        }))}
+                                        ariaLabel={t('input.leagueSelect')}
+                                        triggerClassName={classNames("custom-dropdown-trigger", { disabled: isAutoLeague })}
+                                        showSelectedIcon={false}
+                                        fullWidth={true}
+                                    />
+                                </div>
 
-                            <div className="input-group">
-                                <label>&nbsp;</label>
-                                <label className="auto-toggle-inline" title="Güce göre otomatik belirle">
-                                    <input type="checkbox" checked={isAutoLeague} onChange={onToggleAutoLeague} />
-                                    <span>{t('input.auto')}</span>
-                                </label>
+                                <div className="input-group">
+                                    <label>&nbsp;</label>
+                                    <label className="auto-toggle-inline" title="Güce göre otomatik belirle">
+                                        <input type="checkbox" checked={isAutoLeague} onChange={onToggleAutoLeague} />
+                                        <span>{t('input.auto')}</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section >
+            </section >
 
-        {/* Image Viewer Modal */}
-        {isImageViewerOpen && (
-            <div 
-                className="image-viewer-modal"
-                onClick={() => setIsImageViewerOpen(false)}
-                style={{
-                    position: 'fixed',
-                    inset: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 10000,
-                    backdropFilter: 'blur(2px)',
-                }}
-            >
+            {/* Image Viewer Modal */}
+            {isImageViewerOpen && (
                 <div
-                    onClick={(e) => e.stopPropagation()}
+                    className="image-viewer-modal"
+                    onClick={() => setIsImageViewerOpen(false)}
                     style={{
-                        position: 'relative',
-                        maxWidth: '90vw',
-                        maxHeight: '85vh',
+                        position: 'fixed',
+                        inset: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        zIndex: 10000,
+                        backdropFilter: 'blur(2px)',
                     }}
                 >
-                    <img
-                        src={findUsernameImage}
-                        alt={t('input.usernameHelpPreviewTitle')}
+                    <div
+                        onClick={(e) => e.stopPropagation()}
                         style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: 'contain',
-                            borderRadius: 'var(--radius-md)',
-                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)',
-                        }}
-                    />
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsImageViewerOpen(false);
-                        }}
-                        style={{
-                            position: 'absolute',
-                            top: '-40px',
-                            right: '0',
-                            background: 'rgba(255, 255, 255, 0.2)',
-                            color: '#fff',
-                            border: 'none',
-                            width: '36px',
-                            height: '36px',
-                            borderRadius: '50%',
-                            fontSize: '24px',
-                            cursor: 'pointer',
+                            position: 'relative',
+                            maxWidth: '90vw',
+                            maxHeight: '85vh',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
                         }}
                     >
-                        ✕
-                    </button>
+                        <img
+                            src={findUsernameImage}
+                            alt={t('input.usernameHelpPreviewTitle')}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'contain',
+                                borderRadius: 'var(--radius-md)',
+                                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)',
+                            }}
+                        />
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setIsImageViewerOpen(false);
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: '-40px',
+                                right: '0',
+                                background: 'rgba(255, 255, 255, 0.2)',
+                                color: '#fff',
+                                border: 'none',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '50%',
+                                fontSize: '24px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
-            </div>
-        )}
+            )}
         </>
     );
 };

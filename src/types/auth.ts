@@ -106,3 +106,28 @@ export interface DeleteUserOperationClaimResponseDto {
   deletedDate: string;
 }
 
+/** Forgot Password - Step 1: Request reset code */
+export interface ForgotPasswordRequestDto {
+  createPasswordResetCodeDto: {
+    email: string;
+  };
+}
+
+export interface ForgotPasswordResponse {
+  createdDate: string;
+  expirationDate: string;
+}
+
+/** Forgot Password - Step 2: Reset password with code */
+export interface ForgotPasswordResetDto {
+  email: string;
+  resetCode: string;
+  newPassword: string;
+  ipAddress: string;
+}
+
+export interface ForgotPasswordResetResponse {
+  token: string;
+  expirationDate: string;
+}
+

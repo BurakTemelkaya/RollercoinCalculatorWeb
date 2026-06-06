@@ -158,6 +158,10 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <div className="auth-forgot-link">
+            <Link to={`/${lang || 'en'}/forgot-password`}>{t('auth.forgotPassword')}</Link>
+          </div>
+
           {hasSiteKey && (
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
               <Turnstile
