@@ -71,9 +71,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
   useEffect(() => {
     if (adsBlocked) return;
     const timer = setTimeout(() => {
-      if ((window as any).AdManager) {
-        (window as any).AdManager.loadAd('top-ad-container', '2435688', 320, 50);
-      }
+      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
+      const c_display_preferences: any = {};
+      c_display_preferences.zone = "4176a2678c2d7dc7660";
+      c_display_preferences.width = "320";
+      c_display_preferences.height = "50";
+      (window as any).coinzilla_display.push(c_display_preferences);
     }, 100);
     return () => clearTimeout(timer);
   }, [location.pathname, adsBlocked]);
@@ -222,7 +225,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <DailyBonusQuest />
               </React.Suspense>
               {!adsBlocked && (
-                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}></div>
+                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
+                  <div className="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
+                </div>
               )}
               {adsBlocked && (
                 <div className="adblocker-notice">

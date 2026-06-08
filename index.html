@@ -137,21 +137,12 @@
   </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6643171955921787"
     crossorigin="anonymous"></script>
+  <script async src="https://coinzillatag.com/lib/display.js"></script>
 
 
 </head>
 
 <body>
-  <!-- Global Ad Manager (A-Ads only) -->
-  <script>
-    window.AdManager = {
-      loadAd: function (containerId, aadsId, w, h) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '<iframe data-aa="' + aadsId + '" src="//ad.a-ads.com/' + aadsId + '/?size=' + w + 'x' + h + '&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:' + w + 'px; height:' + h + 'px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
-      }
-    };
-  </script>
 
   <!-- Top Banner Ad moved to MainLayout.tsx -->
 
@@ -163,9 +154,14 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <div id="left-side-ad" style="width: 160px; height: 600px;"></div>
+          <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
           <script>
-            window.AdManager.loadAd('left-side-ad', '2429727', 160, 600);
+                  window.coinzilla_display = window.coinzilla_display || [];
+                  var c_display_preferences = {};
+                  c_display_preferences.zone = "24569e7101752ae238";
+                  c_display_preferences.width = "160";
+                  c_display_preferences.height = "600";
+                  coinzilla_display.push(c_display_preferences);
           </script>
         </div>
       </div>
@@ -178,9 +174,15 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
         <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <iframe data-aa="2429727"
-            src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe"
-            style="border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin: 0 auto"></iframe>
+          <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
+          <script>
+                  window.coinzilla_display = window.coinzilla_display || [];
+                  var c_display_preferences_right = {};
+                  c_display_preferences_right.zone = "24569e7101752ae238";
+                  c_display_preferences_right.width = "160";
+                  c_display_preferences_right.height = "600";
+                  coinzilla_display.push(c_display_preferences_right);
+          </script>
         </div>
       </div>
     </div>
@@ -199,9 +201,14 @@
               points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 489.292,457.678 277.331,245.004 489.292,32.337 " />
           </svg>
         </label>
-        <div id="mobile-sticky-ad" style="width: 320px; height: 50px;"></div>
+        <div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
         <script>
-          window.AdManager.loadAd('mobile-sticky-ad', '2429728', 320, 50);
+                window.coinzilla_display = window.coinzilla_display || [];
+                var c_display_preferences_mobile = {};
+                c_display_preferences_mobile.zone = "4176a2678c2d7dc7660";
+                c_display_preferences_mobile.width = "320";
+                c_display_preferences_mobile.height = "50";
+                coinzilla_display.push(c_display_preferences_mobile);
         </script>
       </div>
     </div>
