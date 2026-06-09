@@ -384,7 +384,10 @@
             "battery": "电池",
             "miner": "矿机",
             "rack": "机架",
-            "utilityItem": "物品"
+            "utilityItem": "物品",
+            "mysteryBox": "Mystery Box",
+            "trophy": "Trophy",
+            "hat": "Hat"
         },
         "eventHistory": "活动历史",
         "viewHistory": "过去活动",
