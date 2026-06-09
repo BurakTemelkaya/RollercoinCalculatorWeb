@@ -384,7 +384,10 @@
             "battery": "Baterai",
             "miner": "Penambang",
             "rack": "Rak",
-            "utilityItem": "Barang Utilitas"
+            "utilityItem": "Barang Utilitas",
+            "mysteryBox": "Mystery Box",
+            "trophy": "Trophy",
+            "hat": "Hat"
         },
         "eventHistory": "Riwayat Acara",
         "viewHistory": "Acara Lalu",
