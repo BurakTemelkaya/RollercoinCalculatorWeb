@@ -196,4 +196,5 @@ export const CURRENCY_ID_MAP: Record<number, string> = {
     11: 'SOL',
     12: 'ALGO',
     13: 'HMT',
+    15: 'USDT',
 };
