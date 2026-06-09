@@ -384,7 +384,10 @@
             "battery": "Батарея",
             "miner": "Майнер",
             "rack": "Стойка",
-            "utilityItem": "Предмет"
+            "utilityItem": "Предмет",
+            "mysteryBox": "Mystery Box",
+            "trophy": "Trophy",
+            "hat": "Hat"
         },
         "eventHistory": "История событий",
         "viewHistory": "Прошлые события",
