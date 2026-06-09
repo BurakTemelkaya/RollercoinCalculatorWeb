@@ -223,16 +223,16 @@ export interface TaskData {
 
 // Currency discount from backend API
 export interface CurrencyDiscount {
-    id: string;
-    currencyId: number;
-    amount: number;
-    createdDate: string;
-    endDate: string;
-    updatedDate: string | null;
+  id: string;
+  currencyId: number;
+  amount: number;
+  createdDate: string;
+  endDate: string;
+  updatedDate: string | null;
 }
 
 // Box price options (fixed)
-export const BOX_PRICE_OPTIONS = [1.45, 3.45, 8.95] as const;
+export const BOX_PRICE_OPTIONS = [1.99, 3.99, 11.99, 29.99, 64.98, 129.99] as const;
 
 // Discount options (fixed)
 export const DISCOUNT_OPTIONS = [60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10] as const;
