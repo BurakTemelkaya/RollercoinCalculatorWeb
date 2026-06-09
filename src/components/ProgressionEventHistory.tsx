@@ -171,6 +171,11 @@ export default function ProgressionEventHistory() {
                                             </svg>
                                             {durationDays} {t('event.days')}
                                         </div>
+                                        {event.totalPoint != null && event.totalPoint > 0 && (
+                                            <div className="peh-card-duration peh-card-points" style={{ marginLeft: 'auto' }}>
+                                                🏆 {event.totalPoint.toLocaleString()}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="peh-card-action">
                                         {t('event.viewDetails')}

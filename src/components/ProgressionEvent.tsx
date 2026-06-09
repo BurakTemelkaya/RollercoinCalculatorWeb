@@ -8,12 +8,6 @@ import type {
     ProgressionReward,
     LevelConfig,
     MinerItem,
-    RackItem,
-    UtilityItem,
-    MutationComponentItem,
-    MysteryBoxItem,
-    TrophyItem,
-    HatItem,
     CurrencyDiscount,
 } from '../types/progressionEvent';
 import {
@@ -31,21 +25,23 @@ import batteryImg from '../assets/items/battery.png';
 import bonusPowerImg from '../assets/items/bonus_power.png';
 import xpImg from '../assets/items/xp.png';
 import speedupImg from '../assets/items/speedup_item.gif';
-import commonFanImg from '../assets/items/common_fan.png';
-import commonHashboardImg from '../assets/items/common_hashboard.png';
-import commonWireImg from '../assets/items/common_wire.png';
-import uncommonFanImg from '../assets/items/uncommon_fan.png';
-import uncommonHashboardImg from '../assets/items/uncommon_hashboard.png';
-import uncommonWireImg from '../assets/items/uncommon_wire.png';
 import rareFanImg from '../assets/items/rare_fan.png';
-import rareHashboardImg from '../assets/items/rare_hashboard.png';
-import rareWireImg from '../assets/items/rare_wire.png';
-import epicFanImg from '../assets/items/epic_fan.png';
-import epicHashboardImg from '../assets/items/epic_hashboard.png';
-import epicWireImg from '../assets/items/epic_wire.png';
 import legendaryFanImg from '../assets/items/legendary_fan.png';
-import legendaryHashboardImg from '../assets/items/legendary_hashboard.png';
+import commonFanImg from '../assets/items/common_fan.png';
+import uncommonFanImg from '../assets/items/uncommon_fan.png';
+import epicFanImg from '../assets/items/epic_fan.png';
+
+import commonWireImg from '../assets/items/common_wire.png';
+import uncommonWireImg from '../assets/items/uncommon_wire.png';
+import rareWireImg from '../assets/items/rare_wire.png';
+import epicWireImg from '../assets/items/epic_wire.png';
 import legendaryWireImg from '../assets/items/legendary_wire.png';
+
+import commonHashboardImg from '../assets/items/common_hashboard.png';
+import uncommonHashboardImg from '../assets/items/uncommon_hashboard.png';
+import rareHashboardImg from '../assets/items/rare_hashboard.png';
+import epicHashboardImg from '../assets/items/epic_hashboard.png';
+import legendaryHashboardImg from '../assets/items/legendary_hashboard.png';
 import abandonedMineChestImg from '../assets/items/Abandoned_mine_chest_d310e38e-9dea-4756-a017-cf427dc65abf.png';
 import wiresCaseImg from '../assets/items/wires_case_855b977d-950c-45e3-a315-b20be4a052ab.png';
 import hashboardCaseImg from '../assets/items/hashboard_case_1116df97-ed73-4baf-a0d8-76a9cb7cf588.png';
@@ -89,80 +85,68 @@ function formatPoints(num: number): string {
     return num.toString();
 }
 
-function getMinerImageUrl(filename: string): string {
-    return `https://static.rollercoin.com/static/img/market/miners/${filename}.gif?v=1`;
+function getMinerImageUrl(filename: string, imageVersion?: number): string {
+    const v = imageVersion ? imageVersion : 1;
+    return `https://static.rollercoin.com/static/img/market/miners/${filename}.gif?v=${v}`;
 }
 
 function getRackImageUrl(id: string): string {
-    return `https://static.rollercoin.com/static/img/market/racks/${id}.png?v=1.0.4`;
+    return `https://static.rollercoin.com/static/img/market/racks/${id}.png?v=1`;
 }
 
-function getMutationComponentImage(itemId: string | null, item?: MutationComponentItem): string | null {
-    const name = item?.name?.en?.toLowerCase() ?? '';
+function getCdnUrl(path: string): string {
+    return `https://static.rollercoin.com/${path}`;
+}
 
-    if (name.includes('legendary')) {
-        if (name.includes('fan')) return legendaryFanImg;
-        if (name.includes('hashboard')) return legendaryHashboardImg;
-        if (name.includes('wire') || name.includes('wiring')) return legendaryWireImg;
+function getMutationComponentImage(itemId: string | null, title?: string): string | null {
+    const t = (title || '').toLowerCase();
+    
+    if (t.includes('wire')) {
+        if (t.includes('uncommon')) return uncommonWireImg;
+        if (t.includes('rare')) return rareWireImg;
+        if (t.includes('epic')) return epicWireImg;
+        if (t.includes('legendary')) return legendaryWireImg;
+        return commonWireImg;
     }
-    if (name.includes('epic')) {
-        if (name.includes('fan')) return epicFanImg;
-        if (name.includes('hashboard')) return epicHashboardImg;
-        if (name.includes('wire') || name.includes('wiring')) return epicWireImg;
+    if (t.includes('fan')) {
+        if (t.includes('uncommon')) return uncommonFanImg;
+        if (t.includes('rare')) return rareFanImg;
+        if (t.includes('epic')) return epicFanImg;
+        if (t.includes('legendary')) return legendaryFanImg;
+        return commonFanImg;
     }
-    if (name.includes('rare')) {
-        if (name.includes('fan')) return rareFanImg;
-        if (name.includes('hashboard')) return rareHashboardImg;
-        if (name.includes('wire') || name.includes('wiring')) return rareWireImg;
+    if (t.includes('hashboard')) {
+        if (t.includes('uncommon')) return uncommonHashboardImg;
+        if (t.includes('rare')) return rareHashboardImg;
+        if (t.includes('epic')) return epicHashboardImg;
+        if (t.includes('legendary')) return legendaryHashboardImg;
+        return commonHashboardImg;
     }
-    if (name.includes('uncommon')) {
-        if (name.includes('fan')) return uncommonFanImg;
-        if (name.includes('hashboard')) return uncommonHashboardImg;
-        if (name.includes('wire') || name.includes('wiring')) return uncommonWireImg;
-    }
-    if (name.includes('common')) {
-        if (name.includes('fan')) return commonFanImg;
-        if (name.includes('hashboard')) return commonHashboardImg;
-        if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
-    }
-
-    // Fallbacks if rarity is not specified
-    if (name.includes('fan')) return commonFanImg;
-    if (name.includes('hashboard')) return commonHashboardImg;
-    if (name.includes('wire') || name.includes('wiring')) return commonWireImg;
 
     // Hardcoded legacy item IDs as last resort
-    if (itemId === '6196269b67433d2dc52e0130') {
-        return legendaryFanImg;
-    }
-    if (itemId === '61b35e3767433d2dc57f86a2') {
-        return rareFanImg;
-    }
+    if (itemId === '6196269b67433d2dc52e0130') return legendaryFanImg;
+    if (itemId === '61b35e3767433d2dc57f86a2') return rareFanImg;
+    if (itemId === '61b3604967433d2dc58893b0') return commonWireImg;
+    if (itemId === '61b35fea67433d2dc586f7fe') return commonFanImg;
+    if (itemId === '61b3606767433d2dc58913a9') return commonHashboardImg;
 
     return null;
 }
 
-function getMutationComponentDisplayName(itemId: string | null, item?: MutationComponentItem): string {
-    if (itemId === '6196269b67433d2dc52e0130') {
-        return 'Legendary Fan';
-    }
-    if (itemId === '61b35e3767433d2dc57f86a2') {
-        return 'Rare Fan';
-    }
+function getMutationComponentDisplayName(itemId: string | null, title?: string): string {
+    if (title) return title;
+    
+    if (itemId === '6196269b67433d2dc52e0130') return 'Legendary Fan';
+    if (itemId === '61b35e3767433d2dc57f86a2') return 'Rare Fan';
+    if (itemId === '61b3604967433d2dc58893b0') return 'Common Wire';
+    if (itemId === '61b35fea67433d2dc586f7fe') return 'Common Fan';
+    if (itemId === '61b3606767433d2dc58913a9') return 'Common Hashboard';
 
-    return item?.name?.en ?? 'Mutation Component';
+    return 'Mutation Component';
 }
 
-function getMysteryBoxImageUrl(box?: MysteryBoxItem): string | null {
-    // Prefer API-provided image URL (dynamic, no manual update needed)
-    if (box?.media?.box_image_url) {
-        return `https://static.rollercoin.com/${box.media.box_image_url}`;
-    }
-    return null;
-}
-
-function getMysteryBoxLocalFallback(box?: MysteryBoxItem, fallbackTitle?: string): string {
-    const title = (box?.title?.en ?? fallbackTitle ?? '').toLowerCase();
+function getMysteryBoxLocalFallback(_box?: unknown, fallbackTitle?: string): string {
+    const title = (fallbackTitle ?? '').toLowerCase();
 
     if (title.includes('wires') || title.includes('wire')) {
         return wiresCaseImg;
@@ -200,7 +184,7 @@ const rewardTypeFallbackIcon = xpImg;
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; localImage?: string; level?: number; scale?: number } {
+): { text: string; subText: string; imageUrl?: string; coverUrl?: string; localImage?: string; level?: number; scale?: number } {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -244,88 +228,62 @@ function getRewardDisplay(
                 return {
                     text: miner.name.en,
                     subText: `${formatPower(miner.power)} | ${bonusPct}%`,
-                    imageUrl: getMinerImageUrl(miner.filename),
+                    imageUrl: getMinerImageUrl(miner.filename, miner.image_version),
                     level: (miner.level || 0) + 1,
                 };
             }
-            return { text: t('event.rewardTypes.miner'), subText: '' };
+            return { text: t('event.rewardTypes.miner'), subText: `x${reward.amount}` };
         }
         case 'rack': {
-            const rack = reward.item as RackItem | undefined;
-            if (rack) {
-                return {
-                    text: rack.name.en,
-                    subText: `Rack Bonus:${rack.capacity * 5}%`,
-                    imageUrl: getRackImageUrl(rack._id),
-                };
-            }
-            return { text: t('event.rewardTypes.rack'), subText: '' };
+            const rackName = reward.title.en || t('event.rewardTypes.rack');
+            const capacityText = reward.rack_capacity ? ` (${reward.rack_capacity} slots)` : '';
+            return {
+                text: rackName,
+                subText: `${t('event.rewardTypes.rack')}${capacityText}`,
+                imageUrl: reward.item_id ? getRackImageUrl(reward.item_id) : undefined,
+            };
         }
         case 'utility_item': {
-            const utility = reward.item as UtilityItem | undefined;
-            if (utility) {
-                // Use API-provided image URL (dynamic, no manual update needed)
-                const utilityImageUrl = utility.media?.preview_url
-                    ? `https://static.rollercoin.com/${utility.media.preview_url}`
-                    : undefined;
-                return {
-                    text: `${utility.name.en} x${reward.amount}`,
-                    subText: utility.name.en,
-                    imageUrl: utilityImageUrl,
-                    localImage: utilityImageUrl ? undefined : speedupImg,
-                };
-            }
-            return { text: t('event.rewardTypes.utilityItem'), subText: '' };
+            const utilityName = reward.title.en || t('event.rewardTypes.utilityItem');
+            const utilityImage = reward.item_media_url ? getCdnUrl(reward.item_media_url) : undefined;
+            return {
+                text: utilityName,
+                subText: `x${reward.amount}`,
+                imageUrl: utilityImage,
+                localImage: !utilityImage ? speedupImg : undefined,
+            };
         }
         case 'mutation_component': {
-            const component = reward.item as MutationComponentItem | undefined;
-            const displayName = getMutationComponentDisplayName(reward.item_id, component);
+            const titleEn = reward.title.en || '';
+            const displayName = getMutationComponentDisplayName(reward.item_id, titleEn);
             return {
                 text: `${displayName} x${reward.amount}`,
                 subText: displayName,
-                localImage: getMutationComponentImage(reward.item_id, component) ?? undefined,
+                localImage: getMutationComponentImage(reward.item_id, titleEn) ?? undefined,
             };
         }
         case 'mystery_box': {
-            const box = reward.item as MysteryBoxItem | undefined;
-            const boxTitle = box?.title?.en ?? reward.title.en;
-            // Use API-provided image URL (dynamic, no manual update needed)
-            const boxImageUrl = getMysteryBoxImageUrl(box);
+            const boxName = reward.title.en || t('event.rewardTypes.mysteryBox');
+            const boxUrl = reward.box_image_url || reward.cover_image_url || reward.item_media_url;
+            const coverUrl = reward.cover_image_url || reward.item_media_url;
+            
+            const boxImage = boxUrl ? getCdnUrl(boxUrl) : undefined;
+            const coverImage = coverUrl ? getCdnUrl(coverUrl) : undefined;
+
             return {
-                text: `${boxTitle} x${reward.amount}`,
-                subText: '',
-                imageUrl: boxImageUrl ?? undefined,
-                localImage: boxImageUrl ? undefined : getMysteryBoxLocalFallback(box, reward.title.en),
+                text: `${boxName} x${reward.amount}`,
+                subText: boxName,
+                imageUrl: boxImage,
+                coverUrl: (boxImage && coverImage && boxImage !== coverImage) ? coverImage : undefined,
+                localImage: !boxImage ? getMysteryBoxLocalFallback(undefined, reward.title.en) : undefined,
             };
         }
-        case 'trophy': {
-            const trophy = reward.item as TrophyItem | undefined;
-            if (trophy) {
-                const name = trophy.name?.en ?? reward.title.en;
-                return {
-                    text: name,
-                    subText: '',
-                    imageUrl: `https://static.rollercoin.com/static/img/game/room/trophies/${trophy.file_name}.png?v=1.0.0`,
-                    scale: 1.6,
-                };
-            }
-            return { text: reward.title.en, subText: '' };
-        }
-        case 'hat': {
-            const hat = reward.item as HatItem | undefined;
-            if (hat) {
-                const name = hat.title?.en ?? reward.title.en;
-                return {
-                    text: name,
-                    subText: '',
-                    imageUrl: `https://static.rollercoin.com/static/img/market/hats/${hat._id}.png?v=1.0.0`,
-                    scale: 1.6,
-                };
-            }
-            return { text: reward.title.en, subText: '' };
-        }
+        case 'trophy':
+            return { text: reward.title.en || t('event.rewardTypes.trophy'), subText: '' };
+        case 'hat':
+            return { text: reward.title.en || t('event.rewardTypes.hat'), subText: '' };
         default:
-            return { text: reward.title.en, subText: '' };
+            return { text: reward.title.en || reward.type, subText: '' };
     }
 }
 
@@ -457,7 +415,7 @@ export default function ProgressionEvent() {
     const eventSummary = useMemo(() => {
         if (!eventData) return null;
 
-        const rewards = eventData.data.rewards;
+        const rewards = eventData.rewards;
         let totalMinerPower = 0;
         let totalBonus = 0;
         let tempPower = 0;
@@ -520,7 +478,7 @@ export default function ProgressionEvent() {
     const multiplierData = useMemo(() => {
         if (!eventData) return [];
 
-        const { max_xp } = eventData.data.event;
+        const max_xp = eventData.maxXp;
         const rows = [];
 
         for (let m = 1; m <= MAX_MULTIPLIER; m++) {
@@ -582,7 +540,7 @@ export default function ProgressionEvent() {
     const [showFixedSidebarRewards] = useState(false);
     const [sidebarLeftRewards] = useState(0);
     const [sidebarWidthRewards] = useState(0);
-    
+
     const sidebarRefMultiplier = useRef<HTMLElement>(null);
     const [showFixedSidebarMultiplier] = useState(false);
     const [sidebarLeftMultiplier] = useState(0);
@@ -672,7 +630,8 @@ export default function ProgressionEvent() {
 
     if (!eventData) return null;
 
-    const { event, rewards, levels_config } = eventData.data;
+    const rewards = eventData.rewards;
+    const levels_config = eventData.levels;
 
     const renderCards = () => (
         <>
@@ -771,7 +730,25 @@ export default function ProgressionEvent() {
                             timeText = t('event.discountEndsIn', { time: timeStr.trim() });
                         }
 
-                        const endDateStr = new Date(discountEndUtc).toLocaleDateString(formatLang, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                        const formatOptions: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' };
+                        const endDateStr = new Date(discountEndUtc).toLocaleDateString(formatLang, formatOptions);
+
+                        if (!isActive) {
+                            let rawStart = '';
+                            if (d.createdDate) {
+                                rawStart = d.createdDate.replace(/Z$/, '');
+                            } else if (eventData?.createdDate) {
+                                rawStart = eventData.createdDate.replace(/Z$/, '');
+                            }
+
+                            if (rawStart) {
+                                const startDateUtc = rawStart + 'Z';
+                                const startDateStr = new Date(startDateUtc).toLocaleDateString(formatLang, formatOptions);
+                                timeText = `${startDateStr} — ${endDateStr}`;
+                            } else {
+                                timeText = t('event.discountExpired');
+                            }
+                        }
 
                         return (
                             <div key={d.id} className={`pe-info-row pe-discount-row ${!isActive ? 'pe-discount-expired' : ''}`}>
@@ -795,22 +772,25 @@ export default function ProgressionEvent() {
         );
     };
 
+    const finalReward = eventData?.rewards && eventData.rewards.length > 0 ? eventData.rewards[eventData.rewards.length - 1] : null;
+    const finalRewardDisplay = finalReward ? getRewardDisplay(finalReward, t) : null;
+
     return (
         <div className="pe-container">
             {/* Dynamic SEO for Progression Event */}
             <>
-                <title>{`${event.title.en} | Rollercoin Calculator`}</title>
-                <meta name="description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <title>{`${eventData.name} | Rollercoin Calculator`}</title>
+                <meta name="description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
                 <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/event`} />
                 <meta property="og:type" content="article" />
-                <meta property="og:title" content={`${event.title.en} | Rollercoin Calculator`} />
-                <meta property="og:description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta property="og:title" content={`${eventData.name} | Rollercoin Calculator`} />
+                <meta property="og:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
                 <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event`} />
-                <meta property="og:image" content={`https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated}`} />
+                <meta property="og:image" content={`https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1`} />
                 <meta name="twitter:card" content="summary" />
-                <meta name="twitter:title" content={`${event.title.en} | Rollercoin Calculator`} />
-                <meta name="twitter:description" content={`${event.title.en} — Progression Event rewards, multiplier calculator, and budget planner.`} />
-                <meta name="twitter:image" content={`https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated}`} />
+                <meta name="twitter:title" content={`${eventData.name} | Rollercoin Calculator`} />
+                <meta name="twitter:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta name="twitter:image" content={`https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1`} />
             </>
             {/* Ad-Blocker Warning */}
             {adBlockWarning && (
@@ -833,7 +813,7 @@ export default function ProgressionEvent() {
 
             {/* Event Header */}
             <div className="pe-header" style={{
-                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${event._id}/progression-event-modal-bg.png?v=${event.last_updated})`
+                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1)`
             }}>
                 <div className="pe-header-top-row">
                     <div className="pe-header-actions pe-header-left">
@@ -853,7 +833,41 @@ export default function ProgressionEvent() {
                             {!isEnded && <span className="pe-time-label">{t('event.leftTime')}:&nbsp;</span>}
                             <strong>{timeLeft}</strong>
                         </div>
-                        <h2 className="pe-title">{event.title.en}</h2>
+                        <h2 className="pe-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {eventData.name}
+                        </h2>
+
+                        {finalRewardDisplay && finalRewardDisplay.imageUrl && (
+                            <div className="pe-header-final-reward">
+                                <div className="pe-final-reward-img-wrapper" style={{ marginTop: '4px' }}>
+                                    <img src={finalRewardDisplay.imageUrl} alt={finalRewardDisplay.text} className="pe-final-reward-img" />
+                                    {finalRewardDisplay.coverUrl && (
+                                        <img src={finalRewardDisplay.coverUrl} alt={finalRewardDisplay.text} className="pe-final-reward-img" style={{ position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }} />
+                                    )}
+                                    {finalRewardDisplay.level && finalRewardDisplay.level > 1 && (
+                                        <img
+                                            src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${finalRewardDisplay.level}.png?v=1.0.0`}
+                                            alt={`Level ${finalRewardDisplay.level}`}
+                                            style={{ position: 'absolute', top: '25px', left: '-5px', width: '28px', height: '18px', objectFit: 'contain', zIndex: 3, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
+                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                        />
+                                    )}
+                                </div>
+                                {finalRewardDisplay.subText && (
+                                    <div className="pe-final-reward-stats">
+                                        {finalRewardDisplay.subText.split('|')[0]}
+                                        {finalRewardDisplay.subText.split('|')[1] && <span style={{ color: '#06b6d4', marginLeft: '4px' }}>|{finalRewardDisplay.subText.split('|')[1]}</span>}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {eventData.totalPoint != null && eventData.totalPoint > 0 && (
+                            <div className="pe-header-total-points large" title="Total Points Required">
+                                <span className="pe-tp-icon">🏆</span>
+                                {eventData.totalPoint.toLocaleString()} Points
+                            </div>
+                        )}
                     </div>
 
                     <div className="pe-header-actions pe-header-right pe-time-desktop">
@@ -915,8 +929,8 @@ export default function ProgressionEvent() {
                                             {renderCards()}
                                         </div>
                                     </aside>
-                                    <div 
-                                        className="pe-table-container" 
+                                    <div
+                                        className="pe-table-container"
                                         ref={tableSectionRewardsRef}
                                         onScroll={(e) => {
                                             if (stickyContainerRewardsRef.current) {
@@ -963,7 +977,7 @@ export default function ProgressionEvent() {
                                                                                     <img
                                                                                         src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
                                                                                         alt={`Level ${display.level}`}
-                                                                                        style={{ position: 'absolute', top: '0px', right: '-5px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
+                                                                                        style={{ position: 'absolute', top: '2px', left: '-10px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
                                                                                         onError={(e) => {
                                                                                             const target = e.target as HTMLImageElement;
                                                                                             target.style.display = 'none';
@@ -990,6 +1004,17 @@ export default function ProgressionEvent() {
                                                                                         }
                                                                                     }}
                                                                                 />
+                                                                                {display.coverUrl && (
+                                                                                    <img 
+                                                                                        src={display.coverUrl} 
+                                                                                        alt={display.text} 
+                                                                                        className="pe-reward-img-api" 
+                                                                                        style={{ 
+                                                                                            position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none',
+                                                                                            ...(display.scale ? { transform: `scale(${display.scale})` } : {})
+                                                                                        }} 
+                                                                                    />
+                                                                                )}
                                                                             </div>
                                                                         ) : display?.localImage ? (
                                                                             <img
@@ -1032,8 +1057,8 @@ export default function ProgressionEvent() {
 
                                     {/* Fixed sticky header clone - Rewards */}
                                     {activeTab === 'rewards' && showFixedRewards && headerWidthsRewards.length > 0 && createPortal(
-                                        <div 
-                                            className="fixed-thead-clone" 
+                                        <div
+                                            className="fixed-thead-clone"
                                             ref={stickyContainerRewardsRef}
                                             style={{ position: 'fixed', top: 0, left: tableLeftRewards, width: tableWidthRewards, zIndex: 100, pointerEvents: 'none', overflowX: 'hidden' }}
                                         >
@@ -1152,9 +1177,9 @@ export default function ProgressionEvent() {
                                     </aside>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minWidth: 0 }}>
                                         {/* Table */}
-                                        <div 
+                                        <div
 
-                                            className="pe-table-container" 
+                                            className="pe-table-container"
                                             ref={tableSectionMultiplierRef}
                                             onScroll={(e) => {
                                                 if (stickyContainerMultiplierRef.current) {
@@ -1262,8 +1287,8 @@ export default function ProgressionEvent() {
 
                                         {/* Fixed sticky header clone - Multiplier */}
                                         {activeTab === 'multiplier' && showFixedMultiplier && headerWidthsMultiplier.length > 0 && createPortal(
-                                            <div 
-                                                className="fixed-thead-clone hide-scrollbar" 
+                                            <div
+                                                className="fixed-thead-clone hide-scrollbar"
                                                 ref={stickyContainerMultiplierRef}
                                                 style={{ position: 'fixed', top: 0, left: tableLeftMultiplier, width: tableWidthMultiplier, zIndex: 100, overflowX: 'auto' }}
                                                 onScroll={(e) => {

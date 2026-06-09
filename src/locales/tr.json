@@ -385,7 +385,10 @@
             "battery": "Pil",
             "miner": "Madenci",
             "rack": "Raf",
-            "utilityItem": "Yardımcı Eşya"
+            "utilityItem": "Yardımcı Eşya",
+            "mysteryBox": "Gizemli Kutu",
+            "trophy": "Kupa",
+            "hat": "Şapka"
         },
         "eventHistory": "Etkinlik Geçmişi",
         "viewHistory": "Geçmiş Etkinlikler",

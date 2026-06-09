@@ -384,7 +384,10 @@
             "battery": "Battery",
             "miner": "Miner",
             "rack": "Rack",
-            "utilityItem": "Utility Item"
+            "utilityItem": "Utility Item",
+            "mysteryBox": "Mystery Box",
+            "trophy": "Trophy",
+            "hat": "Hat"
         },
         "eventHistory": "Event History",
         "viewHistory": "Past Events",

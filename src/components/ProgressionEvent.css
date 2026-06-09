@@ -1286,17 +1286,17 @@
   }
 
   .pe-reward-img-wrapper {
-    width: 36px;
+    width: 48px;
   }
 
   .pe-reward-img-api {
-    max-width: 36px;
-    max-height: 26px;
+    max-width: 48px;
+    max-height: 38px;
   }
 
   .pe-reward-img-local {
-    width: 26px;
-    height: 26px;
+    width: 36px;
+    height: 36px;
   }
 
   .pe-reward-name {
@@ -1472,4 +1472,74 @@
     flex-direction: row;
     justify-content: space-between;
   }
+}.pe-header-total-points {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.pe-tp-icon {
+  font-size: 14px;
+}
+.pe-header-final-reward {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.pe-final-reward-img-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pe-final-reward-img {
+  width: 150px;
+  max-width: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+}
+
+.pe-final-reward-stats {
+  background: rgba(54, 46, 42, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: -2px; position: relative; z-index: 5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.pe-final-reward-stats span {
+  color: var(--accent-primary, #06b6d4);
+  margin-left: 4px;
+}
+
+.pe-header-total-points.large {
+  font-size: 18px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.2);
+  margin-top: 16px;
+  font-weight: 800;
+}
+.pe-header-total-points.large .pe-tp-icon {
+  font-size: 18px;
 }

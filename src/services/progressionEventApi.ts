@@ -6,7 +6,21 @@
 
 import { buildApiUrl } from '../config/api';
 import { apiGet } from './apiClient';
-import type { ProgressionEventResponse, ProgressionEventData, MultiplierData, TaskData, ProgressionEventListItem, CurrencyDiscount } from '../types/progressionEvent';
+import type {
+    ProgressionEventResponse,
+    ProgressionReward,
+    LevelConfig,
+    MultiplierData,
+    TaskData,
+    ProgressionEventListItem,
+    CurrencyDiscount,
+    ApiReward,
+    ApiLevel,
+    ApiMultiplier,
+    ApiTask,
+    ApiMiner,
+    MinerItem,
+} from '../types/progressionEvent';
 import type { PaginatedResponse } from '../types/pagination';
 
 export interface ParsedProgressionEvent {
@@ -14,29 +28,122 @@ export interface ParsedProgressionEvent {
     name: string;
     endDate: string;
     createdDate?: string;
-    data: ProgressionEventData;
+    totalPoint?: number;
+    rewards: ProgressionReward[];
+    levels: LevelConfig[];
+    maxXp: number;
     multiplierData?: MultiplierData[];
     taskData?: TaskData[];
 }
 
 /**
+ * Converts an API miner (camelCase) to internal MinerItem format.
+ */
+function convertApiMiner(apiMiner: ApiMiner): MinerItem {
+    return {
+        _id: apiMiner.id,
+        power: apiMiner.power,
+        width: apiMiner.width,
+        name: { en: apiMiner.name, cn: apiMiner.name },
+        description: { en: '', cn: '' },
+        created_by_title: { link: '', text: '' },
+        level: apiMiner.level,
+        type: 'basic',
+        filename: apiMiner.fileName,
+        image_version: apiMiner.imageVersion,
+        frames_data: { frame_width: 0, frame_height: 0 },
+        is_can_be_sold_on_mp: false,
+        bonus: apiMiner.percent,
+        is_in_set: false,
+    };
+}
+
+/**
+ * Converts an API reward (camelCase, flat) to internal ProgressionReward format.
+ */
+function convertApiReward(apiReward: ApiReward): ProgressionReward {
+    const emptyText = { en: '', cn: '' };
+    return {
+        id: apiReward.id,
+        item_id: apiReward.itemId ?? null,
+        amount: apiReward.amount,
+        currency: apiReward.currency,
+        ttl_time: apiReward.ttlTime ?? 0,
+        required_level: apiReward.requiredLevel,
+        type: apiReward.rewardType,
+        title: apiReward.itemName ? { en: apiReward.itemName, cn: apiReward.itemName } : emptyText,
+        description: emptyText,
+        range_count: { min: 0, max: 0 },
+        item_media_url: apiReward.itemPreviewUrl ?? null,
+        box_image_url: apiReward.itemBoxUrl ?? null,
+        cover_image_url: apiReward.itemCoverUrl ?? null,
+        rack_capacity: apiReward.rackCapacity ?? null,
+        item: apiReward.miner ? convertApiMiner(apiReward.miner) : undefined,
+    };
+}
+
+/**
+ * Converts an API level (camelCase) to internal LevelConfig format.
+ */
+function convertApiLevel(apiLevel: ApiLevel): LevelConfig {
+    return {
+        level: apiLevel.level,
+        level_xp: apiLevel.levelXp,
+        required_xp: apiLevel.requiredXp,
+    };
+}
+
+/**
+ * Converts API multiplier to internal MultiplierData format.
+ */
+function convertApiMultiplier(apiMult: ApiMultiplier): MultiplierData {
+    return {
+        id: apiMult.id,
+        multiplier: apiMult.multiplier,
+        amount: apiMult.amount,
+        title: apiMult.title,
+    };
+}
+
+/**
+ * Converts API task to internal TaskData format.
+ */
+function convertApiTask(apiTask: ApiTask): TaskData {
+    return {
+        id: apiTask.id,
+        amount: apiTask.amount,
+        title: apiTask.title,
+        type: apiTask.type,
+        xp_reward: apiTask.xpReward,
+        xp_type: apiTask.xpType,
+    };
+}
+
+/**
  * Parses a raw ProgressionEventResponse into a ParsedProgressionEvent.
- * Shared between fetchProgressionEvent and fetchProgressionEventById.
+ * Converts the new flat API format (camelCase) into internal snake_case types.
  */
 function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedProgressionEvent {
-    const data: ProgressionEventData = JSON.parse(raw.data);
+    const rewards = (raw.rewards || []).map(convertApiReward);
+    const levels = (raw.levels || []).map(convertApiLevel);
+
+    // Sort levels by level number
+    levels.sort((a, b) => a.level - b.level);
+
+    // Calculate max_xp from levels (the highest requiredXp)
+    const maxXp = levels.length > 0
+        ? Math.max(...levels.map(l => l.required_xp))
+        : 0;
+
     let multiplierData: MultiplierData[] | undefined;
     let taskData: TaskData[] | undefined;
 
-    try {
-        if (raw.multiplierData) {
-            multiplierData = JSON.parse(raw.multiplierData);
-        }
-        if (raw.taskData) {
-            taskData = JSON.parse(raw.taskData);
-        }
-    } catch (e) {
-        console.error("Error parsing dynamic progression event data:", e);
+    if (raw.multipliers && raw.multipliers.length > 0) {
+        multiplierData = raw.multipliers.map(convertApiMultiplier);
+    }
+
+    if (raw.tasks && raw.tasks.length > 0) {
+        taskData = raw.tasks.map(convertApiTask);
     }
 
     // Ensure endDate is treated as UTC. The API returns dates without timezone info
@@ -54,7 +161,10 @@ function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedPro
         name: raw.name,
         endDate,
         createdDate,
-        data,
+        totalPoint: raw.totalPoint,
+        rewards,
+        levels,
+        maxXp,
         multiplierData,
         taskData,
     };
@@ -104,4 +214,3 @@ export async function fetchCurrencyDiscounts(
     const response = await apiGet<PaginatedResponse<CurrencyDiscount>>(url);
     return response.items;
 }
-

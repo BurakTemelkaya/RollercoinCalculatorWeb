@@ -4,15 +4,17 @@
  * Type definitions for the Progression Event feature
  */
 
-// API Response (top-level)
+// API Response (top-level) — new flat format
 export interface ProgressionEventResponse {
   id: string;
   name: string;
   endDate: string;
   createdDate?: string;
-  data: string; // JSON string containing ProgressionEventData
-  multiplierData?: string; // JSON string containing MultiplierData[]
-  taskData?: string; // JSON string containing TaskData[]
+  totalPoint?: number;
+  rewards: ApiReward[];
+  levels: ApiLevel[];
+  multipliers?: ApiMultiplier[];
+  tasks?: ApiTask[];
 }
 
 // List item returned by GetList endpoint
@@ -21,53 +23,66 @@ export interface ProgressionEventListItem {
   name: string;
   createdDate: string;
   endDate: string;
+  totalPoint?: number;
 }
 
-// Parsed inner data
-export interface ProgressionEventData {
-  event: ProgressionEventInfo;
-  rewards: ProgressionReward[];
-  levels_config: LevelConfig[];
+// API reward item (flat, camelCase)
+export interface ApiReward {
+  id: string;
+  requiredLevel: number;
+  rewardType: RewardType;
+  amount: number;
+  currency: string;
+  itemId: string | null;
+  minerId: string | null;
+  ttlTime: number;
+  itemName: string | null;
+  itemPreviewUrl: string | null;
+  itemBoxUrl: string | null;
+  itemCoverUrl: string | null;
+  rackCapacity: number | null;
+  miner: ApiMiner | null;
 }
 
-export interface MultiplierData {
+// API miner item (nested in reward, camelCase)
+export interface ApiMiner {
+  id: string;
+  name: string;
+  fileName: string;
+  imageVersion: number;
+  level: number;
+  percent: number; // bonus percentage (divide by 100 for display)
+  power: number;   // Gh/s
+  width: number;
+}
+
+// API level item (flat, camelCase)
+export interface ApiLevel {
+  id: string;
+  level: number;
+  levelXp: number;
+  requiredXp: number;
+}
+
+// API multiplier item (flat, camelCase)
+export interface ApiMultiplier {
   id: string;
   multiplier: number;
   amount: number;
-  title: LocalizedText;
+  title: string;
 }
 
-export interface TaskData {
+// API task item (flat, camelCase)
+export interface ApiTask {
   id: string;
   amount: number;
-  title: LocalizedText;
+  title: string;
   type: string;
-  xp_reward: number;
-  xp_type: string;
+  xpReward: number;
+  xpType: string;
 }
 
-export interface ProgressionEventInfo {
-  _id: string;
-  max_xp: number;
-  max_multiplier: number;
-  max_level: number;
-  tag: { text: string; color: string; text_color: string };
-  progression_event_type: string;
-  end_date: string;
-  last_updated: number;
-  description: LocalizedText;
-  title: LocalizedText;
-  media?: {
-    banner_url?: string;
-    preview_url?: string;
-  };
-}
-
-export interface LocalizedText {
-  en: string;
-  cn: string;
-  [key: string]: string;
-}
+// === Internal types (used by the component) ===
 
 export interface ProgressionReward {
   id: string;
@@ -80,6 +95,10 @@ export interface ProgressionReward {
   title: LocalizedText;
   description: LocalizedText;
   range_count: { min: number; max: number };
+  item_media_url?: string | null;
+  box_image_url?: string | null;
+  cover_image_url?: string | null;
+  rack_capacity?: number | null;
   item?: MinerItem | RackItem | UtilityItem | BatteryItem | MutationComponentItem | MysteryBoxItem | TrophyItem | HatItem;
 }
 
@@ -96,6 +115,12 @@ export type RewardType =
   | 'trophy'
   | 'hat';
 
+export interface LocalizedText {
+  en: string;
+  cn: string;
+  [key: string]: string;
+}
+
 export interface MinerItem {
   _id: string;
   power: number;
@@ -106,6 +131,7 @@ export interface MinerItem {
   level: number;
   type: string; // 'basic' | 'merge'
   filename: string;
+  image_version?: number;
   frames_data: { frame_width: number; frame_height: number; frames_count?: number };
   is_can_be_sold_on_mp: boolean;
   bonus: number;
@@ -175,6 +201,24 @@ export interface LevelConfig {
   level: number;
   level_xp: number;
   required_xp: number;
+}
+
+// Multiplier data (internal, snake_case for component compatibility)
+export interface MultiplierData {
+  id: string;
+  multiplier: number;
+  amount: number;
+  title: string;
+}
+
+// Task data (internal, snake_case for component compatibility)
+export interface TaskData {
+  id: string;
+  amount: number;
+  title: string;
+  type: string;
+  xp_reward: number;
+  xp_type: string;
 }
 
 // Currency discount from backend API
