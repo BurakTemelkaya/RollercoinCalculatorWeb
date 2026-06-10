@@ -40,7 +40,7 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
     borderRadius: '0 8px 8px 0'
   });
 
-  const isMyBlogs = !isAdmin; // For now user panel is mostly "My Blogs"
+  const isMyBlogs = !isAdmin && location.pathname.includes('/my-blogs');
 
   return (
     <div className="dashboard-layout" style={{ display: 'flex', minHeight: '100vh', background: '#0f0f1e', color: '#fff' }} data-color-mode="dark">
