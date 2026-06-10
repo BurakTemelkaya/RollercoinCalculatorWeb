@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguageSwitcher } from '../hooks/useLanguageSwitcher';
@@ -17,6 +17,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, title, isAdmin, adminBackTo, adminBackLabel }: DashboardLayoutProps) {
   const { lang } = useParams<{ lang: string }>();
+  const location = useLocation();
   const { t } = useTranslation();
   const { currentLang, changeLanguage, SUPPORTED_LANGUAGES } = useLanguageSwitcher();
   const { logout } = useAuth();
@@ -82,6 +83,13 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
               >
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z" /></svg>
                 {t('nav.myBlogs', 'Bloglarım')}
+              </Link>
+              <Link
+                to={`/${lang}/notification-settings`}
+                style={sidebarLinkStyle(!isAdmin && location.pathname.includes('/notification-settings'))}
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                {t('nav.notificationSettings', 'Bildirim Ayarları')}
               </Link>
             </nav>
 

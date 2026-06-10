@@ -1,5 +1,5 @@
 // Update this version whenever CURRENT_CACHE_VERSION changes in App.tsx
-const CACHE_VERSION = '20260609.191333';
+const CACHE_VERSION = '20260610.170941';
 const CACHE_NAME = `rollercoin-${CACHE_VERSION}`;
 
 self.addEventListener('install', () => {
@@ -39,4 +39,42 @@ self.addEventListener('fetch', (event) => {
     );
   }
   // All other requests (JS, CSS, assets): use browser default behavior
+});
+
+self.addEventListener('push', (event) => {
+  let title = 'Rollercoin Calculator';
+  let options = {
+    body: 'You have a new notification.',
+    icon: '/icon.png',
+    badge: '/icon.png'
+  };
+
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      title = data.title || title;
+      if (data.body) options.body = data.body;
+      if (data.icon) options.icon = data.icon;
+      if (data.url) options.data = { url: data.url };
+    } catch (e) {
+      options.body = event.data.text();
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  if (event.notification.data && event.notification.data.url) {
+    event.waitUntil(
+      self.clients.openWindow(event.notification.data.url)
+    );
+  } else {
+    event.waitUntil(
+      self.clients.openWindow('/')
+    );
+  }
 });

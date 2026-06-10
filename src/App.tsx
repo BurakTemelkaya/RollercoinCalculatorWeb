@@ -70,6 +70,7 @@ const MergePage = lazyWithRetry(() => import('./components/MergePage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
 const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
+const NotificationSettingsPage = lazyWithRetry(() => import('./components/NotificationSettingsPage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -323,7 +324,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260609.191333';
+  const CURRENT_CACHE_VERSION = '20260610.170941';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -947,6 +948,7 @@ function App() {
 
       {/* Dashboard Routes without MainLayout */}
       <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
+      <Route path="/:lang/notification-settings" element={<React.Suspense fallback={null}><ProtectedRoute><NotificationSettingsPage /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
       <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
