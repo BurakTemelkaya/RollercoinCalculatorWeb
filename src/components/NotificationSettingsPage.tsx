@@ -31,7 +31,7 @@ export default function NotificationSettingsPage() {
     const { getValidToken } = useAuth();
 
     const [preferences, setPreferences] = useState<CreateNotificationPreferenceDto[]>([
-        { eventType: 'General', isWebPushEnabled: false, isEmailEnabled: false }
+        { notificationType: 'ProgressionEvent', isWebPushEnabled: false, isEmailEnabled: false }
     ]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -52,7 +52,7 @@ export default function NotificationSettingsPage() {
                 const data = await getNotificationPreferences(token);
                 if (data && data.length > 0) {
                     setPreferences(data.map(d => ({
-                        eventType: d.eventType,
+                        notificationType: d.notificationType,
                         isWebPushEnabled: d.isWebPushEnabled,
                         isEmailEnabled: d.isEmailEnabled
                     })));
@@ -219,7 +219,7 @@ export default function NotificationSettingsPage() {
                             {successMessage && <div className="auth-success" style={{ padding: '12px', background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderRadius: '8px', border: '1px solid rgba(52, 211, 153, 0.2)' }}>{successMessage}</div>}
 
                             {preferences.map((pref, index) => (
-                                <div key={pref.eventType || index} style={{
+                                <div key={pref.notificationType || index} style={{
                                     background: 'rgba(15, 15, 30, 0.4)',
                                     border: '1px solid rgba(255,255,255,0.1)',
                                     borderRadius: '12px',
@@ -229,7 +229,7 @@ export default function NotificationSettingsPage() {
                                     gap: '16px'
                                 }}>
                                     <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#f8fafc', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
-                                        {pref.eventType === 'General' ? t('settings.eventGeneral', 'General Notifications') : pref.eventType}
+                                        {pref.notificationType === 'ProgressionEvent' ? 'Progression Event' : pref.notificationType}
                                     </h3>
 
                                     <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>

@@ -4,7 +4,7 @@ import { buildApiUrl } from '../config/api';
 export interface NotificationPreferenceDto {
     id: string;
     userId: string;
-    eventType: string;
+    notificationType: string;
     isWebPushEnabled: boolean;
     isEmailEnabled: boolean;
     createdDate: string;
@@ -12,7 +12,7 @@ export interface NotificationPreferenceDto {
 }
 
 export interface CreateNotificationPreferenceDto {
-    eventType: string;
+    notificationType: string;
     isWebPushEnabled: boolean;
     isEmailEnabled: boolean;
 }
