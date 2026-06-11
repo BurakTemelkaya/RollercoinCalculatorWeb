@@ -383,10 +383,20 @@ export default function ProgressionEvent() {
                 const endDate = eventData.endDate.replace(/Z$/, '');
                 console.log('[CurrencyDiscount] Fetching discounts:', { startDate, endDate });
                 const discounts = await fetchCurrencyDiscounts(startDate, endDate);
-                console.log('[CurrencyDiscount] Received:', discounts);
-                setCurrencyDiscounts(discounts);
-                if (discounts.length > 0) {
-                    setDiscount(discounts[0].amount);
+                
+                // Filter out discounts that ended before or right as the event started
+                // We add a 1-hour tolerance to handle events starting slightly before their official 15:00:00 UTC time
+                const eventStartMs = new Date(rawStart + 'Z').getTime();
+                const filteredDiscounts = discounts.filter(d => {
+                    const discountEndUtc = d.endDate && !d.endDate.endsWith('Z') && !d.endDate.includes('+') ? d.endDate + 'Z' : d.endDate;
+                    const discountEndMs = new Date(discountEndUtc).getTime();
+                    return discountEndMs > eventStartMs + 3600000; // Must end strictly > 1 hour after event start
+                });
+
+                console.log('[CurrencyDiscount] Filtered:', filteredDiscounts);
+                setCurrencyDiscounts(filteredDiscounts);
+                if (filteredDiscounts.length > 0) {
+                    setDiscount(filteredDiscounts[0].amount);
                 }
             } catch (err) {
                 console.error('Failed to fetch currency discounts:', err);
