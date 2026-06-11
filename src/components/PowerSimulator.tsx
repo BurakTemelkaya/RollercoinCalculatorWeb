@@ -266,7 +266,12 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const uiFormulaLeague = uiMiners * (1 + uiBonusVal / 100) + uiRacks - uiFreon;
             const uiFormulaTotal = (uiMiners + uiGames) * (1 + uiBonusVal / 100) + uiRacks + uiTemp;
 
-            hiddenLeagueOffset = (api.max_Power * 1e9) - uiFormulaLeague;
+            // League power = miners + bonus + racks - freon (directly from API raw values)
+            // NOTE: api.bonus is already the calculated absolute bonus power, not a percentage.
+            // Do NOT use max_Power here — max_Power is total power without decrease
+            // (includes games, temp, and bonus applied to games), not league power.
+            const apiLeaguePowerGh = (api.miners || 0) + (api.bonus || 0) + (api.racks || 0) - (api.freon || 0);
+            hiddenLeagueOffset = (apiLeaguePowerGh * 1e9) - uiFormulaLeague;
             hiddenTotalOffset = (api.current_Power * 1e9) - uiFormulaTotal;
         }
 
