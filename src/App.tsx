@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -18,7 +18,7 @@ import { RollercoinUserResponse } from './types/user';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
-import { NAV_ICONS } from './utils/icons';
+
 
 // Seamless update: when a deploy removes old JS chunks, the dynamic import fails.
 // This wrapper catches that error and does a single transparent reload so the user
@@ -324,7 +324,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260611.145903';
+  const CURRENT_CACHE_VERSION = '20260611.174345';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -767,21 +767,6 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       ) : (
         <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
           <>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '24px' }}>
-              <Link to={`/${lang}/event`} className="pe-event-link" style={{ margin: 0 }}>
-                <span className="tab-icon">{NAV_ICONS.events}</span>
-                {t('tabs.event')}
-              </Link>
-              <Link to={`/${lang}/merges`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.1))', borderColor: 'rgba(56, 189, 248, 0.2)' }}>
-                <span className="tab-icon">{NAV_ICONS.merges}</span>
-                {t('nav.merges')}
-              </Link>
-              <Link to={`/${lang}/support`} className="pe-event-link" style={{ margin: 0, background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1))', borderColor: 'rgba(245, 158, 11, 0.2)' }}>
-                <span className="tab-icon">{NAV_ICONS.support}</span>
-                {t('nav.support')}
-              </Link>
-            </div>
-
             {/* Data Input Form */}
             <DataInputForm
               onDataParsed={handleDataParsed}

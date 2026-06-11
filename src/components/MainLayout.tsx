@@ -73,13 +73,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
     const timer = setTimeout(() => {
       (window as any).coinzilla_display = (window as any).coinzilla_display || [];
       const c_display_preferences: any = {};
-      c_display_preferences.zone = "4176a2678c2d7dc7660";
-      c_display_preferences.width = "320";
-      c_display_preferences.height = "50";
+      c_display_preferences.zone = "83069e710174ee88650";
+      c_display_preferences.width = "300";
+      c_display_preferences.height = "250";
       (window as any).coinzilla_display.push(c_display_preferences);
     }, 100);
     return () => clearTimeout(timer);
-  }, [location.pathname, adsBlocked]);
+  }, [adsBlocked]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -221,12 +221,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
             {/* Top Banner: Daily Quest + Ad */}
             <div className="top-banner-row">
-              <React.Suspense fallback={null}>
-                <DailyBonusQuest />
-              </React.Suspense>
+              <div className="top-banner-left">
+                <React.Suspense fallback={null}>
+                  <DailyBonusQuest />
+                </React.Suspense>
+                <div className="quick-actions-row">
+                  <Link to={`/${i18n.language}/event`} className="quick-action-btn btn-events">{NAV_ICONS.events} {t('tabs.event')}</Link>
+                  <Link to={`/${i18n.language}/merges`} className="quick-action-btn btn-merges">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+                  <Link to={`/${i18n.language}/support`} className="quick-action-btn btn-support">{NAV_ICONS.support} {t('nav.support')}</Link>
+                </div>
+              </div>
               {!adsBlocked && (
-                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '320px', height: '50px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
-                  <div className="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
+                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
+                  <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                 </div>
               )}
               {adsBlocked && (
