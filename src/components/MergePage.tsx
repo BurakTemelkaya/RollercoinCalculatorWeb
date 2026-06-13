@@ -6,6 +6,7 @@ import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge
 import type { PaginatedResponse } from '../types/pagination';
 import { autoScalePower } from '../utils/powerParser';
 import Pagination from './Pagination';
+import ComponentForgeCalculator from './ComponentForgeCalculator';
 import './MergePage.css';
 
 // Local mutation component images for detail view
@@ -231,6 +232,8 @@ export default function MergePage() {
     const [isPartPriceModalOpen, setIsPartPriceModalOpen] = useState(false);
     const [tempSettingsPrices, setTempSettingsPrices] = useState<Record<string, string>>({});
 
+    const [activeTab, setActiveTab] = useState<'miners' | 'parts'>('miners');
+
     const openPartPriceSettings = () => {
         const stringified: Record<string, string> = {};
         Object.keys(customPartPrices).forEach(key => {
@@ -423,9 +426,59 @@ export default function MergePage() {
                 </div>
             </div>
 
-            {/* Controls */}
-            <div className="merge-controls">
-                <div style={{ display: 'flex', gap: '6px', flex: 1, minWidth: '180px', width: '100%' }}>
+            {/* Main Tabs and Controls Row */}
+            <div className="merge-tabs-controls-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div className="merge-main-tabs" style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                        onClick={() => setActiveTab('miners')}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 24px', borderRadius: '8px',
+                            fontWeight: '700', fontSize: '15px', cursor: 'pointer', transition: 'all 0.2s',
+                            backgroundColor: activeTab === 'miners' ? '#06b6d4' : 'rgba(255, 255, 255, 0.03)',
+                            color: activeTab === 'miners' ? '#fff' : '#94a3b8',
+                            border: `1px solid ${activeTab === 'miners' ? '#06b6d4' : 'rgba(255,255,255,0.08)'}`,
+                            boxShadow: activeTab === 'miners' ? '0 0 12px rgba(6, 182, 212, 0.3)' : 'none'
+                        }}
+                    >
+                        <span style={{ fontSize: '18px' }}>⛏️</span> Miners
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('parts')}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 24px', borderRadius: '8px',
+                            fontWeight: '700', fontSize: '15px', cursor: 'pointer', transition: 'all 0.2s',
+                            backgroundColor: activeTab === 'parts' ? '#06b6d4' : 'rgba(255, 255, 255, 0.03)',
+                            color: activeTab === 'parts' ? '#fff' : '#94a3b8',
+                            border: `1px solid ${activeTab === 'parts' ? '#06b6d4' : 'rgba(255,255,255,0.08)'}`,
+                            boxShadow: activeTab === 'parts' ? '0 0 12px rgba(6, 182, 212, 0.3)' : 'none'
+                        }}
+                    >
+                        <span style={{ fontSize: '18px' }}>🔩</span> Parts
+                    </button>
+                </div>
+
+                {/* Forge Level Selector */}
+                <div className="merge-forge-selector">
+                    <img src={craftingImg} alt="Forge" width="18" height="18" className="merge-forge-label" />
+                    <select
+                        className="merge-forge-select"
+                        value={forgeLevel}
+                        onChange={(e) => handleForgeLevelChange(parseInt(e.target.value, 10) as ForgeLevel)}
+                        title={t('merge.forgeLevel', 'Forge Seviyesi')}
+                    >
+                        {[1, 2, 3, 4, 5].map(lv => (
+                            <option key={lv} value={lv}>
+                                Lv.{lv}{FORGE_DISCOUNTS[lv] > 0 ? ` (-${FORGE_DISCOUNTS[lv] * 100}%)` : ''}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
+            {activeTab === 'miners' && (
+                    <div className="merge-controls" style={{ margin: 0, flex: 1, justifyContent: 'flex-end' }}>
+                        <div style={{ display: 'flex', gap: '6px', flex: 1, minWidth: '180px', width: '100%', maxWidth: '350px' }}>
                     <div className="merge-search-wrapper" style={{ flex: 1, minWidth: 0 }}>
                         <span className="merge-search-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -509,25 +562,13 @@ export default function MergePage() {
                         <span>{getSortLabel()}</span>
                     </button>
 
-                    {/* Forge Level Selector */}
-                    <div className="merge-forge-selector">
-                        <img src={craftingImg} alt="Forge" width="18" height="18" className="merge-forge-label" />
-                        <select
-                            className="merge-forge-select"
-                            value={forgeLevel}
-                            onChange={(e) => handleForgeLevelChange(parseInt(e.target.value, 10) as ForgeLevel)}
-                            title={t('merge.forgeLevel', 'Forge Seviyesi')}
-                        >
-                            {[1, 2, 3, 4, 5].map(lv => (
-                                <option key={lv} value={lv}>
-                                    Lv.{lv}{FORGE_DISCOUNTS[lv] > 0 ? ` (-${FORGE_DISCOUNTS[lv] * 100}%)` : ''}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+
                 </div>
             </div>
-
+            )}
+        </div>
+            {activeTab === 'miners' && (
+                <>
             {/* Content */}
             {error ? (
                 <div className="merge-error">
@@ -979,6 +1020,8 @@ export default function MergePage() {
                     </div>
                 </div>
             )}
+                </>
+            )}
 
             {/* Part Price Settings Modal */}
             {isPartPriceModalOpen && (
@@ -1078,6 +1121,15 @@ export default function MergePage() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Component Calculator */}
+            {activeTab === 'parts' && (
+                <ComponentForgeCalculator 
+                    forgeLevel={forgeLevel as 1 | 2 | 3 | 4 | 5} 
+                    customPartPrices={customPartPrices} 
+                    onOpenSettings={openPartPriceSettings}
+                />
             )}
 
             {/* SEO Content Section */}

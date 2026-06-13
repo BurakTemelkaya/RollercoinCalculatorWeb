@@ -1,0 +1,830 @@
+/* ===== Component Forge Calculator ===== */
+
+.cfc-container {
+    margin-top: 32px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg, 16px);
+}
+
+/* Header */
+.cfc-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.cfc-header-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.08));
+    border-radius: 10px;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.cfc-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary, #e2e8f0);
+    margin: 0;
+}
+
+.cfc-desc {
+    font-size: 13px;
+    color: var(--text-secondary, #94a3b8);
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+}
+
+/* Controls */
+.cfc-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Type Tabs */
+.cfc-type-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.cfc-type-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 10px);
+    color: var(--text-secondary, #94a3b8);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    flex: 1;
+    justify-content: center;
+    min-width: 100px;
+}
+
+.cfc-type-tab:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary, #e2e8f0);
+}
+
+.cfc-type-tab.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.08));
+    border-color: rgba(99, 102, 241, 0.3);
+    color: var(--text-primary, #e2e8f0);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.1);
+}
+
+.cfc-type-tab-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+/* Controls Row */
+.cfc-controls-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.cfc-control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cfc-count-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.cfc-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted, #a0aec0);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cfc-select {
+    background: var(--bg-primary, #0a0e17);
+    border: 1px solid var(--border-color, rgba(148, 163, 184, 0.1));
+    border-radius: var(--radius-md, 10px);
+    padding: 10px 14px;
+    color: var(--text-primary, #fff);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    min-width: 130px;
+}
+
+.cfc-select:focus {
+    outline: none;
+    border-color: var(--accent-primary, #6366f1);
+}
+
+.cfc-select option {
+    background: var(--bg-primary, #0a0e17);
+}
+
+/* Count Input */
+.cfc-count-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--bg-primary, #0a0e17);
+    border: 1px solid var(--border-color, rgba(148, 163, 184, 0.1));
+    border-radius: var(--radius-md, 10px);
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.cfc-count-wrapper:focus-within {
+    border-color: var(--accent-primary, #6366f1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.cfc-count-btn {
+    width: 38px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: none;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+    font-family: inherit;
+}
+
+.cfc-count-btn:hover {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.cfc-count-input {
+    flex: 1;
+    min-width: 80px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 8px;
+    outline: none;
+    font-family: inherit;
+}
+
+/* Quick Buttons */
+.cfc-quick-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.cfc-quick-btn {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.cfc-quick-btn:hover {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: var(--text-primary, #e2e8f0);
+}
+
+.cfc-quick-clear {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.15);
+}
+
+.cfc-quick-clear:hover {
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.3);
+    color: #f87171;
+}
+
+/* Info Badge */
+.cfc-info-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(168, 85, 247, 0.03));
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    border-radius: var(--radius-md, 10px);
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: var(--text-primary, #e2e8f0);
+    flex-wrap: wrap;
+}
+
+.cfc-info-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.cfc-info-forge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f59e0b;
+}
+
+.cfc-discount-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+/* Table */
+.cfc-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 12px;
+    border-radius: var(--radius-md, 10px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cfc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 600px;
+}
+
+.cfc-table thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #a0aec0);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+}
+
+.cfc-table tbody td {
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-primary, #e2e8f0);
+    vertical-align: middle;
+}
+
+.cfc-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.cfc-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Rarity Cell */
+.cfc-rarity-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cfc-rarity-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.cfc-rarity-badge {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.cfc-expand-icon {
+    font-size: 10px;
+    color: var(--text-muted, #a0aec0);
+    margin-left: 2px;
+}
+
+.cfc-parts-per-unit {
+    font-weight: 600;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.cfc-produced {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.cfc-produced.zero {
+    color: var(--text-muted, #64748b);
+    font-size: 13px;
+}
+
+/* Fee Cell */
+.cfc-fee-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.cfc-fee-total {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    color: #f59e0b;
+    white-space: nowrap;
+}
+
+.cfc-fee-unit {
+    font-size: 11px;
+    color: var(--text-muted, #a0aec0);
+}
+
+/* Market Price */
+.cfc-market-price {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cfc-market-price.custom {
+    color: #f59e0b;
+}
+
+.cfc-custom-tag {
+    font-size: 10px;
+    margin-left: 2px;
+}
+
+/* Value Cell */
+.cfc-value-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.cfc-net-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.cfc-net-value.profit {
+    color: #10b981;
+}
+
+.cfc-net-value.loss {
+    color: #f87171;
+}
+
+.cfc-net-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.cfc-net-badge.profit {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.cfc-net-badge.loss {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+}
+
+/* Step Details */
+.cfc-steps-detail {
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md, 10px);
+    margin-bottom: 16px;
+    animation: fadeIn 0.2s ease;
+}
+
+.cfc-steps-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary, #94a3b8);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.cfc-steps-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cfc-step-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    flex: 1;
+    min-width: 110px;
+}
+
+.cfc-step-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cfc-step-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.cfc-step-arrow {
+    font-size: 16px;
+    color: var(--text-muted, #64748b);
+}
+
+.cfc-step-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.cfc-step-arrow-text {
+    color: var(--text-muted, #64748b);
+    font-size: 10px;
+}
+
+.cfc-step-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.cfc-step-stat {
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+    font-weight: 600;
+}
+
+.cfc-step-fee {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #f59e0b;
+}
+
+/* Forge Level Comparison */
+.cfc-forge-comparison {
+    margin-top: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md, 10px);
+    overflow: hidden;
+}
+
+.cfc-forge-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: none;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: left;
+    font-family: inherit;
+}
+
+.cfc-forge-toggle:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.cfc-toggle-icon {
+    font-size: 10px;
+    color: var(--text-muted, #a0aec0);
+}
+
+.cfc-forge-target-badge {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cfc-forge-table-wrap {
+    overflow-x: auto;
+}
+
+.cfc-forge-table {
+    min-width: 580px;
+}
+
+.cfc-forge-table tbody td {
+    font-size: 13px;
+}
+
+.cfc-active-forge {
+    background: rgba(99, 102, 241, 0.08) !important;
+    border-left: 3px solid var(--accent-primary, #6366f1);
+}
+
+.cfc-active-forge td:first-child {
+    padding-left: 11px;
+}
+
+.cfc-forge-level-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Market Prices Reference */
+.cfc-market-ref {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md, 10px);
+}
+
+.cfc-market-ref-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary, #94a3b8);
+    margin: 0 0 12px 0;
+}
+
+.cfc-market-table-wrap {
+    overflow-x: auto;
+}
+
+.cfc-market-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+}
+
+.cfc-market-table thead th {
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+}
+
+.cfc-market-table tbody td {
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text-primary, #e2e8f0);
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.cfc-market-type-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left !important;
+    font-weight: 700 !important;
+    color: var(--text-secondary, #94a3b8) !important;
+    white-space: nowrap;
+}
+
+.cfc-market-type-img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.cfc-market-price-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.cfc-market-edit-icon {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.2s;
+    pointer-events: none;
+}
+
+.cfc-market-table tbody td:hover .cfc-market-edit-icon {
+    opacity: 0.8;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.cfc-market-table tbody td:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cfc-custom-cell {
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.cfc-market-ref-hint {
+    margin: 10px 0 0 0;
+    font-size: 11px;
+    color: var(--text-muted, #64748b);
+    line-height: 1.4;
+}
+
+/* Loading & Error & Empty */
+.cfc-loading,
+.cfc-error,
+.cfc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 14px;
+}
+
+.cfc-error {
+    color: #f87171;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .cfc-container {
+        padding: 16px;
+    }
+
+    .cfc-title {
+        font-size: 17px;
+    }
+
+    .cfc-type-tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .cfc-type-tab-img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .cfc-controls-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cfc-count-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .cfc-info-badge {
+        font-size: 13px;
+    }
+
+    .cfc-info-forge {
+        margin-left: 0;
+    }
+
+    .cfc-rarity-img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .cfc-step-card {
+        min-width: 90px;
+    }
+
+    .cfc-quick-btns {
+        justify-content: flex-start;
+    }
+
+    .cfc-quick-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cfc-type-tab {
+        padding: 8px 10px;
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .cfc-type-tab-img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Tooltip for CFC */
+.cfc-tooltip {
+    position: relative;
+    cursor: help;
+    text-decoration: underline dotted rgba(255, 255, 255, 0.3);
+    text-underline-offset: 2px;
+}
+
+.cfc-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.cfc-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+}
