@@ -296,6 +296,7 @@
     "minersPower": "Miners Power",
     "rackPower": "Rack Power (Flat/Bonus)",
     "totalBonus": "Total Bonus",
+    "hamsterBonus": "Hamster Bonus",
     "gamesPower": "Games Power (Optional)",
     "tempPower": "Temporary Power (Optional)",
     "freonPower": "Freon Power (Optional)",
