@@ -17,6 +17,8 @@ export interface UserPowerResponseDto {
     bonus: number;
     bonus_percent?: number;
     freon?: number;
+    hamster_expedition_bonus_percent?: number;
+    hamster_expedition_bonus_power?: number;
 }
 
 export interface RollercoinUserResponse {

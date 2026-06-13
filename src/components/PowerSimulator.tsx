@@ -61,6 +61,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     const [statTempUnit, setStatTempUnit] = useState<PowerUnit>(() => getStoredUnit('tempUnit', 'Ph'));
     const [statFreonPower, setStatFreonPower] = useState<string>(() => getStoredStr('freon', ''));
     const [statFreonUnit, setStatFreonUnit] = useState<PowerUnit>(() => getStoredUnit('freonUnit', 'Ph'));
+    const [statHamsterBonus, setStatHamsterBonus] = useState<string>(() => getStoredStr('hamsterBonus', ''));
 
     // New Miner Input
     const [newMinerPower, setNewMinerPower] = useState<string>(() => getStoredStr('newMiner', ''));
@@ -85,6 +86,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     useEffect(() => { localStorage.setItem('rollercoin_sim_tempUnit', statTempUnit); }, [statTempUnit]);
     useEffect(() => { localStorage.setItem('rollercoin_sim_freon', statFreonPower); }, [statFreonPower]);
     useEffect(() => { localStorage.setItem('rollercoin_sim_freonUnit', statFreonUnit); }, [statFreonUnit]);
+    useEffect(() => { localStorage.setItem('rollercoin_sim_hamsterBonus', statHamsterBonus); }, [statHamsterBonus]);
     useEffect(() => { localStorage.setItem('rollercoin_sim_newMiner', newMinerPower); }, [newMinerPower]);
     useEffect(() => { localStorage.setItem('rollercoin_sim_newMinerUnit', newMinerUnit); }, [newMinerUnit]);
     useEffect(() => { localStorage.setItem('rollercoin_sim_newBonus', newMinerBonus); }, [newMinerBonus]);
@@ -109,18 +111,29 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
             const minersRawGh = fetchedUser.userPowerResponseDto.miners || 0;
             const gamesRawGh = fetchedUser.userPowerResponseDto.games || 0;
 
-            const baseForBonusGh = minersRawGh + gamesRawGh; 
+            const baseForBonusGh = minersRawGh + gamesRawGh;
 
             let calculatedBonus = 0;
+            let calculatedHamsterBonus = 0;
             if (fetchedUser.userPowerResponseDto.bonus_percent !== undefined) {
-                // If API provides bonus_percent directly (value like 97483 for 974.83%)
-                calculatedBonus = fetchedUser.userPowerResponseDto.bonus_percent / 100;
+                const totalApiBonusPercent = fetchedUser.userPowerResponseDto.bonus_percent / 100;
+                if (fetchedUser.userPowerResponseDto.hamster_expedition_bonus_percent !== undefined) {
+                    calculatedHamsterBonus = fetchedUser.userPowerResponseDto.hamster_expedition_bonus_percent / 100;
+                }
+                // The API's 'bonus_percent' ALREADY includes 'hamster_expedition_bonus_percent'
+                // So we subtract it to get the true base collection bonus
+                calculatedBonus = totalApiBonusPercent - calculatedHamsterBonus;
             } else if (baseForBonusGh > 0) {
-                // The true bonus is applied to (Miners + Games)
-                const bonusPowerRawGh = fetchedUser.userPowerResponseDto.bonus || 0;
-                calculatedBonus = (bonusPowerRawGh / baseForBonusGh) * 100;
+                const totalApiBonusPwr = fetchedUser.userPowerResponseDto.bonus || 0;
+                const hamsterPwr = fetchedUser.userPowerResponseDto.hamster_expedition_bonus_power || 0;
+                // The API's 'bonus' ALREADY includes 'hamster_expedition_bonus_power'
+                const baseBonusPwr = totalApiBonusPwr - hamsterPwr;
+
+                calculatedBonus = (baseBonusPwr / baseForBonusGh) * 100;
+                calculatedHamsterBonus = (hamsterPwr / baseForBonusGh) * 100;
             }
             setStatBonus(calculatedBonus.toFixed(4));
+            setStatHamsterBonus(calculatedHamsterBonus > 0 ? calculatedHamsterBonus.toFixed(4) : '');
 
             // User requested that inputs be treated as Raw Miner Power.
             // So we populate the input with the Base (Raw) value if fetching.
@@ -199,7 +212,6 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     useEffect(() => {
         const currentMinerVal = parseFloat(statMinersPower) || 0;
         const currentMinerBaseH = toBaseUnit({ value: currentMinerVal, unit: statMinersUnit });
-        const currentBonusVal = parseFloat(statBonus) || 0;
 
         const rackVal = parseFloat(statRackPower) || 0;
         const rackH = toBaseUnit({ value: rackVal, unit: statRackUnit });
@@ -231,57 +243,75 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
 
         if (fetchMode === 'username' && fetchedUser) {
             const api = fetchedUser.userPowerResponseDto;
-            
+
             // To perfectly cancel out the rounding applied when populating the UI,
             // we calculate the formula using the exact same rounded numbers the UI inputs have (.toFixed(3)).
-            const uiMiners = toBaseUnit({ 
-                value: parseFloat(autoScalePower((api.miners || 0) * 1e9).value.toFixed(3)), 
-                unit: autoScalePower((api.miners || 0) * 1e9).unit 
+            const uiMiners = toBaseUnit({
+                value: parseFloat(autoScalePower((api.miners || 0) * 1e9).value.toFixed(3)),
+                unit: autoScalePower((api.miners || 0) * 1e9).unit
             });
-            const uiGames = toBaseUnit({ 
-                value: parseFloat(autoScalePower((api.games || 0) * 1e9).value.toFixed(3)), 
-                unit: autoScalePower((api.games || 0) * 1e9).unit 
+            const uiGames = toBaseUnit({
+                value: parseFloat(autoScalePower((api.games || 0) * 1e9).value.toFixed(3)),
+                unit: autoScalePower((api.games || 0) * 1e9).unit
             });
-            const uiRacks = toBaseUnit({ 
-                value: parseFloat(autoScalePower((api.racks || 0) * 1e9).value.toFixed(3)), 
-                unit: autoScalePower((api.racks || 0) * 1e9).unit 
+            const uiRacks = toBaseUnit({
+                value: parseFloat(autoScalePower((api.racks || 0) * 1e9).value.toFixed(3)),
+                unit: autoScalePower((api.racks || 0) * 1e9).unit
             });
-            const uiTemp = toBaseUnit({ 
-                value: parseFloat(autoScalePower((api.temp || 0) * 1e9).value.toFixed(3)), 
-                unit: autoScalePower((api.temp || 0) * 1e9).unit 
+            const uiTemp = toBaseUnit({
+                value: parseFloat(autoScalePower((api.temp || 0) * 1e9).value.toFixed(3)),
+                unit: autoScalePower((api.temp || 0) * 1e9).unit
             });
-            const uiFreon = toBaseUnit({ 
-                value: parseFloat(autoScalePower((api.freon || 0) * 1e9).value.toFixed(3)), 
-                unit: autoScalePower((api.freon || 0) * 1e9).unit 
+            const uiFreon = toBaseUnit({
+                value: parseFloat(autoScalePower((api.freon || 0) * 1e9).value.toFixed(3)),
+                unit: autoScalePower((api.freon || 0) * 1e9).unit
             });
 
-            let rawBonusVal = 0;
+            let rawBaseBonusVal = 0;
+            let rawHamsterBonusVal = 0;
             if (api.bonus_percent !== undefined) {
-                rawBonusVal = api.bonus_percent / 100;
+                const totalApiBonusPercent = api.bonus_percent / 100;
+                if (api.hamster_expedition_bonus_percent !== undefined) {
+                    rawHamsterBonusVal = api.hamster_expedition_bonus_percent / 100;
+                }
+                rawBaseBonusVal = totalApiBonusPercent - rawHamsterBonusVal;
             } else if (((api.miners || 0) + (api.games || 0)) > 0) {
-                rawBonusVal = ((api.bonus || 0) / ((api.miners || 0) + (api.games || 0))) * 100;
+                const totalBonusPwr = api.bonus || 0;
+                const hamsterPwr = api.hamster_expedition_bonus_power || 0;
+                const baseBonusPwr = totalBonusPwr - hamsterPwr;
+
+                rawBaseBonusVal = (baseBonusPwr / ((api.miners || 0) + (api.games || 0))) * 100;
+                rawHamsterBonusVal = (hamsterPwr / ((api.miners || 0) + (api.games || 0))) * 100;
             }
-            const uiBonusVal = parseFloat(rawBonusVal.toFixed(4));
+            const uiBaseBonusVal = parseFloat(rawBaseBonusVal.toFixed(4));
+            const uiTotalBonusVal = parseFloat((rawBaseBonusVal + rawHamsterBonusVal).toFixed(4));
 
-            const uiFormulaLeague = uiMiners * (1 + uiBonusVal / 100) + uiRacks - uiFreon;
-            const uiFormulaTotal = (uiMiners + uiGames) * (1 + uiBonusVal / 100) + uiRacks + uiTemp;
+            // League power only uses base collection bonus! Hamster bonus does NOT count for league.
+            const uiFormulaLeague = uiMiners * (1 + uiBaseBonusVal / 100) + uiRacks - uiFreon;
+            const uiFormulaTotal = (uiMiners + uiGames) * (1 + uiTotalBonusVal / 100) + uiRacks + uiTemp;
 
-            // League power = miners + bonus + racks - freon (directly from API raw values)
-            // NOTE: api.bonus is already the calculated absolute bonus power, not a percentage.
-            // Do NOT use max_Power here — max_Power is total power without decrease
-            // (includes games, temp, and bonus applied to games), not league power.
-            const apiLeaguePowerGh = (api.miners || 0) + (api.bonus || 0) + (api.racks || 0) - (api.freon || 0);
+            // League power = miners + (bonus ON MINERS) + racks - freon
+            const apiBaseBonusPwr = (api.bonus || 0) - (api.hamster_expedition_bonus_power || 0);
+            const totalBaseGh = (api.miners || 0) + (api.games || 0);
+            const apiBaseBonusOnMinersPwr = totalBaseGh > 0 ? apiBaseBonusPwr * ((api.miners || 0) / totalBaseGh) : 0;
+            const apiLeaguePowerGh = (api.miners || 0) + apiBaseBonusOnMinersPwr + (api.racks || 0) - (api.freon || 0);
             hiddenLeagueOffset = (apiLeaguePowerGh * 1e9) - uiFormulaLeague;
-            hiddenTotalOffset = (api.current_Power * 1e9) - uiFormulaTotal;
+
+            // api.current_Power already includes hamster expedition bonus (it's part of api.bonus)
+            hiddenTotalOffset = ((api.current_Power || 0) * 1e9) - uiFormulaTotal;
         }
 
         // --- Current State Base ---
         // Calculate based on the visible input fields (which the user might have edited)
-        let currentLeaguePowerH = currentMinerBaseH * (1 + currentBonusVal / 100) + rackH - freonH;
+        const currentBaseBonusVal = parseFloat(statBonus) || 0;
+        const currentTotalBonusVal = currentBaseBonusVal + (parseFloat(statHamsterBonus) || 0);
+
+        // League power ONLY uses the Base Bonus, NOT the Hamster Bonus!
+        let currentLeaguePowerH = currentMinerBaseH * (1 + currentBaseBonusVal / 100) + rackH - freonH;
 
         const bonusBase = currentMinerBaseH + gamesH;
-        let currentTotalPowerH = (bonusBase * (1 + currentBonusVal / 100)) + rackH + tempH;
-        
+        let currentTotalPowerH = (bonusBase * (1 + currentTotalBonusVal / 100)) + rackH + tempH;
+
         // Apply backend offsets so that if inputs match API exactly, the output matches API exactly.
         // If inputs are edited, it correctly scales from the edit.
         currentLeaguePowerH += hiddenLeagueOffset;
@@ -305,10 +335,11 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         const totalAddedBonusVal = addedMinersBonusVal + previewBonusVal;
 
         // --- New State (Calculated via Inputs + Offset) ---
-        const newTotalBonusPercent = currentBonusVal + totalAddedBonusVal;
+        const newTotalBonusPercent = currentTotalBonusVal + totalAddedBonusVal;
+        const newBaseBonusPercent = currentBaseBonusVal + totalAddedBonusVal; // assuming added miner gives regular collection bonus
         const newAllMinersH = currentMinerBaseH + totalAddedBaseH;
-        
-        const newLeaguePowerH = (newAllMinersH * (1 + newTotalBonusPercent / 100)) + rackH - freonH + hiddenLeagueOffset;
+
+        const newLeaguePowerH = (newAllMinersH * (1 + newBaseBonusPercent / 100)) + rackH - freonH + hiddenLeagueOffset;
 
         const newBonusBaseH = newAllMinersH + gamesH;
         let newTotalPowerH = (newBonusBaseH * (1 + newTotalBonusPercent / 100)) + rackH + tempH + hiddenTotalOffset;
@@ -338,7 +369,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
         } else {
             setSimulationResult(null);
         }
-    }, [statMinersPower, statMinersUnit, statBonus, statRackPower, statRackUnit, statGamesPower, statGamesUnit, statTempPower, statTempUnit, statFreonPower, statFreonUnit, addedMiners, newMinerPower, newMinerUnit, newMinerBonus, currentLeague]);
+    }, [statMinersPower, statMinersUnit, statBonus, statHamsterBonus, statRackPower, statRackUnit, statGamesPower, statGamesUnit, statTempPower, statTempUnit, statFreonPower, statFreonUnit, addedMiners, newMinerPower, newMinerUnit, newMinerBonus, currentLeague]);
 
     const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
 
@@ -454,6 +485,17 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                         type="number"
                                         value={statBonus}
                                         onChange={e => setStatBonus(e.target.value)}
+                                        placeholder="0"
+                                        className="power-value-input"
+                                    />
+                                </div>
+
+                                <div className="input-group compact mobile-half" style={{ flex: 1 }}>
+                                    <label>{t('simulator.hamsterBonus')} (%)</label>
+                                    <input
+                                        type="number"
+                                        value={statHamsterBonus}
+                                        onChange={e => setStatHamsterBonus(e.target.value)}
                                         placeholder="0"
                                         className="power-value-input"
                                     />

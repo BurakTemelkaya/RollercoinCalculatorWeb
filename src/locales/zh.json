@@ -294,6 +294,7 @@
     "minersPower": "矿机算力",
     "rackPower": "机架算力",
     "totalBonus": "总奖励",
+    "hamsterBonus": "仓鼠奖励",
     "gamesPower": "游戏算力 (可选)",
     "tempPower": "临时算力 (可选)",
     "freonPower": "氟利昂",
