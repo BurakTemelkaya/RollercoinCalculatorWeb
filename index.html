@@ -154,14 +154,35 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
           <script>
-                  window.coinzilla_display = window.coinzilla_display || [];
-                  var c_display_preferences = {};
-                  c_display_preferences.zone = "24569e7101752ae238";
-                  c_display_preferences.width = "160";
-                  c_display_preferences.height = "600";
-                  coinzilla_display.push(c_display_preferences);
+            (function () {
+              var container = document.getElementById('left-side-ad-container');
+              if (!container) return;
+
+              function loadCoinzilla() {
+                container.innerHTML = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
+                window.coinzilla_display = window.coinzilla_display || [];
+                var c_display_preferences = {};
+                c_display_preferences.zone = "24569e7101752ae238";
+                c_display_preferences.width = "160";
+                c_display_preferences.height = "600";
+                coinzilla_display.push(c_display_preferences);
+              }
+
+              function loadAads() {
+                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
+              }
+
+              // Check A-ADS reachability
+              var testUrl = 'https://ad.a-ads.com/2429727/?size=160x600';
+              fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
+                .then(function () {
+                  loadAads();
+                })
+                .catch(function () {
+                  loadCoinzilla();
+                });
+            })();
           </script>
         </div>
       </div>
