@@ -1,0 +1,744 @@
+/* ===== WRAPPER ===== */
+.room-simulator-wrapper {
+    /* MİNER BOYUTLARINI BURADAN DEĞİŞTİREBİLİRSİN */
+    --size-2-width: 75px;
+    /* BÜYÜK miner genişliği (Küçültüldü) */
+    --size-1-width: 70px;
+    /* KÜÇÜK miner genişliği (Büyütüldü) */
+
+    margin-top: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    position: relative;
+    z-index: 10;
+    max-width: 100%;
+    /* overflow removed to prevent tooltip clipping */
+}
+
+/* ===== HEADER ===== */
+.room-sim-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Başlık solda, butonlar en sağda kalacak */
+    padding: 15px 20px;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1000;
+}
+
+.room-sim-header .modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1001;
+    position: relative;
+}
+
+.room-numbers {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.room-number {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #514e72);
+    background: var(--bg-color, #1a1b2e);
+    color: var(--text-color, #ccc);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    padding: 0;
+    line-height: 1;
+}
+
+.room-number:hover {
+    background: var(--border-color, #514e72);
+}
+
+.room-number.selected {
+    background: var(--primary-color, #0275d8);
+    color: white;
+    border-color: var(--primary-color, #0275d8);
+}
+
+/* ===== RAF GRİD ALANI ===== */
+.room-grid-area {
+    background-color: #2b2b36;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+    padding: 40px 20px;
+    overflow: visible;
+    text-align: center;
+}
+
+.room-grid-area-inner {
+    display: inline-block;
+    text-align: left;
+}
+
+.racks-grid {
+    display: inline-grid;
+    gap: 12px;
+}
+
+/* ===== RAF SABİT BOYUTU (TAM ROLLERCOIN: 97x155px) ===== */
+.card-rack-item {
+    position: relative;
+    width: 97px;
+    height: 155px;
+    z-index: 1;
+}
+
+.card-rack-item:hover {
+    z-index: 1000;
+}
+
+.rack-drop-wrapper {
+    background-color: rgba(24, 25, 39, 0.5);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.rack-drop-wrapper:hover {
+    border-color: #03e1e4;
+    background-color: rgba(3, 225, 228, 0.1);
+}
+
+.rack-drop-wrapper:hover .rack-drop-hover {
+    opacity: 1 !important;
+}
+
+.rack-item {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    object-position: bottom !important;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ===== MINER POZİSYONLAMA ===== */
+.miners-block-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.miner-img-wrapper {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    background: none;
+}
+
+/* Genişlikler yukarıdaki değişkenlere bağlandı */
+.miner-img-wrapper.size-2 {
+    width: var(--size-2-width);
+}
+
+.miner-img-wrapper.size-1 {
+    width: var(--size-1-width);
+}
+
+.miner-item {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    transition: filter 0.15s ease;
+}
+
+.miner-img-wrapper:hover .miner-item {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7)) brightness(1.15);
+}
+
+/* ===== LEVEL BADGE ===== */
+.miners-badges {
+    position: absolute;
+    z-index: 50;
+    display: flex;
+    gap: 1px;
+    pointer-events: none;
+}
+
+/* Büyük Miner Rozet Ayarı */
+.miner-img-wrapper.size-2 .miners-badges {
+    top: 10px;
+    left: 0px;
+}
+
+/* Küçük Minerlar için AYRI AYRI Rozet Ayarı */
+.miner-img-wrapper.size-1.pos-0 .miners-badges {
+    top: 10px;
+    left: 15px;
+}
+
+.miner-img-wrapper.size-1.pos-1 .miners-badges {
+    top: 15px;
+    left: 15px;
+}
+
+.miners-badges img {
+    width: 14px;
+    height: 14px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+/* ===== BUTONLAR VE AKSİYONLAR ===== */
+/* ===== RACK AYAR BUTONU (Kaldırıldı) ===== */
+
+.rack-actions-overlay {
+    position: absolute;
+    top: -8px;
+    right: -24px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: auto;
+    z-index: 50;
+}
+
+.card-rack-item:hover .rack-actions-overlay {
+    opacity: 1;
+}
+
+.miner-actions-overlay {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 50;
+    pointer-events: auto;
+}
+
+.miner-img-wrapper:hover .miner-actions-overlay,
+.miner-img-wrapper.active-tooltip .miner-actions-overlay {
+    opacity: 1;
+}
+
+.action-icon-btn {
+    background: var(--error-color, #d9534f);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+/* RAF İÇİN ÇARPI BUTONU AYARI */
+.rack-actions-overlay .action-icon-btn {
+    /* Rafların çarpı butonunu kaydırmak istersen burayı kullanabilirsin */
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+/* 2 HÜCRELİ (BÜYÜK) MINERLAR İÇİN ÇARPI BUTONU AYARI */
+.miner-img-wrapper.size-2 .action-icon-btn {
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+/* 1 HÜCRELİ (KÜÇÜK) MINERLAR İÇİN ÇARPI BUTONU AYARI */
+.miner-img-wrapper.size-1 .action-icon-btn {
+    /* Tekli minerlar için istediğin kaydırmayı buraya yazabilirsin */
+    margin-right: 15px;
+    /* Örnek olarak biraz daha sola çektim, buradan değiştirebilirsin */
+    margin-top: 5px;
+}
+
+.action-icon-btn.add-btn {
+    background: var(--primary-color, #0275d8);
+}
+
+/* ===== TOOLTIP ===== */
+.miner-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    color: white;
+    white-space: nowrap;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 5px;
+}
+
+/* Tooltip'in diğer rafların altında kalmasını önlemek için hover durumunda z-index artırıyoruz */
+.card-rack-item:hover {
+    z-index: 9999 !important;
+}
+
+.miner-img-wrapper:hover {
+    z-index: 9999 !important;
+}
+
+.miner-tooltip-down {
+    bottom: auto;
+    top: 100%;
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+/* ===== RACK TOOLTIP ===== */
+.rack-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    color: white;
+    white-space: nowrap;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 5px;
+}
+
+.card-rack-item:hover:not(:has(.miner-img-wrapper:hover))>.rack-tooltip {
+    opacity: 1;
+}
+
+.rack-tooltip-down {
+    bottom: auto;
+    top: 100%;
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+.miner-img-wrapper:hover .miner-tooltip,
+.miner-img-wrapper.active-tooltip .miner-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.miner-name {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 2px;
+}
+
+.miner-stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* ===== MOBİL ===== */
+@media (max-width: 991px) {
+    .room-grid-area {
+        padding: 20px 12px;
+    }
+
+    .racks-grid {
+        grid-template-columns: repeat(2, 97px) !important;
+        grid-template-rows: auto !important;
+        gap: 10px !important;
+    }
+
+    .rack-drop-wrapper {
+        display: none !important;
+    }
+
+    .room-sim-header {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+.room-controls-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== ROLLERCOIN FILTER DESIGN ===== */
+.rc-filter-container {
+    background: #252636;
+    border-radius: 6px;
+    padding: 20px;
+    color: #fff;
+    font-family: inherit;
+    border: 1px solid #3c3e58;
+}
+
+.rc-filter-group {
+    margin-bottom: 20px;
+}
+
+.rc-filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.rc-filter-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #f1f1f1;
+}
+
+.rc-native-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #03e1e4;
+    border-radius: 2px;
+    outline: none;
+    margin: 10px 0 20px 0;
+}
+
+.rc-native-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #252636;
+    border: 3px solid #03e1e4;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* ===== DUAL SLIDER ===== */
+.rc-dual-slider-container {
+    position: relative;
+    height: 16px;
+    margin: 10px 0 20px 0;
+}
+
+.rc-dual-slider-container::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+.rc-dual-slider-fill {
+    position: absolute;
+    top: 6px;
+    height: 4px;
+    background: #03e1e4;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+.rc-dual-slider-container .rc-native-slider {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    background: none;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.rc-dual-slider-container .rc-native-slider::-webkit-slider-thumb {
+    pointer-events: auto;
+    position: relative;
+    z-index: 3;
+}
+
+.rc-dual-slider-container .rc-native-slider::-moz-range-thumb {
+    pointer-events: auto;
+    position: relative;
+    z-index: 3;
+}
+
+.rc-dual-slider-container .rc-slider-min {
+    z-index: 4;
+}
+
+.rc-dual-slider-container .rc-slider-max {
+    z-index: 5;
+}
+
+.rc-native-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #252636;
+    border: 3px solid #03e1e4;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.rc-filter-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rc-filter-input {
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+}
+
+.rc-filter-input:focus {
+    border-color: #03e1e4;
+}
+
+.rc-filter-separator {
+    color: #aaa;
+    font-weight: bold;
+}
+
+.rc-filter-ok {
+    background: #03e1e4;
+    color: #1a1b2e;
+    border: none;
+    font-weight: 900;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #02a9ab;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 13px;
+    outline: none;
+    flex-shrink: 0;
+}
+
+.rc-filter-ok:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #02a9ab;
+}
+
+.rc-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rc-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.rc-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.rc-checkbox-custom {
+    width: 20px;
+    height: 20px;
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.rc-checkbox-label input[type="checkbox"]:checked+.rc-checkbox-custom {
+    background: #1d1d29;
+    border-color: #484b6a;
+}
+
+.rc-checkbox-label input[type="checkbox"]:checked+.rc-checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #03e1e4;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.rc-search-input {
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+}
+
+.rc-filter-search-btn {
+    width: 100%;
+    margin-top: 15px;
+    background: #03e1e4;
+    color: #1a1b2e;
+    border: none;
+    font-weight: 900;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #02a9ab;
+    text-transform: uppercase;
+    font-size: 15px;
+}
+
+.rc-filter-search-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #02a9ab;
+}
+
+.rc-select {
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    flex: 1;
+}
+
+/* Room Stats Container */
+.room-stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    background: #1d1f33;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: 1px solid #3c3e58;
+}
+
+.room-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-stat-item:not(:first-child) {
+    border-left: 1px solid #3c3e58;
+    padding-left: 25px;
+}
+
+.rs-label {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.rs-value {
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.rs-value.primary { color: #fff; }
+.rs-value.success { color: #28a745; font-size: 15px; }
+.rs-value.highlight { color: #ffc107; }
+
+.rs-subvalue {
+    color: #03e1e4;
+    font-size: 12px;
+    margin-top: 2px;
+    text-align: center;
+}
+
+@media (max-width: 1200px) {
+    .room-simulator-wrapper {
+        max-width: 100%;
+    }
+    
+    .room-grid-area {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .room-stats-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .room-stat-item:not(:first-child) {
+        border-left: none;
+        border-top: 1px solid #3c3e58;
+        padding-left: 0;
+        padding-top: 15px;
+        width: 100%;
+    }
+}

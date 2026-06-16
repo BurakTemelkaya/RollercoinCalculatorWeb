@@ -316,7 +316,22 @@
     "usingCurrentStats": "Usar estadísticas actuales",
     "noChange": "Sin cambios",
     "leaguePower": "Poder de Liga",
-    "leaguePowerNote": "El poder de Juegos y Temporal aumenta tu total pero NO afecta tu liga. La liga se determina solo por Mineros + Bono + Poder de estantes."
+    "leaguePowerNote": "El poder de Juegos y Temporal aumenta tu total pero NO afecta tu liga. La liga se determina solo por Mineros + Bono + Poder de estantes.",
+    "undo": "Deshacer",
+    "reset": "Restablecer",
+    "addRack": "Añadir Estante",
+    "rooms": "Habitaciones:",
+    "minerAdded": "{{name}} añadido al estante.",
+    "minerMoved": "{{name}} movido con éxito.",
+    "rackFull": "¡Este estante está completamente lleno!",
+    "cellTaken": "¡La celda objetivo está ocupada!",
+    "roomFull": "¡No se pueden añadir más estantes a esta habitación!",
+    "roomReset": "Habitación restablecida al estado inicial.",
+    "undoSuccess": "Última acción deshecha.",
+    "fetchRoom": "Obtener Datos de Mi Habitación",
+    "roomFetchNote": "Escanea tu habitación para ver tu poder exacto de liga.",
+    "fetchingRoom": "Escaneando Habitación (10s)...",
+    "roomFetchedSuccessText": "¡Habitación escaneada con éxito!"
   },
   "settings": {
     "title": "Configuración",

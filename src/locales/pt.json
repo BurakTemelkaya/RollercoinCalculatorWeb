@@ -316,7 +316,22 @@
     "usingCurrentStats": "Usar estatísticas abaixo",
     "noChange": "Sem mudança",
     "leaguePower": "Poder de Liga",
-    "leaguePowerNote": "Jogos não afetam sua liga."
+    "leaguePowerNote": "Jogos não afetam sua liga.",
+    "undo": "Desfazer",
+    "reset": "Redefinir",
+    "addRack": "Adicionar Rack",
+    "rooms": "Salas:",
+    "minerAdded": "{{name}} adicionado ao rack.",
+    "minerMoved": "{{name}} movido com sucesso.",
+    "rackFull": "Este rack está completamente cheio!",
+    "cellTaken": "A célula de destino está ocupada!",
+    "roomFull": "Não é possível adicionar mais racks a esta sala!",
+    "roomReset": "Sala redefinida para o estado inicial.",
+    "undoSuccess": "Última ação desfeita.",
+    "fetchRoom": "Buscar Dados da Minha Sala",
+    "roomFetchNote": "Verifique sua sala para ver seu poder exato da liga.",
+    "fetchingRoom": "Analisando Sala (10s)...",
+    "roomFetchedSuccessText": "Sala analisada com sucesso!"
   },
   "settings": {
     "title": "Configurações",

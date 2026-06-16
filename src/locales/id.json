@@ -316,7 +316,22 @@
     "usingCurrentStats": "Gunakan statistik",
     "noChange": "Tidak ada perubahan",
     "leaguePower": "Kekuatan Liga",
-    "leaguePowerNote": "Permainan tidak memengaruhi liga."
+    "leaguePowerNote": "Permainan tidak memengaruhi liga.",
+    "undo": "Batal",
+    "reset": "Atur Ulang",
+    "addRack": "Tambah Rak",
+    "rooms": "Ruangan:",
+    "minerAdded": "{{name}} ditambahkan ke rak.",
+    "minerMoved": "{{name}} berhasil dipindahkan.",
+    "rackFull": "Rak ini sudah penuh!",
+    "cellTaken": "Sel target sudah terisi!",
+    "roomFull": "Tidak ada lagi rak yang bisa ditambahkan ke ruangan ini!",
+    "roomReset": "Ruangan dikembalikan ke awal.",
+    "undoSuccess": "Tindakan terakhir dibatalkan.",
+    "fetchRoom": "Ambil Data Ruanganku",
+    "roomFetchNote": "Pindai ruangan Anda untuk melihat kekuatan liga Anda yang sebenarnya.",
+    "fetchingRoom": "Memindai Ruangan (10d)...",
+    "roomFetchedSuccessText": "Ruangan berhasil dipindai!"
   },
   "settings": {
     "title": "Pengaturan",

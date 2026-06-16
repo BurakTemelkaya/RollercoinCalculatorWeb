@@ -318,7 +318,25 @@
     "usingCurrentStats": "Use the current stats entered below",
     "noChange": "No change",
     "leaguePower": "League Power",
-    "leaguePowerNote": "Games and Temp power increase your total but do NOT affect your league. League is determined only by Miners + Bonus + Rack power."
+    "leaguePowerNote": "Games and Temp power increase your total but do NOT affect your league. League is determined only by Miners + Bonus + Rack power.",
+    "undo": "Undo",
+    "reset": "Reset",
+    "addRack": "Add Rack",
+    "rooms": "Rooms:",
+    "minerAdded": "{{name}} added to rack.",
+    "minerMoved": "{{name}} moved successfully.",
+    "rackFull": "This rack is completely full!",
+    "cellTaken": "Target cell is occupied!",
+    "roomFull": "No more racks can be added to this room!",
+    "roomReset": "Room reset to initial state.",
+    "undoSuccess": "Last action undone.",
+    "rackAddedSuccess": "Rack added successfully.",
+    "rackAddError": "Error adding rack: {{error}}",
+    "noEmptySpace": "No empty space found for this miner!",
+    "fetchRoom": "Fetch My Room Data",
+    "roomFetchNote": "Scan your room to see your exact league power (excluding inventory bonuses).",
+    "fetchingRoom": "Scanning Room (10s)...",
+    "roomFetchedSuccessText": "Room scanned successfully!"
   },
   "settings": {
     "title": "Settings",
@@ -426,6 +444,8 @@
   "merge": {
     "title": "Merge Recipes",
     "search": "Search miner...",
+    "sorting": "Sort",
+    "filters": "Filters",
     "sortBy": "Sort by",
     "sortOptions": {
       "newest": "Newest",

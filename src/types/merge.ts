@@ -71,4 +71,9 @@ export interface MergeListParams {
     searchName?: string;
     sortBy?: 'bonus' | 'percent' | 'name' | 'power';
     isDescending?: boolean;
+    minPower?: number;
+    maxPower?: number;
+    minBonus?: number;
+    maxBonus?: number;
+    minerWidth?: number;
 }

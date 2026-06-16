@@ -319,7 +319,25 @@
     "usingCurrentStats": "Alttaki mevcut istatistikleri kullan",
     "noChange": "Değişiklik yok",
     "leaguePower": "Lig Gücü",
-    "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir."
+    "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir.",
+    "undo": "Geri Al",
+    "reset": "Sıfırla",
+    "addRack": "Raf Ekle",
+    "rooms": "Odalar:",
+    "minerAdded": "{{name}} rafa eklendi.",
+    "minerMoved": "{{name}} başarıyla taşındı.",
+    "rackFull": "Bu raf tamamen dolu!",
+    "cellTaken": "Hedeflenen hücre dolu!",
+    "roomFull": "Bu odaya daha fazla raf eklenemez!",
+    "roomReset": "Oda ilk haline sıfırlandı.",
+    "undoSuccess": "Son işlem geri alındı.",
+    "rackAddedSuccess": "Raf başarıyla eklendi.",
+    "rackAddError": "Raf eklerken bir hata oluştu: {{error}}",
+    "noEmptySpace": "Bu minerı koyacak boş bir yer bulunamadı!",
+    "fetchRoom": "Odamın Verilerini Çek",
+    "roomFetchNote": "Tam lig gücünüzü (envanter bonusları hariç) görmek için odanızı taratın.",
+    "fetchingRoom": "Oda Taranıyor (10 sn)...",
+    "roomFetchedSuccessText": "Odanız taranarak güç hesaplaması kusursuzlaştırıldı!"
   },
   "settings": {
     "title": "Ayarlar",
@@ -427,6 +445,8 @@
   "merge": {
     "title": "Birleştirme Tarifleri",
     "search": "Madenci ara...",
+    "sorting": "Sıralama",
+    "filters": "Filtreler",
     "sortBy": "Sırala",
     "sortOptions": {
       "newest": "En Yeni",

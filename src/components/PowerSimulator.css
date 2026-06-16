@@ -691,3 +691,194 @@
         text-align: center;
     }
 }
+
+/* Beautiful Fetch Room Button */
+.beautiful-fetch-room {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.fetch-room-card {
+    background: linear-gradient(145deg, rgba(37, 38, 54, 0.8), rgba(28, 28, 40, 0.9));
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.fetch-room-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    opacity: 0.5;
+}
+
+.fetch-room-icon {
+    font-size: 2.5rem;
+    background: rgba(99, 102, 241, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    flex-shrink: 0;
+}
+
+.fetch-room-content {
+    flex: 1;
+}
+
+.fetch-room-content h3 {
+    margin: 0 0 5px 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.fetch-room-content p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.premium-fetch-btn {
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    flex-shrink: 0;
+}
+
+.premium-fetch-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+}
+
+/* League Power Dashboard */
+.league-power-dashboard {
+    background: rgba(28, 28, 40, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.lpd-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.lpd-league {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lpd-league-icon {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.lpd-league-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.lpd-power {
+    text-align: right;
+}
+
+.lpd-power-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.lpd-power-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+}
+
+.lpd-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.lpd-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    flex: 1;
+}
+
+.lpd-stat .label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.lpd-stat .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .fetch-room-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .lpd-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .lpd-power {
+        text-align: center;
+    }
+
+    .lpd-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

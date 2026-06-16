@@ -316,7 +316,22 @@
     "usingCurrentStats": "Utiliser les stats ci-dessous",
     "noChange": "Aucun changement",
     "leaguePower": "Puissance de Ligue",
-    "leaguePowerNote": "Les jeux n'affectent pas la ligue."
+    "leaguePowerNote": "Les jeux n'affectent pas la ligue.",
+    "undo": "Annuler",
+    "reset": "Réinitialiser",
+    "addRack": "Ajouter Étagère",
+    "rooms": "Salles:",
+    "minerAdded": "{{name}} ajouté à l'étagère.",
+    "minerMoved": "{{name}} déplacé avec succès.",
+    "rackFull": "Cette étagère est complètement pleine !",
+    "cellTaken": "La cellule cible est occupée !",
+    "roomFull": "Plus aucune étagère ne peut être ajoutée à cette salle !",
+    "roomReset": "Salle réinitialisée.",
+    "undoSuccess": "Dernière action annulée.",
+    "fetchRoom": "Obtenir les Données de Ma Salle",
+    "roomFetchNote": "Scannez votre salle pour voir votre puissance exacte de ligue.",
+    "fetchingRoom": "Analyse de la Salle (10s)...",
+    "roomFetchedSuccessText": "Salle analysée avec succès !"
   },
   "settings": {
     "title": "Paramètres",

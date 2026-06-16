@@ -316,7 +316,22 @@
     "usingCurrentStats": "使用下方统计信息",
     "noChange": "没有变化",
     "leaguePower": "联赛算力",
-    "leaguePowerNote": "游戏不影响您的联赛级别。"
+    "leaguePowerNote": "游戏不影响您的联赛级别。",
+    "undo": "撤销",
+    "reset": "重置",
+    "addRack": "添加机架",
+    "rooms": "房间:",
+    "minerAdded": "{{name}} 已添加到机架。",
+    "minerMoved": "{{name}} 移动成功。",
+    "rackFull": "此机架已满！",
+    "cellTaken": "目标单元格已被占用！",
+    "roomFull": "无法向此房间添加更多机架！",
+    "roomReset": "房间已重置为初始状态。",
+    "undoSuccess": "撤销了上一步操作。",
+    "fetchRoom": "获取我的房间数据",
+    "roomFetchNote": "扫描您的房间以查看确切的联赛算力。",
+    "fetchingRoom": "正在扫描房间 (10秒)...",
+    "roomFetchedSuccessText": "房间扫描成功！"
   },
   "settings": {
     "title": "设置",

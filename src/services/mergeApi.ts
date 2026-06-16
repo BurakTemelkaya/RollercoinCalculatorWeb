@@ -22,8 +22,7 @@ export async function fetchMerges(
     searchParams.set('PageRequest.PageSize', params.pageSize.toString());
 
     if (params.searchName?.trim()) {
-        searchParams.set('SearchName', params.searchName.trim());
-        searchParams.set('BypassCache', 'true');
+        searchParams.set('Name', params.searchName.trim());
     }
     if (params.sortBy) {
         searchParams.set('SortBy', params.sortBy);
@@ -31,6 +30,12 @@ export async function fetchMerges(
     if (params.isDescending !== undefined) {
         searchParams.set('IsDescending', params.isDescending.toString());
     }
+
+    if (params.minPower !== undefined) searchParams.set('MinMinerPower', params.minPower.toString());
+    if (params.maxPower !== undefined) searchParams.set('MaxMinerPower', params.maxPower.toString());
+    if (params.minBonus !== undefined) searchParams.set('MinMinerBonus', params.minBonus.toString());
+    if (params.maxBonus !== undefined) searchParams.set('MaxMinerBonus', params.maxBonus.toString());
+    if (params.minerWidth !== undefined) searchParams.set('Width', params.minerWidth.toString());
 
     const url = buildApiUrl(`/api/Merges?${searchParams.toString()}`);
     return apiGet<PaginatedResponse<MergeListItem>>(url);

@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useMemo } from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 // ... existing imports ...
 
 import { CoinData, HashPower, EarningsResult } from './types';
@@ -10,11 +11,12 @@ import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper
 import { LEAGUES, LeagueInfo, CURRENCY_MAP } from './data/leagues';
 import { ApiLeagueData } from './types/api';
 import { convertApiLeagueToCoinData } from './services/leagueApi';
-import { fetchUserFromApi } from './services/userApi';
+import { fetchUserFromApi, fetchUserRoomFromApi } from './services/userApi';
 import { autoScalePower } from './utils/powerParser';
 import { COIN_ICONS } from './utils/constants';
 import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
+import { RollercoinRoomResponse } from './types/room';
 import DataInputForm from './components/DataInputForm';
 import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
@@ -198,6 +200,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       localStorage.removeItem(STORAGE_KEYS.API_LEAGUES);
       localStorage.removeItem('rollercoin_web_raw_api_data');
       localStorage.removeItem('rollercoin_web_fetched_user');
+      localStorage.removeItem('rollercoin_web_fetched_room');
       localStorage.removeItem('rollercoin_web_userpower_timestamp');
     };
 
@@ -220,7 +223,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
   // User Fetch State (Lifted)
   const [fetchedUser, setFetchedUser] = useState<RollercoinUserResponse | null>(null);
+  const [fetchedRoom, setFetchedRoom] = useState<RollercoinRoomResponse | null>(null);
   const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const [isFetchingRoom, setIsFetchingRoom] = useState(false);
   const [fetchMode, setFetchMode] = useState<'username' | 'power'>('username');
 
   // Services
@@ -239,6 +244,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       setFetchedUser(data);
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
+
       if (apiLeagueId) {
         const leaguesSource = apiLeagues || LEAGUES;
 
@@ -287,6 +293,21 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     }
   };
 
+  const handleFetchRoom = async (avatarId: string) => {
+    if (!avatarId) return;
+    setIsFetchingRoom(true);
+    try {
+      const roomData = await fetchUserRoomFromApi(avatarId);
+      setFetchedRoom(roomData);
+      showNotification(t('simulator.roomFetchedSuccess', 'Odadan veriler başarıyla çekildi!'), 'success');
+    } catch (error) {
+      console.error('Failed to fetch user room:', error);
+      showNotification(t('simulator.roomFetchError', 'Oda verileri çekilirken hata oluştu.'), 'error');
+    } finally {
+      setIsFetchingRoom(false);
+    }
+  };
+
   // Block Duration State
   const [blockDurations, setBlockDurations] = useState<Record<string, number>>({
     'TRX': 602,
@@ -324,7 +345,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260613.184007';
+  const CURRENT_CACHE_VERSION = '20260616.035839';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -348,6 +369,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       if (savedPower) setUserPower(JSON.parse(savedPower));
       const savedFetchedUser = localStorage.getItem('rollercoin_web_fetched_user');
       if (savedFetchedUser) setFetchedUser(JSON.parse(savedFetchedUser));
+      const savedFetchedRoom = localStorage.getItem('rollercoin_web_fetched_room');
+      if (savedFetchedRoom) setFetchedRoom(JSON.parse(savedFetchedRoom));
       if (savedBalances) setBalances(JSON.parse(savedBalances));
       if (savedTab === 'calculator' || savedTab === 'withdraw' || savedTab === 'simulator') {
         setActiveTab(savedTab);
@@ -609,6 +632,12 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   }, [fetchedUser]);
 
   useEffect(() => {
+    if (fetchedRoom) {
+      localStorage.setItem('rollercoin_web_fetched_room', JSON.stringify(fetchedRoom));
+    }
+  }, [fetchedRoom]);
+
+  useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.BALANCES, JSON.stringify(balances));
   }, [balances]);
 
@@ -747,14 +776,15 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         />
       </React.Suspense>
       {/* Notification */}
-      {notification && (
+      {notification && createPortal(
         <div className="notification-container">
           <Notification
             message={notification.message}
             type={notification.type}
             onClose={() => setNotification(null)}
           />
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Content */}
@@ -854,8 +884,11 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}
+                          fetchedRoom={fetchedRoom}
                           onFetchUser={handleFetchUser}
+                          onFetchRoom={handleFetchRoom}
                           isFetchingUser={isFetchingUser}
+                          isFetchingRoom={isFetchingRoom}
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
                         />

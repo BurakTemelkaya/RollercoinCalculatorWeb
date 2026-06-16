@@ -8,6 +8,7 @@ import { autoScalePower } from '../utils/powerParser';
 import Pagination from './Pagination';
 import ComponentForgeCalculator from './ComponentForgeCalculator';
 import './MergePage.css';
+import './RoomSimulator.css'; // For shared filter UI styles
 
 // Local mutation component images for detail view
 import commonHashboardImg from '../assets/items/common_hashboard.png';
@@ -190,6 +191,27 @@ export default function MergePage() {
     const [sortBy, setSortBy] = useState<SortByOption>('newest');
     const [isDescending, setIsDescending] = useState(true);
 
+    const [minPower, setMinPower] = useState('');
+    const [maxPower, setMaxPower] = useState('');
+    const [minBonus, setMinBonus] = useState('');
+    const [maxBonus, setMaxBonus] = useState('');
+    const [minerWidth, setMinerWidth] = useState('');
+
+    const [tempMinPower, setTempMinPower] = useState('');
+    const [tempMaxPower, setTempMaxPower] = useState('');
+    const [tempMinBonus, setTempMinBonus] = useState('');
+    const [tempMaxBonus, setTempMaxBonus] = useState('');
+    const [tempMinerWidth, setTempMinerWidth] = useState('');
+
+    const applyFilters = () => {
+        setMinPower(tempMinPower);
+        setMaxPower(tempMaxPower);
+        setMinBonus(tempMinBonus);
+        setMaxBonus(tempMaxBonus);
+        setMinerWidth(tempMinerWidth);
+        setCurrentPage(0);
+    };
+
     // Detail modal
     const [selectedMerge, setSelectedMerge] = useState<MergeDetail | null>(null);
     const [detailLoading, setDetailLoading] = useState(false);
@@ -314,6 +336,12 @@ export default function MergePage() {
                 // Always pass isDescending so user can reverse the default (newest) list
                 params.isDescending = isDescending;
 
+                if (minPower) params.minPower = Number(minPower);
+                if (maxPower) params.maxPower = Number(maxPower);
+                if (minBonus) params.minBonus = Math.round(Number(minBonus) * 100);
+                if (maxBonus) params.maxBonus = Math.round(Number(maxBonus) * 100);
+                if (minerWidth) params.minerWidth = Number(minerWidth);
+
                 const result = await fetchMerges(params);
                 setData(result);
             } catch (err) {
@@ -325,7 +353,7 @@ export default function MergePage() {
         };
 
         loadData();
-    }, [currentPage, searchQuery, sortBy, isDescending, t]);
+    }, [currentPage, searchQuery, sortBy, isDescending, t, minPower, maxPower, minBonus, maxBonus, minerWidth]);
 
     // Sync page to URL
     const handlePageChange = (page: number) => {
@@ -475,100 +503,195 @@ export default function MergePage() {
                     </select>
                 </div>
             </div>
-
-            {activeTab === 'miners' && (
-                    <div className="merge-controls" style={{ margin: 0, flex: 1, justifyContent: 'flex-end' }}>
-                        <div style={{ display: 'flex', gap: '6px', flex: 1, minWidth: '180px', width: '100%', maxWidth: '350px' }}>
-                    <div className="merge-search-wrapper" style={{ flex: 1, minWidth: 0 }}>
-                        <span className="merge-search-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                        </span>
-                        <input
-                            type="text"
-                            className="merge-search"
-                            placeholder={t('merge.search')}
-                            value={searchInput}
-                            onChange={(e) => handleSearchChange(e.target.value)}
-                        />
-                    </div>
-
-                    <button
-                        className="merge-sort-dir-btn"
-                        onClick={toggleLevelDisplay}
-                        title={t('merge.toggleLevelDisplay', 'Seviye Görünümünü Değiştir (Lv / Roma)')}
-                        style={{ minWidth: '40px', fontWeight: 'bold', gap: '6px' }}
-                    >
-                        <span style={{ fontSize: '12px' }}>👁️</span>
-                        {levelDisplayMode === 'roman' ? (
-                            <img
-                                src={getLevelIconUrl(2)}
-                                alt="Roman"
-                                style={{ width: '18px', height: '12px', objectFit: 'contain' }}
-                            />
-                        ) : (
-                            <span style={{
-                                background: '#4f46e5',
-                                color: 'white',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                padding: '2px 4px',
-                                borderRadius: '4px',
-                                lineHeight: 1,
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                display: 'inline-block'
-                            }}>
-                                Lv.2
-                            </span>
-                        )}
-                    </button>
-
-                    <button
-                        className="merge-sort-dir-btn"
-                        onClick={openPartPriceSettings}
-                        title={t('merge.partPrices', 'Parça Fiyatları')}
-                        style={{ minWidth: '40px', fontWeight: 'bold' }}
-                    >
-                        ⚙️
-                    </button>
-                </div>
-
-                <div className="merge-sort-group">
-                    <select
-                        className="merge-sort-select"
-                        value={sortBy}
-                        onChange={(e) => {
-                            setSortBy(e.target.value as SortByOption);
-                            setCurrentPage(0);
-                        }}
-                    >
-                        <option value="newest">{t('merge.sortOptions.newest')}</option>
-                        <option value="name">{t('merge.sortOptions.name')}</option>
-                        <option value="power">{t('merge.sortOptions.power')}</option>
-                        <option value="percent">{t('merge.sortOptions.bonus')}</option>
-                    </select>
-
-                    <button
-                        className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
-                        onClick={() => setIsDescending(!isDescending)}
-                        title={getSortLabel()}
-                        style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
-                    >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 5v14M19 12l-7 7-7-7" />
-                        </svg>
-                        <span>{getSortLabel()}</span>
-                    </button>
-
-
-                </div>
-            </div>
-            )}
         </div>
             {activeTab === 'miners' && (
-                <>
+                <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                    {/* LEFT: FILTER SIDEBAR */}
+                    <div className="rc-filter-container" style={{ flex: '1 1 250px', maxWidth: 350 }}>
+                        {/* Search */}
+                        <div className="rc-filter-group">
+                            <div className="merge-search-wrapper" style={{ minWidth: 0 }}>
+                                <span className="merge-search-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    </svg>
+                                </span>
+                                <input
+                                    type="text"
+                                    className="merge-search"
+                                    placeholder={t('merge.search')}
+                                    value={searchInput}
+                                    onChange={(e) => handleSearchChange(e.target.value)}
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Sort */}
+                        <div className="rc-filter-group">
+                            <label className="rc-filter-label">{t('merge.sorting')}:</label>
+                            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                                <select
+                                    className="merge-sort-select"
+                                    value={sortBy}
+                                    onChange={(e) => {
+                                        setSortBy(e.target.value as SortByOption);
+                                        setCurrentPage(0);
+                                    }}
+                                    style={{ flex: 1 }}
+                                >
+                                    <option value="newest">{t('merge.sortOptions.newest')}</option>
+                                    <option value="name">{t('merge.sortOptions.name')}</option>
+                                    <option value="power">{t('merge.sortOptions.power')}</option>
+                                    <option value="percent">{t('merge.sortOptions.bonus')}</option>
+                                </select>
+
+                                <button
+                                    className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
+                                    onClick={() => setIsDescending(!isDescending)}
+                                    title={getSortLabel()}
+                                    style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M12 5v14M19 12l-7 7-7-7" />
+                                    </svg>
+                                    <span>{getSortLabel()}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Quick actions row */}
+                        <div className="rc-filter-group" style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                            <button
+                                className="merge-sort-dir-btn"
+                                onClick={toggleLevelDisplay}
+                                title={t('merge.toggleLevelDisplay', 'Seviye Görünümünü Değiştir (Lv / Roma)')}
+                                style={{ minWidth: '40px', fontWeight: 'bold', gap: '6px' }}
+                            >
+                                <span style={{ fontSize: '12px' }}>👁️</span>
+                                {levelDisplayMode === 'roman' ? (
+                                    <img
+                                        src={getLevelIconUrl(2)}
+                                        alt="Roman"
+                                        style={{ width: '18px', height: '12px', objectFit: 'contain' }}
+                                    />
+                                ) : (
+                                    <span style={{
+                                        background: '#4f46e5',
+                                        color: 'white',
+                                        fontSize: '10px',
+                                        fontWeight: 700,
+                                        padding: '2px 4px',
+                                        borderRadius: '4px',
+                                        lineHeight: 1,
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        display: 'inline-block'
+                                    }}>
+                                        Lv.2
+                                    </span>
+                                )}
+                            </button>
+
+                            <button
+                                className="merge-sort-dir-btn"
+                                onClick={openPartPriceSettings}
+                                title={t('merge.partPrices', 'Parça Fiyatları')}
+                                style={{ minWidth: '40px', fontWeight: 'bold' }}
+                            >
+                                ⚙️
+                            </button>
+                        </div>
+
+                        <div style={{ borderTop: '1px solid #3c3e58', margin: '12px 0' }} />
+
+                        <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 16, color: '#94a3b8' }}>{t('merge.filters', 'Filtreler')}</h3>
+
+                        {/* Power range */}
+                        <div className="rc-filter-group">
+                            <label className="rc-filter-label">Power range (Gh/s):</label>
+                            <div className="rc-dual-slider-container">
+                                <div className="rc-dual-slider-fill" style={{ left: `${(Number(tempMinPower || 0) / 16830000000) * 100}%`, width: `${((Number(tempMaxPower || 16830000000) - Number(tempMinPower || 0)) / 16830000000) * 100}%` }} />
+                                <input
+                                    type="range"
+                                    className="rc-native-slider rc-slider-min"
+                                    min="0" max="16830000000" step="1000000"
+                                    value={tempMinPower || 0}
+                                    onChange={e => setTempMinPower(Math.min(Number(e.target.value), Number(tempMaxPower || 16830000000) - 1000000).toString())}
+                                />
+                                <input
+                                    type="range"
+                                    className="rc-native-slider rc-slider-max"
+                                    min="0" max="16830000000" step="1000000"
+                                    value={tempMaxPower || 16830000000}
+                                    onChange={e => setTempMaxPower(Math.max(Number(e.target.value), Number(tempMinPower || 0) + 1000000).toString())}
+                                />
+                            </div>
+                            <div className="rc-filter-inputs">
+                                <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" />
+                                <span className="rc-filter-separator">-</span>
+                                <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder="Max" />
+                                <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
+                            </div>
+                            <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Min: {tempMinPower ? formatPower(Number(tempMinPower)) : '0'}</span>
+                                <span>Max: {tempMaxPower ? formatPower(Number(tempMaxPower)) : 'Limitsiz'}</span>
+                            </div>
+                        </div>
+
+                        {/* Bonus range */}
+                        <div className="rc-filter-group">
+                            <label className="rc-filter-label">Bonus range (%):</label>
+                            <div className="rc-dual-slider-container">
+                                <div className="rc-dual-slider-fill" style={{ left: `${(Number(tempMinBonus || 0) / 135) * 100}%`, width: `${((Number(tempMaxBonus || 135) - Number(tempMinBonus || 0)) / 135) * 100}%` }} />
+                                <input
+                                    type="range"
+                                    className="rc-native-slider rc-slider-min"
+                                    min="0" max="135" step="1"
+                                    value={tempMinBonus || 0}
+                                    onChange={e => setTempMinBonus(Math.min(Number(e.target.value), Number(tempMaxBonus || 135) - 1).toString())}
+                                />
+                                <input
+                                    type="range"
+                                    className="rc-native-slider rc-slider-max"
+                                    min="0" max="135" step="1"
+                                    value={tempMaxBonus || 135}
+                                    onChange={e => setTempMaxBonus(Math.max(Number(e.target.value), Number(tempMinBonus || 0) + 1).toString())}
+                                />
+                            </div>
+                            <div className="rc-filter-inputs">
+                                <input type="number" className="rc-filter-input" value={tempMinBonus} onChange={e => setTempMinBonus(e.target.value)} placeholder="0" />
+                                <span className="rc-filter-separator">-</span>
+                                <input type="number" className="rc-filter-input" value={tempMaxBonus} onChange={e => setTempMaxBonus(e.target.value)} placeholder="Max" />
+                                <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
+                            </div>
+                        </div>
+
+                        {/* Cells count */}
+                        <div className="rc-filter-group">
+                            <label className="rc-filter-label">Cells count:</label>
+                            <div className="rc-checkbox-group">
+                                <label className="rc-checkbox-label">
+                                    <input type="checkbox" checked={tempMinerWidth === '1'} onChange={() => {
+                                        setTempMinerWidth(tempMinerWidth === '1' ? '' : '1');
+                                    }} />
+                                    <span className="rc-checkbox-custom"></span>
+                                    1
+                                </label>
+                                <label className="rc-checkbox-label">
+                                    <input type="checkbox" checked={tempMinerWidth === '2'} onChange={() => {
+                                        setTempMinerWidth(tempMinerWidth === '2' ? '' : '2');
+                                    }} />
+                                    <span className="rc-checkbox-custom"></span>
+                                    2
+                                </label>
+                                <button className="rc-filter-ok" onClick={applyFilters} style={{ marginLeft: 'auto' }}>OK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: CONTENT */}
+                    <div style={{ flex: '2 1 500px', minWidth: 0 }}>
             {/* Content */}
             {error ? (
                 <div className="merge-error">
@@ -679,6 +802,9 @@ export default function MergePage() {
                 <div className="merge-empty">
                     <span style={{ fontSize: '48px' }}>🔍</span>
                     <p>{t('merge.noResults')}</p>
+                </div>
+            )}
+                    </div>
                 </div>
             )}
 
@@ -1019,8 +1145,6 @@ export default function MergePage() {
                         </div>
                     </div>
                 </div>
-            )}
-                </>
             )}
 
             {/* Part Price Settings Modal */}
