@@ -91,7 +91,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
     const handleSearchMiners = async (page = 0) => {
         if (!userId) {
-            alert(t('simulator.linkAccountAlert', 'Lütfen arama yapmak için önce odanızı taratarak (Odamın Verilerini Çek) hesabınızı bağlayın.'));
+            alert(t('simulator.linkAccountAlert'));
             return;
         }
 
@@ -167,7 +167,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         try {
             const activeRoom = room.rooms ? room.rooms[currentRoomIndex] : null;
             if (!activeRoom) {
-                alert('Aktif oda verisi bulunamadı!');
+                alert(t('simulator.noActiveRoom'));
                 return;
             }
 
@@ -177,7 +177,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
             const maxAllowedRacks = activeLevel === 0 ? 12 : 18;
             if (roomRacks.length >= maxAllowedRacks) {
-                alert(`Bu oda kapasite sınırına ulaştı (Maksimum ${maxAllowedRacks} raf eklenebilir)!`);
+                alert(t('simulator.maxRacksReached', { max: maxAllowedRacks }));
                 setIsAddRackOpen(false);
                 return;
             }
@@ -209,7 +209,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             }
 
             if (targetX === -1) {
-                addNotification('Bu oda tamamen dolu!', 'error');
+                addNotification(t('simulator.roomFull'), 'error');
                 setIsAddRackOpen(false);
                 return;
             }
@@ -233,9 +233,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             setIsAddRackOpen(false);
             setAddRackTarget(null);
             setNewRackBonus('0');
-            addNotification('Raf başarıyla eklendi.', 'success');
+            addNotification(t('simulator.rackAddedSuccess'), 'success');
+            setIsAddRackOpen(false);
         } catch (err: any) {
-            addNotification('Raf eklerken bir hata oluştu: ' + err.message, 'error');
+            addNotification(t('simulator.rackAddedError', { error: err.message }), 'error');
             console.error(err);
         }
     };
@@ -336,7 +337,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             }
         }
 
-        if (targetY === -1) { addNotification('Bu raf tamamen dolu!', 'error'); return; }
+        if (targetY === -1) { addNotification(t('simulator.rackFull'), 'error'); return; }
 
         let isMove = false;
         if ((miner as any).placement?.user_rack_id) {
@@ -377,7 +378,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         } else {
             handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] });
             const levelStr = newMiner.level > 0 ? ` (Lvl ${newMiner.level})` : '';
-            addNotification(`${newMiner.name}${levelStr} rafa eklendi.`, 'success');
+            addNotification(t('simulator.minerAddedSuccess', { name: `${newMiner.name}${levelStr}` }), 'success');
         }
         setDraggedMiner(null);
         setDragTarget(null);
@@ -510,26 +511,26 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         <div className="room-simulator-wrapper" onClick={() => setActiveTooltipId(null)}>
             <div className="room-sim-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 15, position: 'relative', zIndex: 10 }}>
                 <span className="modal-title">
-                    {t('simulator.roomTitle', 'Oda Simülatörü')}
+                    {t('simulator.roomTitle')}
                 </span>
 
                 <div className="room-stats-container">
                     <div className="room-stat-item">
-                        <span className="rs-label">Oda Taban Gücü</span>
-                        <span className="rs-value primary">{formatPower(roomBasePower)}</span>
+                        <span className="rs-label">{t('simulator.roomBasePower')}</span>
+                        <span className="rs-value primary">{formatPower(Number(roomBasePower))}</span>
                     </div>
                     <div className="room-stat-item">
-                        <span className="rs-label">Raf Bonusları</span>
+                        <span className="rs-label">{t('simulator.rackBonuses')}</span>
                         <span className="rs-value success">+{effectiveRackBonusPercent.toFixed(2)}%</span>
                         <span className="rs-subvalue">+{formatPower(roomRackBonusPower)}</span>
                     </div>
                     <div className="room-stat-item">
-                        <span className="rs-label">Miner Bonusları</span>
+                        <span className="rs-label">{t('simulator.minerBonuses')}</span>
                         <span className="rs-value success">+{(totalRoomBonus / 100).toFixed(2)}%</span>
                         <span className="rs-subvalue">+{formatPower(roomMinerBonusPower)}</span>
                     </div>
                     <div className="room-stat-item">
-                        <span className="rs-label">Oda Toplam Gücü</span>
+                        <span className="rs-label">{t('simulator.roomTotalPower')}</span>
                         <span className="rs-value highlight">{formatPower(roomPowerWithBonus)}</span>
                     </div>
                 </div>
@@ -557,7 +558,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                     setAddRackTarget({ x: zone.x, y: zone.y });
                                     setIsAddRackOpen(true);
                                 }}
-                                title="Buraya Raf Ekle"
+                                title={t('simulator.addRackHere')}
                             >
                                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0 }} className="rack-drop-hover">
                                     <span style={{ fontSize: 24, color: '#fff', background: 'rgba(0,0,0,0.5)', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</span>
@@ -634,8 +635,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                         <div className={`rack-tooltip ${rackY === 0 || rackY >= 2 ? 'rack-tooltip-down' : ''}`}>
                                             <div style={{ color: '#03e1e4', fontWeight: 'bold' }}>{rack.name}</div>
-                                            <div style={{ color: '#aaa' }}>Hücre: {(rack as any)?.rack_info?.capacity || 8}</div>
-                                            {((rack as any)?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>+{(((rack as any)?.bonus || 0) / 100).toFixed(2)}% Bonus</div>}
+                                            <div style={{ color: '#aaa' }}>{t('merge.cell')}: {(rack as any)?.rack_info?.capacity || 8}</div>
+                                            {((rack as any)?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>{t('merge.bonusAmount', { amount: (((rack as any)?.bonus || 0) / 100).toFixed(2) })}</div>}
                                         </div>
 
                                         <div className="rack-actions-overlay">
@@ -714,7 +715,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                         <div className={`miner-tooltip ${(miner.placement?.y || 0) === 0 || (miner.placement?.y || 0) >= 2 ? 'miner-tooltip-down' : ''}`}>
                                                             <div className="miner-name">{miner.name}</div>
                                                             <div className="miner-stat-row">
-                                                                <span>Güç:</span>
+                                                                <span>{t('merge.power')}:</span>
                                                                 <span>{formatPower(Number(miner.power))}</span>
                                                             </div>
                                                             <div className="miner-stat-row">
@@ -722,7 +723,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                 {isBonusActive ? (
                                                                     <span style={{ color: '#03e1e4' }}>+{bonusValue.toFixed(2)}%</span>
                                                                 ) : (
-                                                                    <span style={{ color: '#d9534f', textDecoration: 'line-through' }}>{bonusValue.toFixed(2)}% (Kopya)</span>
+                                                                    <span style={{ color: '#d9534f', textDecoration: 'line-through' }}>{bonusValue.toFixed(2)}% {t('merge.copy')}</span>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -739,7 +740,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                 <div className="rc-bottom-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#252636', padding: '15px 25px', borderRadius: '12px', border: '1px solid #3c3e58', marginTop: 30, flexWrap: 'wrap', gap: 15 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 20, width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-                        <span style={{ color: '#aaa', fontWeight: 'bold', fontSize: 18 }}>{t('simulator.rooms', 'Rooms:')}</span>
+                        <span style={{ color: '#aaa', fontWeight: 'bold', fontSize: 18 }}>{t('simulator.rooms')}</span>
                         {userRooms.length > 0 && (
                             <div className="room-numbers" style={{ display: isMobile ? 'grid' : 'flex', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'none', gap: 10, width: isMobile ? '100%' : 'auto' }}>
                                 {userRooms.map((r, idx) => (
@@ -800,14 +801,14 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                             className="btn-roller"
                             onClick={() => {
                                 if (currentRoomRacks.length >= validDropZones.length) {
-                                    addNotification('Bu odaya daha fazla raf eklenemez!', 'error');
+                                    addNotification(t('simulator.cannotAddMoreRacks'), 'error');
                                     return;
                                 }
                                 setIsAddRackOpen(true);
                             }}
                             style={{ padding: '12px 25px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', gap: 8, fontSize: 16, fontWeight: 'bold', border: 'none', borderRadius: '8px' }}
                         >
-                            <span style={{ fontSize: 20 }}>+</span> {t('simulator.addRack', 'Raf Ekle')}
+                            <span style={{ fontSize: 20 }}>+</span> {t('simulator.addRack')}
                         </button>
                     </div>
                 </div>
@@ -827,7 +828,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             {isAddRackOpen && document.body && createPortal(
                 <div className="modal-overlay" onClick={() => setIsAddRackOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div className="modal-content" onClick={e => e.stopPropagation()} style={{ background: '#1a1b2e', padding: 25, borderRadius: 8, minWidth: 320, border: '1px solid #514e72', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-                        <h3 style={{ marginTop: 0, color: '#fff', fontSize: 20 }}>Raf Ekle</h3>
+                        <h3 style={{ marginTop: 0, color: '#fff', fontSize: 20 }}>{t('simulator.addRack')}</h3>
                         <label style={{ display: 'block', marginBottom: 20, color: '#ccc', fontWeight: 'bold' }}>Bonus (%): <br /><input type="number" value={newRackBonus} onChange={e => setNewRackBonus(e.target.value)} style={{ width: '100%', padding: 10, marginTop: 8, background: '#292a3f', border: '1px solid #514e72', color: '#fff', borderRadius: 6, fontSize: 16 }} /></label>
                         <div style={{ display: 'flex', gap: 15, marginTop: 10 }}>
                             <button
@@ -840,7 +841,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #a94442'; }}
                                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #a94442'; }}
                             >
-                                İptal
+                                {t('simulator.cancel')}
                             </button>
                             <button
                                 onClick={handleAddRack}
@@ -852,7 +853,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #025aa5'; }}
                                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #025aa5'; }}
                             >
-                                Ekle
+                                {t('simulator.add')}
                             </button>
                         </div>
                     </div>
@@ -866,7 +867,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                     onClick={() => setIsMobileMinerSearchOpen(true)}
                     style={{ width: '100%', padding: '15px', marginTop: 20, background: '#03e1e4', color: '#1a1b2e', fontSize: 18, fontWeight: 'bold', border: 'none', borderRadius: 8, boxShadow: '0 4px 0 #02a9ab', cursor: 'pointer' }}
                 >
-                    🔍 Miner Ara / Odaya Ekle
+                    🔍 {t('merge.searchMiner')}
                 </button>
             )}
 
@@ -881,7 +882,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                         >
                             {isMobile && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid #514e72', paddingBottom: 15 }}>
-                                    <h3 style={{ margin: 0, color: '#fff', fontSize: 20 }}>Miner Ara / Ekle</h3>
+                                    <h3 style={{ margin: 0, color: '#fff', fontSize: 20 }}>{t('merge.searchMiner')}</h3>
                                     <button onClick={() => { setIsMobileMinerSearchOpen(false); setMobileTargetRackId(null); }} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: 32, cursor: 'pointer', lineHeight: 1 }}>×</button>
                                 </div>
                             )}
@@ -889,11 +890,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                 {/* LEFT: FILTER SIDEBAR */}
                                 <div className="rc-filter-container" style={{ flex: '1 1 300px', maxWidth: 400 }}>
-                                    <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 18, borderBottom: '1px solid #3c3e58', paddingBottom: 10 }}>Filtreler</h3>
+                                    <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 18, borderBottom: '1px solid #3c3e58', paddingBottom: 10 }}>{t('merge.filters')}</h3>
 
                                     {/* Power range */}
                                     <div className="rc-filter-group">
-                                        <label className="rc-filter-label">Power range (Gh/s):</label>
+                                        <label className="rc-filter-label">{t('merge.filterPower')}:</label>
                                         <div className="rc-dual-slider-container">
                                             <div className="rc-dual-slider-fill" style={{ left: `${(Number(minPower || 0) / 16830000000) * 100}%`, width: `${((Number(maxPower || 16830000000) - Number(minPower || 0)) / 16830000000) * 100}%` }} />
                                             <input
@@ -914,18 +915,18 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                         <div className="rc-filter-inputs">
                                             <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" />
                                             <span className="rc-filter-separator">-</span>
-                                            <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder="Max" />
+                                            <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max')} />
                                             <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
                                         </div>
                                         <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                            <span>Min: {minPower ? formatPower(Number(minPower)) : '0'}</span>
-                                            <span>Max: {maxPower ? formatPower(Number(maxPower)) : 'Limitsiz'}</span>
+                                            <span>{t('merge.min')}: {minPower ? formatPower(Number(minPower)) : '0'}</span>
+                                            <span>{t('merge.max')}: {maxPower ? formatPower(Number(maxPower)) : t('merge.unlimited')}</span>
                                         </div>
                                     </div>
 
                                     {/* Bonus range */}
                                     <div className="rc-filter-group">
-                                        <label className="rc-filter-label">Bonus range (%):</label>
+                                        <label className="rc-filter-label">{t('merge.filterBonus')}:</label>
                                         <div className="rc-dual-slider-container">
                                             <div className="rc-dual-slider-fill" style={{ left: `${(Number(minBonus || 0) / 135) * 100}%`, width: `${((Number(maxBonus || 135) - Number(minBonus || 0)) / 135) * 100}%` }} />
                                             <input
@@ -946,14 +947,14 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                         <div className="rc-filter-inputs">
                                             <input type="number" className="rc-filter-input" value={minBonus} onChange={e => setMinBonus(e.target.value)} placeholder="0" />
                                             <span className="rc-filter-separator">-</span>
-                                            <input type="number" className="rc-filter-input" value={maxBonus} onChange={e => setMaxBonus(e.target.value)} placeholder="Max" />
+                                            <input type="number" className="rc-filter-input" value={maxBonus} onChange={e => setMaxBonus(e.target.value)} placeholder={t('merge.max')} />
                                             <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
                                         </div>
                                     </div>
 
                                     {/* Cells count */}
                                     <div className="rc-filter-group">
-                                        <label className="rc-filter-label">Cells count:</label>
+                                        <label className="rc-filter-label">{t('merge.filterCells')}:</label>
                                         <div className="rc-checkbox-group">
                                             <label className="rc-checkbox-label">
                                                 <input type="checkbox" checked={minerWidth === '1'} onChange={() => setMinerWidth(minerWidth === '1' ? '' : '1')} />
@@ -970,13 +971,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                     {/* Sort */}
                                     <div className="rc-filter-group" style={{ borderTop: '1px solid #3c3e58', paddingTop: 20 }}>
-                                        <label className="rc-filter-label" style={{ marginBottom: 10 }}>Sıralama (Sort):</label>
+                                        <label className="rc-filter-label" style={{ marginBottom: 10 }}>{t('merge.sorting')}:</label>
                                         <div className="rc-filter-inputs">
                                             <select value={sortBy} onChange={e => { setSortBy(e.target.value); setTimeout(() => handleSearchMiners(0), 50); }} className="rc-select">
-                                                <option value="power">Güce Göre</option>
-                                                <option value="percent">Bonusa Göre</option>
-                                                <option value="name">İsme Göre</option>
-                                                <option value="newest">Eklenme Tarihine Göre</option>
+                                                <option value="power">{t('merge.sortOptions.power')}</option>
+                                                <option value="percent">{t('merge.sortOptions.bonus')}</option>
+                                                <option value="name">{t('merge.sortOptions.name')}</option>
+                                                <option value="newest">{t('merge.sortOptions.newest')}</option>
                                             </select>
                                             <button className="rc-filter-ok" onClick={() => { setIsDescending(!isDescending); setTimeout(() => handleSearchMiners(0), 50); }} style={{ padding: '8px 10px', fontSize: 15 }}>
                                                 {isDescending ? '▼' : '▲'}
@@ -986,21 +987,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                     {/* Search by Name */}
                                     <div className="rc-filter-group" style={{ marginTop: 20 }}>
-                                        <input type="text" className="rc-search-input" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearchMiners(0)} placeholder="İsme Göre Ara..." />
+                                        <input type="text" className="rc-search-input" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearchMiners(0)} placeholder={t('merge.searchByName')} />
                                         <button className="rc-filter-search-btn" onClick={() => handleSearchMiners(0)} disabled={isSearching}>
-                                            {isSearching ? 'ARANIYOR...' : 'ARA'}
+                                            {isSearching ? t('merge.searching') : t('merge.searchBtn')}
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* RIGHT: RESULTS AREA */}
                                 <div className="miner-search-results-wrapper" style={{ flex: '2 1 300px', background: '#15162a', padding: 20, borderRadius: 8, border: '1px solid #514e72' }}>
-                                    <h3 style={{ marginTop: 0, color: '#fff', marginBottom: 5 }}>Arama Sonuçları</h3>
-                                    <p style={{ color: '#aaa', fontSize: 13, marginBottom: 15 }}>İstediğiniz minerı rafın üzerine sürükleyin veya doğrudan tıklayarak yerleştirin.</p>
+                                    <h3 style={{ marginTop: 0, color: '#fff', marginBottom: 5 }}>{t('merge.searchResults')}</h3>
+                                    <p style={{ color: '#aaa', fontSize: 13, marginBottom: 15 }}>{t('merge.dragDropHint')}</p>
 
                                     <div className="miner-search-results" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, maxHeight: 600, overflowY: 'auto', padding: 5 }}>
                                         {minerList.length === 0 ? (
-                                            <div style={{ color: '#888', width: '100%', textAlign: 'center', padding: 20 }}>Sonuç bulunamadı. Lütfen filtre girip arama yapın.</div>
+                                            <div style={{ color: '#888', width: '100%', textAlign: 'center', padding: 20 }}>{t('merge.noResultsFound')}</div>
                                         ) : (
                                             minerList.map(miner => (
                                                 <div
@@ -1024,7 +1025,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                             boxShadow: '0 2px 4px rgba(0,0,0,0.4)', zIndex: 10
                                                         }}
-                                                        title="Odaya Ekle"
+                                                        title={t('merge.addToRoom')}
                                                     >
                                                         +
                                                     </button>
@@ -1047,9 +1048,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                     {totalPages > 1 && (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10, marginTop: 15, color: '#fff' }}>
-                                            <button onClick={() => handleSearchMiners(pageIndex - 1)} disabled={pageIndex === 0 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Önceki</button>
+                                            <button onClick={() => handleSearchMiners(pageIndex - 1)} disabled={pageIndex === 0 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>{t('pagination.previous')}</button>
                                             <span>{pageIndex + 1} / {totalPages}</span>
-                                            <button onClick={() => handleSearchMiners(pageIndex + 1)} disabled={pageIndex >= totalPages - 1 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Sonraki</button>
+                                            <button onClick={() => handleSearchMiners(pageIndex + 1)} disabled={pageIndex >= totalPages - 1 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>{t('pagination.next')}</button>
                                         </div>
                                     )}
                                 </div>

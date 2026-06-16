@@ -609,7 +609,7 @@ export default function MergePage() {
 
                         {/* Power range */}
                         <div className="rc-filter-group">
-                            <label className="rc-filter-label">Power range (Gh/s):</label>
+                            <label className="rc-filter-label">{t('merge.filterPower')}:</label>
                             <div className="rc-dual-slider-container">
                                 <div className="rc-dual-slider-fill" style={{ left: `${(Number(tempMinPower || 0) / 16830000000) * 100}%`, width: `${((Number(tempMaxPower || 16830000000) - Number(tempMinPower || 0)) / 16830000000) * 100}%` }} />
                                 <input
@@ -630,18 +630,18 @@ export default function MergePage() {
                             <div className="rc-filter-inputs">
                                 <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" />
                                 <span className="rc-filter-separator">-</span>
-                                <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder="Max" />
+                                <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder={t('merge.max')} />
                                 <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
                             </div>
                             <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                <span>Min: {tempMinPower ? formatPower(Number(tempMinPower)) : '0'}</span>
-                                <span>Max: {tempMaxPower ? formatPower(Number(tempMaxPower)) : 'Limitsiz'}</span>
+                                <span>{t('merge.min')}: {tempMinPower ? formatPower(Number(tempMinPower)) : '0'}</span>
+                                <span>{t('merge.max')}: {tempMaxPower ? formatPower(Number(tempMaxPower)) : t('merge.unlimited')}</span>
                             </div>
                         </div>
 
                         {/* Bonus range */}
                         <div className="rc-filter-group">
-                            <label className="rc-filter-label">Bonus range (%):</label>
+                            <label className="rc-filter-label">{t('merge.filterBonus')}:</label>
                             <div className="rc-dual-slider-container">
                                 <div className="rc-dual-slider-fill" style={{ left: `${(Number(tempMinBonus || 0) / 135) * 100}%`, width: `${((Number(tempMaxBonus || 135) - Number(tempMinBonus || 0)) / 135) * 100}%` }} />
                                 <input
@@ -662,14 +662,14 @@ export default function MergePage() {
                             <div className="rc-filter-inputs">
                                 <input type="number" className="rc-filter-input" value={tempMinBonus} onChange={e => setTempMinBonus(e.target.value)} placeholder="0" />
                                 <span className="rc-filter-separator">-</span>
-                                <input type="number" className="rc-filter-input" value={tempMaxBonus} onChange={e => setTempMaxBonus(e.target.value)} placeholder="Max" />
+                                <input type="number" className="rc-filter-input" value={tempMaxBonus} onChange={e => setTempMaxBonus(e.target.value)} placeholder={t('merge.max')} />
                                 <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
                             </div>
                         </div>
 
                         {/* Cells count */}
                         <div className="rc-filter-group">
-                            <label className="rc-filter-label">Cells count:</label>
+                            <label className="rc-filter-label">{t('merge.filterCells')}:</label>
                             <div className="rc-checkbox-group">
                                 <label className="rc-checkbox-label">
                                     <input type="checkbox" checked={tempMinerWidth === '1'} onChange={() => {

@@ -152,7 +152,7 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                                 {isFetchingRoom ? (
                                     <><span className="spinner small"></span> {t('simulator.fetchingRoom', 'Taranıyor...')}</>
                                 ) : (
-                                    <span>Tarat</span>
+                                    <span>{t('simulator.fetch', 'Tarat')}</span>
                                 )}
                             </button>
                         </div>
