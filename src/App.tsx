@@ -44,7 +44,6 @@ function lazyWithRetry(importFn: () => Promise<{ default: React.ComponentType<an
 
 // Lazy load complex components to improve initial load and shorten critical request chains
 const WithdrawTimer = lazyWithRetry(() => import('./components/WithdrawTimer'));
-const PowerSimulator = lazyWithRetry(() => import('./components/PowerSimulator'));
 const SettingsModal = lazyWithRetry(() => import('./components/SettingsModal'));
 const ColumnSettingsModal = lazyWithRetry(() => import('./components/ColumnSettingsModal'));
 const ProgressionEvent = lazyWithRetry(() => import('./components/ProgressionEvent'));
@@ -76,6 +75,8 @@ const NotificationSettingsPage = lazyWithRetry(() => import('./components/Notifi
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
+import RoomPowerSimulator from './components/RoomPowerSimulator';
+import ManualSimulator from './components/ManualSimulator';
 import './index.css';
 
 // Local storage keys
@@ -94,12 +95,13 @@ const STORAGE_KEYS = {
 
 import { fetchPrices, PriceApiProvider } from './services/priceApi';
 
-type Tab = 'calculator' | 'withdraw' | 'simulator';
+type Tab = 'calculator' | 'withdraw' | 'simulator' | 'room_simulator';
 
 const TAB_ORDER: Record<Tab, number> = {
   calculator: 0,
   simulator: 1,
-  withdraw: 2,
+  room_simulator: 2,
+  withdraw: 3
 };
 
 import Notification from './components/Notification';
@@ -158,7 +160,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [balances, setBalances] = useState<Record<string, number>>({});
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
-  const [collapsedTabs, setCollapsedTabs] = useState<Set<Tab>>(new Set(['simulator', 'withdraw']));
+  const [collapsedTabs, setCollapsedTabs] = useState<Set<Tab>>(new Set(['simulator', 'room_simulator', 'withdraw']));
 
   const handleTabChange = (newTab: Tab) => {
     if (newTab === activeTab) return;
@@ -345,7 +347,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260616.044401';
+  const CURRENT_CACHE_VERSION = '20260616.185818';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -372,7 +374,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       const savedFetchedRoom = localStorage.getItem('rollercoin_web_fetched_room');
       if (savedFetchedRoom) setFetchedRoom(JSON.parse(savedFetchedRoom));
       if (savedBalances) setBalances(JSON.parse(savedBalances));
-      if (savedTab === 'calculator' || savedTab === 'withdraw' || savedTab === 'simulator') {
+      if (savedTab === 'calculator' || savedTab === 'withdraw' || savedTab === 'simulator' || savedTab === 'room_simulator') {
         setActiveTab(savedTab);
         setCollapsedTabs(prev => { const next = new Set(prev); next.delete(savedTab); return next; });
       }
@@ -824,7 +826,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
             {/* Tabs */}
             {earnings.length > 0 && (
-              <div className="main-tabs">
+              <div className="main-tabs main-tabs-4">
                 <div
                   className="main-tabs-bg"
                   style={{ transform: `translateX(calc(${TAB_ORDER[activeTab] * 100}% + calc(${TAB_ORDER[activeTab]} * var(--tab-gap))))` }}
@@ -842,6 +844,13 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                 >
                   <span className="tab-icon">⚡</span>
                   {t('tabs.simulator')}
+                </button>
+                <button
+                  className={`main-tab ${activeTab === 'room_simulator' ? 'active' : ''}`}
+                  onClick={() => handleTabChange('room_simulator')}
+                >
+                  <span className="tab-icon">🏠</span>
+                  {t('tabs.roomSimulator', 'Oda Simülatörü')}
                 </button>
                 <button
                   className={`main-tab ${activeTab === 'withdraw' ? 'active' : ''}`}
@@ -880,7 +889,23 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-                        <PowerSimulator
+                        <ManualSimulator
+                          currentLeague={league}
+                          apiLeagues={apiLeagues || null}
+                          fetchedUser={fetchedUser}
+                          fetchedRoom={fetchedRoom}
+                          onFetchUser={handleFetchUser}
+                          onFetchRoom={handleFetchRoom}
+                          isFetchingUser={isFetchingUser}
+                          isFetchingRoom={isFetchingRoom}
+                          globalUserName={globalUserName}
+                          setGlobalUserName={setGlobalUserName}
+                        />
+                      </React.Suspense>
+                    </div>
+                    <div className={`tab-panel${collapsedTabs.has('room_simulator') ? ' collapsed' : ''}`}>
+                      <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
+                        <RoomPowerSimulator
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}

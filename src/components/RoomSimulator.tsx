@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
-import { autoScalePower } from '../utils/powerParser';
+import { autoScalePower, toBaseUnit } from '../utils/powerParser';
+import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import Notification from './Notification';
 import './RoomSimulator.css';
@@ -73,7 +74,33 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     // Miner Arama State'leri
     const [searchQuery, setSearchQuery] = useState('');
     const [minPower, setMinPower] = useState('');
-    const [maxPower, setMaxPower] = useState('16830000000');
+    const [maxPower, setMaxPower] = useState('');
+    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
+    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Gh');
+
+    const getMinPowerGh = () => minPower ? (toBaseUnit({ value: Number(minPower), unit: minPowerUnit }) / 1e9) : undefined;
+    const getMaxPowerGh = () => maxPower ? (toBaseUnit({ value: Number(maxPower), unit: maxPowerUnit }) / 1e9) : undefined;
+
+    const handleMinPowerSlider = (ghVal: number) => {
+        const asHs = ghVal * 1e9;
+        let converted = asHs;
+        if (minPowerUnit === 'Th') converted = asHs / 1e12;
+        else if (minPowerUnit === 'Ph') converted = asHs / 1e15;
+        else if (minPowerUnit === 'Eh') converted = asHs / 1e18;
+        else converted = ghVal;
+        setMinPower(converted.toString());
+    };
+
+    const handleMaxPowerSlider = (ghVal: number) => {
+        const asHs = ghVal * 1e9;
+        let converted = asHs;
+        if (maxPowerUnit === 'Th') converted = asHs / 1e12;
+        else if (maxPowerUnit === 'Ph') converted = asHs / 1e15;
+        else if (maxPowerUnit === 'Eh') converted = asHs / 1e18;
+        else converted = ghVal;
+        setMaxPower(converted.toString());
+    };
+
     const [minBonus, setMinBonus] = useState('');
     const [maxBonus, setMaxBonus] = useState('135');
     const [minerWidth, setMinerWidth] = useState('');
@@ -104,8 +131,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         try {
             const params: any = { PageIndex: page };
             if (searchQuery) params.Name = searchQuery;
-            if (minPower) params.MinMinerPower = Number(minPower);
-            if (maxPower) params.MaxMinerPower = Number(maxPower);
+            const minGh = getMinPowerGh();
+            if (minGh !== undefined) params.MinMinerPower = minGh;
+            const maxGh = getMaxPowerGh();
+            if (maxGh !== undefined) params.MaxMinerPower = maxGh;
             if (minBonus) params.MinMinerBonus = Math.round(Number(minBonus) * 100);
             if (maxBonus) params.MaxMinerBonus = Math.round(Number(maxBonus) * 100);
             if (minerWidth) params.Width = Number(minerWidth);
@@ -896,31 +925,46 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                     <div className="rc-filter-group">
                                         <label className="rc-filter-label">{t('merge.filterPower')}:</label>
                                         <div className="rc-dual-slider-container">
-                                            <div className="rc-dual-slider-fill" style={{ left: `${(Number(minPower || 0) / 16830000000) * 100}%`, width: `${((Number(maxPower || 16830000000) - Number(minPower || 0)) / 16830000000) * 100}%` }} />
+                                            <div className="rc-dual-slider-fill" style={{ left: `${((getMinPowerGh() || 0) / 16830000000) * 100}%`, width: `${(((getMaxPowerGh() || 16830000000) - (getMinPowerGh() || 0)) / 16830000000) * 100}%` }} />
                                             <input
                                                 type="range"
                                                 className="rc-native-slider rc-slider-min"
                                                 min="0" max="16830000000" step="1000000"
-                                                value={minPower || 0}
-                                                onChange={e => setMinPower(Math.min(Number(e.target.value), Number(maxPower || 16830000000) - 1000000).toString())}
+                                                value={getMinPowerGh() || 0}
+                                                onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh() || 16830000000) - 1000000))}
                                             />
                                             <input
                                                 type="range"
                                                 className="rc-native-slider rc-slider-max"
                                                 min="0" max="16830000000" step="1000000"
-                                                value={maxPower || 16830000000}
-                                                onChange={e => setMaxPower(Math.max(Number(e.target.value), Number(minPower || 0) + 1000000).toString())}
+                                                value={getMaxPowerGh() || 16830000000}
+                                                onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh() || 0) + 1000000))}
                                             />
                                         </div>
-                                        <div className="rc-filter-inputs">
-                                            <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" />
-                                            <span className="rc-filter-separator">-</span>
-                                            <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max')} />
+                                        <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px' }}>
+                                            <div style={{ display: 'flex', gap: '4px' }}>
+                                                <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
+                                                <select className="rc-select" value={minPowerUnit} onChange={e => setMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                    <option value="Gh">Gh</option>
+                                                    <option value="Th">Th</option>
+                                                    <option value="Ph">Ph</option>
+                                                    <option value="Eh">Eh</option>
+                                                </select>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '4px' }}>
+                                                <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%' }} />
+                                                <select className="rc-select" value={maxPowerUnit} onChange={e => setMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                    <option value="Gh">Gh</option>
+                                                    <option value="Th">Th</option>
+                                                    <option value="Ph">Ph</option>
+                                                    <option value="Eh">Eh</option>
+                                                </select>
+                                            </div>
                                             <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
                                         </div>
                                         <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                            <span>{t('merge.min')}: {minPower ? formatPower(Number(minPower)) : '0'}</span>
-                                            <span>{t('merge.max')}: {maxPower ? formatPower(Number(maxPower)) : t('merge.unlimited')}</span>
+                                            <span>{t('merge.min')}: {getMinPowerGh() ? formatPower(getMinPowerGh()!) : '0'}</span>
+                                            <span>{t('merge.max')}: {(getMaxPowerGh() || 16830000000) < 16830000000 ? formatPower(getMaxPowerGh()!) : t('merge.unlimited')}</span>
                                         </div>
                                     </div>
 

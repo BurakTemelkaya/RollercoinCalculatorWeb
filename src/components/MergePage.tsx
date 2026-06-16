@@ -4,7 +4,8 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchMerges, fetchMergeById } from '../services/mergeApi';
 import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge';
 import type { PaginatedResponse } from '../types/pagination';
-import { autoScalePower } from '../utils/powerParser';
+import { autoScalePower, toBaseUnit } from '../utils/powerParser';
+import { PowerUnit } from '../types';
 import Pagination from './Pagination';
 import ComponentForgeCalculator from './ComponentForgeCalculator';
 import './MergePage.css';
@@ -193,12 +194,39 @@ export default function MergePage() {
 
     const [minPower, setMinPower] = useState('');
     const [maxPower, setMaxPower] = useState('');
+    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
+    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Gh');
     const [minBonus, setMinBonus] = useState('');
     const [maxBonus, setMaxBonus] = useState('');
     const [minerWidth, setMinerWidth] = useState('');
 
     const [tempMinPower, setTempMinPower] = useState('');
     const [tempMaxPower, setTempMaxPower] = useState('');
+    const [tempMinPowerUnit, setTempMinPowerUnit] = useState<PowerUnit>('Gh');
+    const [tempMaxPowerUnit, setTempMaxPowerUnit] = useState<PowerUnit>('Gh');
+
+    const getMinPowerGh = (val: string, unit: PowerUnit) => val ? (toBaseUnit({ value: Number(val), unit }) / 1e9) : undefined;
+    const getMaxPowerGh = (val: string, unit: PowerUnit) => val ? (toBaseUnit({ value: Number(val), unit }) / 1e9) : undefined;
+
+    const handleMinPowerSlider = (ghVal: number) => {
+        const asHs = ghVal * 1e9;
+        let converted = asHs;
+        if (tempMinPowerUnit === 'Th') converted = asHs / 1e12;
+        else if (tempMinPowerUnit === 'Ph') converted = asHs / 1e15;
+        else if (tempMinPowerUnit === 'Eh') converted = asHs / 1e18;
+        else converted = ghVal;
+        setTempMinPower(converted.toString());
+    };
+
+    const handleMaxPowerSlider = (ghVal: number) => {
+        const asHs = ghVal * 1e9;
+        let converted = asHs;
+        if (tempMaxPowerUnit === 'Th') converted = asHs / 1e12;
+        else if (tempMaxPowerUnit === 'Ph') converted = asHs / 1e15;
+        else if (tempMaxPowerUnit === 'Eh') converted = asHs / 1e18;
+        else converted = ghVal;
+        setTempMaxPower(converted.toString());
+    };
     const [tempMinBonus, setTempMinBonus] = useState('');
     const [tempMaxBonus, setTempMaxBonus] = useState('');
     const [tempMinerWidth, setTempMinerWidth] = useState('');
@@ -206,6 +234,8 @@ export default function MergePage() {
     const applyFilters = () => {
         setMinPower(tempMinPower);
         setMaxPower(tempMaxPower);
+        setMinPowerUnit(tempMinPowerUnit);
+        setMaxPowerUnit(tempMaxPowerUnit);
         setMinBonus(tempMinBonus);
         setMaxBonus(tempMaxBonus);
         setMinerWidth(tempMinerWidth);
@@ -336,8 +366,11 @@ export default function MergePage() {
                 // Always pass isDescending so user can reverse the default (newest) list
                 params.isDescending = isDescending;
 
-                if (minPower) params.minPower = Number(minPower);
-                if (maxPower) params.maxPower = Number(maxPower);
+                const minGh = getMinPowerGh(minPower, minPowerUnit);
+                if (minGh !== undefined) params.minPower = minGh;
+                
+                const maxGh = getMaxPowerGh(maxPower, maxPowerUnit);
+                if (maxGh !== undefined) params.maxPower = maxGh;
                 if (minBonus) params.minBonus = Math.round(Number(minBonus) * 100);
                 if (maxBonus) params.maxBonus = Math.round(Number(maxBonus) * 100);
                 if (minerWidth) params.minerWidth = Number(minerWidth);
@@ -611,31 +644,46 @@ export default function MergePage() {
                         <div className="rc-filter-group">
                             <label className="rc-filter-label">{t('merge.filterPower')}:</label>
                             <div className="rc-dual-slider-container">
-                                <div className="rc-dual-slider-fill" style={{ left: `${(Number(tempMinPower || 0) / 16830000000) * 100}%`, width: `${((Number(tempMaxPower || 16830000000) - Number(tempMinPower || 0)) / 16830000000) * 100}%` }} />
+                                <div className="rc-dual-slider-fill" style={{ left: `${((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 16830000000) * 100}%`, width: `${(((getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) - (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0)) / 16830000000) * 100}%` }} />
                                 <input
                                     type="range"
                                     className="rc-native-slider rc-slider-min"
                                     min="0" max="16830000000" step="1000000"
-                                    value={tempMinPower || 0}
-                                    onChange={e => setTempMinPower(Math.min(Number(e.target.value), Number(tempMaxPower || 16830000000) - 1000000).toString())}
+                                    value={getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0}
+                                    onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) - 1000000))}
                                 />
                                 <input
                                     type="range"
                                     className="rc-native-slider rc-slider-max"
                                     min="0" max="16830000000" step="1000000"
-                                    value={tempMaxPower || 16830000000}
-                                    onChange={e => setTempMaxPower(Math.max(Number(e.target.value), Number(tempMinPower || 0) + 1000000).toString())}
+                                    value={getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000}
+                                    onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) + 1000000))}
                                 />
                             </div>
-                            <div className="rc-filter-inputs">
-                                <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" />
-                                <span className="rc-filter-separator">-</span>
-                                <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder={t('merge.max')} />
+                            <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px' }}>
+                                <div style={{ display: 'flex', gap: '4px' }}>
+                                    <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
+                                    <select className="rc-select" value={tempMinPowerUnit} onChange={e => setTempMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                        <option value="Gh">Gh</option>
+                                        <option value="Th">Th</option>
+                                        <option value="Ph">Ph</option>
+                                        <option value="Eh">Eh</option>
+                                    </select>
+                                </div>
+                                <div style={{ display: 'flex', gap: '4px' }}>
+                                    <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%' }} />
+                                    <select className="rc-select" value={tempMaxPowerUnit} onChange={e => setTempMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                        <option value="Gh">Gh</option>
+                                        <option value="Th">Th</option>
+                                        <option value="Ph">Ph</option>
+                                        <option value="Eh">Eh</option>
+                                    </select>
+                                </div>
                                 <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
                             </div>
                             <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('merge.min')}: {tempMinPower ? formatPower(Number(tempMinPower)) : '0'}</span>
-                                <span>{t('merge.max')}: {tempMaxPower ? formatPower(Number(tempMaxPower)) : t('merge.unlimited')}</span>
+                                <span>{t('merge.min')}: {getMinPowerGh(tempMinPower, tempMinPowerUnit) ? formatPower(getMinPowerGh(tempMinPower, tempMinPowerUnit)!) : '0'}</span>
+                                <span>{t('merge.max')}: {(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) < 16830000000 ? formatPower(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit)!) : t('merge.unlimited')}</span>
                             </div>
                         </div>
 

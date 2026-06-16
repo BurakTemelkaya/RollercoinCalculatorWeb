@@ -1,0 +1,345 @@
+
+.manual-simulator {
+    padding: 1rem;
+    color: var(--text);
+}
+
+.ms-header {
+    margin-bottom: 2rem;
+}
+
+.ms-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+}
+
+.ms-header p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.ms-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.ms-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.ms-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent);
+}
+
+.ms-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ms-input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ms-input-group {
+    flex: 1;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ms-input-group label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+
+
+
+
+
+
+.ms-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.ms-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.ms-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ms-btn.outline {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+}
+
+.ms-btn.outline:hover:not(:disabled) {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.ms-power-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ms-power-row input {
+    flex: 2;
+}
+
+.ms-power-row select {
+    flex: 1;
+}
+
+.ms-added-miners {
+    margin-top: 1.5rem;
+}
+
+.ms-added-miners h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.ms-miner-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ms-miner-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.ms-miner-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ms-miner-name {
+    font-weight: 500;
+}
+
+.ms-miner-stats {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.ms-miner-stat {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.ms-remove-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ms-remove-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.ms-results {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.ms-result-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.ms-result-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.ms-result-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.ms-result-diff {
+    font-size: 1.1rem;
+    color: #10b981;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.ms-result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.ms-result-card {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ms-rc-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.ms-rc-val {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ms-league-transition {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    background: rgba(0,0,0,0.2);
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.ms-league {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ms-league img {
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.ms-league span {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.ms-arrow {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+.ms-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+}
+
+.ms-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+}
+
+.ms-tab {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.ms-tab:hover {
+    color: var(--text);
+}
+
+.ms-tab.active {
+    color: var(--accent);
+}
+
+.ms-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 3px 3px 0 0;
+}

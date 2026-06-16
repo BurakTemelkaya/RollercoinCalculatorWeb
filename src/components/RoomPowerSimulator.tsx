@@ -9,9 +9,9 @@ import { RoomSimulator } from './RoomSimulator';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import { getLeagueImage } from '../data/leagueImages';
-import './PowerSimulator.css';
+import './RoomPowerSimulator.css';
 
-interface PowerSimulatorProps {
+interface RoomPowerSimulatorProps {
     currentLeague: LeagueInfo;
     apiLeagues: LeagueInfo[] | null;
     fetchedUser?: RollercoinUserResponse | null;
@@ -24,7 +24,7 @@ interface PowerSimulatorProps {
     setGlobalUserName?: (val: string) => void;
 }
 
-const PowerSimulator: React.FC<PowerSimulatorProps> = ({
+const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     apiLeagues,
     fetchedUser,
     fetchedRoom,
@@ -215,14 +215,28 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
                         {originalExactPower && Math.abs(powerDiffGh) > 0.001 && (
                             <div className="simulation-results">
                                 <div className="results-inner">
+                                    <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
+                                        <div className="result-item">
+                                            <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower((originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0)) * 1e9))}</span>
+                                        </div>
+                                        <div className="transition-arrow">➜</div>
+                                        <div className="result-item">
+                                            <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
+                                            <span className="value primary">{formatHashPower(autoScalePower((leaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0)) * 1e9))}</span>
+                                            <span className={`sub-value ${powerDiffGh >= 0 ? 'success' : 'danger'}`}>
+                                                {powerDiffGh >= 0 ? '+' : '-'}{formatHashPower(powerDiff)}
+                                            </span>
+                                        </div>
+                                    </div>
                                     <div className="result-row">
                                         <div className="result-item">
-                                            <span className="label">{t('simulator.currentPower', 'Current Power')}</span>
+                                            <span className="label">{t('simulator.currentLeaguePower', 'Mevcut Lig Gücü')}</span>
                                             <span className="value secondary">{formatHashPower(autoScalePower(originalLeaguePowerGh * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
-                                            <span className="label">{t('simulator.newTotal', 'New Total')}</span>
+                                            <span className="label">{t('simulator.newLeaguePower', 'Yeni Lig Gücü')}</span>
                                             <span className="value primary">{formatHashPower(autoScalePower(leaguePowerGh * 1e9))}</span>
                                             <span className={`sub-value ${powerDiffGh >= 0 ? 'success' : 'danger'}`}>
                                                 {powerDiffGh >= 0 ? '+' : '-'}{formatHashPower(powerDiff)}
@@ -272,4 +286,4 @@ const PowerSimulator: React.FC<PowerSimulatorProps> = ({
     );
 };
 
-export default PowerSimulator;
+export default RoomPowerSimulator;
