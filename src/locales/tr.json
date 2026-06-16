@@ -318,7 +318,25 @@
     "usingCurrentStats": "Alttaki mevcut istatistikleri kullan",
     "noChange": "Değişiklik yok",
     "leaguePower": "Lig Gücü",
-    "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir."
+    "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir.",
+    "undo": "Undo",
+    "reset": "Reset",
+    "addRack": "Add Rack",
+    "rooms": "Rooms:",
+    "minerAdded": "{{name}} added to rack.",
+    "minerMoved": "{{name}} moved successfully.",
+    "rackFull": "This rack is completely full!",
+    "cellTaken": "Target cell is occupied!",
+    "roomFull": "No more racks can be added to this room!",
+    "roomReset": "Room reset to initial state.",
+    "undoSuccess": "Last action undone.",
+    "rackAddedSuccess": "Rack added successfully.",
+    "rackAddError": "Error adding rack: {{error}}",
+    "noEmptySpace": "No empty space found for this miner!",
+    "fetchRoom": "Fetch My Room Data",
+    "roomFetchNote": "Scan your room to see your exact league power (excluding inventory bonuses).",
+    "fetchingRoom": "Scanning Room (10s)...",
+    "roomFetchedSuccessText": "Room scanned successfully!"
   },
   "settings": {
     "title": "Ayarlar",
@@ -426,6 +444,8 @@
   "merge": {
     "title": "Birleştirme Tarifleri",
     "search": "Madenci ara...",
+    "sorting": "Sort",
+    "filters": "Filters",
     "sortBy": "Sırala",
     "sortOptions": {
       "newest": "En Yeni",
