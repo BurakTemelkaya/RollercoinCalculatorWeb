@@ -152,7 +152,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             rackBonus: rack,
             fileName: miner.fileName
         }]);
-        const levelStr = miner.level > 0 ? t('simulator.minerLevelPrefix', { level: miner.level }) : '';
+        const levelStr = (miner.level + 1) > 0 ? t('simulator.minerLevelPrefix', { level: miner.level + 1 }) : '';
         const fullName = `${levelStr}${miner.name}`;
         
         addNotification(t('simulator.minerAdded', { name: fullName }), 'success');
@@ -203,8 +203,8 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             const maxGh = getMaxPowerGh();
             if (maxGh !== undefined) params.MaxMinerPower = maxGh;
             
-            if (minBonus) params.MinMinerBonus = Number(minBonus);
-            if (maxBonus) params.MaxMinerBonus = Number(maxBonus);
+            if (minBonus) params.MinMinerBonus = Math.round(Number(minBonus) * 100);
+            if (maxBonus) params.MaxMinerBonus = Math.round(Number(maxBonus) * 100);
 
             const res = await fetchUserMinersFromApi(params);
             if (res && res.items) {
@@ -270,7 +270,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
 
     // Calculate current slider values in Gh/s
     const sliderMinGh = getMinPowerGh() || 0;
-    const sliderMaxGh = getMaxPowerGh() || 16830000000;
+    const sliderMaxGh = getMaxPowerGh() || 100000000000;
 
     return (
         <section className="manual-simulator">
@@ -455,18 +455,18 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                         <div className="rc-filter-group">
                                             <label className="rc-filter-label">{t('merge.filterPower', 'Güç Aralığı')}:</label>
                                             <div className="rc-dual-slider-container">
-                                                <div className="rc-dual-slider-fill" style={{ left: `${(sliderMinGh / 16830000000) * 100}%`, width: `${((sliderMaxGh - sliderMinGh) / 16830000000) * 100}%` }} />
+                                                <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, (sliderMinGh / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, (sliderMaxGh / 100000000000) * 100) - Math.min(100, (sliderMinGh / 100000000000) * 100))}%` }} />
                                                 <input
                                                     type="range"
                                                     className="rc-native-slider rc-slider-min"
-                                                    min="0" max="16830000000" step="1000000"
+                                                    min="0" max="100000000000" step="1000000"
                                                     value={sliderMinGh}
                                                     onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), sliderMaxGh - 1000000))}
                                                 />
                                                 <input
                                                     type="range"
                                                     className="rc-native-slider rc-slider-max"
-                                                    min="0" max="16830000000" step="1000000"
+                                                    min="0" max="100000000000" step="1000000"
                                                     value={sliderMaxGh}
                                                     onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), sliderMinGh + 1000000))}
                                                 />
@@ -494,26 +494,26 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                             </div>
                                             <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                                                 <span>{t('merge.min', 'Min')}: {sliderMinGh ? formatPower(sliderMinGh) : '0'}</span>
-                                                <span>{t('merge.max', 'Max')}: {sliderMaxGh < 16830000000 ? formatPower(sliderMaxGh) : t('merge.unlimited', 'Sınırsız')}</span>
+                                                <span>{t('merge.max', 'Max')}: {sliderMaxGh < 100000000000 ? formatPower(sliderMaxGh) : t('merge.unlimited', 'Sınırsız')}</span>
                                             </div>
                                         </div>
 
                                         <div className="rc-filter-group">
                                             <label className="rc-filter-label">{t('merge.filterBonus', 'Bonus Aralığı')}:</label>
                                             <div className="rc-dual-slider-container">
-                                                <div className="rc-dual-slider-fill" style={{ left: `${(Number(minBonus || 0) / 135) * 100}%`, width: `${((Number(maxBonus || 135) - Number(minBonus || 0)) / 135) * 100}%` }} />
+                                                <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, (Number(minBonus || 0) / 500) * 100)}%`, width: `${Math.max(0, Math.min(100, (Number(maxBonus || 500) / 500) * 100) - Math.min(100, (Number(minBonus || 0) / 500) * 100))}%` }} />
                                                 <input
                                                     type="range"
                                                     className="rc-native-slider rc-slider-min"
-                                                    min="0" max="135" step="1"
+                                                    min="0" max="500" step="1"
                                                     value={minBonus || 0}
-                                                    onChange={e => setMinBonus(Math.min(Number(e.target.value), Number(maxBonus || 135) - 1).toString())}
+                                                    onChange={e => setMinBonus(Math.min(Number(e.target.value), Number(maxBonus || 500) - 1).toString())}
                                                 />
                                                 <input
                                                     type="range"
                                                     className="rc-native-slider rc-slider-max"
-                                                    min="0" max="135" step="1"
-                                                    value={maxBonus || 135}
+                                                    min="0" max="500" step="1"
+                                                    value={maxBonus || 500}
                                                     onChange={e => setMaxBonus(Math.max(Number(e.target.value), Number(minBonus || 0) + 1).toString())}
                                                 />
                                             </div>
@@ -569,7 +569,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                     key={miner.id}
                                                     style={{
                                                         background: '#2f3045', padding: 10, borderRadius: 4,
-                                                        display: 'flex', flexDirection: 'column', alignItems: 'center', width: 130,
+                                                        display: 'flex', flexDirection: 'column', alignItems: 'center', width: 160,
                                                         border: '1px solid #514e72', transition: 'border 0.2s', position: 'relative'
                                                     }}
                                                     onMouseEnter={(e) => e.currentTarget.style.borderColor = '#03e1e4'}
@@ -590,19 +590,19 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                     {miner.fileName ? (
                                                         <img
                                                             src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
-                                                            style={{ width: 50, height: 'auto', pointerEvents: 'none' }}
+                                                            style={{ width: 80, height: 'auto', pointerEvents: 'none' }}
                                                             onError={(e) => {
                                                                 const target = e.target as HTMLImageElement;
                                                                 if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.split('.')[0] || 'crypto_combo'}.png`;
                                                             }}
                                                         />
                                                     ) : (
-                                                        <div style={{ fontSize: '30px' }}>📦</div>
+                                                        <div style={{ fontSize: '40px' }}>📦</div>
                                                     )}
-                                                    <span style={{ color: '#fff', fontSize: 12, textAlign: 'center', marginTop: 8, fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%' }}>{miner.name}</span>
-                                                    <span style={{ color: '#888', fontSize: 11 }}>Lvl {miner.level} • {miner.width} Hücre</span>
-                                                    <span style={{ color: '#03e1e4', fontSize: 12, marginTop: 4 }}>{formatPowerStr(miner.power)}</span>
-                                                    {miner.percent > 0 && <span style={{ color: '#28a745', fontSize: 11 }}>+{(miner.percent / 100).toFixed(2)}% Bonus</span>}
+                                                    <span style={{ color: '#fff', fontSize: 13, textAlign: 'center', marginTop: 8, fontWeight: 'bold', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{miner.name}</span>
+                                                    <span style={{ color: '#888', fontSize: 12 }}>Lvl {miner.level + 1} • {miner.width} Hücre</span>
+                                                    <span style={{ color: '#03e1e4', fontSize: 13, marginTop: 4 }}>{formatPowerStr(miner.power)}</span>
+                                                    {miner.percent > 0 && <span style={{ color: '#28a745', fontSize: 12 }}>+{(miner.percent / 100).toFixed(2)}% Bonus</span>}
                                                 </div>
                                             ))}
                                             {searchedMiners.length === 0 && !isSearching && (
