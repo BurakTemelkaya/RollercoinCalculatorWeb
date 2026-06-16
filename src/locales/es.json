@@ -318,7 +318,25 @@
     "usingCurrentStats": "Usar estadísticas actuales",
     "noChange": "Sin cambios",
     "leaguePower": "Poder de Liga",
-    "leaguePowerNote": "El poder de Juegos y Temporal aumenta tu total pero NO afecta tu liga. La liga se determina solo por Mineros + Bono + Poder de estantes."
+    "leaguePowerNote": "El poder de Juegos y Temporal aumenta tu total pero NO afecta tu liga. La liga se determina solo por Mineros + Bono + Poder de estantes.",
+    "undo": "Undo",
+    "reset": "Reset",
+    "addRack": "Add Rack",
+    "rooms": "Rooms:",
+    "minerAdded": "{{name}} added to rack.",
+    "minerMoved": "{{name}} moved successfully.",
+    "rackFull": "This rack is completely full!",
+    "cellTaken": "Target cell is occupied!",
+    "roomFull": "No more racks can be added to this room!",
+    "roomReset": "Room reset to initial state.",
+    "undoSuccess": "Last action undone.",
+    "rackAddedSuccess": "Rack added successfully.",
+    "rackAddError": "Error adding rack: {{error}}",
+    "noEmptySpace": "No empty space found for this miner!",
+    "fetchRoom": "Fetch My Room Data",
+    "roomFetchNote": "Scan your room to see your exact league power (excluding inventory bonuses).",
+    "fetchingRoom": "Scanning Room (10s)...",
+    "roomFetchedSuccessText": "Room scanned successfully!"
   },
   "settings": {
     "title": "Configuración",
@@ -426,6 +444,8 @@
   "merge": {
     "title": "Recetas de Fusión",
     "search": "Buscar minero...",
+    "sorting": "Sort",
+    "filters": "Filters",
     "sortBy": "Ordenar por",
     "sortOptions": {
       "newest": "Más Reciente",
