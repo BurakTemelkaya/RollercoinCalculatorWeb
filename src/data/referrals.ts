@@ -9,6 +9,7 @@ import solSiege from '../assets/support/solsiege.png';
 import honeygain from '../assets/support/honeygain.jpg';
 import immutable from '../assets/support/immutable.png';
 import freecash from '../assets/support/freecash.png';
+import rollercoin from '../assets/support/rollercoin.jpg';
 
 export interface ReferralLink {
   id: string;
@@ -19,6 +20,7 @@ export interface ReferralLink {
 }
 
 export const REFERRAL_LINKS: ReferralLink[] = [
+  { id: 'rollercoin', name: 'Rollercoin', url: 'https://rollercoin.com/?r=l80wkskx', icon: rollercoin },
   { id: 'chainers', name: 'Chainers (Web)', url: 'https://chainers.io/?r=mhnobucr', icon: iconChainers },
   { id: 'chainersHeroes', name: 'Chainers Heroes Bot (Telegram)', url: 'https://t.me/chainers_heroes_bot?start=1276468423', icon: iconChainersHeroes },
   { id: 'rollerTap', name: 'RollerTap Bot (Telegram)', url: 'https://t.me/rollertap_bot?start=1276468423', icon: iconRollerTap },

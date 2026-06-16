@@ -10,8 +10,7 @@ import { PowerUnit } from '../types';
 import { LeagueInfo, LEAGUES } from '../data/leagues';
 import { getLeagueByPower } from '../utils/leagueHelper';
 import { getLeagueImage } from '../data/leagueImages';
-import { fetchMerges } from '../services/mergeApi';
-import { MergeListItem } from '../types/merge';
+import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import Notification from './Notification';
 import './ManualSimulator.css';
@@ -70,7 +69,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
 
     // Global Search State
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchedMiners, setSearchedMiners] = useState<MergeListItem[]>([]);
+    const [searchedMiners, setSearchedMiners] = useState<MinerDto[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [searchRackBonus, setSearchRackBonus] = useState('');
     const [pageIndex, setPageIndex] = useState(0);
@@ -143,18 +142,18 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setManualRackBonus('');
     };
 
-    const handleAddSearchedMiner = (miner: MergeListItem) => {
+    const handleAddSearchedMiner = (miner: MinerDto) => {
         const rack = parseFloat(searchRackBonus) || 0;
         setAddedMiners([...addedMiners, {
             id: Date.now().toString() + Math.random().toString(),
-            name: miner.resultItemName,
-            power: miner.resultItemPower, // Already in Gh!
-            bonus: miner.resultItemPercent / 100, // API gives 150 = 1.5%
+            name: miner.name,
+            power: miner.power, // Already in Gh!
+            bonus: miner.percent / 100, // API gives 150 = 1.5%
             rackBonus: rack,
-            fileName: miner.resultItemFileName
+            fileName: miner.fileName
         }]);
-        const levelStr = miner.resultItemLevel > 0 ? t('simulator.minerLevelPrefix', { level: miner.resultItemLevel }) : '';
-        const fullName = `${levelStr}${miner.resultItemName}`;
+        const levelStr = miner.level > 0 ? t('simulator.minerLevelPrefix', { level: miner.level }) : '';
+        const fullName = `${levelStr}${miner.name}`;
         
         addNotification(t('simulator.minerAdded', { name: fullName }), 'success');
     };
@@ -192,23 +191,22 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setIsSearching(true);
         try {
             const params: any = {
-                pageIndex: page,
-                pageSize: 20,
-                sortBy,
-                isDescending
+                PageIndex: page,
+                SortBy: sortBy === 'percent' ? 'bonus' : sortBy === 'newest' ? 'date' : sortBy,
+                IsDescending: isDescending
             };
-            if (searchQuery) params.searchName = searchQuery;
+            if (searchQuery) params.Name = searchQuery;
             
             const minGh = getMinPowerGh();
-            if (minGh !== undefined) params.minPower = minGh;
+            if (minGh !== undefined) params.MinMinerPower = minGh;
             
             const maxGh = getMaxPowerGh();
-            if (maxGh !== undefined) params.maxPower = maxGh;
+            if (maxGh !== undefined) params.MaxMinerPower = maxGh;
             
-            if (minBonus) params.minBonus = Number(minBonus);
-            if (maxBonus) params.maxBonus = Number(maxBonus);
+            if (minBonus) params.MinMinerBonus = Number(minBonus);
+            if (maxBonus) params.MaxMinerBonus = Number(maxBonus);
 
-            const res = await fetchMerges(params);
+            const res = await fetchUserMinersFromApi(params);
             if (res && res.items) {
                 setSearchedMiners(res.items);
                 setPageIndex(res.index);
@@ -589,22 +587,22 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                     >
                                                         +
                                                     </button>
-                                                    {miner.resultItemFileName ? (
+                                                    {miner.fileName ? (
                                                         <img
-                                                            src={`https://static.rollercoin.com/static/img/market/miners/${miner.resultItemFileName?.includes('.') ? miner.resultItemFileName : (miner.resultItemFileName + '.gif')}?v=1.2.1`}
+                                                            src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
                                                             style={{ width: 50, height: 'auto', pointerEvents: 'none' }}
                                                             onError={(e) => {
                                                                 const target = e.target as HTMLImageElement;
-                                                                if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.resultItemFileName?.split('.')[0] || 'crypto_combo'}.png`;
+                                                                if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.split('.')[0] || 'crypto_combo'}.png`;
                                                             }}
                                                         />
                                                     ) : (
                                                         <div style={{ fontSize: '30px' }}>📦</div>
                                                     )}
-                                                    <span style={{ color: '#fff', fontSize: 12, textAlign: 'center', marginTop: 8, fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%' }}>{miner.resultItemName}</span>
-                                                    <span style={{ color: '#888', fontSize: 11 }}>Lvl {miner.resultItemLevel} • {miner.resultItemWidth} Hücre</span>
-                                                    <span style={{ color: '#03e1e4', fontSize: 12, marginTop: 4 }}>{formatPowerStr(miner.resultItemPower)}</span>
-                                                    {miner.resultItemPercent > 0 && <span style={{ color: '#28a745', fontSize: 11 }}>+{(miner.resultItemPercent / 100).toFixed(2)}% Bonus</span>}
+                                                    <span style={{ color: '#fff', fontSize: 12, textAlign: 'center', marginTop: 8, fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%' }}>{miner.name}</span>
+                                                    <span style={{ color: '#888', fontSize: 11 }}>Lvl {miner.level} • {miner.width} Hücre</span>
+                                                    <span style={{ color: '#03e1e4', fontSize: 12, marginTop: 4 }}>{formatPowerStr(miner.power)}</span>
+                                                    {miner.percent > 0 && <span style={{ color: '#28a745', fontSize: 11 }}>+{(miner.percent / 100).toFixed(2)}% Bonus</span>}
                                                 </div>
                                             ))}
                                             {searchedMiners.length === 0 && !isSearching && (
