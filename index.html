@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <!-- Cache Busting for HTML -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
@@ -160,13 +160,33 @@
               if (!container) return;
 
               function loadCoinzilla() {
-                container.innerHTML = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
-                window.coinzilla_display = window.coinzilla_display || [];
-                var c_display_preferences = {};
-                c_display_preferences.zone = "24569e7101752ae238";
-                c_display_preferences.width = "160";
-                c_display_preferences.height = "600";
-                coinzilla_display.push(c_display_preferences);
+                var iframe = document.createElement('iframe');
+                iframe.style.border = '0';
+                iframe.style.padding = '0';
+                iframe.style.width = '160px';
+                iframe.style.height = '600px';
+                iframe.style.overflow = 'hidden';
+                iframe.style.display = 'block';
+                iframe.style.margin = '0 auto';
+                iframe.scrolling = 'no';
+                container.innerHTML = '';
+                container.appendChild(iframe);
+                var doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
+                  '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>' +
+                  '<scr' + 'ipt>' +
+                  'window.coinzilla_display = window.coinzilla_display || [];' +
+                  'var c_display_preferences = {};' +
+                  'c_display_preferences.zone = "24569e7101752ae238";' +
+                  'c_display_preferences.width = "160";' +
+                  'c_display_preferences.height = "600";' +
+                  'coinzilla_display.push(c_display_preferences);' +
+                  '</scr' + 'ipt>' +
+                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
+                  '</body></html>'
+                );
+                doc.close();
               }
 
               function loadAads() {
@@ -176,7 +196,7 @@
               function testUrl(url) {
                 return Promise.race([
                   fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 2500); })
                 ]);
               }
 
@@ -187,7 +207,7 @@
                   // A-ADS blocked, check Coinzilla
                   testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
                     .then(loadCoinzilla)
-                    .catch(function() { /* both blocked */ });
+                    .catch(function () { /* both blocked */ });
                 });
             })();
           </script>
@@ -208,13 +228,33 @@
               if (!container) return;
 
               function loadCoinzilla() {
-                container.innerHTML = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
-                window.coinzilla_display = window.coinzilla_display || [];
-                var c_display_preferences_right = {};
-                c_display_preferences_right.zone = "24569e7101752ae238";
-                c_display_preferences_right.width = "160";
-                c_display_preferences_right.height = "600";
-                coinzilla_display.push(c_display_preferences_right);
+                var iframe = document.createElement('iframe');
+                iframe.style.border = '0';
+                iframe.style.padding = '0';
+                iframe.style.width = '160px';
+                iframe.style.height = '600px';
+                iframe.style.overflow = 'hidden';
+                iframe.style.display = 'block';
+                iframe.style.margin = '0 auto';
+                iframe.scrolling = 'no';
+                container.innerHTML = '';
+                container.appendChild(iframe);
+                var doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
+                  '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>' +
+                  '<scr' + 'ipt>' +
+                  'window.coinzilla_display = window.coinzilla_display || [];' +
+                  'var c_display_preferences_right = {};' +
+                  'c_display_preferences_right.zone = "24569e7101752ae238";' +
+                  'c_display_preferences_right.width = "160";' +
+                  'c_display_preferences_right.height = "600";' +
+                  'coinzilla_display.push(c_display_preferences_right);' +
+                  '</scr' + 'ipt>' +
+                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
+                  '</body></html>'
+                );
+                doc.close();
               }
 
               function loadAads() {
@@ -224,7 +264,7 @@
               function testUrl(url) {
                 return Promise.race([
                   fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 2500); })
                 ]);
               }
 
@@ -235,7 +275,7 @@
                   // A-ADS blocked, check Coinzilla
                   testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
                     .then(loadCoinzilla)
-                    .catch(function() { /* both blocked */ });
+                    .catch(function () { /* both blocked */ });
                 });
             })();
           </script>
@@ -264,13 +304,33 @@
               if (!container) return;
 
               function loadCoinzillaMobile() {
-                container.innerHTML = '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>';
-                window.coinzilla_display = window.coinzilla_display || [];
-                var c_display_preferences_mobile = {};
-                c_display_preferences_mobile.zone = "4176a2678c2d7dc7660";
-                c_display_preferences_mobile.width = "320";
-                c_display_preferences_mobile.height = "50";
-                coinzilla_display.push(c_display_preferences_mobile);
+                var iframe = document.createElement('iframe');
+                iframe.style.border = '0';
+                iframe.style.padding = '0';
+                iframe.style.width = '320px';
+                iframe.style.height = '50px';
+                iframe.style.overflow = 'hidden';
+                iframe.style.display = 'block';
+                iframe.style.margin = '0 auto';
+                iframe.scrolling = 'no';
+                container.innerHTML = '';
+                container.appendChild(iframe);
+                var doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
+                  '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>' +
+                  '<scr' + 'ipt>' +
+                  'window.coinzilla_display = window.coinzilla_display || [];' +
+                  'var c_display_preferences_mobile = {};' +
+                  'c_display_preferences_mobile.zone = "4176a2678c2d7dc7660";' +
+                  'c_display_preferences_mobile.width = "320";' +
+                  'c_display_preferences_mobile.height = "50";' +
+                  'coinzilla_display.push(c_display_preferences_mobile);' +
+                  '</scr' + 'ipt>' +
+                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
+                  '</body></html>'
+                );
+                doc.close();
               }
 
               function loadAadsMobile() {
@@ -280,7 +340,7 @@
               function testUrl(url) {
                 return Promise.race([
                   fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 5000); })
                 ]);
               }
 
@@ -291,7 +351,7 @@
                   // A-ADS blocked, check Coinzilla
                   testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
                     .then(loadCoinzillaMobile)
-                    .catch(function() { /* both blocked */ });
+                    .catch(function () { /* both blocked */ });
                 });
             })();
           </script>
@@ -345,7 +405,7 @@
     body.hide-global-ads .aads-mobile-only {
       display: none !important;
     }
-    
+
     @media (min-width: 1025px) {
       body.hide-global-ads #root {
         padding-left: 0 !important;
@@ -357,14 +417,14 @@
   <script>
     // Service Worker: silent registration, no user prompts
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      navigator.serviceWorker.register('/sw.js').then(function (reg) {
         // Optional: trigger update check on navigation
         reg.update();
       });
 
       // Reload the page when the service worker updates and takes control
       let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', function() {
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
         if (!refreshing) {
           window.location.reload();
           refreshing = true;
