@@ -173,14 +173,21 @@
                 container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
               }
 
-              // Check A-ADS reachability
-              var testUrl = 'https://ad.a-ads.com/2429727/?size=160x600';
-              fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
-                .then(function () {
-                  loadAads();
-                })
+              function testUrl(url) {
+                return Promise.race([
+                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
+                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                ]);
+              }
+
+              // A-ADS is primary here
+              testUrl('https://ad.a-ads.com/2429727/?size=160x600&cb=' + Date.now())
+                .then(loadAads)
                 .catch(function () {
-                  loadCoinzilla();
+                  // A-ADS blocked, check Coinzilla
+                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
+                    .then(loadCoinzilla)
+                    .catch(function() { /* both blocked */ });
                 });
             })();
           </script>
@@ -195,14 +202,42 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
         <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
           <script>
-                  window.coinzilla_display = window.coinzilla_display || [];
-                  var c_display_preferences_right = {};
-                  c_display_preferences_right.zone = "24569e7101752ae238";
-                  c_display_preferences_right.width = "160";
-                  c_display_preferences_right.height = "600";
-                  coinzilla_display.push(c_display_preferences_right);
+            (function () {
+              var container = document.getElementById('right-side-ad-container');
+              if (!container) return;
+
+              function loadCoinzilla() {
+                container.innerHTML = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
+                window.coinzilla_display = window.coinzilla_display || [];
+                var c_display_preferences_right = {};
+                c_display_preferences_right.zone = "24569e7101752ae238";
+                c_display_preferences_right.width = "160";
+                c_display_preferences_right.height = "600";
+                coinzilla_display.push(c_display_preferences_right);
+              }
+
+              function loadAads() {
+                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
+              }
+
+              function testUrl(url) {
+                return Promise.race([
+                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
+                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                ]);
+              }
+
+              // A-ADS is primary here
+              testUrl('https://ad.a-ads.com/2429727/?size=160x600&cb=' + Date.now())
+                .then(loadAads)
+                .catch(function () {
+                  // A-ADS blocked, check Coinzilla
+                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
+                    .then(loadCoinzilla)
+                    .catch(function() { /* both blocked */ });
+                });
+            })();
           </script>
         </div>
       </div>
@@ -242,13 +277,21 @@
                 container.innerHTML = '<iframe data-aa="2429728" src="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
               }
 
-              var testUrl = 'https://ad.a-ads.com/2429728/?size=320x50';
-              fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
-                .then(function () {
-                  loadAadsMobile();
-                })
+              function testUrl(url) {
+                return Promise.race([
+                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
+                  new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout')); }, 2500); })
+                ]);
+              }
+
+              // A-ADS is primary here
+              testUrl('https://ad.a-ads.com/2429728/?size=320x50&cb=' + Date.now())
+                .then(loadAadsMobile)
                 .catch(function () {
-                  loadCoinzillaMobile();
+                  // A-ADS blocked, check Coinzilla
+                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
+                    .then(loadCoinzillaMobile)
+                    .catch(function() { /* both blocked */ });
                 });
             })();
           </script>
