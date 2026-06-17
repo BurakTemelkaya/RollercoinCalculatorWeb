@@ -170,7 +170,7 @@
               }
 
               function loadAads() {
-                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
+                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
               }
 
               // Check A-ADS reachability
@@ -222,15 +222,37 @@
               points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 489.292,457.678 277.331,245.004 489.292,32.337 " />
           </svg>
         </label>
-        <div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
-        <script>
+        <div id="mobile-ad-content-wrapper">
+          <script>
+            (function () {
+              var container = document.getElementById('mobile-ad-content-wrapper');
+              if (!container) return;
+
+              function loadCoinzillaMobile() {
+                container.innerHTML = '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>';
                 window.coinzilla_display = window.coinzilla_display || [];
                 var c_display_preferences_mobile = {};
                 c_display_preferences_mobile.zone = "4176a2678c2d7dc7660";
                 c_display_preferences_mobile.width = "320";
                 c_display_preferences_mobile.height = "50";
                 coinzilla_display.push(c_display_preferences_mobile);
-        </script>
+              }
+
+              function loadAadsMobile() {
+                container.innerHTML = '<iframe data-aa="2429728" src="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
+              }
+
+              var testUrl = 'https://ad.a-ads.com/2429728/?size=320x50';
+              fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
+                .then(function () {
+                  loadAadsMobile();
+                })
+                .catch(function () {
+                  loadCoinzillaMobile();
+                });
+            })();
+          </script>
+        </div>
       </div>
     </div>
     <style>
