@@ -347,7 +347,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260616.015301';
+  const CURRENT_CACHE_VERSION = '20260617.222222';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -600,8 +600,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
         const tempRaw = (fetchedUser.userPowerResponseDto.temp || 0) * 1e9;
         const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+        const hamsterRaw = (fetchedUser.userPowerResponseDto.hamster_expedition_bonus_power || 0) * 1e9;
         const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
-        effectiveUserPower = autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + bonusRaw);
+        effectiveUserPower = autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + hamsterRaw + bonusRaw);
       }
     }
 
@@ -739,8 +740,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       const racksRaw = (fetchedUser.userPowerResponseDto.racks || 0) * 1e9;
       const tempRaw = (fetchedUser.userPowerResponseDto.temp || 0) * 1e9;
       const freonRaw = (fetchedUser.userPowerResponseDto.freon || 0) * 1e9;
+      const hamsterRaw = (fetchedUser.userPowerResponseDto.hamster_expedition_bonus_power || 0) * 1e9;
       const bonusRaw = Math.max(0, ((fetchedUser.userPowerResponseDto.bonus || 0) * 1e9) - freonRaw);
-      return autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + bonusRaw);
+      return autoScalePower(minersRaw + gamesRaw + racksRaw + tempRaw + freonRaw + hamsterRaw + bonusRaw);
     }
     return userPower;
   }, [fetchMode, fetchedUser, userPower]);

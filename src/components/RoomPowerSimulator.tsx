@@ -67,14 +67,14 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     };
 
     // Calculate Power
-    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom) : null;
+    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, fetchedRoom, fetchedUser?.userPowerResponseDto?.bonus_percent) : null;
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
-    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom) : null;
+    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, fetchedRoom, fetchedUser?.userPowerResponseDto?.bonus_percent) : null;
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
-    
+
     const powerDiffGh = leaguePowerGh - originalLeaguePowerGh;
     const powerDiff = autoScalePower(Math.abs(powerDiffGh) * 1e9);
     const isLeagueChange = originalLeague && currentLeague.id !== originalLeague.id;
@@ -87,6 +87,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                     {t('simulator.title')}
                 </h2>
                 <p className="section-desc">{t('simulator.desc')}</p>
+                <div className="warning-banner" style={{ marginTop: '10px', padding: '10px', background: 'rgba(255, 193, 7, 0.1)', border: '1px solid #ffc107', borderRadius: '8px', color: '#ffc107', fontSize: '0.85rem' }}>
+                    ⚠️ {t('simulator.disclaimer', 'Uyarı: Buradaki hesaplanan değerler oyun içi gizli mekanikler veya eksik veriler nedeniyle hatalı olabilir. Lütfen işlemlerinizi buna dikkat ederek yapın. Sitemiz olası hatalardan kesinlikle sorumluluk kabul etmez.')}
+                </div>
             </div>
 
             <div className="simulator-content">
@@ -144,7 +147,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                 <h3>{t('simulator.fetchRoom', 'Odamın Verilerini Çek')}</h3>
                                 <p>{t('simulator.roomFetchNote', 'Tam lig gücünüzü (envanter bonusları hariç) görmek için odanızı taratın.')}</p>
                             </div>
-                            <button 
+                            <button
                                 className="premium-fetch-btn"
                                 onClick={handleFetchRoom}
                                 disabled={isFetchingRoom}
@@ -206,9 +209,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             </div>
                         )}
 
-                        <RoomSimulator 
-                            room={simulatedRoom} 
-                            onChange={setSimulatedRoom} 
+                        <RoomSimulator
+                            room={simulatedRoom}
+                            onChange={setSimulatedRoom}
                             userId={fetchedUser?.userProfileResponseDto?.avatar_Id}
                         />
 
@@ -218,12 +221,12 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
-                                            <span className="value secondary">{formatHashPower(autoScalePower((originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0)) * 1e9))}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower(((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
-                                            <span className="value primary">{formatHashPower(autoScalePower((leaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0)) * 1e9))}</span>
+                                            <span className="value primary">{formatHashPower(autoScalePower((((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + powerDiffGh) * 1e9))}</span>
                                             <span className={`sub-value ${powerDiffGh >= 0 ? 'success' : 'danger'}`}>
                                                 {powerDiffGh >= 0 ? '+' : '-'}{formatHashPower(powerDiff)}
                                             </span>

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
+import { guessSetByMinerName, guessSetByRackName } from '../utils/setCalculator';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import Notification from './Notification';
@@ -388,11 +389,19 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             }
         }
 
+        const isMinerInRackSet = () => {
+            if (!rack || !rack.rack_info || !rack.rack_info.name) return false;
+            const rackSet = guessSetByRackName(rack.rack_info.name);
+            if (!rackSet) return false;
+            const minerSet = guessSetByMinerName(miner.name);
+            return minerSet !== null && minerSet.title.en === rackSet.title.en;
+        };
+
         const fakeId = isMove ? (miner as any)._id : ('mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
         const newMiner: ApiRoomMiner = {
             _id: fakeId, miner_id: miner.id || (miner as any).miner_id || ('mock_model_' + Date.now()), name: miner.name,
             power: miner.power, bonus_percent: miner.percent || (miner as any).bonus_percent || 0,
-            width, level: miner.level || 0, type: 'miner', is_in_set: false,
+            width, level: miner.level || 0, type: 'miner', is_in_set: isMinerInRackSet(),
             updated: miner.createdDate || (miner as any).updated || new Date().toISOString(), filename: miner.fileName || (miner as any).filename || 'abyss_walker',
             placement: { user_rack_id: targetRackId, x: targetX, y: targetY }
         };
