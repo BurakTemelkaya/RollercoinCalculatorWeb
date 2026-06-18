@@ -81,12 +81,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
     return (
         <section className="power-simulator">
-            <div className="simulator-header">
-                <h2 className="section-title">
-                    <span className="section-icon">⚡</span>
-                    {t('simulator.title')}
-                </h2>
-                <p className="section-desc">{t('simulator.desc')}</p>
+            <div className="ms-header">
+                <h2><span className="section-icon">🏠</span> {t('simulator.roomTitle', 'Oda Simülatörü')}</h2>
+                <p>{t('simulator.desc')}</p>
                 <div className="warning-banner" style={{ marginTop: '10px', padding: '10px', background: 'rgba(255, 193, 7, 0.1)', border: '1px solid #ffc107', borderRadius: '8px', color: '#ffc107', fontSize: '0.85rem' }}>
                     ⚠️ {t('simulator.disclaimer', 'Uyarı: Buradaki hesaplanan değerler oyun içi gizli mekanikler veya eksik veriler nedeniyle hatalı olabilir. Lütfen işlemlerinizi buna dikkat ederek yapın. Sitemiz olası hatalardan kesinlikle sorumluluk kabul etmez.')}
                 </div>

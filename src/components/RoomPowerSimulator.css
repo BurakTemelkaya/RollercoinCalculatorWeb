@@ -9,26 +9,7 @@
     margin-bottom: 24px;
 }
 
-.simulator-header {
-    margin-bottom: 24px;
-}
 
-.simulator-header .section-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.simulator-header .section-desc {
-    color: var(--text-muted);
-    font-size: 13px;
-    margin-top: 4px;
-}
 
 .simulator-content {
     display: flex;
@@ -455,20 +436,7 @@
         margin-bottom: 16px;
     }
 
-    /* Header - match DataInputForm section header style */
-    .simulator-header {
-        margin-bottom: 16px;
-        text-align: center;
-    }
 
-    .simulator-header .section-title {
-        font-size: 14px;
-        justify-content: center;
-    }
-
-    .simulator-header .section-desc {
-        font-size: 12px;
-    }
 
     /* Fetch row */
     .user-fetcher-row {
@@ -660,9 +628,7 @@
         padding: 12px;
     }
 
-    .simulator-header .section-title {
-        font-size: 13px;
-    }
+
 
     .simulator-card {
         padding: 12px;

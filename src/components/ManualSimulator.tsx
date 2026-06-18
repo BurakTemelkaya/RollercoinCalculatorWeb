@@ -332,12 +332,13 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                     <div className="ms-card">
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}><span className="section-icon">➕</span> {t('simulator.addMiner', 'Madenci Ekle')}</h3>
 
-                        <div className="main-tabs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '2rem', marginTop: '1rem', background: 'var(--bg-tertiary)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
+                        <div className="main-tabs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '2rem', marginTop: '1rem', background: 'var(--bg-tertiary)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
                             <button
                                 className={`main-tab ${activeInputTab === 'manual' ? 'active' : ''}`}
                                 onClick={() => setActiveInputTab('manual')}
                                 style={{
-                                    width: '100%', margin: 0, justifyContent: 'center',
+                                    flex: '1 1 140px',
+                                    margin: 0,
                                     background: activeInputTab === 'manual' ? 'var(--accent-secondary)' : 'transparent',
                                     color: activeInputTab === 'manual' ? '#fff' : 'var(--text-secondary)',
                                     border: 'none',
@@ -349,6 +350,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                     transition: 'all 0.2s ease',
                                     display: 'flex',
                                     alignItems: 'center',
+                                    justifyContent: 'center',
                                     gap: '8px',
                                     boxShadow: activeInputTab === 'manual' ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
                                 }}
@@ -360,7 +362,8 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                 className={`main-tab ${activeInputTab === 'search' ? 'active' : ''}`}
                                 onClick={() => setActiveInputTab('search')}
                                 style={{
-                                    width: '100%', margin: 0, justifyContent: 'center',
+                                    flex: '1 1 140px',
+                                    margin: 0,
                                     background: activeInputTab === 'search' ? 'var(--accent-secondary)' : 'transparent',
                                     color: activeInputTab === 'search' ? '#fff' : 'var(--text-secondary)',
                                     border: 'none',
@@ -372,6 +375,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                     transition: 'all 0.2s ease',
                                     display: 'flex',
                                     alignItems: 'center',
+                                    justifyContent: 'center',
                                     gap: '8px',
                                     boxShadow: activeInputTab === 'search' ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
                                 }}
@@ -381,16 +385,18 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                             </button>
                         </div>
 
-                        <div className="tab-slider-viewport" style={{ overflow: 'hidden' }}>
+                        <div className="tab-slider-viewport" style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
                             <div className="tab-slider-track" style={{
                                 display: 'flex',
+                                width: '200%',
                                 transition: 'transform 0.3s ease-in-out',
-                                transform: activeInputTab === 'manual' ? 'translateX(0)' : 'translateX(-100%)',
-                                alignItems: 'flex-start'
+                                transform: activeInputTab === 'manual' ? 'translateX(0)' : 'translateX(-50%)',
+                                alignItems: 'flex-start',
+                                minWidth: 0
                             }}>
-                                <div className="tab-slider-slide" style={{ width: '100%', flexShrink: 0, height: activeInputTab === 'manual' ? 'auto' : 0, overflow: activeInputTab === 'manual' ? 'visible' : 'hidden' }}>
-                                    <div className="ms-input-row" style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', marginTop: '1rem', display: 'flex', gap: '20px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
-                                        <div className="input-group" style={{ flex: '1 1 200px' }}>
+                                <div className="tab-slider-slide" style={{ flex: '0 0 50%', width: '50%', flexShrink: 0, height: activeInputTab === 'manual' ? 'auto' : 0, overflow: activeInputTab === 'manual' ? 'visible' : 'hidden', minWidth: 0 }}>
+                                    <div className="ms-input-row" style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', marginTop: '1rem', display: 'flex', gap: '20px', alignItems: 'flex-end', flexWrap: 'wrap', minWidth: 0 }}>
+                                        <div className="input-group" style={{ flex: '1 1 200px', minWidth: 0 }}>
                                             <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', display: 'block' }}>{t('simulator.minerPower', 'Madenci Gücü')}</label>
                                             <div className="power-input-container" style={{ display: 'flex', width: '100%' }}>
                                                 <input
@@ -405,7 +411,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                     className="power-unit-select"
                                                     value={manualUnit}
                                                     onChange={e => setManualUnit(e.target.value as PowerUnit)}
-                                                    style={{ width: '80px', background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', fontWeight: 600, padding: '0 10px', cursor: 'pointer', borderTopRightRadius: 'var(--radius-md)', borderBottomRightRadius: 'var(--radius-md)' }}
+                                                    style={{ width: '80px', flexShrink: 0, background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', fontWeight: 600, padding: '0 10px', cursor: 'pointer', borderTopRightRadius: 'var(--radius-md)', borderBottomRightRadius: 'var(--radius-md)' }}
                                                 >
                                                     <option value="Gh">Gh</option>
                                                     <option value="Th">Th</option>
@@ -414,7 +420,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="input-group" style={{ flex: '1 1 150px' }}>
+                                        <div className="input-group" style={{ flex: '1 1 150px', minWidth: 0 }}>
                                             <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', display: 'block' }}>{t('simulator.minerBonus', 'Madenci Bonusu')} (%)</label>
                                             <input
                                                 type="number"
@@ -422,10 +428,10 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 placeholder="0"
                                                 value={manualBonus}
                                                 onChange={e => setManualBonus(e.target.value)}
-                                                style={{ width: '100%', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '10px 14px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600, outline: 'none' }}
+                                                style={{ width: '100%', minWidth: 0, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '10px 14px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600, outline: 'none' }}
                                             />
                                         </div>
-                                        <div className="input-group" style={{ flex: '1 1 150px' }}>
+                                        <div className="input-group" style={{ flex: '1 1 150px', minWidth: 0 }}>
                                             <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', display: 'block' }}>{t('simulator.rackBonus', 'Raf Bonusu')} (%)</label>
                                             <input
                                                 type="number"
@@ -433,7 +439,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 placeholder="0"
                                                 value={manualRackBonus}
                                                 onChange={e => setManualRackBonus(e.target.value)}
-                                                style={{ width: '100%', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '10px 14px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600, outline: 'none' }}
+                                                style={{ width: '100%', minWidth: 0, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '10px 14px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600, outline: 'none' }}
                                             />
                                         </div>
                                         <div className="input-group" style={{ flex: '0 0 auto' }}>
@@ -450,10 +456,10 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                         </div>
                                     </div>
                                 </div>
-                                <div className="tab-slider-slide" style={{ width: '100%', flexShrink: 0, height: activeInputTab === 'search' ? 'auto' : 0, overflow: activeInputTab === 'search' ? 'visible' : 'hidden' }}>
+                                <div className="tab-slider-slide" style={{ flex: '0 0 50%', width: '50%', flexShrink: 0, height: activeInputTab === 'search' ? 'auto' : 0, overflow: activeInputTab === 'search' ? 'visible' : 'hidden', minWidth: 0 }}>
                                     <div className="miner-search-area" style={{ marginTop: '1rem', padding: 0 }}>
                                         <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                                            <div className="rc-filter-container" style={{ flex: '1 1 300px', maxWidth: 400 }}>
+                                            <div className="rc-filter-container" style={{ flex: '1 1 100%', maxWidth: 400, minWidth: 0 }}>
                                                 <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 18, borderBottom: '1px solid #3c3e58', paddingBottom: 10 }}>{t('merge.filters', 'Filtreler')}</h3>
 
                                                 <div className="rc-filter-group">
@@ -475,26 +481,26 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                             onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), sliderMinGh + 1000000))}
                                                         />
                                                     </div>
-                                                    <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px' }}>
-                                                        <div style={{ display: 'flex', gap: '4px' }}>
-                                                            <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
-                                                            <select className="rc-select" value={minPowerUnit} onChange={e => setMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                    <div className="rc-filter-inputs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                                        <div style={{ display: 'flex', gap: '4px', flex: '1 1 120px' }}>
+                                                            <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" style={{ width: '100%', minWidth: 0 }} />
+                                                            <select className="rc-select" value={minPowerUnit} onChange={e => setMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px', flexShrink: 0, width: '60px' }}>
                                                                 <option value="Gh">Gh</option>
                                                                 <option value="Th">Th</option>
                                                                 <option value="Ph">Ph</option>
                                                                 <option value="Eh">Eh</option>
                                                             </select>
                                                         </div>
-                                                        <div style={{ display: 'flex', gap: '4px' }}>
-                                                            <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max', 'Max')} style={{ width: '100%' }} />
-                                                            <select className="rc-select" value={maxPowerUnit} onChange={e => setMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                        <div style={{ display: 'flex', gap: '4px', flex: '1 1 120px' }}>
+                                                            <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max', 'Max')} style={{ width: '100%', minWidth: 0 }} />
+                                                            <select className="rc-select" value={maxPowerUnit} onChange={e => setMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px', flexShrink: 0, width: '60px' }}>
                                                                 <option value="Gh">Gh</option>
                                                                 <option value="Th">Th</option>
                                                                 <option value="Ph">Ph</option>
                                                                 <option value="Eh">Eh</option>
                                                             </select>
                                                         </div>
-                                                        <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
+                                                        <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)} style={{ flex: '1 1 100%' }}>OK</button>
                                                     </div>
                                                     <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                                                         <span>{t('merge.min', 'Min')}: {sliderMinGh ? formatPower(sliderMinGh) : '0'}</span>
@@ -521,24 +527,24 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                             onChange={e => setMaxBonus(Math.max(Number(e.target.value), Number(minBonus || 0) + 1).toString())}
                                                         />
                                                     </div>
-                                                    <div className="rc-filter-inputs">
-                                                        <input type="number" className="rc-filter-input" value={minBonus} onChange={e => setMinBonus(e.target.value)} placeholder="0" />
-                                                        <span className="rc-filter-separator">-</span>
-                                                        <input type="number" className="rc-filter-input" value={maxBonus} onChange={e => setMaxBonus(e.target.value)} placeholder={t('merge.max', 'Max')} />
-                                                        <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
+                                                    <div className="rc-filter-inputs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                                        <input type="number" className="rc-filter-input" value={minBonus} onChange={e => setMinBonus(e.target.value)} placeholder="0" style={{ flex: '1 1 100px', minWidth: 0 }} />
+                                                        <span className="rc-filter-separator" style={{ display: 'flex', alignItems: 'center' }}>-</span>
+                                                        <input type="number" className="rc-filter-input" value={maxBonus} onChange={e => setMaxBonus(e.target.value)} placeholder={t('merge.max', 'Max')} style={{ flex: '1 1 100px', minWidth: 0 }} />
+                                                        <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)} style={{ flex: '1 1 100%' }}>OK</button>
                                                     </div>
                                                 </div>
 
                                                 <div className="rc-filter-group" style={{ borderTop: '1px solid #3c3e58', paddingTop: 20 }}>
                                                     <label className="rc-filter-label" style={{ marginBottom: 10 }}>{t('merge.sorting', 'Sıralama')}:</label>
-                                                    <div className="rc-filter-inputs">
-                                                        <select value={sortBy} onChange={e => { setSortBy(e.target.value); setTimeout(() => handleSearchMiners(0), 50); }} className="rc-select">
+                                                    <div className="rc-filter-inputs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                                        <select value={sortBy} onChange={e => { setSortBy(e.target.value); setTimeout(() => handleSearchMiners(0), 50); }} className="rc-select" style={{ flex: '1 1 200px' }}>
                                                             <option value="power">{t('merge.sortOptions.power', 'Güç')}</option>
                                                             <option value="percent">{t('merge.sortOptions.bonus', 'Bonus')}</option>
                                                             <option value="name">{t('merge.sortOptions.name', 'İsim')}</option>
                                                             <option value="newest">{t('merge.sortOptions.newest', 'En Yeni')}</option>
                                                         </select>
-                                                        <button className="rc-filter-ok" onClick={() => { setIsDescending(!isDescending); setTimeout(() => handleSearchMiners(0), 50); }} style={{ padding: '8px 10px', fontSize: 15 }}>
+                                                        <button className="rc-filter-ok" onClick={() => { setIsDescending(!isDescending); setTimeout(() => handleSearchMiners(0), 50); }} style={{ padding: '8px 14px', fontSize: 15, flex: '0 0 auto' }}>
                                                             {isDescending ? '▼' : '▲'}
                                                         </button>
                                                     </div>

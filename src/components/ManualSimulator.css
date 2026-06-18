@@ -1,7 +1,12 @@
 
 .manual-simulator {
-    padding: 1rem;
-    color: var(--text);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 24px;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+    color: var(--text-primary);
 }
 
 .ms-header {
