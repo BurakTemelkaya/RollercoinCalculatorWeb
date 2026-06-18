@@ -172,21 +172,23 @@
                 container.innerHTML = '';
                 container.appendChild(iframe);
                 var doc = iframe.contentWindow.document;
-                doc.open();
-                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
-                  '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>' +
-                  '<scr' + 'ipt>' +
-                  'window.coinzilla_display = window.coinzilla_display || [];' +
-                  'var c_display_preferences = {};' +
-                  'c_display_preferences.zone = "24569e7101752ae238";' +
-                  'c_display_preferences.width = "160";' +
-                  'c_display_preferences.height = "600";' +
-                  'coinzilla_display.push(c_display_preferences);' +
-                  '</scr' + 'ipt>' +
-                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
-                  '</body></html>'
-                );
-                doc.close();
+                doc.body.style.margin = '0';
+                doc.body.style.padding = '0';
+                doc.body.style.background = 'transparent';
+
+                var coinzillaDiv = doc.createElement('div');
+                coinzillaDiv.className = 'coinzilla';
+                coinzillaDiv.setAttribute('data-zone', 'C-24569e7101752ae238');
+                doc.body.appendChild(coinzillaDiv);
+
+                var script1 = doc.createElement('script');
+                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences = { zone: "24569e7101752ae238", width: "160", height: "600" }; coinzilla_display.push(c_display_preferences);';
+                doc.body.appendChild(script1);
+
+                var script2 = doc.createElement('script');
+                script2.async = true;
+                script2.src = 'https://coinzillatag.com/lib/display.js';
+                doc.body.appendChild(script2);
               }
 
               function loadAads() {
@@ -240,21 +242,23 @@
                 container.innerHTML = '';
                 container.appendChild(iframe);
                 var doc = iframe.contentWindow.document;
-                doc.open();
-                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
-                  '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>' +
-                  '<scr' + 'ipt>' +
-                  'window.coinzilla_display = window.coinzilla_display || [];' +
-                  'var c_display_preferences_right = {};' +
-                  'c_display_preferences_right.zone = "24569e7101752ae238";' +
-                  'c_display_preferences_right.width = "160";' +
-                  'c_display_preferences_right.height = "600";' +
-                  'coinzilla_display.push(c_display_preferences_right);' +
-                  '</scr' + 'ipt>' +
-                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
-                  '</body></html>'
-                );
-                doc.close();
+                doc.body.style.margin = '0';
+                doc.body.style.padding = '0';
+                doc.body.style.background = 'transparent';
+
+                var coinzillaDiv = doc.createElement('div');
+                coinzillaDiv.className = 'coinzilla';
+                coinzillaDiv.setAttribute('data-zone', 'C-24569e7101752ae238');
+                doc.body.appendChild(coinzillaDiv);
+
+                var script1 = doc.createElement('script');
+                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences_right = { zone: "24569e7101752ae238", width: "160", height: "600" }; coinzilla_display.push(c_display_preferences_right);';
+                doc.body.appendChild(script1);
+
+                var script2 = doc.createElement('script');
+                script2.async = true;
+                script2.src = 'https://coinzillatag.com/lib/display.js';
+                doc.body.appendChild(script2);
               }
 
               function loadAads() {
@@ -316,21 +320,23 @@
                 container.innerHTML = '';
                 container.appendChild(iframe);
                 var doc = iframe.contentWindow.document;
-                doc.open();
-                doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
-                  '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>' +
-                  '<scr' + 'ipt>' +
-                  'window.coinzilla_display = window.coinzilla_display || [];' +
-                  'var c_display_preferences_mobile = {};' +
-                  'c_display_preferences_mobile.zone = "4176a2678c2d7dc7660";' +
-                  'c_display_preferences_mobile.width = "320";' +
-                  'c_display_preferences_mobile.height = "50";' +
-                  'coinzilla_display.push(c_display_preferences_mobile);' +
-                  '</scr' + 'ipt>' +
-                  '<scr' + 'ipt async src="https://coinzillatag.com/lib/display.js"></scr' + 'ipt>' +
-                  '</body></html>'
-                );
-                doc.close();
+                doc.body.style.margin = '0';
+                doc.body.style.padding = '0';
+                doc.body.style.background = 'transparent';
+
+                var coinzillaDiv = doc.createElement('div');
+                coinzillaDiv.className = 'coinzilla';
+                coinzillaDiv.setAttribute('data-zone', 'C-4176a2678c2d7dc7660');
+                doc.body.appendChild(coinzillaDiv);
+
+                var script1 = doc.createElement('script');
+                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences_mobile = { zone: "4176a2678c2d7dc7660", width: "320", height: "50" }; coinzilla_display.push(c_display_preferences_mobile);';
+                doc.body.appendChild(script1);
+
+                var script2 = doc.createElement('script');
+                script2.async = true;
+                script2.src = 'https://coinzillatag.com/lib/display.js';
+                doc.body.appendChild(script2);
               }
 
               function loadAadsMobile() {
