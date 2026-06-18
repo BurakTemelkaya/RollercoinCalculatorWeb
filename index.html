@@ -154,67 +154,16 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <script data-cfasync="false">
-            (function () {
-              var container = document.getElementById('left-side-ad-container');
-              if (!container) return;
-
-              function loadCoinzilla() {
-                var iframe = document.createElement('iframe');
-                iframe.style.border = '0';
-                iframe.style.padding = '0';
-                iframe.style.width = '160px';
-                iframe.style.height = '600px';
-                iframe.style.overflow = 'hidden';
-                iframe.style.display = 'block';
-                iframe.style.margin = '0 auto';
-                iframe.scrolling = 'no';
-                container.innerHTML = '';
-                container.appendChild(iframe);
-                var doc = iframe.contentWindow.document;
-                doc.body.style.margin = '0';
-                doc.body.style.padding = '0';
-                doc.body.style.background = 'transparent';
-
-                var coinzillaDiv = doc.createElement('div');
-                coinzillaDiv.className = 'coinzilla';
-                coinzillaDiv.setAttribute('data-zone', 'C-24569e7101752ae238');
-                doc.body.appendChild(coinzillaDiv);
-
-                var script1 = doc.createElement('script');
-                script1.setAttribute('data-cfasync', 'false');
-                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences = { zone: "24569e7101752ae238", width: "160", height: "600" }; coinzilla_display.push(c_display_preferences);';
-                doc.body.appendChild(script1);
-
-                var script2 = doc.createElement('script');
-                script2.setAttribute('data-cfasync', 'false');
-                script2.async = true;
-                script2.src = 'https://coinzillatag.com/lib/display.js';
-                doc.body.appendChild(script2);
-              }
-
-              function loadAads() {
-                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
-              }
-
-              function testUrl(url) {
-                return Promise.race([
-                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 2500); })
-                ]);
-              }
-
-              // A-ADS is primary here
-              testUrl('https://ad.a-ads.com/2429727/?size=160x600&cb=' + Date.now())
-                .then(loadAads)
-                .catch(function () {
-                  // A-ADS blocked, check Coinzilla
-                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
-                    .then(loadCoinzilla)
-                    .catch(function () { /* both blocked */ });
-                });
-            })();
-          </script>
+          <object data="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 160px; height: 600px; border: 0; padding: 0; overflow: hidden;">
+            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
+            <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
+            <script>
+              window.coinzilla_display = window.coinzilla_display || [];
+              var c_display_preferences = { zone: "24569e7101752ae238", width: "160", height: "600" };
+              coinzilla_display.push(c_display_preferences);
+            </script>
+            <script async src="https://coinzillatag.com/lib/display.js"></script>
+          </object>
         </div>
       </div>
     </div>
@@ -226,67 +175,16 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
         <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <script data-cfasync="false">
-            (function () {
-              var container = document.getElementById('right-side-ad-container');
-              if (!container) return;
-
-              function loadCoinzilla() {
-                var iframe = document.createElement('iframe');
-                iframe.style.border = '0';
-                iframe.style.padding = '0';
-                iframe.style.width = '160px';
-                iframe.style.height = '600px';
-                iframe.style.overflow = 'hidden';
-                iframe.style.display = 'block';
-                iframe.style.margin = '0 auto';
-                iframe.scrolling = 'no';
-                container.innerHTML = '';
-                container.appendChild(iframe);
-                var doc = iframe.contentWindow.document;
-                doc.body.style.margin = '0';
-                doc.body.style.padding = '0';
-                doc.body.style.background = 'transparent';
-
-                var coinzillaDiv = doc.createElement('div');
-                coinzillaDiv.className = 'coinzilla';
-                coinzillaDiv.setAttribute('data-zone', 'C-24569e7101752ae238');
-                doc.body.appendChild(coinzillaDiv);
-
-                var script1 = doc.createElement('script');
-                script1.setAttribute('data-cfasync', 'false');
-                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences_right = { zone: "24569e7101752ae238", width: "160", height: "600" }; coinzilla_display.push(c_display_preferences_right);';
-                doc.body.appendChild(script1);
-
-                var script2 = doc.createElement('script');
-                script2.setAttribute('data-cfasync', 'false');
-                script2.async = true;
-                script2.src = 'https://coinzillatag.com/lib/display.js';
-                doc.body.appendChild(script2);
-              }
-
-              function loadAads() {
-                container.innerHTML = '<div id="frame" style="width: 160px;margin: auto;z-index: 99998;height: auto"><iframe data-aa="2429727" src="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto"></iframe></div>';
-              }
-
-              function testUrl(url) {
-                return Promise.race([
-                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 2500); })
-                ]);
-              }
-
-              // A-ADS is primary here
-              testUrl('https://ad.a-ads.com/2429727/?size=160x600&cb=' + Date.now())
-                .then(loadAads)
-                .catch(function () {
-                  // A-ADS blocked, check Coinzilla
-                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
-                    .then(loadCoinzilla)
-                    .catch(function () { /* both blocked */ });
-                });
-            })();
-          </script>
+          <object data="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 160px; height: 600px; border: 0; padding: 0; overflow: hidden;">
+            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
+            <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
+            <script>
+              window.coinzilla_display = window.coinzilla_display || [];
+              var c_display_preferences_right = { zone: "24569e7101752ae238", width: "160", height: "600" };
+              coinzilla_display.push(c_display_preferences_right);
+            </script>
+            <script async src="https://coinzillatag.com/lib/display.js"></script>
+          </object>
         </div>
       </div>
     </div>
@@ -306,67 +204,16 @@
           </svg>
         </label>
         <div id="mobile-ad-content-wrapper">
-          <script data-cfasync="false">
-            (function () {
-              var container = document.getElementById('mobile-ad-content-wrapper');
-              if (!container) return;
-
-              function loadCoinzillaMobile() {
-                var iframe = document.createElement('iframe');
-                iframe.style.border = '0';
-                iframe.style.padding = '0';
-                iframe.style.width = '320px';
-                iframe.style.height = '50px';
-                iframe.style.overflow = 'hidden';
-                iframe.style.display = 'block';
-                iframe.style.margin = '0 auto';
-                iframe.scrolling = 'no';
-                container.innerHTML = '';
-                container.appendChild(iframe);
-                var doc = iframe.contentWindow.document;
-                doc.body.style.margin = '0';
-                doc.body.style.padding = '0';
-                doc.body.style.background = 'transparent';
-
-                var coinzillaDiv = doc.createElement('div');
-                coinzillaDiv.className = 'coinzilla';
-                coinzillaDiv.setAttribute('data-zone', 'C-4176a2678c2d7dc7660');
-                doc.body.appendChild(coinzillaDiv);
-
-                var script1 = doc.createElement('script');
-                script1.setAttribute('data-cfasync', 'false');
-                script1.innerHTML = 'window.coinzilla_display = window.coinzilla_display || []; var c_display_preferences_mobile = { zone: "4176a2678c2d7dc7660", width: "320", height: "50" }; coinzilla_display.push(c_display_preferences_mobile);';
-                doc.body.appendChild(script1);
-
-                var script2 = doc.createElement('script');
-                script2.setAttribute('data-cfasync', 'false');
-                script2.async = true;
-                script2.src = 'https://coinzillatag.com/lib/display.js';
-                doc.body.appendChild(script2);
-              }
-
-              function loadAadsMobile() {
-                container.innerHTML = '<iframe data-aa="2429728" src="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe" style="border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin: 0 auto"></iframe>';
-              }
-
-              function testUrl(url) {
-                return Promise.race([
-                  fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }),
-                  new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, 5000); })
-                ]);
-              }
-
-              // A-ADS is primary here
-              testUrl('https://ad.a-ads.com/2429728/?size=320x50&cb=' + Date.now())
-                .then(loadAadsMobile)
-                .catch(function () {
-                  // A-ADS blocked, check Coinzilla
-                  testUrl('https://coinzillatag.com/lib/display.js?cb=' + Date.now())
-                    .then(loadCoinzillaMobile)
-                    .catch(function () { /* both blocked */ });
-                });
-            })();
-          </script>
+          <object data="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 320px; height: 50px; border: 0; padding: 0; overflow: hidden; display: block; margin: 0 auto;">
+            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
+            <div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
+            <script>
+              window.coinzilla_display = window.coinzilla_display || [];
+              var c_display_preferences_mobile = { zone: "4176a2678c2d7dc7660", width: "320", height: "50" };
+              coinzilla_display.push(c_display_preferences_mobile);
+            </script>
+            <script async src="https://coinzillatag.com/lib/display.js"></script>
+          </object>
         </div>
       </div>
     </div>
