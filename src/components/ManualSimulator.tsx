@@ -212,21 +212,18 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const baseRoomPower = useMemo(() => {
         if (fetchedUser?.userPowerResponseDto) {
             const dto = fetchedUser.userPowerResponseDto;
-            // Divide by 100 because API sends 1538050 for 153.8050%, but manual simulator expects 100 scale (15380.5)
-            const actualBonusPercent = ((dto.bonus_percent || 0) / 100) - ((dto.hamster_expedition_bonus_percent || 0) / 100);
+            // The API sends bonus_percent scaled by 100 (e.g. 219713 = 2197.13%)
+            // So to get the multiplier, we divide by 10000.
+            const actualBonusPercent = (dto.bonus_percent || 0) - (dto.hamster_expedition_bonus_percent || 0);
             const baseMinerPowerGh = dto.miners || 0;
             const rackBonusPowerGh = dto.racks || 0;
             const totalLeaguePowerGh = dto.max_Power || 0;
-            
-            // Derive set bonus if any
-            const calcWithoutSet = baseMinerPowerGh + (baseMinerPowerGh * (actualBonusPercent / 10000)) + rackBonusPowerGh;
-            const totalSetBonusPowerGh = Math.max(0, totalLeaguePowerGh - calcWithoutSet);
 
             return {
                 baseMinerPowerGh,
                 collectionBonusPercent: actualBonusPercent,
                 rackBonusPowerGh,
-                totalSetBonusPowerGh,
+                totalSetBonusPowerGh: 0,
                 totalLeaguePowerGh,
                 placedMinersCount: 0
             };
@@ -242,7 +239,6 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     }, [fetchedUser]);
 
     const simulation = useMemo(() => {
-
         let totalAddedPower = 0;
         let totalAddedBonusPercent = 0;
         let totalAddedRackPower = 0;
@@ -253,18 +249,25 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             totalAddedRackPower += (m.power * (m.rackBonus / 100));
         });
 
-        const newBaseMinerPower = baseRoomPower.baseMinerPowerGh + totalAddedPower;
-        const newCollectionBonusSum = baseRoomPower.collectionBonusPercent + (totalAddedBonusPercent * 100);
-        const newRackBonusPower = baseRoomPower.rackBonusPowerGh + totalAddedRackPower;
+        const currentBonusMultiplier = baseRoomPower.collectionBonusPercent / 10000;
+        const addedBonusMultiplier = totalAddedBonusPercent / 100;
 
-        const newLeaguePowerGh = newBaseMinerPower + (newBaseMinerPower * (newCollectionBonusSum / 10000)) + newRackBonusPower + baseRoomPower.totalSetBonusPowerGh;
+        // Delta calculation to prevent re-introducing API base bugs
+        // Delta = addedPower + (addedPower * currentBonus) + (baseMinerPowerGh * addedBonus) + (addedPower * addedBonus) + addedRackPower
+        const powerDelta = totalAddedPower 
+            + (totalAddedPower * currentBonusMultiplier)
+            + (baseRoomPower.baseMinerPowerGh * addedBonusMultiplier)
+            + (totalAddedPower * addedBonusMultiplier)
+            + totalAddedRackPower;
+
+        const newLeaguePowerGh = baseRoomPower.totalLeaguePowerGh + powerDelta;
 
         const currentLeague = getLeagueByPower(autoScalePower(baseRoomPower.totalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
         const newLeague = getLeagueByPower(autoScalePower(newLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
         return {
             newLeaguePowerGh,
-            powerIncreaseGh: newLeaguePowerGh - baseRoomPower.totalLeaguePowerGh,
+            powerIncreaseGh: powerDelta,
             currentLeague,
             newLeague,
             isLeagueChange: currentLeague.id !== newLeague.id,
@@ -273,19 +276,6 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             totalAddedRackPower
         };
     }, [baseRoomPower, addedMiners, apiLeagues, fetchedUser]);
-
-    // The API's current_Power is bugged (it multiplies bonus by 100x). We recalculate it.
-    const trueCurrentPower = useMemo(() => {
-        if (!fetchedUser?.userPowerResponseDto) return 0;
-        const dto = fetchedUser.userPowerResponseDto;
-        return dto.miners +
-            (dto.miners * ((dto.bonus_percent || 0) / 1000000)) +
-            dto.racks +
-            (dto.games || 0) +
-            (dto.temp || 0) +
-            (dto.freon || 0) +
-            (dto.hamster_expedition_bonus_power || 0);
-    }, [fetchedUser]);
 
     const formatPowerStr = (gh: number) => formatHashPower(autoScalePower(gh * 1e9));
 
@@ -692,12 +682,12 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                     <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
-                                            <span className="value secondary">{formatHashPower(autoScalePower((trueCurrentPower || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower(((fetchedUser?.userPowerResponseDto?.current_Power) || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
-                                            <span className="value primary">{formatHashPower(autoScalePower(((trueCurrentPower || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + simulation.powerIncreaseGh) * 1e9))}</span>
+                                            <span className="value primary">{formatHashPower(autoScalePower((((fetchedUser?.userPowerResponseDto?.current_Power) || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + simulation.powerIncreaseGh) * 1e9))}</span>
                                             <span className={`sub-value ${simulation.powerIncreaseGh >= 0 ? 'success' : 'danger'}`}>
                                                 {simulation.powerIncreaseGh >= 0 ? '+' : '-'}{formatHashPower(autoScalePower(Math.abs(simulation.powerIncreaseGh) * 1e9))}
                                             </span>

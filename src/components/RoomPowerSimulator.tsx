@@ -60,17 +60,6 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         setFetchStarted();
     };
 
-    // The API's current_Power is bugged (it multiplies bonus by 100x). We recalculate it.
-    const trueCurrentPower = fetchedUser?.userPowerResponseDto ? (
-        fetchedUser.userPowerResponseDto.miners +
-        (fetchedUser.userPowerResponseDto.miners * ((fetchedUser.userPowerResponseDto.bonus_percent || 0) / 1000000)) + // 1538050 -> 1.53805
-        fetchedUser.userPowerResponseDto.racks +
-        (fetchedUser.userPowerResponseDto.games || 0) +
-        (fetchedUser.userPowerResponseDto.temp || 0) +
-        (fetchedUser.userPowerResponseDto.freon || 0) +
-        (fetchedUser.userPowerResponseDto.hamster_expedition_bonus_power || 0)
-    ) : 0;
-
     const handleFetchRoom = () => {
         if (fetchedUser?.userProfileResponseDto?.avatar_Id && onFetchRoom) {
             onFetchRoom(fetchedUser.userProfileResponseDto.avatar_Id);
@@ -141,7 +130,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             <div className="user-info">
                                 <span className="user-name">{fetchedUser.userProfileResponseDto.name}</span>
                                 <span className="user-power-total">
-                                    {formatHashPower(autoScalePower(trueCurrentPower * 1e9))}
+                                    {formatHashPower(autoScalePower(fetchedUser.userPowerResponseDto.current_Power * 1e9))}
                                 </span>
                             </div>
                         </div>
@@ -231,12 +220,12 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
-                                            <span className="value secondary">{formatHashPower(autoScalePower((trueCurrentPower || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower(((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
-                                            <span className="value primary">{formatHashPower(autoScalePower(((trueCurrentPower || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + powerDiffGh) * 1e9))}</span>
+                                            <span className="value primary">{formatHashPower(autoScalePower((((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + powerDiffGh) * 1e9))}</span>
                                             <span className={`sub-value ${powerDiffGh >= 0 ? 'success' : 'danger'}`}>
                                                 {powerDiffGh >= 0 ? '+' : '-'}{formatHashPower(powerDiff)}
                                             </span>
