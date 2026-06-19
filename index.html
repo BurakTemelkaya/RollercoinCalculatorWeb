@@ -159,15 +159,29 @@
               var containerId = 'left-side-ad-container';
               var fallbackAd = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
               
+              var done = false;
+              var timeout = setTimeout(function() {
+                if (done) return; done = true;
+                document.getElementById(containerId).innerHTML += fallbackAd;
+                window.coinzilla_display = window.coinzilla_display || [];
+                coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
+              }, 2000);
+
               fetch('https://ad.a-ads.com/2429727/?size=160x600', { method: 'HEAD', mode: 'no-cors' })
                 .then(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   var iframe = document.createElement('iframe');
                   iframe.setAttribute('data-aa', '2429727');
                   iframe.src = '//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe';
                   iframe.style.cssText = 'border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin:auto;';
-                  document.getElementById(containerId).appendChild(iframe);
+                  var container = document.getElementById(containerId);
+                  container.innerHTML = '';
+                  container.appendChild(iframe);
                 })
                 .catch(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   document.getElementById(containerId).innerHTML += fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
@@ -190,15 +204,29 @@
               var containerId = 'right-side-ad-container';
               var fallbackAd = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
               
+              var done = false;
+              var timeout = setTimeout(function() {
+                if (done) return; done = true;
+                document.getElementById(containerId).innerHTML += fallbackAd;
+                window.coinzilla_display = window.coinzilla_display || [];
+                coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
+              }, 2000);
+
               fetch('https://ad.a-ads.com/2429727/?size=160x600', { method: 'HEAD', mode: 'no-cors' })
                 .then(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   var iframe = document.createElement('iframe');
                   iframe.setAttribute('data-aa', '2429727');
                   iframe.src = '//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe';
                   iframe.style.cssText = 'border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin:auto;';
-                  document.getElementById(containerId).appendChild(iframe);
+                  var container = document.getElementById(containerId);
+                  container.innerHTML = '';
+                  container.appendChild(iframe);
                 })
                 .catch(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   document.getElementById(containerId).innerHTML += fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
@@ -229,15 +257,29 @@
               var containerId = 'mobile-ad-content-wrapper';
               var fallbackAd = '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>';
               
+              var done = false;
+              var timeout = setTimeout(function() {
+                if (done) return; done = true;
+                document.getElementById(containerId).innerHTML += fallbackAd;
+                window.coinzilla_display = window.coinzilla_display || [];
+                coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });
+              }, 2000);
+
               fetch('https://ad.a-ads.com/2429728/?size=320x50', { method: 'HEAD', mode: 'no-cors' })
                 .then(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   var iframe = document.createElement('iframe');
                   iframe.setAttribute('data-aa', '2429728');
                   iframe.src = '//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe';
                   iframe.style.cssText = 'border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin:0 auto;';
-                  document.getElementById(containerId).appendChild(iframe);
+                  var container = document.getElementById(containerId);
+                  container.innerHTML = '';
+                  container.appendChild(iframe);
                 })
                 .catch(function() {
+                  if (done) return; done = true;
+                  clearTimeout(timeout);
                   document.getElementById(containerId).innerHTML += fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });

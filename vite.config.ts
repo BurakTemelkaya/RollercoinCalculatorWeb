@@ -35,7 +35,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:7080',
+        target: 'https://api.rollercoincalculator.app',
         changeOrigin: true,
         secure: false
       }

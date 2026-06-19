@@ -72,7 +72,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   useEffect(() => {
     if (adsBlocked) return;
     
-    fetch('https://coinzillatag.com/lib/display.js', { method: 'HEAD', mode: 'no-cors' })
+    const fetchPromise = fetch('https://coinzillatag.com/lib/display.js', { method: 'HEAD', mode: 'no-cors' });
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000));
+    
+    Promise.race([fetchPromise, timeoutPromise])
       .then(() => setAdFallbackStatus('primary'))
       .catch(() => setAdFallbackStatus('fallback'));
   }, [adsBlocked]);
