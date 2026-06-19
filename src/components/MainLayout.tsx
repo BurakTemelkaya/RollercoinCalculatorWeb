@@ -5,6 +5,7 @@ import appLogo from '../assets/logo.png';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
+import { GlobalAds } from './GlobalAds';
 
 export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
@@ -98,6 +99,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="app-layout">
+      <GlobalAds adsBlocked={adsBlocked} />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
