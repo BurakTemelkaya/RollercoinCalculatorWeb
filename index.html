@@ -154,16 +154,26 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;left:0">
         <div id="left-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <object data="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 160px; height: 600px; border: 0; padding: 0; overflow: hidden;">
-            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
-            <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
-            <script>
-              window.coinzilla_display = window.coinzilla_display || [];
-              var c_display_preferences = { zone: "24569e7101752ae238", width: "160", height: "600" };
-              coinzilla_display.push(c_display_preferences);
-            </script>
-            <script async src="https://coinzillatag.com/lib/display.js"></script>
-          </object>
+          <script>
+            (function() {
+              var containerId = 'left-side-ad-container';
+              var fallbackAd = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
+              
+              fetch('https://ad.a-ads.com/2429727/?size=160x600', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                  var iframe = document.createElement('iframe');
+                  iframe.setAttribute('data-aa', '2429727');
+                  iframe.src = '//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe';
+                  iframe.style.cssText = 'border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin:auto;';
+                  document.getElementById(containerId).appendChild(iframe);
+                })
+                .catch(function() {
+                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  window.coinzilla_display = window.coinzilla_display || [];
+                  coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
+                });
+            })();
+          </script>
         </div>
       </div>
     </div>
@@ -175,16 +185,26 @@
       <div style="width:max(170px, calc((100vw - 1200px) / 2));height:100%;position:fixed;top:0;right:0">
         <div id="right-side-ad-container"
           style="width: 160px; height: 600px; position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; margin: auto; z-index: 99998; pointer-events: auto;">
-          <object data="//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 160px; height: 600px; border: 0; padding: 0; overflow: hidden;">
-            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
-            <div class="coinzilla" data-zone="C-24569e7101752ae238"></div>
-            <script>
-              window.coinzilla_display = window.coinzilla_display || [];
-              var c_display_preferences_right = { zone: "24569e7101752ae238", width: "160", height: "600" };
-              coinzilla_display.push(c_display_preferences_right);
-            </script>
-            <script async src="https://coinzillatag.com/lib/display.js"></script>
-          </object>
+          <script>
+            (function() {
+              var containerId = 'right-side-ad-container';
+              var fallbackAd = '<div class="coinzilla" data-zone="C-24569e7101752ae238"></div>';
+              
+              fetch('https://ad.a-ads.com/2429727/?size=160x600', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                  var iframe = document.createElement('iframe');
+                  iframe.setAttribute('data-aa', '2429727');
+                  iframe.src = '//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe';
+                  iframe.style.cssText = 'border:0; padding:0; width:160px; height:600px; overflow:hidden; display:block; margin:auto;';
+                  document.getElementById(containerId).appendChild(iframe);
+                })
+                .catch(function() {
+                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  window.coinzilla_display = window.coinzilla_display || [];
+                  coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
+                });
+            })();
+          </script>
         </div>
       </div>
     </div>
@@ -204,16 +224,26 @@
           </svg>
         </label>
         <div id="mobile-ad-content-wrapper">
-          <object data="//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe" type="text/html" style="width: 320px; height: 50px; border: 0; padding: 0; overflow: hidden; display: block; margin: 0 auto;">
-            <!-- A-ADS Engelliyse / Yüklenemezse (Fallback) Coinzilla Çalışır -->
-            <div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
-            <script>
-              window.coinzilla_display = window.coinzilla_display || [];
-              var c_display_preferences_mobile = { zone: "4176a2678c2d7dc7660", width: "320", height: "50" };
-              coinzilla_display.push(c_display_preferences_mobile);
-            </script>
-            <script async src="https://coinzillatag.com/lib/display.js"></script>
-          </object>
+          <script>
+            (function() {
+              var containerId = 'mobile-ad-content-wrapper';
+              var fallbackAd = '<div class="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>';
+              
+              fetch('https://ad.a-ads.com/2429728/?size=320x50', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                  var iframe = document.createElement('iframe');
+                  iframe.setAttribute('data-aa', '2429728');
+                  iframe.src = '//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe';
+                  iframe.style.cssText = 'border:0; padding:0; width:320px; height:50px; overflow:hidden; display:block; margin:0 auto;';
+                  document.getElementById(containerId).appendChild(iframe);
+                })
+                .catch(function() {
+                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  window.coinzilla_display = window.coinzilla_display || [];
+                  coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });
+                });
+            })();
+          </script>
         </div>
       </div>
     </div>

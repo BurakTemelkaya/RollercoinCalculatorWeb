@@ -52,6 +52,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
+  const [adFallbackStatus, setAdFallbackStatus] = useState<'loading' | 'primary' | 'fallback'>('loading');
 
   useEffect(() => {
     const checkAdsBlocked = () => {
@@ -70,16 +71,25 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   useEffect(() => {
     if (adsBlocked) return;
-    const timer = setTimeout(() => {
-      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
-      const c_display_preferences: any = {};
-      c_display_preferences.zone = "83069e710174ee88650";
-      c_display_preferences.width = "300";
-      c_display_preferences.height = "250";
-      (window as any).coinzilla_display.push(c_display_preferences);
-    }, 100);
-    return () => clearTimeout(timer);
+    
+    fetch('https://coinzillatag.com/lib/display.js', { method: 'HEAD', mode: 'no-cors' })
+      .then(() => setAdFallbackStatus('primary'))
+      .catch(() => setAdFallbackStatus('fallback'));
   }, [adsBlocked]);
+
+  useEffect(() => {
+    if (adFallbackStatus === 'primary') {
+      const timer = setTimeout(() => {
+        (window as any).coinzilla_display = (window as any).coinzilla_display || [];
+        const c_display_preferences: any = {};
+        c_display_preferences.zone = "83069e710174ee88650";
+        c_display_preferences.width = "300";
+        c_display_preferences.height = "250";
+        (window as any).coinzilla_display.push(c_display_preferences);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [adFallbackStatus]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -233,7 +243,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
               {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
-                  <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  {adFallbackStatus === 'primary' && (
+                    <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  )}
+                  {adFallbackStatus === 'fallback' && (
+                    <iframe data-aa='2429727' src='//ad.a-ads.com/2429727/?size=300x250&background_color=1e2433&title_color=fffffe' style={{border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto'}}></iframe>
+                  )}
                 </div>
               )}
               {adsBlocked && (
