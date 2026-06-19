@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinUserResponse } from '../types/user';
-import { RollercoinRoomResponse } from '../types/room';
-import { calculateExactRoomPower } from '../utils/roomParser';
+
+
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
 import { LeagueInfo, LEAGUES } from '../data/leagues';
@@ -21,11 +21,8 @@ interface ManualSimulatorProps {
     currentLeague: LeagueInfo;
     apiLeagues: LeagueInfo[] | null;
     fetchedUser?: RollercoinUserResponse | null;
-    fetchedRoom?: RollercoinRoomResponse | null;
     onFetchUser?: (username: string) => Promise<void>;
-    onFetchRoom?: (avatarId: string) => Promise<void>;
     isFetchingUser?: boolean;
-    isFetchingRoom?: boolean;
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
 }
@@ -46,11 +43,8 @@ const formatPower = (gh: number) => {
 const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     apiLeagues,
     fetchedUser,
-    fetchedRoom,
     onFetchUser,
-    onFetchRoom,
     isFetchingUser,
-    isFetchingRoom,
     globalUserName = '',
     setGlobalUserName = () => { }
 }) => {
@@ -113,11 +107,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setFetchStarted();
     };
 
-    const handleFetchRoom = () => {
-        if (fetchedUser?.userProfileResponseDto?.avatar_Id && onFetchRoom) {
-            onFetchRoom(fetchedUser.userProfileResponseDto.avatar_Id);
-        }
-    };
+
 
     const handleAddManual = () => {
         const val = parseFloat(manualPower);
@@ -220,8 +210,26 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     };
 
     const baseRoomPower = useMemo(() => {
-        if (fetchedRoom) {
-            return calculateExactRoomPower(fetchedRoom, fetchedRoom, fetchedUser?.userPowerResponseDto?.bonus_percent);
+        if (fetchedUser?.userPowerResponseDto) {
+            const dto = fetchedUser.userPowerResponseDto;
+            // Divide by 100 because API sends 1538050 for 153.8050%, but manual simulator expects 100 scale (15380.5)
+            const actualBonusPercent = ((dto.bonus_percent || 0) / 100) - ((dto.hamster_expedition_bonus_percent || 0) / 100);
+            const baseMinerPowerGh = dto.miners || 0;
+            const rackBonusPowerGh = dto.racks || 0;
+            const totalLeaguePowerGh = dto.max_Power || 0;
+            
+            // Derive set bonus if any
+            const calcWithoutSet = baseMinerPowerGh + (baseMinerPowerGh * (actualBonusPercent / 10000)) + rackBonusPowerGh;
+            const totalSetBonusPowerGh = Math.max(0, totalLeaguePowerGh - calcWithoutSet);
+
+            return {
+                baseMinerPowerGh,
+                collectionBonusPercent: actualBonusPercent,
+                rackBonusPowerGh,
+                totalSetBonusPowerGh,
+                totalLeaguePowerGh,
+                placedMinersCount: 0
+            };
         }
         return {
             baseMinerPowerGh: 0,
@@ -231,10 +239,9 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             totalLeaguePowerGh: 0,
             placedMinersCount: 0
         };
-    }, [fetchedRoom]);
+    }, [fetchedUser]);
 
     const simulation = useMemo(() => {
-        if (!fetchedRoom) return null;
 
         let totalAddedPower = 0;
         let totalAddedBonusPercent = 0;
@@ -265,7 +272,20 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             totalAddedBonusPercent,
             totalAddedRackPower
         };
-    }, [baseRoomPower, addedMiners, apiLeagues, fetchedRoom]);
+    }, [baseRoomPower, addedMiners, apiLeagues, fetchedUser]);
+
+    // The API's current_Power is bugged (it multiplies bonus by 100x). We recalculate it.
+    const trueCurrentPower = useMemo(() => {
+        if (!fetchedUser?.userPowerResponseDto) return 0;
+        const dto = fetchedUser.userPowerResponseDto;
+        return dto.miners +
+            (dto.miners * ((dto.bonus_percent || 0) / 1000000)) +
+            dto.racks +
+            (dto.games || 0) +
+            (dto.temp || 0) +
+            (dto.freon || 0) +
+            (dto.hamster_expedition_bonus_power || 0);
+    }, [fetchedUser]);
 
     const formatPowerStr = (gh: number) => formatHashPower(autoScalePower(gh * 1e9));
 
@@ -309,27 +329,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                     </div>
                 </div>
 
-                {fetchedUser && !fetchedRoom && (
-                    <div className="beautiful-fetch-room">
-                        <div className="fetch-room-card">
-                            <div className="fetch-room-icon">🔍</div>
-                            <div className="fetch-room-content">
-                                <h3>{t('simulator.fetchRoom', 'Odamın Verilerini Çek')}</h3>
-                                <p>{t('simulator.roomFetchNote', 'Tam lig gücünüzü hesaplamak için odanızı taratmalısınız.')}</p>
-                            </div>
-                            <button
-                                className="premium-fetch-btn"
-                                onClick={handleFetchRoom}
-                                disabled={isFetchingRoom}
-                            >
-                                {isFetchingRoom ? <><span className="spinner small"></span> {t('simulator.fetchingRoom', 'Taranıyor...')}</> : <span>{t('simulator.fetch', 'Tarat')}</span>}
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {fetchedRoom && (
-                    <div className="ms-card">
+                <div className="ms-card">
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}><span className="section-icon">➕</span> {t('simulator.addMiner', 'Madenci Ekle')}</h3>
 
                         <div className="main-tabs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '2rem', marginTop: '1rem', background: 'var(--bg-tertiary)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
@@ -692,12 +692,12 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                     <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
-                                            <span className="value secondary">{formatHashPower(autoScalePower(((fetchedUser?.userPowerResponseDto?.current_Power) || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower((trueCurrentPower || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
-                                            <span className="value primary">{formatHashPower(autoScalePower((((fetchedUser?.userPowerResponseDto?.current_Power) || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + simulation.powerIncreaseGh) * 1e9))}</span>
+                                            <span className="value primary">{formatHashPower(autoScalePower(((trueCurrentPower || (baseRoomPower.totalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + simulation.powerIncreaseGh) * 1e9))}</span>
                                             <span className={`sub-value ${simulation.powerIncreaseGh >= 0 ? 'success' : 'danger'}`}>
                                                 {simulation.powerIncreaseGh >= 0 ? '+' : '-'}{formatHashPower(autoScalePower(Math.abs(simulation.powerIncreaseGh) * 1e9))}
                                             </span>
@@ -754,7 +754,6 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                             </div>
                         )}
                     </div>
-                )}
             </div>
             {/* Notifications */}
             {createPortal(

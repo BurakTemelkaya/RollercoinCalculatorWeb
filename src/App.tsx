@@ -895,11 +895,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}
-                          fetchedRoom={fetchedRoom}
                           onFetchUser={handleFetchUser}
-                          onFetchRoom={handleFetchRoom}
                           isFetchingUser={isFetchingUser}
-                          isFetchingRoom={isFetchingRoom}
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
                         />
