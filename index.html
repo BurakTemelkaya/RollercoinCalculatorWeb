@@ -162,7 +162,7 @@
               var done = false;
               var timeout = setTimeout(function() {
                 if (done) return; done = true;
-                document.getElementById(containerId).innerHTML += fallbackAd;
+                document.getElementById(containerId).innerHTML = fallbackAd;
                 window.coinzilla_display = window.coinzilla_display || [];
                 coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
               }, 2000);
@@ -182,7 +182,7 @@
                 .catch(function() {
                   if (done) return; done = true;
                   clearTimeout(timeout);
-                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  document.getElementById(containerId).innerHTML = fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
                 });
@@ -207,7 +207,7 @@
               var done = false;
               var timeout = setTimeout(function() {
                 if (done) return; done = true;
-                document.getElementById(containerId).innerHTML += fallbackAd;
+                document.getElementById(containerId).innerHTML = fallbackAd;
                 window.coinzilla_display = window.coinzilla_display || [];
                 coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
               }, 2000);
@@ -227,7 +227,7 @@
                 .catch(function() {
                   if (done) return; done = true;
                   clearTimeout(timeout);
-                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  document.getElementById(containerId).innerHTML = fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
                 });
@@ -260,7 +260,7 @@
               var done = false;
               var timeout = setTimeout(function() {
                 if (done) return; done = true;
-                document.getElementById(containerId).innerHTML += fallbackAd;
+                document.getElementById(containerId).innerHTML = fallbackAd;
                 window.coinzilla_display = window.coinzilla_display || [];
                 coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });
               }, 2000);
@@ -280,7 +280,7 @@
                 .catch(function() {
                   if (done) return; done = true;
                   clearTimeout(timeout);
-                  document.getElementById(containerId).innerHTML += fallbackAd;
+                  document.getElementById(containerId).innerHTML = fallbackAd;
                   window.coinzilla_display = window.coinzilla_display || [];
                   coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });
                 });
