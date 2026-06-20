@@ -341,6 +341,7 @@
     "leaguePowerNote": "Oyun gücü ve geçici güç toplam gücünüzü artırır ancak lig atlamanızı ETKİLEMEZ. Lig sadece madenci gücü, bonus ve raf gücü ile belirlenir.",
     "undo": "Geri Al",
     "reset": "Sıfırla",
+    "resetConfirm": "Tüm değişiklikleri geri alıp en baştaki haline dönmek istediğinize emin misiniz?",
     "minerAdded": "{{name}} eklendi.",
     "minerMoved": "{{name}} başarıyla taşındı.",
     "cellTaken": "Hedeflenen hücre dolu!",
@@ -364,7 +365,8 @@
     "currentLeaguePower": "Mevcut Lig Gücü",
     "newLeaguePower": "Yeni Lig Gücü",
     "minerLevelPrefix": "{{level}}. seviye ",
-    "disclaimer": "Uyarı: Buradaki hesaplanan değerler oyun içi gizli mekanikler veya eksik veriler nedeniyle hatalı olabilir. Lütfen işlemlerinizi buna dikkat ederek yapın. Sitemiz olası hatalardan kesinlikle sorumluluk kabul etmez."
+    "disclaimer": "Uyarı: Buradaki hesaplanan değerler oyun içi gizli mekanikler veya eksik veriler nedeniyle hatalı olabilir. Lütfen işlemlerinizi buna dikkat ederek yapın. Sitemiz olası hatalardan kesinlikle sorumluluk kabul etmez.",
+    "manualDesc": "Oda verilerinizi çekerek temel gücünüzü bulun ve manuel olarak veya veri tabanından madenci ekleyerek gücünüzü hesaplayın."
   },
   "settings": {
     "title": "Ayarlar",

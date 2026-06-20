@@ -359,7 +359,8 @@
     "currentLeaguePower": "Kekuatan Liga Saat Ini",
     "newLeaguePower": "Kekuatan Liga Baru",
     "minerLevelPrefix": "Level {{level}} ",
-    "disclaimer": "Peringatan: Nilai yang dihitung di sini mungkin tidak akurat karena mekanik tersembunyi dalam game atau data yang hilang. Harap diingat saat membuat keputusan. Situs kami sama sekali tidak bertanggung jawab atas kesalahan potensial."
+    "disclaimer": "Peringatan: Nilai yang dihitung di sini mungkin tidak akurat karena mekanik tersembunyi dalam game atau data yang hilang. Harap diingat saat membuat keputusan. Situs kami sama sekali tidak bertanggung jawab atas kesalahan potensial.",
+    "manualDesc": "Ambil data ruangan Anda untuk menemukan kekuatan dasar Anda, dan hitung kekuatan Anda dengan menambahkan penambang secara manual atau dari basis data."
   },
   "settings": {
     "title": "Pengaturan",

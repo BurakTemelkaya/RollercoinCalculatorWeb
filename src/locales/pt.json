@@ -359,7 +359,8 @@
     "currentLeaguePower": "Poder da Liga Atual",
     "newLeaguePower": "Novo Poder da Liga",
     "minerLevelPrefix": "Nível {{level}} ",
-    "disclaimer": "Aviso: Os valores calculados aqui podem ser imprecisos devido a mecânicas ocultas no jogo ou dados ausentes. Por favor, tenha isso em mente ao tomar decisões. Nosso site não aceita absolutamente nenhuma responsabilidade por possíveis erros."
+    "disclaimer": "Aviso: Os valores calculados aqui podem ser imprecisos devido a mecânicas ocultas no jogo ou dados em falta. Por favor, aja em conformidade. O nosso site não assume qualquer responsabilidade por potenciais erros.",
+    "manualDesc": "Obtenha os dados da sua sala para encontrar o seu poder base e calcule o seu poder adicionando mineradores manualmente ou a partir do banco de dados."
   },
   "settings": {
     "title": "Configurações",

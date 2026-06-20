@@ -333,7 +333,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                 }
             }
         }
-        addNotification('Bu minerı koyacak boş bir yer bulunamadı!', 'error');
+        addNotification(t('simulator.noEmptySpace'), 'error');
     };
 
     const submitAddMinerApi = (miner: MinerDto, targetRackId: string, forceX?: number, forceY?: number) => {
@@ -349,7 +349,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             const taken = rackMiners.some(m => m.placement?.y === targetY && m.placement?.x === targetX);
             const blocked = rackMiners.some(m => m.placement?.y === targetY && (m.width === 2 || width === 2));
             if (taken || blocked) {
-                addNotification('Hedeflenen hücre dolu!', 'error');
+                addNotification(t('simulator.cellTaken'), 'error');
                 return;
             }
         } else {
@@ -384,7 +384,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             const takenByOther = rackMiners.some(m => m._id !== (miner as any)._id && m.placement?.y === targetY && m.placement?.x === targetX);
             const blockedByOther = rackMiners.some(m => m._id !== (miner as any)._id && m.placement?.y === targetY && (m.width === 2 || width === 2));
             if (takenByOther || blockedByOther) {
-                addNotification('Hedeflenen hücre dolu!', 'error');
+                addNotification(t('simulator.cellTaken'), 'error');
                 return;
             }
         }
@@ -412,7 +412,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                 miners: (room.miners || []).map(m => m._id === fakeId ? newMiner : m)
             });
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
-            addNotification(`${newMiner.name}${levelStr} başarıyla taşındı.`, 'success');
+            addNotification(t('simulator.minerMoved', { name: `${newMiner.name}${levelStr}` }), 'success');
         } else {
             handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] });
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
