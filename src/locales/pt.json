@@ -340,6 +340,7 @@
     "leaguePowerNote": "Jogos não afetam sua liga.",
     "undo": "Undo",
     "reset": "Reset",
+    "resetConfirm": "Are you sure you want to undo all changes and return to the initial state?",
     "minerAdded": "{{name}} added.",
     "minerMoved": "{{name}} moved successfully.",
     "cellTaken": "Target cell is occupied!",
@@ -363,7 +364,8 @@
     "currentLeaguePower": "Current League Power",
     "newLeaguePower": "New League Power",
     "minerLevelPrefix": "Level {{level}} ",
-    "disclaimer": "Warning: The calculated values here may be inaccurate due to hidden in-game mechanics or missing data. Please keep this in mind when making decisions. Our site accepts absolutely no responsibility for any potential errors."
+    "disclaimer": "Warning: The calculated values here may be inaccurate due to hidden in-game mechanics or missing data. Please act accordingly. Our site assumes no responsibility for potential errors.",
+    "manualDesc": "Fetch your room data to find your base power, and calculate your power by adding miners manually or from the database."
   },
   "settings": {
     "title": "Configurações",
