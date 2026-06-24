@@ -19,17 +19,17 @@ import { ReviewStatus, type AdminBlogDetail, type BlogReviewListDto, type Langua
 import DashboardLayout from '../DashboardLayout';
 import '../BlogPage.css';
 
-function getStatusBadge(status: ReviewStatus): { label: string; color: string; bg: string } {
+function getStatusBadge(status: ReviewStatus, t: any): { label: string; color: string; bg: string } {
   switch (status) {
     case ReviewStatus.Approved:
-      return { label: 'Approved', color: '#22c55e', bg: 'rgba(34,197,94,0.1)' };
+      return { label: t('admin.approved', 'Approved'), color: '#22c55e', bg: 'rgba(34,197,94,0.1)' };
     case ReviewStatus.Rejected:
-      return { label: 'Rejected', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' };
+      return { label: t('admin.rejected', 'Rejected'), color: '#ef4444', bg: 'rgba(239,68,68,0.1)' };
     case ReviewStatus.RevisionRequested:
-      return { label: 'Revision Requested', color: '#f97316', bg: 'rgba(249,115,22,0.1)' };
+      return { label: t('admin.revisionRequested', 'Revision Requested'), color: '#f97316', bg: 'rgba(249,115,22,0.1)' };
     case ReviewStatus.Pending:
     default:
-      return { label: 'Pending', color: '#eab308', bg: 'rgba(234,179,8,0.1)' };
+      return { label: t('admin.pending', 'Pending'), color: '#eab308', bg: 'rgba(234,179,8,0.1)' };
   }
 }
 
@@ -93,7 +93,7 @@ const ReviewForm = memo(({
         >
           <option value={ReviewStatus.Approved}>{t('admin.approved')}</option>
           <option value={ReviewStatus.Rejected}>{t('admin.rejected')}</option>
-          <option value={ReviewStatus.RevisionRequested}>Revision Requested</option>
+          <option value={ReviewStatus.RevisionRequested}>{t('admin.revisionRequested', 'Revision Requested')}</option>
         </select>
       </div>
 
@@ -221,7 +221,7 @@ export default function AdminBlogDetailPage() {
       ) : error ? (
         <div className="blog-error"><p>{error}</p></div>
       ) : !blog ? (
-        <div className="blog-empty"><p>Blog not found.</p></div>
+        <div className="blog-empty"><p>{t('admin.blogNotFound', 'Blog not found.')}</p></div>
       ) : (
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
           {/* Left: Blog Info */}
@@ -243,7 +243,7 @@ export default function AdminBlogDetailPage() {
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {blog.status !== undefined && (() => {
-                    const badge = getStatusBadge(blog.status!);
+                    const badge = getStatusBadge(blog.status!, t);
                     return (
                       <span style={{
                         padding: '4px 12px', borderRadius: 16,
@@ -373,7 +373,7 @@ export default function AdminBlogDetailPage() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {reviews.map((review) => {
-                    const badge = getStatusBadge(review.status);
+                    const badge = getStatusBadge(review.status, t);
                     const reviewerName = review.reviewerUser
                       ? (review.reviewerUser.name || review.reviewerUser.email?.split('@')[0] || 'Admin')
                       : 'Admin';

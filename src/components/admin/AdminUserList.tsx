@@ -44,7 +44,7 @@ export default function AdminUserList() {
       setError(null);
     } catch (err: any) {
       console.error('Failed to fetch users:', err);
-      setError(err.message || 'Kullanıcılar yüklenirken bir hata oluştu.');
+      setError(err.message || t('admin.usersLoadError', 'Kullanıcılar yüklenirken bir hata oluştu.'));
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export default function AdminUserList() {
   const handleRemoveRole = async (userId: string, operationClaimId: string, roleName: string) => {
     if (!accessToken) return;
     
-    if (!window.confirm(`Kullanıcıdan "${roleName}" rolünü kaldırmak istediğinize emin misiniz?`)) {
+    if (!window.confirm(t('admin.removeRoleConfirm', 'Kullanıcıdan "{{role}}" rolünü kaldırmak istediğinize emin misiniz?', { role: roleName }))) {
       return;
     }
 
@@ -87,7 +87,7 @@ export default function AdminUserList() {
       fetchUsers(currentPage);
     } catch (err: any) {
       console.error('Failed to remove role:', err);
-      setError(err.message || 'Rol kaldırılırken bir hata oluştu.');
+      setError(err.message || t('admin.removeRoleError', 'Rol kaldırılırken bir hata oluştu.'));
     }
   };
 
@@ -122,11 +122,11 @@ export default function AdminUserList() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>İsim</th>
-                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>E-posta</th>
-                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>Roller</th>
-                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>Kayıt Tarihi</th>
-                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem', textAlign: 'right' }}>İşlemler</th>
+                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>{t('admin.name', 'İsim')}</th>
+                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>{t('admin.email', 'E-posta')}</th>
+                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>{t('admin.roles', 'Roller')}</th>
+                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem' }}>{t('admin.registrationDate', 'Kayıt Tarihi')}</th>
+                <th style={{ padding: '12px 16px', color: '#94a3b8', fontWeight: 600, fontSize: '0.9rem', textAlign: 'right' }}>{t('admin.actions', 'İşlemler')}</th>
               </tr>
             </thead>
             <tbody>
@@ -136,13 +136,13 @@ export default function AdminUserList() {
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                       <span className="spinner"></span>
                     </div>
-                    Yükleniyor...
+                    {t('event.loading', 'Yükleniyor...')}
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '48px 16px', color: '#94a3b8' }}>
-                    Kullanıcı bulunamadı.
+                    {t('admin.noUsersFound', 'Kullanıcı bulunamadı.')}
                   </td>
                 </tr>
               ) : (
@@ -159,14 +159,14 @@ export default function AdminUserList() {
                               <button
                                 onClick={() => handleRemoveRole(user.id, claim.operationClaimId, claim.operationClaim.name)}
                                 style={{ background: 'transparent', border: 'none', color: '#a78bfa', cursor: 'pointer', padding: '0 2px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                title="Rolü Kaldır"
+                                title={t('admin.removeRole', 'Rolü Kaldır')}
                               >
                                 &times;
                               </button>
                             </span>
                           ))
                         ) : (
-                          <span style={{ color: '#64748b', fontSize: '0.85rem' }}>Rol Yok</span>
+                          <span style={{ color: '#64748b', fontSize: '0.85rem' }}>{t('admin.noRole', 'Rol Yok')}</span>
                         )}
                       </div>
                     </td>
@@ -186,7 +186,7 @@ export default function AdminUserList() {
                           transition: 'all 0.2s'
                         }}
                       >
-                        Rol Ata
+                        {t('admin.assignRole', 'Rol Ata')}
                       </button>
                     </td>
                   </tr>

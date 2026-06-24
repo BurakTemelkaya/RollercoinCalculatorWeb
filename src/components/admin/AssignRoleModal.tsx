@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getOperationClaims, assignRoleToUser } from '../../services/adminApi';
 import { GetListOperationClaimDto, GetUserDto } from '../../types/auth';
+import { useTranslation } from 'react-i18next';
 import '../auth/AuthPages.css';
 
 interface AssignRoleModalProps {
@@ -13,6 +14,7 @@ interface AssignRoleModalProps {
 
 export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: AssignRoleModalProps) {
   const { accessToken } = useAuth();
+  const { t } = useTranslation();
 
   const [claims, setClaims] = useState<GetListOperationClaimDto[]>([]);
   const [selectedClaimId, setSelectedClaimId] = useState('');
@@ -45,7 +47,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
       }
     } catch (err: any) {
       console.error('Error fetching roles:', err);
-      setError('Roller yüklenirken hata oluştu.');
+      setError(t('admin.usersLoadError', 'Roller yüklenirken hata oluştu.'));
     } finally {
       setIsFetchingRoles(false);
     }
@@ -59,18 +61,18 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
     setSuccess(null);
 
     if (!selectedClaimId) {
-      setError('Lütfen bir rol seçin.');
+      setError(t('admin.selectRole', 'Lütfen bir rol seçin.'));
       return;
     }
 
     if (!accessToken) {
-      setError('Oturum açmanız gerekiyor.');
+      setError(t('auth.loginError', 'Oturum açmanız gerekiyor.'));
       return;
     }
 
     // Check if user already has this role
     if (user.userOperationClaims?.some(c => c.operationClaimId === selectedClaimId)) {
-      setError('Kullanıcı zaten bu role sahip.');
+      setError(t('admin.roleNotFound', 'Kullanıcı zaten bu role sahip.')); // fallback for this msg
       return;
     }
 
@@ -81,7 +83,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
         operationClaimId: selectedClaimId
       }, accessToken);
 
-      setSuccess('Rol başarıyla atandı.');
+      setSuccess(t('admin.assign', 'Rol başarıyla atandı.'));
 
       setTimeout(() => {
         onSuccess();
@@ -90,7 +92,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
 
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Rol atanırken bir hata oluştu.');
+      setError(err.message || t('admin.assignRoleError', 'Rol atanırken bir hata oluştu.'));
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +102,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', inset: 0 }}>
       <div className="modal-content" onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: '420px', background: '#0f172a', borderRadius: '16px', padding: '24px', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
         <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ margin: 0, fontSize: '1.4rem', color: '#f8fafc' }}>Rol Ata</h2>
+          <h2 style={{ margin: 0, fontSize: '1.4rem', color: '#f8fafc' }}>{t('admin.assignRole', 'Rol Ata')}</h2>
           <button className="modal-close" onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.5rem', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = '#94a3b8'}>&times;</button>
         </div>
 
@@ -124,11 +126,11 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
           )}
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: '#cbd5e1', fontSize: '0.9rem', fontWeight: 500 }}>Atanacak Rol</label>
+            <label style={{ display: 'block', marginBottom: '8px', color: '#cbd5e1', fontSize: '0.9rem', fontWeight: 500 }}>{t('admin.roleToAssign', 'Atanacak Rol')}</label>
             {isFetchingRoles ? (
               <div style={{ padding: '14px 16px', background: 'rgba(0,0,0,0.2)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem' }}>
                 <span className="spinner-small" style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.2)', borderTopColor: '#8b5cf6', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
-                Roller Yükleniyor...
+                {t('event.loading', 'Yükleniyor...')}
               </div>
             ) : (
               <div style={{ position: 'relative' }}>
@@ -155,7 +157,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
                   onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 >
                   {claims.length === 0 ? (
-                    <option value="">Rol bulunamadı</option>
+                    <option value="">{t('admin.roleNotFound', 'Rol bulunamadı')}</option>
                   ) : (
                     claims.map(claim => (
                       <option key={claim.id} value={claim.id} style={{ background: '#1e293b', color: '#f8fafc' }}>
@@ -197,7 +199,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
             {isLoading ? (
               <span style={{ display: 'inline-block', width: '20px', height: '20px', border: '3px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
             ) : (
-              'Kaydet'
+              t('admin.save', 'Kaydet')
             )}
           </button>
         </form>

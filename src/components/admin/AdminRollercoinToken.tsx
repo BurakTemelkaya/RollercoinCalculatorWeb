@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { updateRollercoinToken } from '../../services/adminApi';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../DashboardLayout';
 import '../BlogPage.css';
 
 export default function AdminRollercoinToken() {
   const { getValidToken } = useAuth();
+  const { t } = useTranslation();
   
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
@@ -17,7 +19,7 @@ export default function AdminRollercoinToken() {
     setMessage(null);
 
     if (!accessToken || !refreshToken) {
-      setMessage({ type: 'error', text: 'Lütfen hem Access Token hem de Refresh Token giriniz.' });
+      setMessage({ type: 'error', text: t('admin.tokenRequiredError', 'Please enter both Access Token and Refresh Token.') });
       return;
     }
 
@@ -25,31 +27,31 @@ export default function AdminRollercoinToken() {
     try {
       const token = await getValidToken();
       if (!token) {
-        throw new Error('Yetkiniz yok veya oturum süreniz dolmuş.');
+        throw new Error(t('auth.sessionExpired', 'You are not authorized or your session has expired.'));
       }
 
       const success = await updateRollercoinToken({ accessToken, refreshToken }, token);
       if (success) {
-        setMessage({ type: 'success', text: 'Token başarıyla güncellendi!' });
+        setMessage({ type: 'success', text: t('admin.tokenSuccess', 'Token updated successfully!') });
         setAccessToken('');
         setRefreshToken('');
       } else {
-        setMessage({ type: 'error', text: 'Token güncelleme işlemi başarısız oldu (false döndü).' });
+        setMessage({ type: 'error', text: t('admin.tokenFail', 'Token update failed.') });
       }
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.detail || err.message || 'Bir hata oluştu.' });
+      setMessage({ type: 'error', text: err.detail || err.message || t('event.error', 'An error occurred.') });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <DashboardLayout title="Rollercoin Token Güncelleme" isAdmin={true}>
+    <DashboardLayout title={t('admin.rollercoinTokenUpdate', 'Rollercoin Token Update')} isAdmin={true}>
       <div className="blog-page">
         <div className="blog-container" style={{ maxWidth: 600, margin: '0 auto' }}>
           
           <h1 style={{ marginTop: 0, marginBottom: '1rem', color: '#e2e8f0', fontSize: '1.5rem' }}>
-            Rollercoin Hesap Token Güncelleme
+            {t('admin.rollercoinTokenUpdate', 'Rollercoin Token Update')}
           </h1>
           
           <div style={{
@@ -62,7 +64,7 @@ export default function AdminRollercoinToken() {
             fontSize: '0.95rem',
             lineHeight: 1.5
           }}>
-            <strong>⚠️ DİKKAT:</strong> Bu işlem sitenin bağlı olduğu hesabın (botun/hesabın) giriş bilgilerini yenilemek içindir.
+            <strong>⚠️ {t('admin.attention', 'ATTENTION')}:</strong> {t('admin.tokenWarningDesc', 'This action is to renew the login credentials of the connected bot/account.')}
           </div>
 
           {message && (
@@ -140,7 +142,7 @@ export default function AdminRollercoinToken() {
                 marginTop: '8px'
               }}
             >
-              {isSubmitting ? 'Güncelleniyor...' : 'Tokenları Güncelle'}
+              {isSubmitting ? t('admin.saving', 'Saving...') : t('admin.updateTokens', 'Update Tokens')}
             </button>
           </form>
 
