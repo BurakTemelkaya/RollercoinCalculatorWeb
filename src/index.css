@@ -5178,6 +5178,40 @@ html body[data-scroll-locked] {
   width: 100%;
 }
 
+/* Responsive Visibility for Ads */
+/* Default: hide side ads on mobile */
+.desktop-side-ad {
+  display: none;
+}
+
+.aads-mobile-only {
+  display: none;
+}
+
+/* Desktop: show side ads at 1025px+ and push content inward */
+@media (min-width: 1025px) {
+  .desktop-side-ad {
+    display: block;
+  }
+
+  #root {
+    padding-left: 170px;
+    padding-right: 170px;
+  }
+}
+
+/* Mobile: show bottom ad on small screens */
+@media (max-width: 1024px) {
+  .aads-mobile-only {
+    display: block;
+  }
+}
+
+/* Hide mobile ads when blocked */
+body.ads-blocked .aads-mobile-only {
+  display: none !important;
+}
+
 /* Global ad hider for Dashboard panels */
 body.hide-global-ads .desktop-side-ad,
 body.hide-global-ads .aads-mobile-only {
