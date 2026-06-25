@@ -67,19 +67,33 @@ export async function fetchDailyBonusQuest(id?: string): Promise<DailyBonusQuest
     }
 
     const base = '/api/DailyBonusQuest';
+    const timestamp = Date.now();
     const url = id
-        ? buildApiUrl(`${base}?id=${encodeURIComponent(id)}`)
-        : buildApiUrl(base);
+        ? buildApiUrl(`${base}?id=${encodeURIComponent(id)}&_t=${timestamp}`)
+        : buildApiUrl(`${base}?_t=${timestamp}`);
     const data = await apiGet<DailyBonusQuest>(url);
     const normalizedData = normalizeDailyBonusQuest(data);
 
     if (!id) {
         try {
-            const now = new Date();
-            const nextMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0));
+            let expiryTime = 0;
+            if (normalizedData.endDate) {
+                // Ensure it's treated as UTC by appending 'Z' if missing
+                const dateStr = normalizedData.endDate.endsWith('Z') 
+                    ? normalizedData.endDate 
+                    : `${normalizedData.endDate}Z`;
+                expiryTime = new Date(dateStr).getTime();
+            }
+            
+            // Fallback to next midnight if endDate is missing/invalid
+            if (!expiryTime || isNaN(expiryTime)) {
+                const now = new Date();
+                expiryTime = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0)).getTime();
+            }
+
             localStorage.setItem(CACHE_KEY, JSON.stringify({
                 data: normalizedData,
-                expiry: nextMidnight.getTime()
+                expiry: expiryTime
             }));
         } catch (e) {
             console.warn('Failed to set cache for daily bonus quest', e);
