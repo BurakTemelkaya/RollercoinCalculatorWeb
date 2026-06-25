@@ -58,7 +58,19 @@ export async function fetchDailyBonusQuest(id?: string): Promise<DailyBonusQuest
             if (cached) {
                 const parsed = JSON.parse(cached);
                 if (parsed.expiry && parsed.expiry > Date.now() && parsed.data) {
-                    return parsed.data;
+                    let isDataExpired = false;
+                    if (parsed.data.endDate) {
+                        const dateStr = parsed.data.endDate.endsWith('Z') 
+                            ? parsed.data.endDate 
+                            : `${parsed.data.endDate}Z`;
+                        if (new Date(dateStr).getTime() <= Date.now()) {
+                            isDataExpired = true;
+                        }
+                    }
+                    
+                    if (!isDataExpired) {
+                        return parsed.data;
+                    }
                 }
             }
         } catch (e) {
