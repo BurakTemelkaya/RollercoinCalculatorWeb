@@ -286,6 +286,8 @@
     "showDuration": "Afficher le temps restant"
   },
   "simulator": {
+    "clearAllMiners": "Tout Effacer",
+    "cancel": "Annuler",
     "title": "Simulateur de Puissance",
     "desc": "Calculez comment l'ajout d'un mineur affecte votre puissance.",
     "panelTitle": "Simulateur de Distribution",
@@ -726,6 +728,15 @@
     "manageReviews": "Gérer les Avis",
     "newReview": "Nouvel Avis",
     "stayOnPage": "Rester sur la Page",
-    "returnToList": "Retour à la Liste"
+    "returnToList": "Retour à la Liste",
+    "manageUsers": "Utilisateurs",
+    "rollercoinAccount": "Compte Rollercoin",
+    "rollercoinTokenUpdate": "Mise à jour du Token Rollercoin",
+    "attention": "ATTENTION",
+    "tokenWarningDesc": "Cette action vise à renouveler les informations de connexion du bot/compte connecté.",
+    "tokenRequiredError": "Veuillez entrer le Access Token et le Refresh Token.",
+    "tokenSuccess": "Token mis à jour avec succès !",
+    "tokenFail": "Échec de la mise à jour du token.",
+    "updateTokens": "Mettre à jour les Tokens"
   }
 }

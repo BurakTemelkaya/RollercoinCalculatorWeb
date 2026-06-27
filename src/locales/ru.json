@@ -286,6 +286,7 @@
     "showDuration": "Показать время"
   },
   "simulator": {
+    "clearAllMiners": "Очистить Все",
     "title": "Симулятор мощности",
     "desc": "Рассчитайте, как добавление нового майнера повлияет на вашу мощность.",
     "panelTitle": "Симулятор распределения мощности",
@@ -749,6 +750,15 @@
     "manageReviews": "Управление отзывами",
     "newReview": "Новый отзыв",
     "stayOnPage": "Остаться на странице",
-    "returnToList": "Вернуться к списку"
+    "returnToList": "Вернуться к списку",
+    "manageUsers": "Пользователи",
+    "rollercoinAccount": "Аккаунт Rollercoin",
+    "rollercoinTokenUpdate": "Обновление Токена Rollercoin",
+    "attention": "ВНИМАНИЕ",
+    "tokenWarningDesc": "Это действие предназначено для обновления учетных данных подключенного бота/аккаунта.",
+    "tokenRequiredError": "Пожалуйста, введите как Access Token, так и Refresh Token.",
+    "tokenSuccess": "Токен успешно обновлен!",
+    "tokenFail": "Не удалось обновить токен.",
+    "updateTokens": "Обновить Токены"
   }
 }

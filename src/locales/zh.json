@@ -286,6 +286,7 @@
     "showDuration": "显示剩余时间"
   },
   "simulator": {
+    "clearAllMiners": "全部清除",
     "title": "算力模拟器",
     "desc": "计算添加新矿机如何影响您的总算力。",
     "panelTitle": "算力分配模拟",
@@ -749,6 +750,15 @@
     "manageReviews": "管理审核",
     "newReview": "新审核",
     "stayOnPage": "留在本页",
-    "returnToList": "返回列表"
+    "returnToList": "返回列表",
+    "manageUsers": "用户",
+    "rollercoinAccount": "Rollercoin 账户",
+    "rollercoinTokenUpdate": "Rollercoin 令牌更新",
+    "attention": "注意",
+    "tokenWarningDesc": "此操作是为了更新连接的机器人/帐户的登录凭据。",
+    "tokenRequiredError": "请输入 Access Token 和 Refresh Token。",
+    "tokenSuccess": "令牌更新成功！",
+    "tokenFail": "令牌更新失败。",
+    "updateTokens": "更新令牌"
   }
 }

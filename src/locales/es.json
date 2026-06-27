@@ -347,7 +347,8 @@
     "newLeaguePower": "Nuevo poder de liga",
     "minerLevelPrefix": "Nivel {{level}} ",
     "disclaimer": "Advertencia: Los valores calculados aquí pueden ser inexactos debido a mecánicas ocultas del juego o datos faltantes. Actúe en consecuencia. Nuestro sitio no asume ninguna responsabilidad por posibles errores.",
-    "manualDesc": "Obtén los datos de tu sala para encontrar tu poder base y calcula tu poder añadiendo mineros manualmente o desde la base de datos."
+    "manualDesc": "Obtén los datos de tu sala para encontrar tu poder base y calcula tu poder añadiendo mineros manualmente o desde la base de datos.",
+    "clearAllMiners": "Borrar Todo"
   },
   "settings": {
     "title": "Configuración",
@@ -726,6 +727,15 @@
     "manageReviews": "Gestionar Reseñas",
     "newReview": "Nueva Reseña",
     "stayOnPage": "Quedarse en la Página",
-    "returnToList": "Volver a la Lista"
+    "returnToList": "Volver a la Lista",
+    "manageUsers": "Usuarios",
+    "rollercoinAccount": "Cuenta Rollercoin",
+    "rollercoinTokenUpdate": "Actualización del Token de Rollercoin",
+    "attention": "ATENCIÓN",
+    "tokenWarningDesc": "Esta acción es para renovar las credenciales de inicio de sesión de la cuenta/bot conectado.",
+    "tokenRequiredError": "Por favor, introduzca tanto el Access Token como el Refresh Token.",
+    "tokenSuccess": "¡Token actualizado con éxito!",
+    "tokenFail": "Fallo en la actualización del token.",
+    "updateTokens": "Actualizar Tokens"
   }
 }

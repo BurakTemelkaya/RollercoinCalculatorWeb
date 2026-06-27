@@ -286,6 +286,7 @@
     "showDuration": "Mostrar tempo"
   },
   "simulator": {
+    "clearAllMiners": "Limpar Tudo",
     "title": "Simulador de Poder",
     "desc": "Calcule a adição de novos mineradores.",
     "panelTitle": "Simulador de Distribuição",
@@ -749,6 +750,15 @@
     "manageReviews": "Gerenciar Avaliações",
     "newReview": "Nova Avaliação",
     "stayOnPage": "Ficar na Página",
-    "returnToList": "Voltar para a Lista"
+    "returnToList": "Voltar para a Lista",
+    "manageUsers": "Usuários",
+    "rollercoinAccount": "Conta Rollercoin",
+    "rollercoinTokenUpdate": "Atualização do Token Rollercoin",
+    "attention": "ATENÇÃO",
+    "tokenWarningDesc": "Esta ação é para renovar as credenciais de login do bot/conta conectada.",
+    "tokenRequiredError": "Por favor, insira o Access Token e o Refresh Token.",
+    "tokenSuccess": "Token atualizado com sucesso!",
+    "tokenFail": "Falha na atualização do token.",
+    "updateTokens": "Atualizar Tokens"
   }
 }

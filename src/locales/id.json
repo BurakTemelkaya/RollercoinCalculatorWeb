@@ -286,6 +286,7 @@
     "showDuration": "Tampilkan durasi"
   },
   "simulator": {
+    "clearAllMiners": "Hapus Semua",
     "title": "Simulator Kekuatan",
     "desc": "Hitung dampak penambahan penambang.",
     "panelTitle": "Simulator Distribusi",
@@ -749,6 +750,15 @@
     "manageReviews": "Kelola Ulasan",
     "newReview": "Ulasan Baru",
     "stayOnPage": "Tetap di Halaman",
-    "returnToList": "Kembali ke Daftar"
+    "returnToList": "Kembali ke Daftar",
+    "manageUsers": "Pengguna",
+    "rollercoinAccount": "Akun Rollercoin",
+    "rollercoinTokenUpdate": "Pembaruan Token Rollercoin",
+    "attention": "PERHATIAN",
+    "tokenWarningDesc": "Tindakan ini untuk memperbarui kredensial masuk dari bot/akun yang terhubung.",
+    "tokenRequiredError": "Silakan masukkan Access Token dan Refresh Token.",
+    "tokenSuccess": "Token berhasil diperbarui!",
+    "tokenFail": "Pembaruan token gagal.",
+    "updateTokens": "Perbarui Token"
   }
 }

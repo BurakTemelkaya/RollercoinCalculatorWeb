@@ -287,6 +287,7 @@
     "showDuration": "Kalan süreyi göster"
   },
   "simulator": {
+    "clearAllMiners": "Tümünü Sil",
     "cancel": "İptal",
     "roomTitle": "Oda Simülatörü",
     "linkAccountAlert": "Lütfen arama yapmak için önce odanızı taratarak (Odamın Verilerini Çek) hesabınızı bağlayın.",
@@ -779,6 +780,15 @@
     "manageReviews": "İncelemeleri Yönet",
     "newReview": "Yeni İnceleme",
     "stayOnPage": "Sayfada Kal",
-    "returnToList": "Listeye Dön"
+    "returnToList": "Listeye Dön",
+    "manageUsers": "Kullanıcılar",
+    "rollercoinAccount": "Rollercoin Hesabı",
+    "rollercoinTokenUpdate": "Rollercoin Token Güncelleme",
+    "attention": "DİKKAT",
+    "tokenWarningDesc": "Bu işlem sitenin bağlı olduğu hesabın (botun/hesabın) giriş bilgilerini yenilemek içindir.",
+    "tokenRequiredError": "Lütfen hem Access Token hem de Refresh Token giriniz.",
+    "tokenSuccess": "Token başarıyla güncellendi!",
+    "tokenFail": "Token güncelleme işlemi başarısız oldu (false döndü).",
+    "updateTokens": "Tokenları Güncelle"
   }
 }
