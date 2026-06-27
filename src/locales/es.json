@@ -286,6 +286,7 @@
     "showDuration": "Mostrar tiempo restante"
   },
   "simulator": {
+    "clearAllMiners": "Clear All Miners",
     "cancel": "Cancel",
     "roomTitle": "Room Simulator",
     "linkAccountAlert": "Please link your account by fetching your room data (Fetch My Data) first before searching.",
@@ -778,6 +779,15 @@
     "manageReviews": "Manage Reviews",
     "newReview": "New Review",
     "stayOnPage": "Stay on Page",
-    "returnToList": "Return to List"
+    "returnToList": "Return to List",
+    "manageUsers": "Users",
+    "rollercoinAccount": "Rollercoin Account",
+    "rollercoinTokenUpdate": "Rollercoin Token Update",
+    "attention": "ATTENTION",
+    "tokenWarningDesc": "This action is to renew the login credentials of the connected bot/account.",
+    "tokenRequiredError": "Please enter both Access Token and Refresh Token.",
+    "tokenSuccess": "Token updated successfully!",
+    "tokenFail": "Token update failed.",
+    "updateTokens": "Update Tokens"
   }
 }
