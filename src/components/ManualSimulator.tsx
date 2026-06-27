@@ -82,7 +82,19 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const [isDescending, setIsDescending] = useState<boolean>(true);
 
     // Added Miners State
-    const [addedMiners, setAddedMiners] = useState<AddedMiner[]>([]);
+    const ADDED_MINERS_STORAGE_KEY = 'rollercoin_web_added_miners';
+    const [addedMiners, setAddedMiners] = useState<AddedMiner[]>(() => {
+        try {
+            const saved = localStorage.getItem(ADDED_MINERS_STORAGE_KEY);
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return [];
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem(ADDED_MINERS_STORAGE_KEY, JSON.stringify(addedMiners));
+    }, [addedMiners]);
 
     // Notifications State
     const [notifications, setNotifications] = useState<{ id: string, message: string, type: 'success' | 'error' | 'info' }[]>([]);
@@ -150,6 +162,12 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
 
     const removeMiner = (id: string) => {
         setAddedMiners(addedMiners.filter(m => m.id !== id));
+    };
+
+    const clearAllMiners = () => {
+        if (window.confirm(t('simulator.clearAllConfirm', 'Tüm eklenen madencileri silmek istediğinize emin misiniz?'))) {
+            setAddedMiners([]);
+        }
     };
 
     // Calculate actual Gh/s values for the search API based on user input and unit
@@ -627,9 +645,17 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                         </div>
                         {addedMiners.length > 0 && (
                             <div className="ms-added-miners" style={{ marginTop: '2rem', padding: '1.5rem', background: '#1c1c28', borderRadius: '12px', border: '1px solid #3c3e58' }}>
-                                <h4 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '1.5rem', marginTop: 0 }}>
-                                    {t('simulator.addedMinersList', 'Eklenen Madenciler')} ({addedMiners.length})
-                                </h4>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', marginTop: 0 }}>
+                                    <h4 style={{ color: '#fff', fontSize: '1.2rem', margin: 0 }}>
+                                        {t('simulator.addedMinersList', 'Eklenen Madenciler')} ({addedMiners.length})
+                                    </h4>
+                                    <button 
+                                        onClick={clearAllMiners}
+                                        style={{ background: '#d9534f', color: '#fff', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                        {t('simulator.clearAllMiners', 'Tümünü Sil')}
+                                    </button>
+                                </div>
                                 <div className="ms-miner-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                     {addedMiners.map(miner => (
                                         <div
