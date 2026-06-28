@@ -109,6 +109,8 @@ interface ForgeTargetResult {
     forgeFeePerUnit: number;
     marketPricePerUnit: number;
     totalMarketValue: number;
+    baseCost: number;
+    netProfit: number;
     steps: ForgeStepResult[];
 }
 
@@ -216,6 +218,10 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [showAllForgeLevels, setShowAllForgeLevels] = useState(false);
 
+    // New States for Cost Strategy
+    const [costStrategy, setCostStrategy] = useState<'free' | 'custom' | 'market'>('free');
+    const [customCostInput, setCustomCostInput] = useState<string>('');
+
     // Fetch marketplace prices
     useEffect(() => {
         let cancelled = false;
@@ -273,6 +279,14 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
         const typeKey = componentType.toLowerCase();
         const output: ForgeTargetResult[] = [];
 
+        let baseCostTotal = 0;
+        if (costStrategy === 'market') {
+            baseCostTotal = partCount * getMarketPrice(componentType, startLevel);
+        } else if (costStrategy === 'custom') {
+            const parsed = parseFloat(customCostInput.replace(',', '.'));
+            baseCostTotal = (!isNaN(parsed) && parsed > 0) ? (parsed * 1e6) : 0;
+        }
+
         for (let target = startLevel + 1; target <= 4; target++) {
             const { producedCount, totalFees, steps } = calculateForgeForward(
                 typeKey, startLevel, target, partCount, forgeLevel
@@ -280,6 +294,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
             const ppu = calcPartsPerUnit(typeKey, startLevel, target, forgeLevel);
             const fpu = calcFeePerUnit(typeKey, startLevel, target, forgeLevel);
             const marketPrice = getMarketPrice(componentType, target);
+
+            const totalMarketValue = producedCount * marketPrice;
+            const netProfit = totalMarketValue - totalFees - baseCostTotal;
 
             output.push({
                 targetLevel: target,
@@ -289,19 +306,29 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                 totalForgeFees: totalFees,
                 forgeFeePerUnit: fpu,
                 marketPricePerUnit: marketPrice,
-                totalMarketValue: producedCount * marketPrice,
+                totalMarketValue,
+                baseCost: baseCostTotal,
+                netProfit,
                 steps,
             });
         }
         return output;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [componentType, startLevel, partCount, forgeLevel, apiPrices, customPartPrices]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [componentType, startLevel, partCount, forgeLevel, costStrategy, customCostInput, apiPrices, customPartPrices]);
 
     // Calculate forge level comparison for the highest target
     const forgeLevelComparison = useMemo(() => {
         const typeKey = componentType.toLowerCase();
         const maxTarget = 4; // Legendary
         if (startLevel >= maxTarget) return [];
+
+        let baseCostTotal = 0;
+        if (costStrategy === 'market') {
+            baseCostTotal = partCount * getMarketPrice(componentType, startLevel);
+        } else if (costStrategy === 'custom') {
+            const parsed = parseFloat(customCostInput.replace(',', '.'));
+            baseCostTotal = (!isNaN(parsed) && parsed > 0) ? (parsed * 1e6) : 0;
+        }
 
         return [1, 2, 3, 4, 5].map(fl => {
             const { producedCount, totalFees } = calculateForgeForward(
@@ -311,6 +338,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
             const fpu = calcFeePerUnit(typeKey, startLevel, maxTarget, fl);
             const marketPrice = getMarketPrice(componentType, maxTarget);
 
+            const totalMarketValue = producedCount * marketPrice;
+            const netProfit = totalMarketValue - totalFees - baseCostTotal;
+
             return {
                 forgeLevel: fl,
                 discount: FORGE_DISCOUNTS[fl],
@@ -319,11 +349,12 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                 totalFees,
                 feePerUnit: fpu,
                 marketPrice,
-                totalMarketValue: producedCount * marketPrice,
+                totalMarketValue,
+                netProfit,
             };
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [componentType, startLevel, partCount, apiPrices, customPartPrices]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [componentType, startLevel, partCount, costStrategy, customCostInput, apiPrices, customPartPrices]);
 
     // Render
     return (
@@ -375,9 +406,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                     }}
                                     title={RARITY_NAMES[level]}
                                 >
-                                    <img 
-                                        src={COMPONENT_IMAGES[componentType]?.[level]} 
-                                        alt={RARITY_NAMES[level]} 
+                                    <img
+                                        src={COMPONENT_IMAGES[componentType]?.[level]}
+                                        alt={RARITY_NAMES[level]}
                                         style={{ width: '32px', height: '32px', objectFit: 'contain' }}
                                     />
                                 </button>
@@ -435,6 +466,45 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                         ✕
                     </button>
                 </div>
+
+                {/* Strategy Selector */}
+                <div className="cfc-strategy-section">
+                    <label className="cfc-label">{t('merge.componentCalc.strategyTitle', 'Başlangıç Parçalarının Maliyeti')}</label>
+                    <div className="cfc-strategy-tabs">
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'free' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('free')}
+                        >
+                            <span>🎁</span> {t('merge.componentCalc.strategyFree', 'Bedava (Elimde Var)')}
+                        </button>
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'market' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('market')}
+                        >
+                            <span>🛒</span> {t('merge.componentCalc.strategyMarket', 'Pazardan Al')}
+                        </button>
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'custom' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('custom')}
+                        >
+                            <span>✏️</span> {t('merge.componentCalc.strategyCustom', 'Özel Maliyet')}
+                        </button>
+                    </div>
+                    {costStrategy === 'custom' && (
+                        <div className="cfc-custom-cost-input-wrapper">
+                            <input
+                                type="number"
+                                className="cfc-count-input"
+                                placeholder={t('merge.componentCalc.customCostPlaceholder', 'Toplam ödediğiniz RLT')}
+                                value={customCostInput}
+                                onChange={e => setCustomCostInput(e.target.value)}
+                                min="0"
+                                step="0.01"
+                            />
+                            <span className="cfc-currency-label">RLT</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Results */}
@@ -482,9 +552,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                     <th>{t('merge.componentCalc.forgeCost', 'Forge Ücreti')}</th>
                                     <th>{t('merge.componentCalc.marketPrice', 'Pazar Fiyatı')}</th>
                                     <th>
-                                        <span 
-                                            className="cfc-tooltip" 
-                                            data-tooltip={t('merge.componentCalc.totalValueTooltip', 'Toplam Pazar Fiyatı - Toplam Forge Ücreti = Net Kâr')}
+                                        <span
+                                            className="cfc-tooltip"
+                                            data-tooltip={t('merge.componentCalc.totalValueTooltip', 'Toplam Pazar Fiyatı - (Toplam Forge Ücreti + Başlangıç Maliyeti) = Net Kâr')}
                                             style={{ textDecorationColor: 'rgba(160, 174, 192, 0.5)' }}
                                         >
                                             {t('merge.componentCalc.totalValue', 'Toplam Değer')}
@@ -495,8 +565,6 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                             <tbody>
                                 {results.map((r) => {
                                     const isExpanded = expandedRow === r.targetLevel;
-                                    const netValue = r.totalMarketValue - r.totalForgeFees;
-                                    const isProfit = netValue > 0;
 
                                     return (
                                         <tr key={r.targetLevel} className="cfc-result-row-group">
@@ -527,8 +595,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                                         <img src={rltImg} alt="RLT" width="12" height="12" />
                                                         {formatRlt(r.totalForgeFees)}
                                                     </span>
-                                                    <span 
-                                                        className="cfc-fee-unit cfc-tooltip" 
+                                                    <span
+                                                        className="cfc-fee-unit cfc-tooltip"
                                                         data-tooltip={t('merge.componentCalc.eaTooltip', 'adet başına')}
                                                     >
                                                         ({formatRlt(r.forgeFeePerUnit)}{t('merge.componentCalc.ea', '/adet')})
@@ -544,13 +612,16 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                             </td>
                                             <td>
                                                 <div className="cfc-value-cell">
-                                                    <span className={`cfc-net-value ${isProfit ? 'profit' : 'loss'}`}>
+                                                    <span className={`cfc-net-value ${r.netProfit > 0 ? 'profit' : 'loss'}`}>
                                                         <img src={rltImg} alt="RLT" width="12" height="12" />
                                                         {formatRlt(r.totalMarketValue)}
                                                     </span>
-                                                    {r.producedCount > 0 && r.totalForgeFees > 0 && (
-                                                        <span className={`cfc-net-badge ${isProfit ? 'profit' : 'loss'}`}>
-                                                            {isProfit ? '▲' : '▼'} {formatRlt(Math.abs(netValue))} {isProfit
+                                                    {r.producedCount > 0 && (
+                                                        <span
+                                                            className={`cfc-net-badge ${r.netProfit > 0 ? 'profit' : 'loss'} ${r.baseCost > 0 ? 'cfc-tooltip' : ''}`}
+                                                            data-tooltip={r.baseCost > 0 ? `${t('merge.componentCalc.baseCost', 'Başlangıç Maliyeti')}: ${formatRlt(r.baseCost)} RLT` : ''}
+                                                        >
+                                                            {r.netProfit > 0 ? '▲' : '▼'} {formatRlt(Math.abs(r.netProfit))} {r.netProfit > 0
                                                                 ? t('merge.componentCalc.netProfit', 'Net Kâr')
                                                                 : t('merge.componentCalc.netLoss', 'Net Zarar')}
                                                         </span>
@@ -601,8 +672,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                                     <img src={rltImg} alt="RLT" width="12" height="12" />
                                                     {formatRlt(step.feePerMerge)} {t('merge.componentCalc.ea', '/adet')}
                                                 </span>
-                                                <span 
-                                                    className="cfc-step-stat cfc-tooltip" 
+                                                <span
+                                                    className="cfc-step-stat cfc-tooltip"
                                                     style={{ fontSize: '12px', color: 'var(--text-muted, #64748b)', cursor: 'help', marginTop: '2px' }}
                                                     data-tooltip={t('merge.componentCalc.stepTotalFeeTooltip', 'Bu adımdaki tüm birleştirmeler için ödenen toplam tutar')}
                                                 >
@@ -642,6 +713,7 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                                 <th>{t('merge.componentCalc.forgeCostPerUnit', 'Ücret/Birim')}</th>
                                                 <th>{t('merge.componentCalc.totalForgeFee', 'Toplam Ücret')}</th>
                                                 <th>{t('merge.componentCalc.totalValue', 'Toplam Değer')}</th>
+                                                <th>{t('merge.componentCalc.netProfit', 'Net Kâr')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -674,9 +746,15 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <span className="cfc-fee-total" style={{ color: '#10b981' }}>
+                                                            <span className="cfc-fee-total">
                                                                 <img src={rltImg} alt="RLT" width="12" height="12" />
                                                                 {formatRlt(row.totalMarketValue)}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span className="cfc-fee-total" style={{ color: row.netProfit > 0 ? '#10b981' : '#ef4444' }}>
+                                                                <img src={rltImg} alt="RLT" width="12" height="12" />
+                                                                {formatRlt(row.netProfit)}
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -721,8 +799,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                             const price = getMarketPrice(type, level);
                                             const custom = isCustomPrice(type, level);
                                             return (
-                                                <td 
-                                                    key={level} 
+                                                <td
+                                                    key={level}
                                                     className={custom ? 'cfc-custom-cell' : ''}
                                                     onClick={onOpenSettings}
                                                     style={{ cursor: onOpenSettings ? 'pointer' : 'default', position: 'relative' }}

@@ -232,6 +232,80 @@
     color: #f87171;
 }
 
+/* Strategy Selector */
+.cfc-strategy-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cfc-strategy-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cfc-strategy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 10px);
+    color: var(--text-secondary, #94a3b8);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.cfc-strategy-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary, #e2e8f0);
+}
+
+.cfc-strategy-btn.active {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: var(--text-primary, #e2e8f0);
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.1);
+}
+
+.cfc-custom-cost-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--bg-primary, #0a0e17);
+    border: 1px solid var(--border-color, rgba(148, 163, 184, 0.1));
+    border-radius: var(--radius-md, 10px);
+    overflow: hidden;
+    transition: border-color 0.2s;
+    max-width: 250px;
+    margin-top: 4px;
+}
+
+.cfc-custom-cost-input-wrapper:focus-within {
+    border-color: var(--accent-primary, #6366f1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.cfc-currency-label {
+    padding: 0 12px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-muted, #a0aec0);
+    background: rgba(255, 255, 255, 0.03);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 /* Info Badge */
 .cfc-info-badge {
     display: flex;
