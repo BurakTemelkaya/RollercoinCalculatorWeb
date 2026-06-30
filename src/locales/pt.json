@@ -286,6 +286,13 @@
     "showDuration": "Mostrar tempo"
   },
   "simulator": {
+    "minRoomReached": "Pelo menos 1 sala deve permanecer.",
+    "deleteRoomConfirm": "Tem certeza de que deseja excluir esta sala? Todos os racks e mineradores dentro também serão excluídos.",
+    "roomDeletedSuccess": "Sala excluída com sucesso.",
+    "roomAddedSuccess": "Sala adicionada com sucesso.",
+    "maxRoomsReached": "Você pode adicionar no máximo 4 salas.",
+    "deleteRoom": "Excluir sala",
+    "addRoom": "Adicionar sala",
     "clearAllMiners": "Limpar Tudo",
     "title": "Simulador de Poder",
     "desc": "Calcule a adição de novos mineradores.",

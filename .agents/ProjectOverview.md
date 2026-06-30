@@ -90,3 +90,5 @@ src/
 - **Race condition**: API ve kullanıcı verileri paralel çekilir. `App.tsx`'teki coins generation effect'inde fallback mantığı var (league.id eşleşmezse fetchedUser.league_Id kullanılır).
 - **Güç birimleri**: Tüm API değerleri Gh/s cinsindendir, iç hesaplamalarda H/s base unit'e çevrilir.
 - **i18n**: Tüm UI metinleri `locales/tr.json` ve `locales/en.json`'da tanımlıdır.
+
+Her işlem yapıldıktan veya kodlar güncellendikten sonra eğer projenin genel yapısında bir değişiklik yapılıyorsa .agent klasöründe yeni dosya oluştur yada güncelle.

@@ -287,6 +287,13 @@
     "showDuration": "Kalan süreyi göster"
   },
   "simulator": {
+    "minRoomReached": "En az 1 oda kalmalıdır.",
+    "deleteRoomConfirm": "Bu odayı silmek istediğinize emin misiniz? Odanın içindeki tüm raf ve madenciler de silinecektir.",
+    "roomDeletedSuccess": "Oda başarıyla silindi.",
+    "roomAddedSuccess": "Oda başarıyla eklendi.",
+    "maxRoomsReached": "Maksimum 4 oda ekleyebilirsiniz.",
+    "deleteRoom": "Odayı Sil",
+    "addRoom": "Oda Ekle",
     "clearAllMiners": "Tümünü Sil",
     "cancel": "İptal",
     "roomTitle": "Oda Simülatörü",

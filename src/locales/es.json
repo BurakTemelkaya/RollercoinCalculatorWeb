@@ -286,6 +286,13 @@
     "showDuration": "Mostrar tiempo restante"
   },
   "simulator": {
+    "minRoomReached": "Debe quedar al menos 1 sala.",
+    "deleteRoomConfirm": "¿Estás seguro de que quieres eliminar esta sala? Todos los estantes y mineros dentro también serán eliminados.",
+    "roomDeletedSuccess": "Sala eliminada con éxito.",
+    "roomAddedSuccess": "Sala añadida con éxito.",
+    "maxRoomsReached": "Puedes añadir un máximo de 4 salas.",
+    "deleteRoom": "Eliminar Sala",
+    "addRoom": "Añadir Sala",
     "title": "Simulador de Poder",
     "desc": "Calcula cómo agregar un nuevo minero afecta tu poder total y tu liga.",
     "panelTitle": "Simulador de Distribución de Poder",

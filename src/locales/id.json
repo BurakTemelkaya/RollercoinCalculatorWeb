@@ -286,6 +286,13 @@
     "showDuration": "Tampilkan durasi"
   },
   "simulator": {
+    "minRoomReached": "Setidaknya 1 ruang harus tersisa.",
+    "deleteRoomConfirm": "Apakah Anda yakin ingin menghapus ruang ini? Semua rak dan penambang di dalamnya juga akan dihapus.",
+    "roomDeletedSuccess": "Ruangan berhasil dihapus.",
+    "roomAddedSuccess": "Ruangan berhasil ditambahkan.",
+    "maxRoomsReached": "Anda dapat menambahkan maksimal 4 ruangan.",
+    "deleteRoom": "Hapus Ruang",
+    "addRoom": "Tambah Ruang",
     "clearAllMiners": "Hapus Semua",
     "title": "Simulator Kekuatan",
     "desc": "Hitung dampak penambahan penambang.",

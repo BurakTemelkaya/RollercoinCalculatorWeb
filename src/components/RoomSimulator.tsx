@@ -35,6 +35,14 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const [initialRoom] = useState<RollercoinRoomResponse>(JSON.parse(JSON.stringify(room)));
     const [history, setHistory] = useState<RollercoinRoomResponse[]>([]);
 
+    useEffect(() => {
+        if (room.rooms && room.rooms.length > 0) {
+            if (currentRoomIndex >= room.rooms.length) {
+                setCurrentRoomIndex(room.rooms.length - 1);
+            }
+        }
+    }, [room.rooms, currentRoomIndex]);
+
     // Notifications State
     const [notifications, setNotifications] = useState<{ id: string, message: string, type: 'success' | 'error' | 'info' }[]>([]);
 
@@ -68,6 +76,57 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             setCurrentRoomIndex(0);
             addNotification(t('simulator.roomReset'), 'info');
         }
+    };
+
+    const handleAddRoom = () => {
+        const rooms = room.rooms || [];
+        if (rooms.length >= 4) {
+            addNotification(t('simulator.maxRoomsReached', 'Maksimum 4 oda ekleyebilirsiniz.'), 'error');
+            return;
+        }
+
+        const newRoomId = 'mock_room_' + Date.now();
+        const newRoom: any = {
+            _id: newRoomId,
+            room_info: {
+                room_id: 'mock_room_type',
+                level: rooms.length, // 0'dan büyük olduğu için diğer odaların layout'unu (4, 8, 6) kullanacak
+                cols: 8,
+                rows: 3
+            }
+        };
+        const updatedRooms = [...rooms, newRoom];
+        handleRoomChange({ ...room, rooms: updatedRooms });
+        setCurrentRoomIndex(updatedRooms.length - 1);
+        addNotification(t('simulator.roomAddedSuccess', 'Oda başarıyla eklendi.'), 'success');
+    };
+
+    const handleDeleteRoom = () => {
+        const rooms = room.rooms || [];
+        if (rooms.length <= 1) {
+            addNotification(t('simulator.minRoomReached', 'En az 1 oda kalmalıdır.'), 'error');
+            return;
+        }
+        if (!window.confirm(t('simulator.deleteRoomConfirm', 'Bu odayı silmek istediğinize emin misiniz? Odanın içindeki tüm raf ve madenciler de silinecektir.'))) {
+            return;
+        }
+
+        const roomToDeleteId = rooms[currentRoomIndex]._id;
+        const newRooms = rooms.filter((_, idx) => idx !== currentRoomIndex);
+        
+        const newRacks = (room.racks || []).filter(r => r.placement?.user_room_id !== roomToDeleteId);
+        const remainingRackIds = new Set(newRacks.map(r => r._id));
+        const newMiners = (room.miners || []).filter(m => remainingRackIds.has(m.placement?.user_rack_id || ''));
+
+        handleRoomChange({
+            ...room,
+            rooms: newRooms,
+            racks: newRacks,
+            miners: newMiners
+        });
+        
+        setCurrentRoomIndex(Math.max(0, currentRoomIndex - 1));
+        addNotification(t('simulator.roomDeletedSuccess', 'Oda başarıyla silindi.'), 'success');
     };
 
     const [newRackBonus, setNewRackBonus] = useState('0');
@@ -800,6 +859,50 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                         {idx + 1}
                                     </button>
                                 ))}
+                                {(userRooms.length < 4) && (
+                                    <button
+                                        onClick={handleAddRoom}
+                                        style={{
+                                            background: '#03e1e4',
+                                            color: '#1a1b2e',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '10px 18px',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            fontSize: 18,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        title={t('simulator.addRoom', 'Oda Ekle')}
+                                    >
+                                        +
+                                    </button>
+                                )}
+                                {(userRooms.length > 1) && (
+                                    <button
+                                        onClick={handleDeleteRoom}
+                                        style={{
+                                            background: '#d9534f',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '10px 18px',
+                                            fontWeight: 'bold',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            fontSize: 18,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        title={t('simulator.deleteRoom', 'Odayı Sil')}
+                                    >
+                                        🗑
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>

@@ -286,6 +286,13 @@
     "showDuration": "Afficher le temps restant"
   },
   "simulator": {
+    "minRoomReached": "Il doit rester au moins 1 salle.",
+    "deleteRoomConfirm": "Êtes-vous sûr de vouloir supprimer cette salle ? Tous les racks et mineurs à l'intérieur seront également supprimés.",
+    "roomDeletedSuccess": "Salle supprimée avec succès.",
+    "roomAddedSuccess": "Salle ajoutée avec succès.",
+    "maxRoomsReached": "Vous pouvez ajouter un maximum de 4 salles.",
+    "deleteRoom": "Supprimer la salle",
+    "addRoom": "Ajouter une salle",
     "clearAllMiners": "Tout Effacer",
     "cancel": "Annuler",
     "title": "Simulateur de Puissance",
