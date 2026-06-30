@@ -286,6 +286,13 @@
     "showDuration": "Показать время"
   },
   "simulator": {
+    "minRoomReached": "At least 1 room must remain.",
+    "deleteRoomConfirm": "Are you sure you want to delete this room? All racks and miners inside will also be deleted.",
+    "roomDeletedSuccess": "Room successfully deleted.",
+    "roomAddedSuccess": "Room successfully added.",
+    "maxRoomsReached": "You can add a maximum of 4 rooms.",
+    "deleteRoom": "Delete Room",
+    "addRoom": "Add Room",
     "clearAllMiners": "Clear All Miners",
     "cancel": "Cancel",
     "roomTitle": "Room Simulator",
