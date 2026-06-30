@@ -92,6 +92,7 @@ const STORAGE_KEYS = {
   AUTO_LEAGUE: 'rollercoin_web_auto_league',
   API_LEAGUES: 'rollercoin_web_api_leagues',
   TABLE_COLUMNS: 'rollercoin_web_table_columns',
+  VISIBLE_COINS: 'rollercoin_web_visible_coins',
   CUSTOM_PERIOD_DAYS: 'rollercoin_web_custom_period_days',
   CUSTOM_PERIOD_HOURS: 'rollercoin_web_custom_period_hours',
 };
@@ -373,6 +374,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [visibleColumns, setVisibleColumns] = useState<Set<TableColumnType>>(
     new Set(['daily', 'weekly', 'monthly'])
   );
+  const [visibleCoins, setVisibleCoins] = useState<string[] | null>(null);
   const [customPeriodDays, setCustomPeriodDays] = useState<number>(0);
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
@@ -426,6 +428,15 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         } catch (_) {
           // Use default if JSON parse fails
         }
+      }
+
+      // Load visible coins
+      const savedVisibleCoins = localStorage.getItem(STORAGE_KEYS.VISIBLE_COINS);
+      if (savedVisibleCoins) {
+        try {
+          const coinArray = JSON.parse(savedVisibleCoins);
+          setVisibleCoins(coinArray);
+        } catch (_) {}
       }
 
       // Load custom period configuration
@@ -797,6 +808,16 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
             setVisibleColumns(newCols);
             localStorage.setItem(STORAGE_KEYS.TABLE_COLUMNS, JSON.stringify([...newCols]));
           }}
+          availableCoins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
+          visibleCoins={visibleCoins}
+          onVisibleCoinsChange={(newCoins: string[] | null) => {
+            setVisibleCoins(newCoins);
+            if (newCoins) {
+              localStorage.setItem(STORAGE_KEYS.VISIBLE_COINS, JSON.stringify(newCoins));
+            } else {
+              localStorage.removeItem(STORAGE_KEYS.VISIBLE_COINS);
+            }
+          }}
           customPeriodDays={customPeriodDays}
           customPeriodHours={customPeriodHours}
           onCustomPeriodDaysChange={(days: number) => {
@@ -807,6 +828,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
             setCustomPeriodHours(hours);
             localStorage.setItem(STORAGE_KEYS.CUSTOM_PERIOD_HOURS, hours.toString());
           }}
+          onShowNotification={(msg: string, type: 'success' | 'error' | 'info') => setNotification({ message: msg, type })}
         />
       </React.Suspense>
       {/* Reward Change Modal */}
@@ -922,6 +944,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         onOpenColumnSettings={() => setColumnModalOpen(true)}
                         onShowNotification={showNotification}
                         visibleColumns={visibleColumns}
+                        visibleCoins={visibleCoins}
                         blockDurations={blockDurations}
                         customPeriodDays={customPeriodDays}
                         customPeriodHours={customPeriodHours}

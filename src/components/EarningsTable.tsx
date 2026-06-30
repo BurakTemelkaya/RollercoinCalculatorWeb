@@ -24,6 +24,7 @@ interface EarningsTableProps {
     customPeriodDays: number;
     customPeriodHours: number;
     isActiveTab?: boolean;
+    visibleCoins?: string[] | null;
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
@@ -38,6 +39,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     customPeriodDays,
     customPeriodHours,
     isActiveTab = true,
+    visibleCoins,
 }) => {
     const { t } = useTranslation();
     const tablesRef = useRef<HTMLDivElement>(null);
@@ -60,9 +62,9 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     const [tableLeft, setTableLeft] = useState(0);
     const [tableWidth, setTableWidth] = useState(0);
 
-    // Separate game tokens and crypto
-    const gameTokens = earnings.filter(e => e.isGameToken);
-    const cryptoCoins = earnings.filter(e => !e.isGameToken);
+    // Separate game tokens and crypto and apply visibleCoins filter
+    const gameTokens = earnings.filter(e => e.isGameToken && (!visibleCoins || visibleCoins.includes(e.displayName)));
+    const cryptoCoins = earnings.filter(e => !e.isGameToken && (!visibleCoins || visibleCoins.includes(e.displayName)));
 
     // Measure header cells and update fixed header
     const measureHeader = useCallback(() => {

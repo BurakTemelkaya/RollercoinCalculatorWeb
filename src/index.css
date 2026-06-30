@@ -3524,12 +3524,11 @@ a:hover {
   }
 
   .column-grid-modal {
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-auto-rows: auto !important;
-    gap: 6px;
-    padding: 4px !important;
-    width: 100% !important;
     display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+    gap: 6px;
+    padding: 8px !important;
+    width: 100% !important;
   }
 }
 
@@ -3631,7 +3630,7 @@ a:hover {
 
 .column-grid-modal {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
   gap: 10px;
   background: var(--bg-secondary);
   padding: 12px;
