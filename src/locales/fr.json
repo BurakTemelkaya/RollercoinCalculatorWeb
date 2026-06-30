@@ -795,5 +795,15 @@
     "tokenSuccess": "Token updated successfully!",
     "tokenFail": "Token update failed.",
     "updateTokens": "Update Tokens"
+  },
+  "rewardChange": {
+    "title": "Block Reward Change",
+    "description": "Block rewards have been updated in the following leagues.",
+    "oldReward": "Old",
+    "newReward": "New",
+    "change": "Change",
+    "close": "Close",
+    "changedAt": "Block Reward Update Date",
+    "expiresAt": "Notification Last Display Date"
   }
 }
