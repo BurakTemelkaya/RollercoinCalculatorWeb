@@ -252,6 +252,7 @@
     "deselectAll": "Hapus Semua",
     "atLeastOneCoin": "Setidaknya satu koin harus dipilih. Yang lain dihapus.",
     "atLeastOneCoinError": "Setidaknya satu koin harus tetap dipilih!",
+    "customPeriodEmptyWarning": "Harap masukkan hari atau jam yang valid.",
     "visibleColumns": "Kolom Terlihat",
     "customPeriod": "Periode Kustom",
     "daysAbbr": "Hari",

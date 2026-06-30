@@ -252,6 +252,7 @@
     "deselectAll": "Deseleccionar Todo",
     "atLeastOneCoin": "Debe seleccionarse al menos una moneda. Las demás fueron eliminadas.",
     "atLeastOneCoinError": "¡Debe quedar al menos una moneda seleccionada!",
+    "customPeriodEmptyWarning": "Por favor, introduzca un día u hora válidos.",
     "visibleColumns": "Columnas Visibles",
     "customPeriod": "Período Personalizado",
     "daysAbbr": "Días",

@@ -253,6 +253,7 @@
     "deselectAll": "Tümünü Kaldır",
     "atLeastOneCoin": "En az bir coin seçili olmalıdır. Diğerleri kaldırıldı.",
     "atLeastOneCoinError": "En az bir coin seçili kalmalıdır!",
+    "customPeriodEmptyWarning": "Lütfen geçerli bir gün veya saat giriniz.",
     "visibleColumns": "Görünür Sütunlar",
     "customPeriod": "Özel Zaman Aralığı",
     "daysAbbr": "Gün",

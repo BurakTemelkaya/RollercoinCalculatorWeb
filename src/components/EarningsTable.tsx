@@ -25,6 +25,7 @@ interface EarningsTableProps {
     customPeriodHours: number;
     isActiveTab?: boolean;
     visibleCoins?: string[] | null;
+    onVisibleCoinsChange?: (coins: string[] | null) => void;
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
@@ -40,6 +41,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     customPeriodHours,
     isActiveTab = true,
     visibleCoins,
+    onVisibleCoinsChange,
 }) => {
     const { t } = useTranslation();
     const tablesRef = useRef<HTMLDivElement>(null);
@@ -600,7 +602,59 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         <section className="earnings-tables" ref={tablesRef}>
             {/* Panels moved to headers */}
 
-            {/* Crypto Table */}
+            {(() => {
+                const renderHeaderActions = () => (
+                    <div className="section-header-actions">
+                        <button
+                            className={`settings-icon-btn ${isSimulatorOpen ? 'active' : ''}`}
+                            onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
+                            title={t('simulator.panelTitle')}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+                            </svg>
+                        </button>
+                        <button
+                            className="settings-icon-btn screenshot-btn"
+                            onClick={handleScreenshot}
+                            disabled={isCapturing}
+                            title={t('table.screenshotTooltip')}
+                        >
+                            {isCapturing ? (
+                                <span className="spinner small"></span>
+                            ) : (
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            )}
+                        </button>
+                        <button
+                            className="settings-icon-btn"
+                            onClick={onOpenColumnSettings}
+                            title={t('table.columnSettings')}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                                <path d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <button
+                            className="settings-icon-btn"
+                            onClick={onOpenSettings}
+                            title={t('table.blockDurationsTooltip')}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                );
+
+                return (
+                    <>
+                        {/* Crypto Table */}
             {cryptoCoins.length > 0 && (
                 <div className="table-section" ref={tableSectionRef}>
                     <div className="section-header-row">
@@ -611,52 +665,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             {t('table.cryptoTitle')}
                         </h2>
                         
-                        <div className="section-header-actions">
-                            <button
-                                className={`settings-icon-btn ${isSimulatorOpen ? 'active' : ''}`}
-                                onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
-                                title={t('simulator.panelTitle')}
-                            >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
-                                </svg>
-                            </button>
-                            <button
-                                className="settings-icon-btn screenshot-btn"
-                                onClick={handleScreenshot}
-                                disabled={isCapturing}
-                                title={t('table.screenshotTooltip')}
-                            >
-                                {isCapturing ? (
-                                    <span className="spinner small"></span>
-                                ) : (
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                                        <circle cx="12" cy="13" r="4"></circle>
-                                    </svg>
-                                )}
-                            </button>
-                            <button
-                                className="settings-icon-btn"
-                                onClick={onOpenColumnSettings}
-                                title={t('table.columnSettings')}
-                            >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                                </svg>
-                            </button>
-                            <button
-                                className="settings-icon-btn"
-                                onClick={onOpenSettings}
-                                title={t('table.blockDurationsTooltip')}
-                            >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </button>
-                        </div>
+                        {renderHeaderActions()}
                     </div>
 
                     {/* Simulator Panel (Only when activated) */}
@@ -835,12 +844,15 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             {/* Game Tokens Table */}
             {gameTokens.length > 0 && (
                 <div className="table-section">
-                    <h2 className="section-title">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                            <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-                        </svg>
-                        {t('table.gameTokenTitle')}
-                    </h2>
+                    <div className="section-header-row">
+                        <h2 className="section-title">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                                <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                            </svg>
+                            {t('table.gameTokenTitle')}
+                        </h2>
+                        {cryptoCoins.length === 0 && renderHeaderActions()}
+                    </div>
                     <div className={tableContainerClassName}>
                         <table className="earnings-table wide-table">
                             <thead>
@@ -863,6 +875,26 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </div>
                 </div>
             )}
+            
+            {cryptoCoins.length === 0 && gameTokens.length === 0 && earnings.length > 0 && (
+                <div style={{ textAlign: 'center', padding: '40px', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border-color)', marginTop: '20px' }}>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>{t('table.noCoinsSelected', 'Gösterilecek coin kalmadı.')}</p>
+                    <button 
+                        onClick={() => { if (onVisibleCoinsChange) onVisibleCoinsChange(null); }}
+                        className="save-btn-primary" 
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                            <path d="M21 3v5h-5"></path>
+                        </svg>
+                        {t('table.resetFilters', 'Filtreleri Sıfırla')}
+                    </button>
+                </div>
+            )}
+            </>
+            );
+            })()}
         </section>
     );
 };

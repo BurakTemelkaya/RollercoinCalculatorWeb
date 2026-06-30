@@ -945,6 +945,14 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         onShowNotification={showNotification}
                         visibleColumns={visibleColumns}
                         visibleCoins={visibleCoins}
+                        onVisibleCoinsChange={(newCoins: string[] | null) => {
+                          setVisibleCoins(newCoins);
+                          if (newCoins) {
+                            localStorage.setItem(STORAGE_KEYS.VISIBLE_COINS, JSON.stringify(newCoins));
+                          } else {
+                            localStorage.removeItem(STORAGE_KEYS.VISIBLE_COINS);
+                          }
+                        }}
                         blockDurations={blockDurations}
                         customPeriodDays={customPeriodDays}
                         customPeriodHours={customPeriodHours}

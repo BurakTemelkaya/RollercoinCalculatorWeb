@@ -252,6 +252,7 @@
     "deselectAll": "取消全选",
     "atLeastOneCoin": "必须选择至少一枚硬币。其他的已被移除。",
     "atLeastOneCoinError": "必须保持至少一枚硬币被选中！",
+    "customPeriodEmptyWarning": "请输入有效的天数或小时数。",
     "visibleColumns": "可见列",
     "customPeriod": "自定义时间",
     "daysAbbr": "天",

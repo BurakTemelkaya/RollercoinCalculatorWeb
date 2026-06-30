@@ -252,6 +252,7 @@
     "deselectAll": "Tout Désélectionner",
     "atLeastOneCoin": "Au moins une pièce doit être sélectionnée. Les autres ont été retirées.",
     "atLeastOneCoinError": "Au moins une pièce doit rester sélectionnée !",
+    "customPeriodEmptyWarning": "Veuillez entrer un jour ou une heure valide.",
     "visibleColumns": "Colonnes Visibles",
     "customPeriod": "Période Personnalisée",
     "daysAbbr": "Jours",

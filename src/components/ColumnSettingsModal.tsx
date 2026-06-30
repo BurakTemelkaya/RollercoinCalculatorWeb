@@ -76,15 +76,25 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
         }
     }, [isOpen]);
 
+    const handleSafeClose = () => {
+        if (visibleCoins !== null && visibleCoins.length === 0) {
+            if (onShowNotification) {
+                onShowNotification(t('table.atLeastOneCoinError', 'En az bir coin seçili kalmalıdır!'), 'error');
+            }
+            return;
+        }
+        onClose();
+    };
+
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content premium-settings">
+        <div className="modal-overlay" onClick={handleSafeClose}>
+            <div className="modal-content premium-settings" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <div className="header-icon">🎛️</div>
                     <h2 className="modal-title">{t('table.columnSettings')}</h2>
-                    <button className="close-btn" onClick={onClose}>✕</button>
+                    <button className="close-btn" onClick={handleSafeClose}>✕</button>
                 </div>
 
                 <div className="modal-body custom-scrollbar">
@@ -190,7 +200,15 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
                             <div 
                                 className="setting-input-large" 
                                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', background: 'var(--input-bg)' }}
-                                onClick={() => setIsMultiSelectOpen(!isMultiSelectOpen)}
+                                onClick={() => {
+                                    if (isMultiSelectOpen && visibleCoins !== null && visibleCoins.length === 0) {
+                                        if (onShowNotification) {
+                                            onShowNotification(t('table.atLeastOneCoinError', 'En az bir coin seçili kalmalıdır!'), 'error');
+                                        }
+                                        return;
+                                    }
+                                    setIsMultiSelectOpen(!isMultiSelectOpen);
+                                }}
                             >
                                 <span style={{ color: visibleCoins === null || visibleCoins.length === availableCoins.length ? 'var(--text-muted)' : 'var(--text-primary)' }}>
                                     {visibleCoins === null || visibleCoins.length === availableCoins.length
@@ -224,9 +242,8 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
                                         <button 
                                             onClick={() => {
                                                 if (availableCoins.length > 0) {
-                                                    onVisibleCoinsChange([availableCoins[0]]);
-                                                    if (onShowNotification) {
-                                                        onShowNotification(t('table.atLeastOneCoin', 'En az bir coin seçili olmalıdır. Diğerleri kaldırıldı.'), 'info');
+                                                    if (onVisibleCoinsChange) {
+                                                        onVisibleCoinsChange([]);
                                                     }
                                                 }
                                             }} 
@@ -254,17 +271,10 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
                                                                 ? currentVisible.filter(c => c !== coin)
                                                                 : [...currentVisible, coin];
                                                                 
-                                                            if (newCoins.length === 0) {
-                                                                if (onShowNotification) {
-                                                                    onShowNotification(t('table.atLeastOneCoinError', 'En az bir coin seçili kalmalıdır!'), 'error');
-                                                                }
-                                                                return;
-                                                            }
-                                                                
                                                             if (newCoins.length === availableCoins.length) {
-                                                                onVisibleCoinsChange(null);
+                                                                if (onVisibleCoinsChange) onVisibleCoinsChange(null);
                                                             } else {
-                                                                onVisibleCoinsChange(newCoins);
+                                                                if (onVisibleCoinsChange) onVisibleCoinsChange(newCoins);
                                                             }
                                                         }}
                                                         className="checkbox-input"
@@ -286,7 +296,7 @@ const ColumnSettingsModal: React.FC<ColumnSettingsModalProps> = ({
                 </div>
 
                 <div className="modal-footer">
-                    <button className="save-btn-primary" onClick={onClose} style={{ marginLeft: 'auto' }}>
+                    <button className="save-btn-primary" onClick={handleSafeClose} style={{ marginLeft: 'auto' }}>
                         <span>{t('settings.save')}</span>
                     </button>
                 </div>
