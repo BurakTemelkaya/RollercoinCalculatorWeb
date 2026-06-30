@@ -766,5 +766,15 @@
     "tokenSuccess": "令牌更新成功！",
     "tokenFail": "令牌更新失败。",
     "updateTokens": "更新令牌"
+  },
+  "rewardChange": {
+    "title": "区块奖励变更",
+    "description": "以下联赛的区块奖励已更新。",
+    "oldReward": "旧",
+    "newReward": "新",
+    "change": "变更",
+    "close": "关闭",
+    "changedAt": "区块奖励更新日期",
+    "expiresAt": "通知最后显示日期"
   }
 }

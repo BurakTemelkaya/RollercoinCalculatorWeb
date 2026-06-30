@@ -44,9 +44,16 @@ function getUserEndpoint(): string {
 }
 
 /**
+ * Gets the reward change endpoint from environment variables
+ */
+function getRewardChangeEndpoint(): string {
+  return import.meta.env.VITE_API_REWARD_CHANGE_ENDPOINT || '/api/RewardChange';
+}
+
+/**
  * Gets full API URL for specific endpoints
  */
-export function getApiUrl(endpointKey: 'leagues' | 'user'): string {
+export function getApiUrl(endpointKey: 'leagues' | 'user' | 'rewardChange'): string {
   const baseUrl = getApiBaseUrl();
 
   switch (endpointKey) {
@@ -54,6 +61,8 @@ export function getApiUrl(endpointKey: 'leagues' | 'user'): string {
       return `${baseUrl}${getLeagueEndpoint()}`;
     case 'user':
       return `${baseUrl}${getUserEndpoint()}`;
+    case 'rewardChange':
+      return `${baseUrl}${getRewardChangeEndpoint()}`;
     default:
       throw new Error(`Unknown endpoint: ${endpointKey}`);
   }

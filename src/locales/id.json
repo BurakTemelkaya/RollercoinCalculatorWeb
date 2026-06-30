@@ -766,5 +766,15 @@
     "tokenSuccess": "Token berhasil diperbarui!",
     "tokenFail": "Pembaruan token gagal.",
     "updateTokens": "Perbarui Token"
+  },
+  "rewardChange": {
+    "title": "Perubahan Hadiah Blok",
+    "description": "Hadiah blok telah diperbarui di liga-liga berikut.",
+    "oldReward": "Lama",
+    "newReward": "Baru",
+    "change": "Perubahan",
+    "close": "Tutup",
+    "changedAt": "Tanggal Pembaruan Hadiah Blok",
+    "expiresAt": "Tanggal Tampilan Terakhir Notifikasi"
   }
 }

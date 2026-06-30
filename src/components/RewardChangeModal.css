@@ -1,0 +1,298 @@
+/* Reward Change Modal Styles */
+
+.reward-change-modal .modal-content {
+  max-width: 900px;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
+.reward-change-modal .modal-body {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  background: var(--bg-secondary);
+  max-height: none;
+}
+
+.reward-change-modal .modal-header {
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.reward-change-modal .modal-footer {
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.reward-change-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reward-change-header-info .header-icon {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.reward-change-header-info .modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+/* Meta info bar (dates) */
+.reward-change-meta {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.reward-change-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.reward-change-meta-item .meta-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.reward-change-meta-item .meta-value {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Description text */
+.reward-change-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* League groups grid — 2 columns */
+.reward-league-groups-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* League group card */
+.reward-league-group {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.reward-league-group:hover {
+  border-color: var(--border-color-hover);
+}
+
+.reward-league-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.reward-league-header:hover {
+  background: var(--bg-card-hover);
+}
+
+.reward-league-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.reward-league-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.reward-league-toggle {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.reward-league-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Change rows */
+.reward-changes-list {
+  padding: 6px 8px;
+}
+
+.reward-change-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+}
+
+.reward-change-row:hover {
+  background: var(--bg-card);
+}
+
+.reward-coin-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.reward-coin-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.reward-coin-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.reward-values {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.reward-old-value {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reward-arrow {
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.reward-new-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reward-change-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 52px;
+  text-align: center;
+}
+
+.reward-change-badge.increase {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.reward-change-badge.decrease {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.reward-change-badge.neutral {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+/* Footer dismiss button */
+.reward-change-dismiss-btn {
+  padding: 10px 28px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.reward-change-dismiss-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reward-change-modal .modal-content {
+    max-width: 100%;
+  }
+
+  .reward-league-groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reward-change-meta {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reward-change-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .reward-values {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 30px;
+  }
+}

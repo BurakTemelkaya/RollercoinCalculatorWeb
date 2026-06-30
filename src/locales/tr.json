@@ -796,5 +796,15 @@
     "tokenSuccess": "Token başarıyla güncellendi!",
     "tokenFail": "Token güncelleme işlemi başarısız oldu (false döndü).",
     "updateTokens": "Tokenları Güncelle"
+  },
+  "rewardChange": {
+    "title": "Blok Ödülü Değişikliği",
+    "description": "Aşağıdaki liglerde blok ödülleri güncellendi.",
+    "oldReward": "Eski",
+    "newReward": "Yeni",
+    "change": "Değişim",
+    "close": "Kapat",
+    "changedAt": "Değişim Tarihi",
+    "expiresAt": "Geçerlilik"
   }
 }

@@ -766,5 +766,15 @@
     "tokenSuccess": "Token atualizado com sucesso!",
     "tokenFail": "Falha na atualização do token.",
     "updateTokens": "Atualizar Tokens"
+  },
+  "rewardChange": {
+    "title": "Mudança de Recompensa de Bloco",
+    "description": "As recompensas de bloco foram atualizadas nas seguintes ligas.",
+    "oldReward": "Antigo",
+    "newReward": "Novo",
+    "change": "Mudança",
+    "close": "Fechar",
+    "changedAt": "Data de Atualização da Recompensa de Bloco",
+    "expiresAt": "Data da Última Exibição da Notificação"
   }
 }

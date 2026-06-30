@@ -12,6 +12,8 @@ import { LEAGUES, LeagueInfo, CURRENCY_MAP } from './data/leagues';
 import { ApiLeagueData } from './types/api';
 import { convertApiLeagueToCoinData } from './services/leagueApi';
 import { fetchUserFromApi, fetchUserRoomFromApi } from './services/userApi';
+import { fetchRewardChange } from './services/rewardChangeApi';
+import { RewardChangeEvent } from './types/rewardChange';
 import { autoScalePower } from './utils/powerParser';
 import { COIN_ICONS } from './utils/constants';
 import { LEAGUE_IMAGES } from './data/leagueImages';
@@ -72,6 +74,7 @@ const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBon
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
 const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
 const NotificationSettingsPage = lazyWithRetry(() => import('./components/NotificationSettingsPage'));
+const RewardChangeModal = lazyWithRetry(() => import('./components/RewardChangeModal'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -337,6 +340,33 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [columnModalOpen, setColumnModalOpen] = useState(false);
+
+  // Reward Change Modal State
+  const [rewardChangeData, setRewardChangeData] = useState<RewardChangeEvent | null>(null);
+  const [showRewardChangeModal, setShowRewardChangeModal] = useState(false);
+
+  // Fetch reward change on mount (once)
+  const rewardChangeCheckedRef = React.useRef(false);
+  useEffect(() => {
+    if (rewardChangeCheckedRef.current) return;
+    rewardChangeCheckedRef.current = true;
+
+    fetchRewardChange()
+      .then(data => {
+        if (!data || !data.changes || data.changes.length === 0) return;
+
+        const lastSeenId = localStorage.getItem('rollercoin_web_last_reward_change_id');
+        if (lastSeenId === data.id) return; // Already shown
+
+        setRewardChangeData(data);
+        setShowRewardChangeModal(true);
+        localStorage.setItem('rollercoin_web_last_reward_change_id', data.id);
+      })
+      .catch(err => {
+        // Silently log — don't bother the user
+        console.error('Reward change fetch failed:', err);
+      });
+  }, []);
 
   // Table column configuration state
   type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
@@ -779,6 +809,16 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
           }}
         />
       </React.Suspense>
+      {/* Reward Change Modal */}
+      {showRewardChangeModal && rewardChangeData && (
+        <React.Suspense fallback={null}>
+          <RewardChangeModal
+            isOpen={showRewardChangeModal}
+            onClose={() => setShowRewardChangeModal(false)}
+            data={rewardChangeData}
+          />
+        </React.Suspense>
+      )}
       {/* Notification */}
       {notification && createPortal(
         <div className="notification-container">
