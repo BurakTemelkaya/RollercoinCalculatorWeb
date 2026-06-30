@@ -657,18 +657,36 @@ export default function ProgressionEvent() {
                         <span>{t('event.multiplierDuration')}</span>
                         <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
                     </div>
-                    <div className="pe-info-row">
-                        <span>{t('event.gameDifficulty')}</span>
-                        <span className="pe-info-value">{EVENT_CONSTANTS.GAME_DIFFICULTY}</span>
-                    </div>
-                    <div className="pe-info-row">
-                        <span>{t('event.spend1Rlt')}</span>
-                        <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
-                    </div>
-                    <div className="pe-info-row">
-                        <span>{t('event.marketplace')}</span>
-                        <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
-                    </div>
+                    {eventData.taskData && eventData.taskData.length > 0 ? (
+                        eventData.taskData.map(task => {
+                            let label = task.title;
+                            if (task.type === 'game_level') label = t('event.gameDifficulty');
+                            if (task.type === 'spend_rlt') label = t('event.spend1Rlt');
+                            if (task.type === 'marketplace') label = t('event.marketplace');
+                            
+                            return (
+                                <div className="pe-info-row" key={task.id}>
+                                    <span>{label}</span>
+                                    <span className="pe-info-value">{task.xp_reward}</span>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <>
+                            <div className="pe-info-row">
+                                <span>{t('event.gameDifficulty')}</span>
+                                <span className="pe-info-value">{dynamicConstants.GAME_DIFFICULTY}</span>
+                            </div>
+                            <div className="pe-info-row">
+                                <span>{t('event.spend1Rlt')}</span>
+                                <span className="pe-info-value">{dynamicConstants.XP_PER_RLT}</span>
+                            </div>
+                            <div className="pe-info-row">
+                                <span>{t('event.marketplace')}</span>
+                                <span className="pe-info-value">{dynamicConstants.MARKETPLACE_RATE}</span>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
