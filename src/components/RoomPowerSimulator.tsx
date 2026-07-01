@@ -66,14 +66,30 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         }
     };
 
-    // The API userPowerResponseDto.bonus_percent is scaled by 10000 (e.g. 1538050 = 153.8050%),
-    // but roomParser expects it scaled by 100 (e.g. 15380.5 = 153.805%). So we divide by 100.
-    const actualBonusPercent = ((fetchedUser?.userPowerResponseDto?.bonus_percent || 0) / 100) - ((fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_percent || 0) / 100);
-    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, fetchedRoom, actualBonusPercent) : null;
+    // Derive the effective bonus percentage from API values so the formula is self-consistent:
+    // League Power = miners + miners × (effectiveBonus / 10000) + racks + setFlatPower
+    // → effectiveBonus = (max_Power - miners - racks - setFlatPower) / miners × 10000
+    //
+    // This captures hidden bonuses (inventory, achievements, etc.) that can't be seen in room data.
+    const apiMaxPowerGh = fetchedUser?.userPowerResponseDto?.max_Power || 0;
+
+    // Step 1: Get original room stats without baseline to find set bonus flat power
+    const origRoomStats = fetchedRoom ? calculateExactRoomPower(fetchedRoom) : null;
+    const origBaseMinerPowerGh = origRoomStats?.baseMinerPowerGh || 0;
+    const origRackBonusPowerGh = origRoomStats?.rackBonusPowerGh || 0;
+    const origSetBonusPowerGh = origRoomStats?.totalSetBonusPowerGh || 0;
+
+    // Step 2: Derive effective bonus that makes formula match API max_Power exactly
+    const effectiveBonusPercent = origBaseMinerPowerGh > 0
+        ? ((apiMaxPowerGh - origBaseMinerPowerGh - origRackBonusPowerGh - origSetBonusPowerGh) / origBaseMinerPowerGh) * 10000
+        : 0;
+
+    // Step 3: Calculate with derived baseline — hidden bonus is correctly preserved
+    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, fetchedRoom, effectiveBonusPercent) : null;
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
-    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, fetchedRoom, actualBonusPercent) : null;
+    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, fetchedRoom, effectiveBonusPercent) : null;
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
