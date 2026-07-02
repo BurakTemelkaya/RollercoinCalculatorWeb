@@ -414,6 +414,8 @@ export default function MergePage() {
     };
 
     // Close on ESC
+    const [showLevel1Cost, setShowLevel1Cost] = useState(false);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && selectedMerge) {
@@ -429,6 +431,7 @@ export default function MergePage() {
         return detail.requiredItems
             .filter(item => item.type === 'mutation_components')
             .reduce((sum, item) => {
+                if (item.level === 0 && !showLevel1Cost) return sum;
                 const defaultPrice = item.price ? item.price / 1e6 : 0;
                 const displayName = getPartDisplayName(item.itemName, item.level);
                 const customPrice = customPartPrices[displayName];
@@ -519,8 +522,41 @@ export default function MergePage() {
                         </button>
                     </div>
 
-                    {/* Forge Level Selector */}
-                    <div className="merge-forge-selector">
+                    {/* Forge Level Selector and Level 1 Toggle */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                                {t('merge.showLevel1Cost')}
+                            </span>
+                            <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={showLevel1Cost}
+                                    onChange={() => setShowLevel1Cost(!showLevel1Cost)}
+                                    style={{ display: 'none' }}
+                                />
+                                <div style={{
+                                    width: '32px',
+                                    height: '18px',
+                                    background: showLevel1Cost ? '#06b6d4' : 'rgba(255,255,255,0.1)',
+                                    borderRadius: '10px',
+                                    position: 'relative',
+                                    transition: 'background 0.3s'
+                                }}>
+                                    <div style={{
+                                        width: '14px',
+                                        height: '14px',
+                                        background: '#fff',
+                                        borderRadius: '50%',
+                                        position: 'absolute',
+                                        top: '2px',
+                                        left: showLevel1Cost ? '16px' : '2px',
+                                        transition: 'left 0.3s'
+                                    }} />
+                                </div>
+                            </label>
+                        </div>
+                        <div className="merge-forge-selector">
                         <img src={craftingImg} alt="Forge" width="18" height="18" className="merge-forge-label" />
                         <select
                             className="merge-forge-select"
@@ -534,6 +570,7 @@ export default function MergePage() {
                                 </option>
                             ))}
                         </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -871,7 +908,52 @@ export default function MergePage() {
                     <div className="merge-detail-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="merge-detail-header">
                             <h3>{selectedMerge.resultItemName} {mergeCount > 1 && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 400 }}>×{mergeCount}</span>}</h3>
-                            <button className="merge-detail-close" onClick={handleCloseDetail}>×</button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <Link
+                                    to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemName)}`}
+                                    className="btn-primary"
+                                    style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', textDecoration: 'none' }}
+                                >
+                                    {t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
+                                </Link>
+                                
+                                {selectedMerge.resultItemLevel === 1 && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
+                                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                                            {t('merge.showLevel1Cost')}
+                                        </span>
+                                        <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={showLevel1Cost}
+                                                onChange={() => setShowLevel1Cost(!showLevel1Cost)}
+                                                style={{ display: 'none' }}
+                                            />
+                                            <div style={{
+                                                width: '32px',
+                                                height: '18px',
+                                                background: showLevel1Cost ? '#06b6d4' : 'rgba(255,255,255,0.1)',
+                                                borderRadius: '10px',
+                                                position: 'relative',
+                                                transition: 'background 0.3s'
+                                            }}>
+                                                <div style={{
+                                                    width: '14px',
+                                                    height: '14px',
+                                                    background: '#fff',
+                                                    borderRadius: '50%',
+                                                    position: 'absolute',
+                                                    top: '2px',
+                                                    left: showLevel1Cost ? '16px' : '2px',
+                                                    transition: 'left 0.3s'
+                                                }} />
+                                            </div>
+                                        </label>
+                                    </div>
+                                )}
+                                
+                                <button className="merge-detail-close" onClick={handleCloseDetail}>×</button>
+                            </div>
                         </div>
 
                         <div className="merge-detail-body">
@@ -996,7 +1078,10 @@ export default function MergePage() {
 
                                     const discountedCount = isMutationComponent ? applyForgeDiscount(item.count, forgeLevel) : item.count;
                                     const effectiveCount = discountedCount * mergeCount;
-                                    const totalItemCost = unitPriceRlt !== null ? unitPriceRlt * effectiveCount : null;
+                                    
+                                    const isLevel1Part = isMutationComponent && item.level === 0;
+                                    const shouldShowCost = !isLevel1Part || showLevel1Cost;
+                                    const totalItemCost = unitPriceRlt !== null && shouldShowCost ? unitPriceRlt * effectiveCount : null;
 
                                     // Image for this required item
                                     let imgSrc: string | null = null;
@@ -1119,10 +1204,16 @@ export default function MergePage() {
                                                                 </>
                                                             )}
                                                         </span>
-                                                        <span className="merge-req-stat-pill merge-req-stat-rlt" style={{ color: customPrice !== undefined ? '#f59e0b' : 'inherit', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            <img src={rltImg} alt="RLT" width="12" height="12" />
-                                                            {totalItemCost!.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} RLT
-                                                        </span>
+                                                        {totalItemCost !== null ? (
+                                                            <span className="merge-req-stat-pill merge-req-stat-rlt" style={{ color: customPrice !== undefined ? '#f59e0b' : 'inherit', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                                <img src={rltImg} alt="RLT" width="12" height="12" />
+                                                                {totalItemCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} RLT
+                                                            </span>
+                                                        ) : (
+                                                            <span className="merge-req-stat-pill merge-req-stat-rlt" style={{ opacity: 0.5, fontStyle: 'italic' }}>
+                                                                {t('merge.costHidden')}
+                                                            </span>
+                                                        )}
                                                     </>
                                                 ) : isMutationComponent ? (
                                                     <span className="merge-req-stat-pill" style={{ color: '#f87171', borderColor: 'rgba(248, 113, 113, 0.2)', background: 'rgba(248, 113, 113, 0.1)' }}>
@@ -1164,7 +1255,7 @@ export default function MergePage() {
                             {(() => {
                                 const partsCost = calcPartsCost(selectedMerge, mergeCount);
                                 const feeCost = applyForgeDiscount(selectedMerge.amount, forgeLevel) * mergeCount;
-                                return partsCost > 0 ? (
+                                return (
                                     <div className="merge-total-summary-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 191, 36, 0.04))', padding: '14px 16px', borderRadius: '10px', marginTop: '12px', border: '1px solid rgba(245, 158, 11, 0.15)' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)' }}>
                                             <span>{t('merge.partsCost')}{mergeCount > 1 ? ` (×${mergeCount})` : ''}</span>
@@ -1188,7 +1279,7 @@ export default function MergePage() {
                                             </span>
                                         </div>
                                     </div>
-                                ) : null;
+                                );
                             })()}
                         </div>
                     </div>

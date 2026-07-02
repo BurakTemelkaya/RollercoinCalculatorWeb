@@ -70,6 +70,7 @@ const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
 const MergePage = lazyWithRetry(() => import('./components/MergePage'));
+const MergeMinerLevelsPage = lazyWithRetry(() => import('./components/MergeMinerLevelsPage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
 const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
@@ -1049,6 +1050,7 @@ function App() {
         <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
         <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
         <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
+        <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
         <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
         <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
         <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />

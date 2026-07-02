@@ -48,3 +48,11 @@ export async function fetchMergeById(mergeId: string): Promise<MergeDetail> {
     const url = buildApiUrl(`/api/Merges/GetById?id=${encodeURIComponent(mergeId)}`);
     return apiGet<MergeDetail>(url);
 }
+
+/**
+ * Fetches all merge levels for a given miner name.
+ */
+export async function fetchMergesByMinerName(minerName: string): Promise<MergeDetail[]> {
+    const url = buildApiUrl(`/api/Merges/get-by-miner-name?minerName=${encodeURIComponent(minerName)}`);
+    return apiGet<MergeDetail[]>(url);
+}
