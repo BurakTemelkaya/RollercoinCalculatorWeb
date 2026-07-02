@@ -75,10 +75,33 @@ const RewardChangeModal: React.FC<RewardChangeModalProps> = ({ isOpen, onClose, 
     const toggleLeague = (leagueId: string) => {
         setCollapsedLeagues(prev => {
             const next = new Set(prev);
-            if (next.has(leagueId)) {
+            const isCurrentlyCollapsed = next.has(leagueId);
+            
+            // Mobile screens (<= 768px) use a 1-column layout, so we toggle individually
+            const isDesktop = typeof window !== 'undefined' && window.matchMedia('(min-width: 769px)').matches;
+
+            if (!isDesktop) {
+                if (isCurrentlyCollapsed) next.delete(leagueId);
+                else next.add(leagueId);
+                return next;
+            }
+            
+            // Find the index of the clicked league
+            const index = leagueGroups.findIndex(g => g.leagueId === leagueId);
+            if (index === -1) return next;
+            
+            // Find the paired league (even index pairs with even+1, odd pairs with odd-1)
+            const pairIndex = index % 2 === 0 ? index + 1 : index - 1;
+            const pairedLeague = leagueGroups[pairIndex];
+
+            if (isCurrentlyCollapsed) {
+                // Expand both
                 next.delete(leagueId);
+                if (pairedLeague) next.delete(pairedLeague.leagueId);
             } else {
+                // Collapse both
                 next.add(leagueId);
+                if (pairedLeague) next.add(pairedLeague.leagueId);
             }
             return next;
         });
