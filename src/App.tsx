@@ -246,6 +246,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const handleFetchUser = async (username: string, showSuccessNotif: boolean = true) => {
     if (!username.trim()) return;
     setIsFetchingUser(true);
+    setFetchedRoom(null); // Clear old room data when searching for a new user
     try {
       const data = await fetchUserFromApi(username.trim());
       setFetchedUser(data);
