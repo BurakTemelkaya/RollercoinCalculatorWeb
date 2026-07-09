@@ -70,14 +70,23 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     // IMPORTANT: Do NOT derive from max_Power — it's a high-water mark that doesn't update
     // when users remove miners from their room, causing inflated bonus for modified rooms.
     // bonus_percent uses the same scale as miner bonus_percent (÷10000 = multiplier).
+    // NOTE: bonus_percent INCLUDES freon bonus, but freon is NOT part of league power.
     const actualBonusPercent = (fetchedUser?.userPowerResponseDto?.bonus_percent || 0) - (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_percent || 0);
+    const freonPowerGh = fetchedUser?.userPowerResponseDto?.freon || 0;
 
     const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, fetchedRoom, actualBonusPercent) : null;
-    const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
+    // Subtract freon from league power — freon is in bonus_percent but doesn't count towards league
+    const baseMinerPowerGh = fetchedUser?.userPowerResponseDto?.miners || 0;
+    const freonMultiplier = baseMinerPowerGh > 0 ? (freonPowerGh / baseMinerPowerGh) : 0;
+    const simulatedMinerPowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
+    const simulatedFreonGh = simulatedMinerPowerGh * freonMultiplier;
+    const leaguePowerGh = exactPower ? (exactPower.totalLeaguePowerGh - simulatedFreonGh) : 0;
     const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
     const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, fetchedRoom, actualBonusPercent) : null;
-    const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
+    const originalMinerPowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
+    const originalFreonGh = originalMinerPowerGh * freonMultiplier;
+    const originalLeaguePowerGh = originalExactPower ? (originalExactPower.totalLeaguePowerGh - originalFreonGh) : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
     const powerDiffGh = leaguePowerGh - originalLeaguePowerGh;
