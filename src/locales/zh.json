@@ -413,6 +413,13 @@
     "emailDesc": "直接在您的收件箱中接收更新。",
     "pushNotifications": "网页推送通知",
     "pushDesc": "在您的浏览器中接收通知。",
+    "generalEmailSettings": "General Email Settings",
+    "receiveAllEmails": "Receive Emails",
+    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
+    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
+    "enableAllEmails": "Turn Emails On",
+    "generalMailEnabledMsg": "Email notifications re-enabled.",
+    "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "您无法接收通知，因为网络推送已启用，但浏览器权限被拒绝。请在您的浏览器中授予权限。",
     "enableInBrowser": "在浏览器中打开"
   },
@@ -835,5 +842,13 @@
     "close": "关闭",
     "changedAt": "区块奖励更新日期",
     "expiresAt": "通知最后显示日期"
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "processing": "Processing your request...",
+    "successTitle": "Unsubscribed Successfully",
+    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
+    "errorTitle": "Unsubscribe Failed",
+    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
   }
 }
