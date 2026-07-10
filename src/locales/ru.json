@@ -173,6 +173,8 @@
     "retry": "Повторить"
   },
   "input": {
+    "showRewardChange": "Last Block Reward Change",
+    "showRewardChangeTooltip": "Show last block reward change details",
     "title": "Ввод данных",
     "userPower": "Ваша мощность",
     "userFetched": "Данные профиля для '{{name}}' успешно обновлены",
