@@ -413,6 +413,13 @@
     "emailDesc": "Receba atualizações diretamente na sua caixa de entrada.",
     "pushNotifications": "Notificações Push Web",
     "pushDesc": "Receba notificações no seu navegador.",
+    "generalEmailSettings": "General Email Settings",
+    "receiveAllEmails": "Receive Emails",
+    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
+    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
+    "enableAllEmails": "Turn Emails On",
+    "generalMailEnabledMsg": "Email notifications re-enabled.",
+    "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "Você não pode receber notificações porque o Web Push está ativado, mas a permissão do navegador foi negada. Por favor, conceda permissão no seu navegador.",
     "enableInBrowser": "Abrir no Navegador"
   },
@@ -835,5 +842,13 @@
     "close": "Fechar",
     "changedAt": "Data de Atualização da Recompensa de Bloco",
     "expiresAt": "Data da Última Exibição da Notificação"
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "processing": "Processing your request...",
+    "successTitle": "Unsubscribed Successfully",
+    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
+    "errorTitle": "Unsubscribe Failed",
+    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
   }
 }
