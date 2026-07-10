@@ -358,12 +358,13 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       .then(data => {
         if (!data || !data.changes || data.changes.length === 0) return;
 
-        const lastSeenId = localStorage.getItem('rollercoin_web_last_reward_change_id');
-        if (lastSeenId === data.id) return; // Already shown
-
         setRewardChangeData(data);
-        setShowRewardChangeModal(true);
-        localStorage.setItem('rollercoin_web_last_reward_change_id', data.id);
+        
+        const lastSeenId = localStorage.getItem('rollercoin_web_last_reward_change_id');
+        if (lastSeenId !== data.id) {
+          setShowRewardChangeModal(true);
+          localStorage.setItem('rollercoin_web_last_reward_change_id', data.id);
+        }
       })
       .catch(err => {
         // Silently log — don't bother the user
@@ -887,6 +888,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
               setFetchMode={setFetchMode}
               userNotFoundError={userNotFoundError}
               setUserNotFoundError={setUserNotFoundError}
+              hasRewardChangeData={!!rewardChangeData}
+              onShowRewardChange={() => setShowRewardChangeModal(true)}
             />
 
 

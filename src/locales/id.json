@@ -173,6 +173,8 @@
     "retry": "Coba lagi"
   },
   "input": {
+    "showRewardChange": "Perubahan Hadiah Blok Terakhir",
+    "showRewardChangeTooltip": "Tampilkan detail perubahan hadiah blok terakhir",
     "title": "Masukan Data",
     "userPower": "Kekuatan Anda",
     "userFetched": "Data '{{name}}' berhasil diperbarui",

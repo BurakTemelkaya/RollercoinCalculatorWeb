@@ -173,6 +173,8 @@
     "retry": "Réessayer"
   },
   "input": {
+    "showRewardChange": "Dernier changement de récompense",
+    "showRewardChangeTooltip": "Afficher les détails du dernier changement de récompense",
     "title": "Entrée de Données",
     "userPower": "Votre Puissance",
     "userFetched": "Données pour '{{name}}' mises à jour.",

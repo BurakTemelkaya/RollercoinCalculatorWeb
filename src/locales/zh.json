@@ -173,6 +173,8 @@
     "retry": "重试"
   },
   "input": {
+    "showRewardChange": "最后一次区块奖励变动",
+    "showRewardChangeTooltip": "显示最后一次区块奖励变动详情",
     "title": "数据输入与设置",
     "userPower": "您的算力",
     "userFetched": "'{{name}}' 的资料已更新",

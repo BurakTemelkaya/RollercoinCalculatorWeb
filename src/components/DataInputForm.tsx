@@ -6,11 +6,14 @@ import { fetchLeaguesFromApi } from '../services/leagueApi';
 import { ApiLeagueData } from '../types/api';
 import { getLeagueImage } from '../data/leagueImages';
 import findUsernameImage from '../assets/find_username.png';
+import leagueIconSvg from '../assets/leagues/league.svg';
 import './DataInputForm.css';
 import classNames from 'classnames';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import { ApiError } from '../services/apiClient';
 import RadixSelect from './RadixSelect';
+
+
 
 interface DataInputFormProps {
     onDataParsed: (coins: CoinData[], userPower: HashPower, isManual?: boolean) => void;
@@ -33,6 +36,8 @@ interface DataInputFormProps {
     setFetchMode: (mode: 'username' | 'power') => void;
     userNotFoundError?: boolean;
     setUserNotFoundError?: (val: boolean) => void;
+    hasRewardChangeData?: boolean;
+    onShowRewardChange?: () => void;
 }
 
 const DataInputForm: React.FC<DataInputFormProps> = ({
@@ -56,6 +61,8 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     setFetchMode,
     userNotFoundError = false,
     setUserNotFoundError = () => { },
+    hasRewardChangeData = false,
+    onShowRewardChange,
 }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(true);
@@ -309,16 +316,41 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                         </div>
                     )}
 
-                    <div className={`header-arrow ${isExpanded ? 'rotated' : ''}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+                    <div className="header-right-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div className={`header-arrow ${isExpanded ? 'rotated' : ''}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <div className={`accordion-wrapper ${isExpanded ? 'open' : ''}`}>
+                <div className={`accordion-wrapper ${isExpanded ? 'open' : 'collapsed'}`}>
                     <div className="accordion-inner">
-                        <div className="input-content-padding">
+                        <div className="input-content-padding" style={{ position: 'relative' }}>
+                            {hasRewardChangeData && onShowRewardChange && (
+                                <button
+                                    className="show-reward-change-btn desktop-only"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onShowRewardChange();
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '24px',
+                                        right: '24px',
+                                        height: '36px',
+                                        padding: '0 16px',
+                                        fontSize: '13px',
+                                        fontWeight: 'bold',
+                                        zIndex: 10
+                                    }}
+                                    title={t('input.showRewardChangeTooltip', 'Son blok ödülü değişimini göster')}
+                                >
+                                    <img src={leagueIconSvg} alt="icon" style={{ width: 18, height: 18, marginRight: '6px' }} />
+                                    {t('input.showRewardChange', 'Son Blok Ödülü Değişimi')}
+                                </button>
+                            )}
                             <div className="desktop-3-up">
                                 <div className="input-group">
                                     <div className="fetch-mode-selector">
@@ -523,11 +555,20 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                 </div>
 
                                 <div className="input-group">
-                                    <label>&nbsp;</label>
                                     <label className="auto-toggle-inline" title="Güce göre otomatik belirle">
                                         <input type="checkbox" checked={isAutoLeague} onChange={onToggleAutoLeague} />
                                         <span>{t('input.auto')}</span>
                                     </label>
+                                    {hasRewardChangeData && onShowRewardChange && (
+                                        <button
+                                            className="show-reward-change-btn mobile-only"
+                                            onClick={onShowRewardChange}
+                                            title={t('input.showRewardChangeTooltip', 'Son blok ödülü değişimini göster')}
+                                        >
+                                            <img src={leagueIconSvg} alt="icon" style={{ width: 16, height: 16, marginRight: '6px' }} />
+                                            {t('input.showRewardChange', 'Son Blok Ödülü Değişimi')}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
