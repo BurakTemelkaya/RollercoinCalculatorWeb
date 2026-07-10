@@ -413,6 +413,13 @@
     "emailDesc": "Güncellemeleri doğrudan e-posta kutunuza alın.",
     "pushNotifications": "Web Push Bildirimleri",
     "pushDesc": "Bildirimleri doğrudan tarayıcınızda alın.",
+    "generalEmailSettings": "General Email Settings",
+    "receiveAllEmails": "Receive Emails",
+    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
+    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
+    "enableAllEmails": "Turn Emails On",
+    "generalMailEnabledMsg": "Email notifications re-enabled.",
+    "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
     "enableInBrowser": "Tarayıcıda Aç"
   },
@@ -835,5 +842,13 @@
     "close": "Kapat",
     "changedAt": "Değişim Tarihi",
     "expiresAt": "Geçerlilik"
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "processing": "Processing your request...",
+    "successTitle": "Unsubscribed Successfully",
+    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
+    "errorTitle": "Unsubscribe Failed",
+    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
   }
 }
