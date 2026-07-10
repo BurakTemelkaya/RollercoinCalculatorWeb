@@ -173,6 +173,8 @@
     "retry": "Intentar de nuevo"
   },
   "input": {
+    "showRewardChange": "Last Block Reward Change",
+    "showRewardChangeTooltip": "Show last block reward change details",
     "title": "Ingreso de Datos y Configuración",
     "userPower": "Tu Poder",
     "userFetched": "Datos del perfil para '{{name}}' actualizados con éxito",
