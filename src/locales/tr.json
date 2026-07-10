@@ -173,6 +173,8 @@
     "retry": "Tekrar dene"
   },
   "input": {
+    "showRewardChange": "Last Block Reward Change",
+    "showRewardChangeTooltip": "Show last block reward change details",
     "title": "Veri Girişi & Ayarlar",
     "userPower": "Kullanıcı Gücünüz",
     "userFetched": "'{{name}}' profil verileri başarıyla güncellendi",
