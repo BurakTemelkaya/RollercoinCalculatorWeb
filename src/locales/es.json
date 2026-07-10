@@ -395,6 +395,13 @@
     "emailDesc": "Recibe actualizaciones directamente en tu bandeja de entrada.",
     "pushNotifications": "Notificaciones Push Web",
     "pushDesc": "Recibe notificaciones en tu navegador.",
+    "generalEmailSettings": "Configuración General de Correo Electrónico",
+    "receiveAllEmails": "Recibir Correos Electrónicos",
+    "receiveAllEmailsDesc": "Habilitar o deshabilitar todas las notificaciones por correo electrónico a nivel global.",
+    "allEmailsDisabledWarning": "Se ha dado de baja completamente de todos los correos electrónicos. Para cambiar su configuración de correo electrónico individual, necesita volver a activar las notificaciones por correo electrónico.",
+    "enableAllEmails": "Activar Correos Electrónicos",
+    "generalMailEnabledMsg": "Notificaciones por correo electrónico reactivadas.",
+    "generalMailDisabledMsg": "Todas las notificaciones por correo electrónico deshabilitadas.",
     "browserPushWarning": "Web Push está habilitado pero el navegador denegó el permiso. Por favor, habilítelo en su navegador.",
     "enableInBrowser": "Abrir en el Navegador"
   },
@@ -783,5 +790,13 @@
     "close": "Cerrar",
     "changedAt": "Fecha de Actualización de la Recompensa de Bloque",
     "expiresAt": "Fecha de Última Visualización de la Notificación"
+  },
+  "unsubscribe": {
+    "title": "Darse de Baja",
+    "processing": "Procesando su solicitud...",
+    "successTitle": "Dado de Baja Exitosamente",
+    "successDesc": "Se ha dado de baja exitosamente de nuestra lista de correo. Ya no recibirá correos electrónicos de nosotros.",
+    "errorTitle": "Fallo al Darse de Baja",
+    "errorDesc": "No pudimos procesar su solicitud de baja. El enlace podría ser inválido o haber expirado."
   }
 }

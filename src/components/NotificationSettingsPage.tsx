@@ -6,6 +6,8 @@ import {
     getNotificationPreferences,
     updateNotificationPreferences,
     createPushSubscription,
+    getGeneralNotificationPreference,
+    updateGeneralMailNotificationStatus,
     CreateNotificationPreferenceDto
 } from '../services/notificationApi';
 import './auth/AuthPages.css';
@@ -38,6 +40,7 @@ export default function NotificationSettingsPage() {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [browserPermission, setBrowserPermission] = useState<string>('Notification' in window ? Notification.permission : 'denied');
+    const [generalMailEnabled, setGeneralMailEnabled] = useState(true);
 
     useEffect(() => {
         const loadPreferences = async () => {
@@ -57,6 +60,9 @@ export default function NotificationSettingsPage() {
                         isEmailEnabled: d.isEmailEnabled
                     })));
                 }
+
+                const isGeneralEnabled = await getGeneralNotificationPreference(token);
+                setGeneralMailEnabled(isGeneralEnabled);
             } catch (err) {
                 console.error('Failed to load preferences:', err);
                 setError(t('settings.loadError', 'Failed to load settings.'));
@@ -69,6 +75,10 @@ export default function NotificationSettingsPage() {
     }, [getValidToken, t]);
 
     const handleToggle = async (index: number, field: 'isWebPushEnabled' | 'isEmailEnabled') => {
+        if (field === 'isEmailEnabled' && !generalMailEnabled) {
+            return; // Cannot toggle individual emails if general mail is disabled
+        }
+        
         if (field === 'isWebPushEnabled' && !preferences[index].isWebPushEnabled) {
             // User is enabling Web Push, request permission immediately triggered by their click
             if (!('Notification' in window)) {
@@ -166,6 +176,36 @@ export default function NotificationSettingsPage() {
         }
     };
 
+    const handleToggleGeneralMail = async () => {
+        const token = await getValidToken();
+        if (!token) return;
+        setIsLoading(true);
+        try {
+            await updateGeneralMailNotificationStatus(token);
+            const isGeneralEnabled = await getGeneralNotificationPreference(token);
+            setGeneralMailEnabled(isGeneralEnabled);
+            
+            // Re-fetch preferences to make sure they match DB
+            const data = await getNotificationPreferences(token);
+            if (data && data.length > 0) {
+                setPreferences(data.map(d => ({
+                    notificationType: d.notificationType,
+                    isWebPushEnabled: d.isWebPushEnabled,
+                    isEmailEnabled: d.isEmailEnabled
+                })));
+            }
+
+            setSuccessMessage(!generalMailEnabled 
+                ? t('settings.generalMailEnabledMsg', 'Email notifications re-enabled.') 
+                : t('settings.generalMailDisabledMsg', 'All email notifications disabled.')
+            );
+        } catch (err) {
+            setError(t('settings.generalMailUpdateError', 'Failed to update email settings.'));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleSave = async () => {
         const token = await getValidToken();
         if (!token) return;
@@ -218,6 +258,58 @@ export default function NotificationSettingsPage() {
                             {error && <div className="auth-error" style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>{error}</div>}
                             {successMessage && <div className="auth-success" style={{ padding: '12px', background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderRadius: '8px', border: '1px solid rgba(52, 211, 153, 0.2)' }}>{successMessage}</div>}
 
+                            <div style={{
+                                background: 'rgba(15, 15, 30, 0.4)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                borderRadius: '12px',
+                                padding: '20px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '16px'
+                            }}>
+                                <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#f8fafc', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
+                                    {t('settings.generalEmailSettings', 'General Email Settings')}
+                                </h3>
+                                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <span style={{ fontWeight: 500, color: '#e2e8f0' }}>{t('settings.receiveAllEmails', 'Receive Emails')}</span>
+                                        <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                                            {t('settings.receiveAllEmailsDesc', 'Enable or disable all email notifications globally.')}
+                                        </span>
+                                    </div>
+                                    <div style={{ position: 'relative', width: '44px', height: '24px', flexShrink: 0 }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={generalMailEnabled}
+                                            onChange={handleToggleGeneralMail}
+                                            style={{ opacity: 0, width: 0, height: 0 }}
+                                        />
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: 0, left: 0, right: 0, bottom: 0,
+                                            background: generalMailEnabled ? '#8b5cf6' : 'rgba(255,255,255,0.1)',
+                                            borderRadius: '24px',
+                                            transition: '0.3s',
+                                            boxShadow: generalMailEnabled ? '0 0 12px rgba(139, 92, 246, 0.4)' : 'none'
+                                        }}></span>
+                                        <span style={{
+                                            position: 'absolute',
+                                            height: '18px', width: '18px',
+                                            left: generalMailEnabled ? '22px' : '3px',
+                                            bottom: '3px',
+                                            backgroundColor: 'white',
+                                            borderRadius: '50%',
+                                            transition: '0.3s'
+                                        }}></span>
+                                    </div>
+                                </label>
+                                {!generalMailEnabled && (
+                                    <div style={{ color: '#f87171', fontSize: '0.9rem', padding: '12px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                                        {t('settings.allEmailsDisabledWarning', 'You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.')}
+                                    </div>
+                                )}
+                            </div>
+
                             {preferences.map((pref, index) => (
                                 <div key={pref.notificationType || index} style={{
                                     background: 'rgba(15, 15, 30, 0.4)',
@@ -237,25 +329,26 @@ export default function NotificationSettingsPage() {
                                             <span style={{ fontWeight: 500, color: '#e2e8f0' }}>{t('settings.emailNotifications', 'Email Notifications')}</span>
                                             <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{t('settings.emailDesc', 'Receive updates directly in your inbox.')}</span>
                                         </div>
-                                        <div style={{ position: 'relative', width: '44px', height: '24px' }}>
+                                        <div style={{ position: 'relative', width: '44px', height: '24px', flexShrink: 0, opacity: !generalMailEnabled ? 0.5 : 1 }}>
                                             <input
                                                 type="checkbox"
-                                                checked={pref.isEmailEnabled}
+                                                disabled={!generalMailEnabled}
+                                                checked={pref.isEmailEnabled && generalMailEnabled}
                                                 onChange={() => handleToggle(index, 'isEmailEnabled')}
                                                 style={{ opacity: 0, width: 0, height: 0 }}
                                             />
                                             <span style={{
                                                 position: 'absolute',
                                                 top: 0, left: 0, right: 0, bottom: 0,
-                                                background: pref.isEmailEnabled ? '#8b5cf6' : 'rgba(255,255,255,0.1)',
+                                                background: (pref.isEmailEnabled && generalMailEnabled) ? '#8b5cf6' : 'rgba(255,255,255,0.1)',
                                                 borderRadius: '24px',
                                                 transition: '0.3s',
-                                                boxShadow: pref.isEmailEnabled ? '0 0 12px rgba(139, 92, 246, 0.4)' : 'none'
+                                                boxShadow: (pref.isEmailEnabled && generalMailEnabled) ? '0 0 12px rgba(139, 92, 246, 0.4)' : 'none'
                                             }}></span>
                                             <span style={{
                                                 position: 'absolute',
                                                 height: '18px', width: '18px',
-                                                left: pref.isEmailEnabled ? '22px' : '3px',
+                                                left: (pref.isEmailEnabled && generalMailEnabled) ? '22px' : '3px',
                                                 bottom: '3px',
                                                 backgroundColor: 'white',
                                                 borderRadius: '50%',
@@ -269,7 +362,7 @@ export default function NotificationSettingsPage() {
                                             <span style={{ fontWeight: 500, color: '#e2e8f0' }}>{t('settings.pushNotifications', 'Web Push Notifications')}</span>
                                             <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{t('settings.pushDesc', 'Receive notifications in your browser.')}</span>
                                         </div>
-                                        <div style={{ position: 'relative', width: '44px', height: '24px' }}>
+                                        <div style={{ position: 'relative', width: '44px', height: '24px', flexShrink: 0 }}>
                                             <input
                                                 type="checkbox"
                                                 checked={pref.isWebPushEnabled}

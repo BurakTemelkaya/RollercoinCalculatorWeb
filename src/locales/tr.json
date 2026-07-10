@@ -414,6 +414,13 @@
     "emailDesc": "Güncellemeleri doğrudan e-posta kutunuza alın.",
     "pushNotifications": "Web Push Bildirimleri",
     "pushDesc": "Bildirimleri doğrudan tarayıcınızda alın.",
+    "generalEmailSettings": "Genel E-posta Ayarları",
+    "receiveAllEmails": "E-postaları Al",
+    "receiveAllEmailsDesc": "Tüm e-posta bildirimlerini genel olarak etkinleştirin veya devre dışı bırakın.",
+    "allEmailsDisabledWarning": "E-posta almayı tamamen kapattınız. Diğer ayarları değiştirmesi için geri açmanız gerekir.",
+    "enableAllEmails": "E-postaları Aç",
+    "generalMailEnabledMsg": "E-posta bildirimleri tekrar açıldı.",
+    "generalMailDisabledMsg": "Tüm e-posta bildirimleri kapatıldı.",
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
     "enableInBrowser": "Tarayıcıda Aç"
   },
@@ -836,5 +843,13 @@
     "close": "Kapat",
     "changedAt": "Değişim Tarihi",
     "expiresAt": "Geçerlilik"
+  },
+  "unsubscribe": {
+    "title": "Abonelikten Çık",
+    "processing": "İşleminiz gerçekleştiriliyor...",
+    "successTitle": "Başarıyla Abonelikten Çıktınız",
+    "successDesc": "E-posta abonelikleriniz iptal edilmiştir. Artık bizden e-posta almayacaksınız.",
+    "errorTitle": "İşlem Başarısız",
+    "errorDesc": "Abonelikten çıkma işleminiz gerçekleştirilemedi. Bağlantı geçersiz veya süresi dolmuş olabilir."
   }
 }

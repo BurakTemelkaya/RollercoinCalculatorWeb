@@ -76,6 +76,7 @@ const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRo
 const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangePasswordPage'));
 const NotificationSettingsPage = lazyWithRetry(() => import('./components/NotificationSettingsPage'));
 const RewardChangeModal = lazyWithRetry(() => import('./components/RewardChangeModal'));
+const UnsubscribePage = lazyWithRetry(() => import('./components/UnsubscribePage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -1044,7 +1045,9 @@ function App() {
       <Routes>
       <Route element={<MainLayoutWrapper />}>
         <Route path="/" element={<AutoRedirect />} />
+        <Route path="/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
         <Route path="/:lang" element={<CalculatorArea />} />
+        <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
         <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
         <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
         <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />

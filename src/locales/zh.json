@@ -410,6 +410,13 @@
     "emailDesc": "直接在您的收件箱中接收更新。",
     "pushNotifications": "网页推送通知",
     "pushDesc": "在您的浏览器中接收通知。",
+    "generalEmailSettings": "常规电子邮件设置",
+    "receiveAllEmails": "接收电子邮件",
+    "receiveAllEmailsDesc": "全局启用或禁用所有电子邮件通知。",
+    "allEmailsDisabledWarning": "您已完全退订所有电子邮件。要更改您的个人电子邮件设置，您需要重新打开电子邮件通知。",
+    "enableAllEmails": "打开电子邮件",
+    "generalMailEnabledMsg": "电子邮件通知已重新启用。",
+    "generalMailDisabledMsg": "所有电子邮件通知已禁用。",
     "browserPushWarning": "您无法接收通知，因为网络推送已启用，但浏览器权限被拒绝。请在您的浏览器中授予权限。",
     "enableInBrowser": "在浏览器中打开"
   },
@@ -806,5 +813,13 @@
     "close": "关闭",
     "changedAt": "区块奖励更新日期",
     "expiresAt": "通知最后显示日期"
+  },
+  "unsubscribe": {
+    "title": "取消订阅",
+    "processing": "正在处理您的请求...",
+    "successTitle": "成功取消订阅",
+    "successDesc": "您已成功取消订阅我们的邮件列表。您将不再收到我们的电子邮件。",
+    "errorTitle": "取消订阅失败",
+    "errorDesc": "我们无法处理您的取消订阅请求。链接可能无效或已过期。"
   }
 }
