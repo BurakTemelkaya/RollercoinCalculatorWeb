@@ -98,7 +98,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                     >
                         <Select.Viewport>
                             {options.length === 0 && emptyText ? (
-                                <Select.Item className="custom-dropdown-item" value="" disabled>
+                                <Select.Item className="custom-dropdown-item" value="__empty_placeholder__" disabled>
                                     <Select.ItemText>{emptyText}</Select.ItemText>
                                 </Select.Item>
                             ) : (
