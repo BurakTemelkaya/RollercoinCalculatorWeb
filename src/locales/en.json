@@ -413,6 +413,13 @@
     "emailDesc": "Receive updates directly in your inbox.",
     "pushNotifications": "Web Push Notifications",
     "pushDesc": "Receive notifications in your browser.",
+    "generalEmailSettings": "General Email Settings",
+    "receiveAllEmails": "Receive Emails",
+    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
+    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
+    "enableAllEmails": "Turn Emails On",
+    "generalMailEnabledMsg": "Email notifications re-enabled.",
+    "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "You cannot receive notifications because Web Push is enabled but browser permission is denied. Please grant permission in your browser.",
     "enableInBrowser": "Open in Browser"
   },
@@ -835,5 +842,13 @@
     "close": "Close",
     "changedAt": "Block Reward Update Date",
     "expiresAt": "Notification Last Display Date"
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "processing": "Processing your request...",
+    "successTitle": "Unsubscribed Successfully",
+    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
+    "errorTitle": "Unsubscribe Failed",
+    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
   }
 }
