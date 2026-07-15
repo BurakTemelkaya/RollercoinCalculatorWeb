@@ -318,7 +318,19 @@ export default function ProgressionEvent() {
     const [showChart, setShowChart] = useState(false);
     const [showMarketplace, setShowMarketplace] = useState(false);
 
-    const MAX_MULTIPLIER = 100;
+    const MAX_MULTIPLIER = useMemo(() => {
+        if (!eventData?.createdDate) return 100;
+        const dateStr = eventData.createdDate.endsWith('Z') ? eventData.createdDate : eventData.createdDate + 'Z';
+        const eventDate = new Date(dateStr);
+        const thresholdDate = new Date('2026-07-14T15:00:00Z');
+        return eventDate.getTime() >= thresholdDate.getTime() ? 1000 : 100;
+    }, [eventData]);
+
+    useEffect(() => {
+        if (eventData) {
+            setFilterMax(MAX_MULTIPLIER);
+        }
+    }, [MAX_MULTIPLIER, eventData]);
 
     // Fetch event data — by specific ID or latest
     useEffect(() => {
