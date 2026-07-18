@@ -119,9 +119,8 @@ export default function NotificationSettingsPage() {
             throw new Error(t('settings.pushPermissionDenied', 'Permission for push notifications was denied.'));
         }
 
-        const registration = await navigator.serviceWorker.register('/sw.js');
-        // Wait for registration to be active
-        await navigator.serviceWorker.ready;
+        // SW zaten vite-plugin-pwa tarafından kayıtlı, sadece ready olmasını bekle
+        const registration = await navigator.serviceWorker.ready;
 
         const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
         if (!vapidPublicKey) {

@@ -1,9 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      strategies: 'injectManifest',       // Kendi SW kodumuz var (push notifications)
+      registerType: 'autoUpdate',          // Otomatik güncelle
+      srcDir: 'src',                       // SW kaynak dosya konumu
+      filename: 'sw.ts',                   // SW dosya adı
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+      },
+      manifest: false,                     // Mevcut public/manifest.json'u kullan
+      devOptions: {
+        enabled: false,                    // Dev'de SW kapalı (mevcut davranış korunur)
+      },
+    }),
+  ],
   // Custom domain için base path ayarı
   base: '/',
   css: {

@@ -5,6 +5,23 @@ import './i18n'
 import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { registerSW } from 'virtual:pwa-register'
+
+// vite-plugin-pwa: autoUpdate stratejisi
+// Yeni SW hazır olduğunda sayfayı otomatik güncelle
+// Periyodik olarak güncelleme kontrolü yap (her saat başı)
+registerSW({
+  onRegisteredSW(_swUrl, registration) {
+    if (registration) {
+      setInterval(() => {
+        registration.update()
+      }, 60 * 60 * 1000) // Her 1 saatte bir güncelleme kontrolü
+    }
+  },
+  onOfflineReady() {
+    console.log('App is ready for offline use.')
+  },
+})
 
 function normalizeInitialUrl() {
   if (typeof navigator !== 'undefined' && navigator.userAgent.includes('ReactSnap')) {

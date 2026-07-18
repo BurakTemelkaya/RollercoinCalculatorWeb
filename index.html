@@ -152,23 +152,6 @@
 
   <script type="module" src="/src/main.tsx"></script>
   <script>
-    // Service Worker: silent registration, no user prompts
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').then(function (reg) {
-        // Optional: trigger update check on navigation
-        reg.update();
-      });
-
-      // Reload the page when the service worker updates and takes control
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', function () {
-        if (!refreshing) {
-          window.location.reload();
-          refreshing = true;
-        }
-      });
-    }
-
     // Ad-blocker detection
     // Sets 'ads-blocked' class on body — React components handle the UI.
     (function () {
