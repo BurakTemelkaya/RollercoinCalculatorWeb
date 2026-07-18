@@ -287,6 +287,7 @@
     margin-right: 15px;
     /* Örnek olarak biraz daha sola çektim, buradan değiştirebilirsin */
     margin-top: 5px;
+    /* Örnek olarak biraz daha aşağı çektim */
 }
 
 .action-icon-btn.add-btn {
@@ -443,6 +444,7 @@
 }
 
 .rc-native-slider {
+    appearance: none;
     -webkit-appearance: none;
     width: 100%;
     height: 4px;
@@ -741,4 +743,33 @@
         padding-top: 15px;
         width: 100%;
     }
+}
+
+/* ========================================================================= */
+/* MOBILE PERFORMANCE OPTIMIZATIONS (Max-width: 768px)                       */
+/* ========================================================================= */
+@media (max-width: 768px) {
+  .miner-item {
+      transform: translateZ(0); /* Hardware acceleration */
+      will-change: transform;
+      filter: none !important; /* Animasyonlu GIF'lere CSS filter uygulamak GPU'yu aşırı yorar */
+  }
+
+  .miner-img-wrapper:hover .miner-item {
+      filter: none !important;
+  }
+
+  .miners-badges img {
+      filter: none !important;
+  }
+  
+  /* Tooltip'in ekrandan taşmasını ve bozuk görünmesini engelle */
+  .miner-tooltip {
+      white-space: normal;
+      width: max-content;
+      max-width: 160px;
+      text-align: center;
+      word-break: normal;
+      overflow-wrap: break-word;
+  }
 }

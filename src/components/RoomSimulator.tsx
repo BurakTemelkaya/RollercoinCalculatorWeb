@@ -797,6 +797,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             className="miner-item"
                                                             src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
                                                             alt={miner.name}
+                                                            loading="lazy"
                                                             onError={(e) => {
                                                                 const target = e.target as HTMLImageElement;
                                                                 if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
@@ -1188,6 +1189,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                     <img
                                                         src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
                                                         style={{ width: 80, height: 'auto', pointerEvents: 'none' }}
+                                                        loading="lazy"
                                                         onError={(e) => {
                                                             const target = e.target as HTMLImageElement;
                                                             if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.split('.')[0] || 'crypto_combo'}.png`;

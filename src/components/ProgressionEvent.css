@@ -1555,3 +1555,42 @@
 .pe-header-total-points.large .pe-tp-icon {
   font-size: 18px;
 }
+
+/* ========================================================================= */
+/* MOBILE PERFORMANCE OPTIMIZATIONS (Max-width: 768px)                       */
+/* ========================================================================= */
+@media (max-width: 768px) {
+  /* Disable expensive backdrop-filters on heavy components */
+  .pe-info-card,
+  .pe-info-value,
+  .pe-header-back-btn,
+  .pe-header-time,
+  .pe-info-row span:first-child,
+  .pe-discount-card,
+  .pe-header-total-points {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Provide opaque fallbacks since blur is removed */
+  .pe-info-card {
+    background: #0f172a !important; /* solid slate-900 */
+  }
+
+  .pe-info-value,
+  .pe-info-row span:first-child {
+    background: #1e293b !important; /* solid slate-800 */
+  }
+
+  .pe-header-time {
+    background: #1e293b !important;
+  }
+
+  .pe-discount-card {
+    background: #0f172a !important;
+  }
+
+  .pe-header-total-points {
+    background: #1e293b !important;
+  }
+}

@@ -978,3 +978,21 @@
         align-items: center;
     }
 }
+
+/* ========================================================================= */
+/* MOBILE PERFORMANCE OPTIMIZATIONS (Max-width: 768px)                       */
+/* ========================================================================= */
+@media (max-width: 768px) {
+  /* Disable expensive backdrop-filters on modals and sticky headers */
+  .merge-detail-overlay,
+  .merge-back-btn,
+  .merge-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Provide opaque fallbacks */
+  .merge-detail-overlay {
+    background: rgba(15, 23, 42, 0.95) !important;
+  }
+}
