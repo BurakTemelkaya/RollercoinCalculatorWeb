@@ -2,19 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 interface GlobalAdsProps {
   adsBlocked: boolean;
+  country: string | null;
 }
 
-export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked }) => {
-  const [country, setCountry] = useState<string | null>(null);
+export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => {
   const [mobileAdVisible, setMobileAdVisible] = useState(true);
-
-  // Fetch user country using geojs API
-  useEffect(() => {
-    fetch('https://get.geojs.io/v1/ip/country.json')
-      .then(res => res.json())
-      .then(data => setCountry(data.country))
-      .catch(() => setCountry('UNKNOWN')); // If adblocker blocks geojs, default to UNKNOWN
-  }, []);
 
   // Inject Coinzilla ads if necessary
   useEffect(() => {
@@ -71,7 +63,7 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked }) => {
               {showCoinzilla ? (
                 <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
               ) : (
-                <iframe data-aa='2429727' src='//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                <iframe data-aa='2448373' src='//ad.a-ads.com/2448373/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
               )}
             </div>
           </div>

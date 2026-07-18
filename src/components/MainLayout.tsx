@@ -53,6 +53,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
+  const [country, setCountry] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('https://get.geojs.io/v1/ip/country.json')
+      .then(res => res.json())
+      .then(data => setCountry(data.country))
+      .catch(() => setCountry('UNKNOWN')); // If adblocker blocks geojs, default to UNKNOWN
+  }, []);
 
   useEffect(() => {
     const checkAdsBlocked = () => {
@@ -70,19 +78,24 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, []);
 
   useEffect(() => {
-    if (adsBlocked) return;
+    if (adsBlocked || !country) return;
     
     const timer = setTimeout(() => {
-      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
-      const c_display_preferences: any = {};
-      c_display_preferences.zone = "83069e710174ee88650";
-      c_display_preferences.width = "300";
-      c_display_preferences.height = "250";
-      (window as any).coinzilla_display.push(c_display_preferences);
+      const isTR = country === 'TR';
+      const showCoinzilla = isTR || country === 'UNKNOWN';
+
+      if (showCoinzilla) {
+        (window as any).coinzilla_display = (window as any).coinzilla_display || [];
+        const c_display_preferences: any = {};
+        c_display_preferences.zone = "83069e710174ee88650";
+        c_display_preferences.width = "300";
+        c_display_preferences.height = "250";
+        (window as any).coinzilla_display.push(c_display_preferences);
+      }
     }, 100);
     
     return () => clearTimeout(timer);
-  }, [adsBlocked]);
+  }, [adsBlocked, country]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -99,7 +112,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="app-layout">
-      <GlobalAds adsBlocked={adsBlocked} />
+      <GlobalAds adsBlocked={adsBlocked} country={country} />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
@@ -235,9 +248,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <Link to={`/${i18n.language}/support`} className="quick-action-btn btn-support">{NAV_ICONS.support} {t('nav.support')}</Link>
                 </div>
               </div>
-              {!adsBlocked && (
+              {!adsBlocked && country && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
-                  <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  {country === 'TR' || country === 'UNKNOWN' ? (
+                    <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  ) : (
+                    <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                  )}
                 </div>
               )}
               {adsBlocked && (
