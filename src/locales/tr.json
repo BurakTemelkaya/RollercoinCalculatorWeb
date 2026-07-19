@@ -173,8 +173,8 @@
     "retry": "Tekrar dene"
   },
   "input": {
-    "showRewardChange": "Last Block Reward Change",
-    "showRewardChangeTooltip": "Show last block reward change details",
+    "showRewardChange": "Son Blok Ödülü Değişimi",
+    "showRewardChangeTooltip": "Son blok ödülü değişim detaylarını göster",
     "title": "Veri Girişi & Ayarlar",
     "userPower": "Kullanıcı Gücünüz",
     "userFetched": "'{{name}}' profil verileri başarıyla güncellendi",
@@ -413,13 +413,13 @@
     "emailDesc": "Güncellemeleri doğrudan e-posta kutunuza alın.",
     "pushNotifications": "Web Push Bildirimleri",
     "pushDesc": "Bildirimleri doğrudan tarayıcınızda alın.",
-    "generalEmailSettings": "General Email Settings",
-    "receiveAllEmails": "Receive Emails",
-    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
-    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
-    "enableAllEmails": "Turn Emails On",
-    "generalMailEnabledMsg": "Email notifications re-enabled.",
-    "generalMailDisabledMsg": "All email notifications disabled.",
+    "generalEmailSettings": "Genel E-posta Ayarları",
+    "receiveAllEmails": "E-postaları Al",
+    "receiveAllEmailsDesc": "Tüm e-posta bildirimlerini genel olarak etkinleştirin veya devre dışı bırakın.",
+    "allEmailsDisabledWarning": "E-posta almayı tamamen kapattınız. Diğer ayarları değiştirmesi için geri açmanız gerekir.",
+    "enableAllEmails": "E-postaları Aç",
+    "generalMailEnabledMsg": "E-posta bildirimleri tekrar açıldı.",
+    "generalMailDisabledMsg": "Tüm e-posta bildirimleri kapatıldı.",
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
     "enableInBrowser": "Tarayıcıda Aç"
   },
@@ -844,11 +844,11 @@
     "expiresAt": "Geçerlilik"
   },
   "unsubscribe": {
-    "title": "Unsubscribe",
-    "processing": "Processing your request...",
-    "successTitle": "Unsubscribed Successfully",
-    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
-    "errorTitle": "Unsubscribe Failed",
-    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
+    "title": "Abonelikten Çık",
+    "processing": "İşleminiz gerçekleştiriliyor...",
+    "successTitle": "Başarıyla Abonelikten Çıktınız",
+    "successDesc": "E-posta abonelikleriniz iptal edilmiştir. Artık bizden e-posta almayacaksınız.",
+    "errorTitle": "İşlem Başarısız",
+    "errorDesc": "Abonelikten çıkma işleminiz gerçekleştirilemedi. Bağlantı geçersiz veya süresi dolmuş olabilir."
   }
 }
