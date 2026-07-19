@@ -173,8 +173,8 @@
     "retry": "Réessayer"
   },
   "input": {
-    "showRewardChange": "Last Block Reward Change",
-    "showRewardChangeTooltip": "Show last block reward change details",
+    "showRewardChange": "Dernier changement de récompense",
+    "showRewardChangeTooltip": "Afficher les détails du dernier changement de récompense",
     "title": "Entrée de Données",
     "userPower": "Votre Puissance",
     "userFetched": "Données pour '{{name}}' mises à jour.",
@@ -413,13 +413,13 @@
     "emailDesc": "Recevez des mises à jour directement dans votre boîte de réception.",
     "pushNotifications": "Notifications Push Web",
     "pushDesc": "Recevez des notifications dans votre navigateur.",
-    "generalEmailSettings": "General Email Settings",
-    "receiveAllEmails": "Receive Emails",
-    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
-    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
-    "enableAllEmails": "Turn Emails On",
-    "generalMailEnabledMsg": "Email notifications re-enabled.",
-    "generalMailDisabledMsg": "All email notifications disabled.",
+    "generalEmailSettings": "Paramètres Généraux des E-mails",
+    "receiveAllEmails": "Recevoir des E-mails",
+    "receiveAllEmailsDesc": "Activer ou désactiver toutes les notifications par e-mail au niveau global.",
+    "allEmailsDisabledWarning": "Vous vous êtes complètement désabonné de tous les e-mails. Pour modifier vos paramètres d'e-mail individuels, vous devez réactiver les notifications par e-mail.",
+    "enableAllEmails": "Activer les E-mails",
+    "generalMailEnabledMsg": "Notifications par e-mail réactivées.",
+    "generalMailDisabledMsg": "Toutes les notifications par e-mail sont désactivées.",
     "browserPushWarning": "Vous ne pouvez pas recevoir de notifications car Web Push est activé mais l'autorisation du navigateur est refusée. Veuillez accorder l'autorisation dans votre navigateur.",
     "enableInBrowser": "Ouvrir dans le Navigateur"
   },
@@ -844,11 +844,11 @@
     "expiresAt": "Date de Dernière Affichage de la Notification"
   },
   "unsubscribe": {
-    "title": "Unsubscribe",
-    "processing": "Processing your request...",
-    "successTitle": "Unsubscribed Successfully",
-    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
-    "errorTitle": "Unsubscribe Failed",
-    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
+    "title": "Se Désabonner",
+    "processing": "Traitement de votre demande...",
+    "successTitle": "Désabonnement Réussi",
+    "successDesc": "Vous avez été désabonné avec succès de notre liste de diffusion. Vous ne recevrez plus d'e-mails de notre part.",
+    "errorTitle": "Échec du Désabonnement",
+    "errorDesc": "Nous n'avons pas pu traiter votre demande de désabonnement. Le lien pourrait être invalide ou expiré."
   }
 }
