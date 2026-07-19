@@ -173,8 +173,8 @@
     "retry": "Tentar de novo"
   },
   "input": {
-    "showRewardChange": "Last Block Reward Change",
-    "showRewardChangeTooltip": "Show last block reward change details",
+    "showRewardChange": "Última mudança de recompensa",
+    "showRewardChangeTooltip": "Mostrar detalhes da última mudança de recompensa",
     "title": "Entrada de Dados e Configurações",
     "userPower": "Seu Poder",
     "userFetched": "Dados atualizados para '{{name}}'",
@@ -413,13 +413,13 @@
     "emailDesc": "Receba atualizações diretamente na sua caixa de entrada.",
     "pushNotifications": "Notificações Push Web",
     "pushDesc": "Receba notificações no seu navegador.",
-    "generalEmailSettings": "General Email Settings",
-    "receiveAllEmails": "Receive Emails",
-    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
-    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
-    "enableAllEmails": "Turn Emails On",
-    "generalMailEnabledMsg": "Email notifications re-enabled.",
-    "generalMailDisabledMsg": "All email notifications disabled.",
+    "generalEmailSettings": "Configurações Gerais de E-mail",
+    "receiveAllEmails": "Receber E-mails",
+    "receiveAllEmailsDesc": "Ative ou desative todas as notificações por e-mail globalmente.",
+    "allEmailsDisabledWarning": "Você cancelou a inscrição de todos os e-mails completamente. Para alterar suas configurações de e-mail individuais, você precisa ativar as notificações por e-mail novamente.",
+    "enableAllEmails": "Ativar E-mails",
+    "generalMailEnabledMsg": "Notificações por e-mail reativadas.",
+    "generalMailDisabledMsg": "Todas as notificações por e-mail desativadas.",
     "browserPushWarning": "Você não pode receber notificações porque o Web Push está ativado, mas a permissão do navegador foi negada. Por favor, conceda permissão no seu navegador.",
     "enableInBrowser": "Abrir no Navegador"
   },
@@ -844,11 +844,11 @@
     "expiresAt": "Data da Última Exibição da Notificação"
   },
   "unsubscribe": {
-    "title": "Unsubscribe",
-    "processing": "Processing your request...",
-    "successTitle": "Unsubscribed Successfully",
-    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
-    "errorTitle": "Unsubscribe Failed",
-    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
+    "title": "Cancelar Inscrição",
+    "processing": "Processando sua solicitação...",
+    "successTitle": "Inscrição Cancelada com Sucesso",
+    "successDesc": "Você cancelou com sucesso a inscrição na nossa lista de e-mails. Você não receberá mais e-mails de nós.",
+    "errorTitle": "Falha ao Cancelar Inscrição",
+    "errorDesc": "Não conseguimos processar sua solicitação de cancelamento. O link pode ser inválido ou expirou."
   }
 }
