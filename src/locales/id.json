@@ -173,8 +173,8 @@
     "retry": "Coba lagi"
   },
   "input": {
-    "showRewardChange": "Last Block Reward Change",
-    "showRewardChangeTooltip": "Show last block reward change details",
+    "showRewardChange": "Perubahan Hadiah Blok Terakhir",
+    "showRewardChangeTooltip": "Tampilkan detail perubahan hadiah blok terakhir",
     "title": "Masukan Data",
     "userPower": "Kekuatan Anda",
     "userFetched": "Data '{{name}}' berhasil diperbarui",
@@ -413,13 +413,13 @@
     "emailDesc": "Terima pembaruan langsung di kotak masuk Anda.",
     "pushNotifications": "Notifikasi Push Web",
     "pushDesc": "Terima notifikasi di browser Anda.",
-    "generalEmailSettings": "General Email Settings",
-    "receiveAllEmails": "Receive Emails",
-    "receiveAllEmailsDesc": "Enable or disable all email notifications globally.",
-    "allEmailsDisabledWarning": "You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.",
-    "enableAllEmails": "Turn Emails On",
-    "generalMailEnabledMsg": "Email notifications re-enabled.",
-    "generalMailDisabledMsg": "All email notifications disabled.",
+    "generalEmailSettings": "Pengaturan Email Umum",
+    "receiveAllEmails": "Terima Email",
+    "receiveAllEmailsDesc": "Aktifkan atau nonaktifkan semua notifikasi email secara global.",
+    "allEmailsDisabledWarning": "Anda telah sepenuhnya berhenti berlangganan dari semua email. Untuk mengubah pengaturan email individual Anda, Anda perlu mengaktifkan kembali notifikasi email.",
+    "enableAllEmails": "Aktifkan Email",
+    "generalMailEnabledMsg": "Notifikasi email diaktifkan kembali.",
+    "generalMailDisabledMsg": "Semua notifikasi email dinonaktifkan.",
     "browserPushWarning": "Anda tidak dapat menerima notifikasi karena Web Push diaktifkan tetapi izin peramban ditolak. Harap berikan izin di peramban Anda.",
     "enableInBrowser": "Buka di Peramban"
   },
@@ -844,11 +844,11 @@
     "expiresAt": "Tanggal Tampilan Terakhir Notifikasi"
   },
   "unsubscribe": {
-    "title": "Unsubscribe",
-    "processing": "Processing your request...",
-    "successTitle": "Unsubscribed Successfully",
-    "successDesc": "You have been successfully unsubscribed from our mailing list. You will no longer receive emails from us.",
-    "errorTitle": "Unsubscribe Failed",
-    "errorDesc": "We could not process your unsubscribe request. The link might be invalid or expired."
+    "title": "Berhenti Berlangganan",
+    "processing": "Memproses permintaan Anda...",
+    "successTitle": "Berhasil Berhenti Berlangganan",
+    "successDesc": "Anda telah berhasil berhenti berlangganan dari milis kami. Anda tidak akan lagi menerima email dari kami.",
+    "errorTitle": "Gagal Berhenti Berlangganan",
+    "errorDesc": "Kami tidak dapat memproses permintaan berhenti berlangganan Anda. Tautan tersebut mungkin tidak valid atau kedaluwarsa."
   }
 }
