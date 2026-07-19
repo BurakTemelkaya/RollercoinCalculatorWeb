@@ -10,6 +10,7 @@ import id from './locales/id.json';
 import pt from './locales/pt.json';
 import ru from './locales/ru.json';
 import es from './locales/es.json';
+import de from './locales/de.json';
 
 i18n
     .use(LanguageDetector)
@@ -25,6 +26,7 @@ i18n
             pt: { translation: pt },
             ru: { translation: ru },
             es: { translation: es },
+            de: { translation: de },
         },
         fallbackLng: 'en',
         interpolation: {

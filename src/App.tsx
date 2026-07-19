@@ -113,7 +113,7 @@ const TAB_ORDER: Record<Tab, number> = {
 import Notification from './components/Notification';
 import LeaguePowerPartition from './components/LeaguePowerPartition';
 
-const SUPPORTED_LANGS = ['en', 'tr', 'zh', 'fr', 'id', 'pt', 'ru', 'es'];
+const SUPPORTED_LANGS = ['en', 'tr', 'zh', 'fr', 'id', 'pt', 'ru', 'es', 'de'];
 
 function AutoRedirect() {
   const navigate = useNavigate();
