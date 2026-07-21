@@ -63,6 +63,6 @@ jobs:
             
             # 5. Sadece frontend servisini zorla yeniden yarat (Warp veya Backend etkilenmez)
             docker compose up -d --force-recreate rollercoin_frontend
-            
+            docker system prune -f
             # 6. Kullanılmayan eski frontend imajlarını sil
             docker image prune -f
