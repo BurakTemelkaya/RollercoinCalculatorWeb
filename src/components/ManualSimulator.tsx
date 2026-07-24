@@ -252,6 +252,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         const flatBonusGh = apiBonus - calculatedPercentBonus;
         
         const currentTotalPowerGh = dto ? dto.current_Power : 0;
+        const unlistedPowerGh = dto ? (dto.current_Power - (globalBaseMinerPowerGh + apiBonus + tempPowerGh + gamesPowerGh)) : 0;
         if (fetchedRoom) {
             // Calculate League Power from exact room data (League power rule: room only)
             const exactPower = calculateExactRoomPower(fetchedRoom);
@@ -266,7 +267,8 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                 globalBonusPercent,
                 tempPowerGh,
                 gamesPowerGh,
-                flatBonusGh
+                flatBonusGh,
+                unlistedPowerGh
             };
         }
 
@@ -282,7 +284,8 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             globalBonusPercent,
             tempPowerGh,
             gamesPowerGh,
-            flatBonusGh
+            flatBonusGh,
+            unlistedPowerGh
         };
     }, [fetchedRoom, fetchedUser]);
 
@@ -304,7 +307,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         const newGlobalBonusPercent = baseRoomPower.globalBonusPercent + (totalAddedBonusPercent * 100);
         
         const newGlobalBonusPowerGh = (newGlobalBaseMinerPowerGh * (newGlobalBonusPercent / 10000)) + baseRoomPower.flatBonusGh;
-        const newTotalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + baseRoomPower.tempPowerGh + baseRoomPower.gamesPowerGh;
+        const newTotalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + baseRoomPower.tempPowerGh + baseRoomPower.gamesPowerGh + baseRoomPower.unlistedPowerGh;
 
         // 2. Calculate NEW LEAGUE POWER (Strictly room-based logic)
         const currentCollectionMultiplier = baseRoomPower.collectionBonusPercent / 10000;
