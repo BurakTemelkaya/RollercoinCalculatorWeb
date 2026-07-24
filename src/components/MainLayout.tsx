@@ -80,7 +80,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   useEffect(() => {
     if (adsBlocked || !country) return;
-    
+
     const timer = setTimeout(() => {
       const isTR = country === 'TR';
       const showCoinzilla = isTR || country === 'UNKNOWN';
@@ -94,7 +94,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         (window as any).coinzilla_display.push(c_display_preferences);
       }
     }, 100);
-    
+
     return () => clearTimeout(timer);
   }, [adsBlocked, country]);
 
@@ -158,11 +158,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <div className="header-actions">
                   <div className="lang-switcher">
                     <RadixSelect
-                        value={lang}
-                        onValueChange={(newLang) => changeLanguage(newLang)}
-                        options={SUPPORTED_LANGUAGES}
-                        placeholder="Language"
-                        showSelectedIcon={true}
+                      value={lang}
+                      onValueChange={(newLang) => changeLanguage(newLang)}
+                      options={SUPPORTED_LANGUAGES}
+                      placeholder="Language"
+                      showSelectedIcon={true}
                     />
                   </div>
 
@@ -254,10 +254,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   {country === 'TR' || country === 'UNKNOWN' ? (
                     <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                   ) : (
-                    <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                    <div id="frame" style={{ width: '300px', margin: 'auto', zIndex: 99998, height: 'auto' }}>
+                      <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                    </div>
                   )}
                 </div>
               )}
+
               {adsBlocked && (
                 <div className="adblocker-notice">
                   <p>{t('ads.blockerNotice')}</p>
