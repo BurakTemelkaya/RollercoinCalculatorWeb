@@ -249,12 +249,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <Link to={`/${i18n.language}/support`} className="quick-action-btn btn-support">{NAV_ICONS.support} {t('nav.support')}</Link>
                 </div>
               </div>
+
               {!adsBlocked && country && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
                   {country === 'TR' || country === 'UNKNOWN' ? (
                     <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                   ) : (
-                    <div dangerouslySetInnerHTML={{ __html: `<!-- BEGIN AADS AD UNIT 2448372 -->\n\n<div id="frame" style="width: 300px;margin: auto;z-index: 99998;height: auto">\n          <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe'\n                            style='border:0; padding:0; width:300px; height:250px; overflow:hidden;display: block;margin: auto'></iframe>\n        </div>\n\n<!-- END AADS AD UNIT 2448372 -->` }} />
+                    <div id="frame" style={{ width: '300px', margin: 'auto', zIndex: 99998, height: 'auto' }}>
+                      <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe'
+                        style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                    </div>
                   )}
                 </div>
               )}
