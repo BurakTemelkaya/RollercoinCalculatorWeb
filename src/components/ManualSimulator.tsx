@@ -3,7 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinUserResponse } from '../types/user';
-
+import { RollercoinRoomResponse } from '../types/room';
+import { calculateExactRoomPower } from '../utils/roomParser';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -21,6 +22,7 @@ interface ManualSimulatorProps {
     currentLeague: LeagueInfo;
     apiLeagues: LeagueInfo[] | null;
     fetchedUser?: RollercoinUserResponse | null;
+    fetchedRoom?: RollercoinRoomResponse | null;
     onFetchUser?: (username: string) => Promise<void>;
     isFetchingUser?: boolean;
     globalUserName?: string;
@@ -43,6 +45,7 @@ const formatPower = (gh: number) => {
 const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     apiLeagues,
     fetchedUser,
+    fetchedRoom,
     onFetchUser,
     isFetchingUser,
     globalUserName = '',
@@ -111,6 +114,13 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     useEffect(() => {
         setLocalUserName(globalUserName);
     }, [globalUserName]);
+
+    // Clear added miners when fetching a new user so they don't stack on top of the new user's power
+    useEffect(() => {
+        if (fetchedUser) {
+            setAddedMiners([]);
+        }
+    }, [fetchedUser?.userProfileResponseDto?.avatar_Id]);
 
     const handleFetchClick = async () => {
         setGlobalUserName(localUserName.trim());
@@ -227,51 +237,54 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         }
     };
 
+    // Calculate base room power from room data (preferred) or API aggregate (fallback)
+    // Base values from API for Total Power calculation
     const baseRoomPower = useMemo(() => {
-        if (fetchedUser?.userPowerResponseDto) {
-            const dto = fetchedUser.userPowerResponseDto;
-            // IMPORTANT: Do NOT use max_Power — it's a high-water mark that doesn't update
-            // when users remove miners from their room.
-            const baseMinerPowerGh = dto.miners || 0;
-            const rackBonusPowerGh = dto.racks || 0;
-            const freonPowerGh = dto.freon || 0;
-            const hamsterBonusPercent = dto.hamster_expedition_bonus_percent || 0;
-
-            // Full bonus_percent for delta calculations (includes freon + hamster)
-            const collectionBonusPercent = dto.bonus_percent || 0;
-
-            // Total power from API (most accurate, avoids all rounding issues)
-            const currentTotalPowerGh = dto.current_Power || 0;
-
-            // League power: bonus_percent includes freon + hamster, both must be excluded.
-            // - Hamster: subtract via percentage (exact integer, no rounding error)
-            // - Freon: subtract via API power value (percentage unknown, power value is precise)
-            const leagueBonusPercent = collectionBonusPercent - hamsterBonusPercent;
-            const leagueBonusMultiplier = leagueBonusPercent / 10000;
-            const currentLeaguePowerGh = baseMinerPowerGh + (baseMinerPowerGh * leagueBonusMultiplier) + rackBonusPowerGh - freonPowerGh;
-
+        const dto = fetchedUser?.userPowerResponseDto;
+        const globalBaseMinerPowerGh = dto?.miners || 0;
+        const globalBonusPercent = dto?.bonus_percent || 0;
+        const tempPowerGh = dto?.temp || 0;
+        const gamesPowerGh = dto?.games || 0;
+        
+        // The original total power before any simulation
+        const apiBonus = dto?.bonus || 0;
+        const calculatedPercentBonus = globalBaseMinerPowerGh * (globalBonusPercent / 10000);
+        const flatBonusGh = apiBonus - calculatedPercentBonus;
+        
+        const currentTotalPowerGh = dto ? dto.current_Power : 0;
+        if (fetchedRoom) {
+            // Calculate League Power from exact room data (League power rule: room only)
+            const exactPower = calculateExactRoomPower(fetchedRoom);
             return {
-                baseMinerPowerGh,
-                collectionBonusPercent,
-                rackBonusPowerGh,
-                freonPowerGh,
-                hamsterBonusPercent,
+                baseMinerPowerGh: exactPower.baseMinerPowerGh,
+                collectionBonusPercent: exactPower.collectionBonusPercent,
+                rackBonusPowerGh: exactPower.rackBonusPowerGh,
                 currentTotalPowerGh,
-                currentLeaguePowerGh,
-                placedMinersCount: 0
+                currentLeaguePowerGh: exactPower.totalLeaguePowerGh,
+                placedMinersCount: exactPower.placedMinersCount,
+                globalBaseMinerPowerGh,
+                globalBonusPercent,
+                tempPowerGh,
+                gamesPowerGh,
+                flatBonusGh
             };
         }
+
+        // FALLBACK: When room data is missing, we can't calculate league power accurately
         return {
             baseMinerPowerGh: 0,
             collectionBonusPercent: 0,
             rackBonusPowerGh: 0,
-            freonPowerGh: 0,
-            hamsterBonusPercent: 0,
-            currentTotalPowerGh: 0,
-            currentLeaguePowerGh: 0,
-            placedMinersCount: 0
+            currentTotalPowerGh,
+            currentLeaguePowerGh: dto ? (dto.max_Power || (dto.current_Power - (dto.games || 0) - (dto.temp || 0))) : 0, // Use max_Power from API if available
+            placedMinersCount: 0,
+            globalBaseMinerPowerGh,
+            globalBonusPercent,
+            tempPowerGh,
+            gamesPowerGh,
+            flatBonusGh
         };
-    }, [fetchedUser]);
+    }, [fetchedRoom, fetchedUser]);
 
     const simulation = useMemo(() => {
         let totalAddedPower = 0;
@@ -280,35 +293,29 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
 
         addedMiners.forEach(m => {
             totalAddedPower += m.power;
-            totalAddedBonusPercent += m.bonus;
+            totalAddedBonusPercent += m.bonus; // m.bonus is in percentage format (e.g. 1.5 for 1.5%)
             totalAddedRackPower += (m.power * (m.rackBonus / 100));
         });
 
-        // collectionBonusPercent = full bonus_percent (includes freon + hamster)
-        const currentBonusMultiplier = baseRoomPower.collectionBonusPercent / 10000;
+        // 1. Calculate NEW TOTAL POWER using global values
+        // We add the new miners' base power to the global base power
+        const newGlobalBaseMinerPowerGh = baseRoomPower.globalBaseMinerPowerGh + totalAddedPower;
+        // We add the new miners' bonus percent to the global bonus percent (m.bonus * 100 converts 1.5% to 150 points)
+        const newGlobalBonusPercent = baseRoomPower.globalBonusPercent + (totalAddedBonusPercent * 100);
+        
+        const newGlobalBonusPowerGh = (newGlobalBaseMinerPowerGh * (newGlobalBonusPercent / 10000)) + baseRoomPower.flatBonusGh;
+        const newTotalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + baseRoomPower.tempPowerGh + baseRoomPower.gamesPowerGh;
+
+        // 2. Calculate NEW LEAGUE POWER (Strictly room-based logic)
+        const currentCollectionMultiplier = baseRoomPower.collectionBonusPercent / 10000;
         const addedBonusMultiplier = totalAddedBonusPercent / 100;
 
-        // Full delta (includes freon + hamster effect on new miners)
-        const powerDelta = totalAddedPower 
-            + (totalAddedPower * currentBonusMultiplier)
-            + (baseRoomPower.baseMinerPowerGh * addedBonusMultiplier)
-            + (totalAddedPower * addedBonusMultiplier)
-            + totalAddedRackPower;
+        const leaguePowerDeltaGh = totalAddedPower
+            + (totalAddedPower * currentCollectionMultiplier)   // existing collection bonus on new miners
+            + (baseRoomPower.baseMinerPowerGh * addedBonusMultiplier) // new bonus on existing base
+            + (totalAddedPower * addedBonusMultiplier)           // new bonus on new miners
+            + totalAddedRackPower;                               // rack bonus on new miners
 
-        // Freon and hamster are fixed % bonuses on all miners.
-        // When new miners are added, these bonuses also apply proportionally.
-        const freonMultiplier = baseRoomPower.baseMinerPowerGh > 0
-            ? (baseRoomPower.freonPowerGh / baseRoomPower.baseMinerPowerGh)
-            : 0;
-        const hamsterMultiplier = baseRoomPower.hamsterBonusPercent / 10000;
-        
-        const freonDeltaGh = totalAddedPower * freonMultiplier;
-        const hamsterDeltaGh = totalAddedPower * hamsterMultiplier;
-
-        // League power delta excludes freon and hamster contributions
-        const leaguePowerDeltaGh = powerDelta - freonDeltaGh - hamsterDeltaGh;
-
-        const newTotalPowerGh = baseRoomPower.currentTotalPowerGh + powerDelta;
         const newLeaguePowerGh = baseRoomPower.currentLeaguePowerGh + leaguePowerDeltaGh;
 
         const currentLeague = getLeagueByPower(autoScalePower(baseRoomPower.currentLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
@@ -317,7 +324,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         return {
             newTotalPowerGh,
             newLeaguePowerGh,
-            powerIncreaseGh: powerDelta,
+            powerIncreaseGh: newTotalPowerGh - baseRoomPower.currentTotalPowerGh,
             leaguePowerDeltaGh,
             currentLeague,
             newLeague,

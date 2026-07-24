@@ -29,6 +29,8 @@ const SET_KEYWORD_MAP: Record<string, string> = {
     'imperial': 'IMPERIAL Set',
     'beer': 'Beer Pack Set',
     'golden': 'Golden Farm Set', // GoldenCarrot, GoldenTomato, etc.
+    'treasure': 'The Lost Treasure Set',
+    'lost': 'The Lost Treasure Set',
 };
 
 export function guessSetByMinerName(minerName: string): RollercoinSet | null {

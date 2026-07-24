@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
-import { guessSetByMinerName, guessSetByRackName } from '../utils/setCalculator';
+import { guessSetByMinerName, guessSetByRackName, calculateSetBonuses } from '../utils/setCalculator';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import Notification from './Notification';
@@ -599,9 +599,17 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         }
     });
 
-    const totalRoomPower = roomBasePower + roomRackBonusPower;
+    const setBonuses = calculateSetBonuses(room);
+    let totalSetPercentPower = 0;
+    let totalSetBonusPowerGh = 0;
+    for (const setBonus of setBonuses.values()) {
+        totalSetPercentPower += setBonus.percent_power;
+        totalSetBonusPowerGh += setBonus.bonus_power;
+    }
+
     const roomMinerBonusPower = globalBasePower * (totalRoomBonus / 10000);
-    const roomPowerWithBonus = totalRoomPower + roomMinerBonusPower;
+    const setPercentPowerGh = roomBasePower * (totalSetPercentPower / 10000);
+    const roomPowerWithBonus = roomBasePower + roomRackBonusPower + roomMinerBonusPower + setPercentPowerGh + totalSetBonusPowerGh;
     const effectiveRackBonusPercent = roomBasePower > 0 ? (roomRackBonusPower / roomBasePower) * 100 : 0;
 
     return (
@@ -626,6 +634,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                         <span className="rs-value success">+{(totalRoomBonus / 100).toFixed(2)}%</span>
                         <span className="rs-subvalue">+{formatPower(roomMinerBonusPower)}</span>
                     </div>
+                    {(totalSetPercentPower > 0 || totalSetBonusPowerGh > 0) && (
+                        <div className="room-stat-item">
+                            <span className="rs-label">{t('simulator.setBonus')}</span>
+                            <span className="rs-value success">
+                                {totalSetPercentPower > 0 ? `+${(totalSetPercentPower / 100).toFixed(2)}% ` : ''}
+                                {totalSetBonusPowerGh > 0 ? `+${formatPower(totalSetBonusPowerGh)}` : ''}
+                            </span>
+                            {totalSetPercentPower > 0 && <span className="rs-subvalue">+{formatPower(setPercentPowerGh)}</span>}
+                        </div>
+                    )}
                     <div className="room-stat-item">
                         <span className="rs-label">{t('simulator.roomTotalPower')}</span>
                         <span className="rs-value highlight">{formatPower(roomPowerWithBonus)}</span>

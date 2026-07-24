@@ -3,31 +3,31 @@ import { calculateSetBonuses } from './setCalculator';
 
 export interface ExactPowerStats {
     baseMinerPowerGh: number;
-    collectionBonusPercent: number; // e.g., 1676.02 for 16.7602%
+    collectionBonusPercent: number;     // ham integer (418 = 4.18%)
+    collectionBonusPowerGh: number;     // baseMiner × (collectionBonus / 10000)
     rackBonusPowerGh: number;
-    totalSetBonusPowerGh: number;
-    totalLeaguePowerGh: number;
+    setPercentBonusPowerGh: number;     // baseMiner × (Σ set.percent_power / 10000)
+    setBonusPowerGh: number;            // Σ set.bonus_power (düz Gh/s)
+    totalLeaguePowerGh: number;         // Lig gücü (hamster+freon+games+temp hariç)
     placedMinersCount: number;
 }
 
 /**
  * Calculates the EXACT League Power from the user's raw room data.
- * This completely bypasses the API's aggregated max_power and bonus_percent
- * which include hidden inventory bonuses that don't count towards league power.
  * 
- * Formula: League Power = Base Miner Power + (Base Miner Power * Collection Bonus) + Rack Bonus
+ * League Power = baseMinerPower + collectionBonus + rackBonus + setPercentBonus + setBonusPower
+ * 
+ * Everything else (freon, hamster, games, temp) is temporary power and NOT included.
  */
-export function calculateExactRoomPower(
-    roomData: RollercoinRoomResponse,
-    originalRoomData?: RollercoinRoomResponse | null,
-    baselineBonusPercent?: number
-): ExactPowerStats {
+export function calculateExactRoomPower(roomData: RollercoinRoomResponse): ExactPowerStats {
     if (!roomData || !roomData.miners) {
         return {
             baseMinerPowerGh: 0,
             collectionBonusPercent: 0,
+            collectionBonusPowerGh: 0,
             rackBonusPowerGh: 0,
-            totalSetBonusPowerGh: 0,
+            setPercentBonusPowerGh: 0,
+            setBonusPowerGh: 0,
             totalLeaguePowerGh: 0,
             placedMinersCount: 0
         };
@@ -37,12 +37,11 @@ export function calculateExactRoomPower(
     let rackBonusPower = 0;
     let placedMinersCount = 0;
 
-    // To calculate collection bonus, we only sum the bonus of UNIQUE miners placed on racks.
-    // In RollerCoin, different levels of the same miner are treated as unique (different miner_id).
+    // Collection bonus: only UNIQUE miner_ids contribute their bonus_percent
     const uniqueMinerIds = new Set<string>();
-    let collectionBonusSum = 0; // In raw integer format, e.g., 418 = 4.18%
+    let collectionBonusSum = 0; // Raw integer format, e.g., 418 = 4.18%
 
-    // Create a map for quick rack lookup
+    // Quick rack lookup map
     const rackMap = new Map<string, ApiRoomRack>();
     if (roomData.racks) {
         for (const rack of roomData.racks) {
@@ -50,89 +49,65 @@ export function calculateExactRoomPower(
         }
     }
 
-    // 3. Calculate Set Bonuses (Global)
-    const simulatedSetBonuses = calculateSetBonuses(roomData);
-    let totalSetBonusPercent = 0;
-    let totalSetBonusPowerGh = 0;
-
-    for (const setBonus of simulatedSetBonuses.values()) {
-        totalSetBonusPercent += setBonus.percent_power;
-        totalSetBonusPowerGh += setBonus.bonus_power;
-    }
-
+    // 1. Iterate placed miners: accumulate base power, collection bonus, rack bonus
     for (const miner of roomData.miners) {
-        // Only count miners that are actually placed on a rack in a room
         if (miner.placement && miner.placement.user_rack_id) {
             placedMinersCount++;
             baseMinerPower += miner.power;
 
-            // 1. Collection Bonus Calculation
+            // Collection Bonus: unique miner_id only
             if (!uniqueMinerIds.has(miner.miner_id)) {
                 uniqueMinerIds.add(miner.miner_id);
                 collectionBonusSum += (miner.bonus_percent || 0);
             }
 
-            // 2. Rack Bonus Calculation
+            // Rack Bonus: each miner gets its rack's bonus % applied to its own power
             const rackId = miner.placement.user_rack_id;
             const rack = rackMap.get(rackId);
-            
-            // Get standard rack bonus
             let rackBonusPercent = rack ? ((rack as any).bonus ?? rack.bonus_percent) : 0;
             if (!rackBonusPercent) rackBonusPercent = 0;
 
             if (rackBonusPercent > 0) {
-                // e.g., 500 = 5%
-                const rackBonusForThisMiner = miner.power * (rackBonusPercent / 10000);
-                rackBonusPower += rackBonusForThisMiner;
+                rackBonusPower += miner.power * (rackBonusPercent / 10000);
             }
         }
     }
 
-    // API values for miner power are already in Gh/s
+    // 2. Set Bonuses (calculated globally across all racks)
+    const setBonuses = calculateSetBonuses(roomData);
+    let totalSetPercentPower = 0; // Sum of percent_power from all achieved set levels
+    let totalSetBonusPowerGh = 0; // Sum of bonus_power (flat Gh/s) from all achieved set levels
+
+    for (const setBonus of setBonuses.values()) {
+        totalSetPercentPower += setBonus.percent_power;
+        totalSetBonusPowerGh += setBonus.bonus_power;
+    }
+
+    // 3. Calculate derived values
     const baseMinerPowerGh = baseMinerPower;
     const rackBonusPowerGh = rackBonusPower;
 
-    // Total calculation
-    let finalCollectionBonusSum = collectionBonusSum;
+    // Collection bonus power: baseMinerPower × (collectionBonusSum / 10000)
+    const collectionBonusPowerGh = baseMinerPowerGh * (collectionBonusSum / 10000);
 
-    if (baselineBonusPercent !== undefined && originalRoomData) {
-        // Calculate the base collection bonus sum for the original room
-        let originalCollectionBonusSum = 0;
-        const originalUniqueMinerIds = new Set<string>();
-        if (originalRoomData.miners) {
-            for (const m of originalRoomData.miners) {
-                if (m.placement && m.placement.user_rack_id && !originalUniqueMinerIds.has(m.miner_id)) {
-                    originalUniqueMinerIds.add(m.miner_id);
-                    originalCollectionBonusSum += (m.bonus_percent || 0);
-                }
-            }
-        }
-        
-        const originalSetBonuses = calculateSetBonuses(originalRoomData);
-        let originalSetBonusPercent = 0;
-        for (const setBonus of originalSetBonuses.values()) {
-            originalSetBonusPercent += setBonus.percent_power;
-        }
+    // Set percent bonus power: baseMinerPower × (totalSetPercentPower / 10000)
+    // Applied to ALL miner power, not per-rack
+    const setPercentBonusPowerGh = baseMinerPowerGh * (totalSetPercentPower / 10000);
 
-        // The unexplained hidden bonus is the difference between the baseline bonus and the original room's base sum AND original set bonuses
-        const unexplainedHiddenBonusSum = Math.max(0, baselineBonusPercent - originalCollectionBonusSum - originalSetBonusPercent);
-        
-        // The final bonus is the simulated room's base sum + simulated set bonus + unexplained hidden bonus
-        finalCollectionBonusSum = collectionBonusSum + totalSetBonusPercent + unexplainedHiddenBonusSum;
-    } else {
-        finalCollectionBonusSum = collectionBonusSum + totalSetBonusPercent;
-    }
-
-    const collectionBonusMultiplier = finalCollectionBonusSum / 10000;
-
-    // Set Bonus Power is a FLAT addition, it does NOT get multiplied by Collection Bonus!
-    const totalLeaguePowerGh = baseMinerPowerGh + (baseMinerPowerGh * collectionBonusMultiplier) + rackBonusPowerGh + totalSetBonusPowerGh;
+    // 4. Total League Power = base + collection + rack + setPercent + setBonusPower
+    const totalLeaguePowerGh = baseMinerPowerGh
+        + collectionBonusPowerGh
+        + rackBonusPowerGh
+        + setPercentBonusPowerGh
+        + totalSetBonusPowerGh;
 
     return {
-        baseMinerPowerGh: baseMinerPowerGh,
-        collectionBonusPercent: finalCollectionBonusSum,
+        baseMinerPowerGh,
+        collectionBonusPercent: collectionBonusSum,
+        collectionBonusPowerGh,
         rackBonusPowerGh,
-        totalSetBonusPowerGh,
+        setPercentBonusPowerGh,
+        setBonusPowerGh: totalSetBonusPowerGh,
         totalLeaguePowerGh,
         placedMinersCount
     };

@@ -157,5 +157,15 @@ export const SETS_DATA: RollercoinSet[] = [
             { "_id": "668e9354e65c1fd7c423b643", "title": { "en": "+7% Bonus Power" }, "level": 2, "bonus_power": 0, "percent_power": 700, "additional_set_percent": 0, "condition_type": "unique_miner", "condition_amount": 4 }
         ],
         "set_id": "668e92a2e65c1fd7c423b640"
+    },
+    {
+        "title": { "en": "The Lost Treasure Set" },
+        "last_updated": "2026-07-07T17:24:15.884Z",
+        "levels": [
+            { "_id": "6a4d363f5e87cb5f62a0c15e", "title": { "en": "+20% Bonus Power" }, "level": 1, "bonus_power": 0, "percent_power": 2000, "additional_set_percent": 0, "condition_type": "unique_miner", "condition_amount": 2 },
+            { "_id": "6a4d363f5e87cb5f62a0c15f", "title": { "en": "+50% Bonus Power" }, "level": 2, "bonus_power": 0, "percent_power": 5000, "additional_set_percent": 0, "condition_type": "unique_miner", "condition_amount": 3 },
+            { "_id": "6a4d363f5e87cb5f62a0c160", "title": { "en": "+80% Bonus Power" }, "level": 3, "bonus_power": 0, "percent_power": 8000, "additional_set_percent": 0, "condition_type": "unique_miner", "condition_amount": 4 }
+        ],
+        "set_id": "6a4d363f5e87cb5f62a0c135"
     }
 ];

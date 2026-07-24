@@ -383,7 +383,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260618.042504';
+  const CURRENT_CACHE_VERSION = '20260724.055044';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -693,6 +693,24 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, activeTab);
   }, [activeTab]);
 
+  // Lazy room fetch: when user switches to simulator or room_simulator tab,
+  // automatically fetch room data if user is loaded but room isn't
+  const roomFetchTriggeredRef = React.useRef(false);
+  useEffect(() => {
+    if ((activeTab === 'simulator' || activeTab === 'room_simulator')
+        && fetchedUser?.userProfileResponseDto?.avatar_Id
+        && !fetchedRoom
+        && !isFetchingRoom
+        && !roomFetchTriggeredRef.current) {
+      roomFetchTriggeredRef.current = true;
+      handleFetchRoom(fetchedUser.userProfileResponseDto.avatar_Id);
+    }
+    // Reset trigger when user changes
+    if (!fetchedUser) {
+      roomFetchTriggeredRef.current = false;
+    }
+  }, [activeTab, fetchedUser, fetchedRoom, isFetchingRoom]);
+
   const handleDataParsed = (parsedCoins: CoinData[], parsedUserPower: HashPower) => {
     setCoins(parsedCoins);
     setUserPower(parsedUserPower);
@@ -972,6 +990,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}
+                          fetchedRoom={fetchedRoom}
                           onFetchUser={handleFetchUser}
                           isFetchingUser={isFetchingUser}
                           globalUserName={globalUserName}

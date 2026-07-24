@@ -66,30 +66,50 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         }
     };
 
-    // Use dto.bonus_percent as the baseline for hidden bonus calculation.
-    // IMPORTANT: Do NOT derive from max_Power — it's a high-water mark that doesn't update
-    // when users remove miners from their room, causing inflated bonus for modified rooms.
-    // bonus_percent uses the same scale as miner bonus_percent (÷10000 = multiplier).
-    // NOTE: bonus_percent INCLUDES freon bonus, but freon is NOT part of league power.
-    const actualBonusPercent = (fetchedUser?.userPowerResponseDto?.bonus_percent || 0) - (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_percent || 0);
-    const freonPowerGh = fetchedUser?.userPowerResponseDto?.freon || 0;
+    // Get temporary power values from API dto
+    const dto = fetchedUser?.userPowerResponseDto;
+    const hamsterBonusPercent = dto?.hamster_expedition_bonus_percent || 0;
+    const freonPowerGh = dto?.freon || 0;
+    const gamesPowerGh = dto?.games || 0;
+    const tempPowerGh = dto?.temp || 0;
 
-    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, fetchedRoom, actualBonusPercent) : null;
-    // Subtract freon from league power — freon is in bonus_percent but doesn't count towards league
-    const baseMinerPowerGh = fetchedUser?.userPowerResponseDto?.miners || 0;
-    const freonMultiplier = baseMinerPowerGh > 0 ? (freonPowerGh / baseMinerPowerGh) : 0;
-    const simulatedMinerPowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
-    const simulatedFreonGh = simulatedMinerPowerGh * freonMultiplier;
-    const leaguePowerGh = exactPower ? (exactPower.totalLeaguePowerGh - simulatedFreonGh) : 0;
-    const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
+    // Global power values from API
+    const globalBaseMinerPowerGh = dto?.miners || 0;
+    const globalBonusPercent = dto?.bonus_percent || 0;
 
-    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, fetchedRoom, actualBonusPercent) : null;
-    const originalMinerPowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
-    const originalFreonGh = originalMinerPowerGh * freonMultiplier;
-    const originalLeaguePowerGh = originalExactPower ? (originalExactPower.totalLeaguePowerGh - originalFreonGh) : 0;
+    // ORIGINAL Room State
+    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom) : null;
+    const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
+    const originalRoomBasePowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
+    // SIMULATED Room State
+    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom) : null;
+    const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
+    const simulatedRoomBasePowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
+    const hamsterBonusPowerGh = exactPower ? exactPower.baseMinerPowerGh * (hamsterBonusPercent / 10000) : 0;
+    const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
+
+    // 1. NEW TOTAL POWER CALCULATION (Global Logic)
+    // Find the delta in base miner power caused by the room simulation
+    const basePowerDeltaGh = simulatedRoomBasePowerGh - originalRoomBasePowerGh;
+    const newGlobalBaseMinerPowerGh = globalBaseMinerPowerGh + basePowerDeltaGh;
+    
+    // Original total power uses API global values
+    const apiBonus = dto?.bonus || 0;
+    const calculatedPercentBonus = globalBaseMinerPowerGh * (globalBonusPercent / 10000);
+    const flatBonusGh = apiBonus - calculatedPercentBonus;
+    
+    const originalTotalPowerGh = dto ? dto.current_Power : 0;
+    
+    // New total power uses updated global base power (assuming bonus_percent stays constant for room modifications)
+    const newGlobalBonusPowerGh = (newGlobalBaseMinerPowerGh * (globalBonusPercent / 10000)) + flatBonusGh;
+    const totalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + tempPowerGh + gamesPowerGh;
+
+    // 2. LEAGUE POWER DELTA (Room Logic)
     const powerDiffGh = leaguePowerGh - originalLeaguePowerGh;
+    const totalPowerDiffGh = totalPowerGh - originalTotalPowerGh;
+
     const powerDiff = autoScalePower(Math.abs(powerDiffGh) * 1e9);
     const isLeagueChange = originalLeague && currentLeague.id !== originalLeague.id;
 
@@ -149,7 +169,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                     )}
                 </div>
 
-                {/* Fetch Room Button (Beautifully Styled) */}
+                {/* Fetch Room Button */}
                 {fetchedUser && !simulatedRoom && (
                     <div className="beautiful-fetch-room">
                         <div className="fetch-room-card">
@@ -193,13 +213,26 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     <span className="value">{formatHashPower(autoScalePower(exactPower.baseMinerPowerGh * 1e9))}</span>
                                 </div>
                                 <div className="lpd-stat">
-                                    <span className="label">{t('simulator.totalBonus', 'Total Bonus')}</span>
+                                    <span className="label">{t('simulator.collectionBonus', 'Collection Bonus')}</span>
                                     <span className="value">{(exactPower.collectionBonusPercent / 100).toFixed(2)}%</span>
                                 </div>
                                 <div className="lpd-stat">
                                     <span className="label">{t('simulator.rackPower', 'Rack Power')}</span>
                                     <span className="value">{formatHashPower(autoScalePower(exactPower.rackBonusPowerGh * 1e9))}</span>
                                 </div>
+                                {(exactPower.setPercentBonusPowerGh > 0 || exactPower.setBonusPowerGh > 0) && (
+                                    <div className="lpd-stat">
+                                        <span className="label">{t('simulator.setBonus', 'Set Bonus')}</span>
+                                        <span className="value">
+                                            {exactPower.setPercentBonusPowerGh > 0
+                                                ? `+${formatHashPower(autoScalePower(exactPower.setPercentBonusPowerGh * 1e9))}`
+                                                : ''}
+                                            {exactPower.setBonusPowerGh > 0
+                                                ? `${exactPower.setPercentBonusPowerGh > 0 ? ' + ' : '+'}${formatHashPower(autoScalePower(exactPower.setBonusPowerGh * 1e9))}`
+                                                : ''}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -207,20 +240,27 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             <div className="lpd-stats temporary-power-dashboard" style={{ marginTop: '-10px', marginBottom: '25px', padding: '15px 20px', background: 'rgba(28, 28, 40, 0.4)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
                                 <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
                                     <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.gamesPower', 'Oyun Gücü')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower((fetchedUser.userPowerResponseDto.games || 0) * 1e9))}</span>
+                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower(gamesPowerGh * 1e9))}</span>
                                 </div>
                                 <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
                                     <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.tempPower', 'Geçici Güç')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#ffc107' }}>{formatHashPower(autoScalePower((fetchedUser.userPowerResponseDto.temp || 0) * 1e9))}</span>
+                                    <span className="value" style={{ fontSize: '1rem', color: '#ffc107' }}>{formatHashPower(autoScalePower(tempPowerGh * 1e9))}</span>
                                 </div>
                                 <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
                                     <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.freonPower', 'Freon Gücü')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower((fetchedUser.userPowerResponseDto.freon || 0) * 1e9))}</span>
+                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower(freonPowerGh * 1e9))}</span>
                                 </div>
+                                {hamsterBonusPercent > 0 && (
+                                    <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
+                                        <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.hamsterBonus', 'Hamster Bonus')}</span>
+                                        <span className="value" style={{ fontSize: '1rem', color: '#ff9800' }}>{(hamsterBonusPercent / 100).toFixed(0)}% (+{formatHashPower(autoScalePower(hamsterBonusPowerGh * 1e9))})</span>
+                                    </div>
+                                )}
                             </div>
                         )}
 
                         <RoomSimulator
+                            key={fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}
                             room={simulatedRoom}
                             onChange={setSimulatedRoom}
                             userId={fetchedUser?.userProfileResponseDto?.avatar_Id}
@@ -232,14 +272,14 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     <div className="result-row" style={{ borderBottom: '1px solid #3c3e58', paddingBottom: '15px', marginBottom: '15px' }}>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.currentTotalPower', 'Mevcut Toplam Güç')}</span>
-                                            <span className="value secondary">{formatHashPower(autoScalePower(((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) * 1e9))}</span>
+                                            <span className="value secondary">{formatHashPower(autoScalePower(originalTotalPowerGh * 1e9))}</span>
                                         </div>
                                         <div className="transition-arrow">➜</div>
                                         <div className="result-item">
                                             <span className="label">{t('simulator.newTotalPower', 'Yeni Toplam Güç')}</span>
-                                            <span className="value primary">{formatHashPower(autoScalePower((((fetchedUser?.userPowerResponseDto?.current_Power) || (originalLeaguePowerGh + (fetchedUser?.userPowerResponseDto?.games || 0) + (fetchedUser?.userPowerResponseDto?.temp || 0) + (fetchedUser?.userPowerResponseDto?.freon || 0) + (fetchedUser?.userPowerResponseDto?.hamster_expedition_bonus_power || 0))) + powerDiffGh) * 1e9))}</span>
-                                            <span className={`sub-value ${powerDiffGh >= 0 ? 'success' : 'danger'}`}>
-                                                {powerDiffGh >= 0 ? '+' : '-'}{formatHashPower(powerDiff)}
+                                            <span className="value primary">{formatHashPower(autoScalePower(totalPowerGh * 1e9))}</span>
+                                            <span className={`sub-value ${totalPowerDiffGh >= 0 ? 'success' : 'danger'}`}>
+                                                {totalPowerDiffGh >= 0 ? '+' : '-'}{formatHashPower(autoScalePower(Math.abs(totalPowerDiffGh) * 1e9))}
                                             </span>
                                         </div>
                                     </div>
