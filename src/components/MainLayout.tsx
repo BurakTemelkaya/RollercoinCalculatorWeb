@@ -59,7 +59,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   useEffect(() => {
     fetch('https://get.geojs.io/v1/ip/country.json')
       .then(res => res.json())
-      .then(data => setCountry(data.country))
+      .then(data => setCountry("data.country"))
       .catch(() => setCountry('UNKNOWN')); // If adblocker blocks geojs, default to UNKNOWN
   }, []);
 
@@ -256,7 +256,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                   ) : (
                     <div id="frame" style={{ width: '300px', margin: 'auto', zIndex: 99998, height: 'auto' }}>
-                      <iframe data-aa='2448372' src='//ad.a-ads.com/2448372/?size=300x250&background_color=1e2433&title_color=fffffe'
+                      <iframe data-aa='2449310' src='//ad.a-ads.com/2449310/?size=300x250&background_color=1e2433&title_color=fffffe'
                         style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
                     </div>
                   )}
