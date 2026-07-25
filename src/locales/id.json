@@ -382,7 +382,15 @@
     "newLeaguePower": "Kekuatan Liga Baru",
     "minerLevelPrefix": "Level {{level}} ",
     "disclaimer": "Peringatan: Nilai yang dihitung di sini mungkin tidak akurat karena mekanik tersembunyi dalam game atau data yang hilang. Harap diingat saat membuat keputusan. Situs kami sama sekali tidak bertanggung jawab atas kesalahan potensial.",
-    "manualDesc": "Ambil data ruangan Anda untuk menemukan kekuatan dasar Anda, dan hitung kekuatan Anda dengan menambahkan penambang secara manual atau dari basis data."
+    "manualDesc": "Ambil data ruangan Anda untuk menemukan kekuatan dasar Anda, dan hitung kekuatan Anda dengan menambahkan penambang secara manual atau dari basis data.",
+    "saveLayout": "Simpan",
+    "loadLayout": "Muat",
+    "layoutSaved": "Tata letak berhasil disimpan!",
+    "layoutSaveError": "Tidak dapat menyimpan tata letak!",
+    "loadConfirm": "Memuat tata letak yang disimpan akan menimpa tata letak Anda saat ini. Apakah Anda yakin?",
+    "layoutLoaded": "Tata letak yang disimpan dimuat!",
+    "noSavedLayout": "Tidak ada tata letak yang disimpan ditemukan!",
+    "layoutLoadError": "Terjadi kesalahan saat memuat tata letak!"
   },
   "settings": {
     "title": "Pengaturan",

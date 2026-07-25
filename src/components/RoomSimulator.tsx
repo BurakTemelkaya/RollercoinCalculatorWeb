@@ -35,6 +35,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const [initialRoom] = useState<RollercoinRoomResponse>(JSON.parse(JSON.stringify(room)));
     const [history, setHistory] = useState<RollercoinRoomResponse[]>([]);
 
+    // Rack Edit Modal State
+    const [editingRackId, setEditingRackId] = useState<string | null>(null);
+    const [replacingMinerId, setReplacingMinerId] = useState<string | null>(null);
+    const [replaceTargetRackId, setReplaceTargetRackId] = useState<string | null>(null);
+
+    // Miner Inventory Toolbar State
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isInventoryCollapsed, setIsInventoryCollapsed] = useState(false);
+
     useEffect(() => {
         if (room.rooms && room.rooms.length > 0) {
             if (currentRoomIndex >= room.rooms.length) {
@@ -78,6 +88,36 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         }
     };
 
+    const handleSaveLayout = () => {
+        try {
+            localStorage.setItem(`saved_room_layout_${userId || 'default'}`, JSON.stringify(room));
+            addNotification(t('simulator.layoutSaved', 'Dizilim başarıyla kaydedildi!'), 'success');
+        } catch (error) {
+            console.error('Error saving layout:', error);
+            addNotification(t('simulator.layoutSaveError', 'Dizilim kaydedilemedi!'), 'error');
+        }
+    };
+
+    const handleLoadLayout = () => {
+        try {
+            const savedLayout = localStorage.getItem(`saved_room_layout_${userId || 'default'}`);
+            if (savedLayout) {
+                if (window.confirm(t('simulator.loadConfirm', 'Kaydedilen dizilimi yüklemek mevcut diziliminizi değiştirecektir. Emin misiniz?'))) {
+                    const parsedLayout = JSON.parse(savedLayout);
+                    setHistory(prev => [...prev, room]);
+                    onChange(parsedLayout);
+                    setCurrentRoomIndex(0);
+                    addNotification(t('simulator.layoutLoaded', 'Kaydedilen dizilim yüklendi!'), 'success');
+                }
+            } else {
+                addNotification(t('simulator.noSavedLayout', 'Kaydedilmiş bir dizilim bulunamadı!'), 'error');
+            }
+        } catch (error) {
+            console.error('Error loading layout:', error);
+            addNotification(t('simulator.layoutLoadError', 'Dizilim yüklenirken hata oluştu!'), 'error');
+        }
+    };
+
     const handleAddRoom = () => {
         const rooms = room.rooms || [];
         if (rooms.length >= 4) {
@@ -113,7 +153,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
         const roomToDeleteId = rooms[currentRoomIndex]._id;
         const newRooms = rooms.filter((_, idx) => idx !== currentRoomIndex);
-        
+
         const newRacks = (room.racks || []).filter(r => r.placement?.user_room_id !== roomToDeleteId);
         const remainingRackIds = new Set(newRacks.map(r => r._id));
         const newMiners = (room.miners || []).filter(m => remainingRackIds.has(m.placement?.user_rack_id || ''));
@@ -124,7 +164,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             racks: newRacks,
             miners: newMiners
         });
-        
+
         setCurrentRoomIndex(Math.max(0, currentRoomIndex - 1));
         addNotification(t('simulator.roomDeletedSuccess', 'Oda başarıyla silindi.'), 'success');
     };
@@ -133,6 +173,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
     // Miner Arama State'leri
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Auto-search effect for query
+    useEffect(() => {
+        if (!isSearchOpen && !isFilterOpen) return;
+        const timer = setTimeout(() => {
+            handleSearchMiners(0);
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
     const [minPower, setMinPower] = useState('');
     const [maxPower, setMaxPower] = useState('');
     const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
@@ -174,16 +223,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const [draggedMiner, setDraggedMiner] = useState<MinerDto | null>(null);
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
-    const [mobileTargetRackId, setMobileTargetRackId] = useState<string | null>(null);
 
     const handleSearchMiners = async (page = 0) => {
         if (!userId) {
             alert(t('simulator.linkAccountAlert'));
-            return;
-        }
-
-        if (!searchQuery && !minPower && !maxPower && !minBonus && !maxBonus && !minerWidth) {
-            alert(t('simulator.searchFilterRequired', 'Arama yapmak için en az bir filtre (İsim, Güç, Bonus veya Boyut) girmelisiniz!'));
             return;
         }
 
@@ -211,6 +254,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             setIsSearching(false);
         }
     };
+
+    // Initial load of miners
+    useEffect(() => {
+        if (userId) {
+            handleSearchMiners(0);
+        }
+    }, [userId]);
 
     const firstInstanceMinerIds = useMemo(() => {
         const uniqueSet = new Set<string>();
@@ -245,11 +295,74 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         const newRacks = (room.racks || []).filter(r => r._id !== rackId);
         const newMiners = (room.miners || []).filter(m => m.placement?.user_rack_id !== rackId);
         handleRoomChange({ ...room, racks: newRacks, miners: newMiners });
+        if (editingRackId === rackId) setEditingRackId(null);
     };
 
     const handleDeleteMiner = (minerId: string) => {
         const newMiners = (room.miners || []).filter(m => m._id !== minerId);
         handleRoomChange({ ...room, miners: newMiners });
+    };
+
+    const handleUnmountMiners = (rackId: string) => {
+        const newMiners = (room.miners || []).filter(m => m.placement?.user_rack_id !== rackId);
+        handleRoomChange({ ...room, miners: newMiners });
+        addNotification(t('simulator.unmountMinersSuccess'), 'success');
+    };
+
+    const handleUnmountRack = (rackId: string) => {
+        handleDeleteRack(rackId);
+        setEditingRackId(null);
+        addNotification(t('simulator.unmountRackSuccess'), 'success');
+    };
+
+    const handleNavigateRack = (direction: 1 | -1) => {
+        if (!editingRackId) return;
+        const activeRoom = room.rooms ? room.rooms[currentRoomIndex] : null;
+        if (!activeRoom) return;
+        const racksInRoom = (room.racks || []).filter(r => r.placement?.user_room_id === activeRoom._id);
+        const sortedRacks = [...racksInRoom].sort((a, b) => {
+            const yA = Number(a.placement?.y || 0);
+            const yB = Number(b.placement?.y || 0);
+            if (yA !== yB) return yA - yB;
+            return Number(a.placement?.x || 0) - Number(b.placement?.x || 0);
+        });
+        const currentIdx = sortedRacks.findIndex(r => r._id === editingRackId);
+        if (currentIdx === -1) return;
+        const newIdx = currentIdx + direction;
+        if (newIdx >= 0 && newIdx < sortedRacks.length) {
+            setEditingRackId(sortedRacks[newIdx]._id);
+        }
+    };
+
+    const handleReplaceMiner = (newMiner: MinerDto, oldMinerId: string, rackId: string) => {
+        const oldMiner = (room.miners || []).find(m => m._id === oldMinerId);
+        if (!oldMiner || !oldMiner.placement) return;
+        const targetX = oldMiner.placement.x;
+        const targetY = oldMiner.placement.y;
+        // Remove old miner first
+        const minersWithoutOld = (room.miners || []).filter(m => m._id !== oldMinerId);
+        // Add new miner at same position
+        const rack: any = (room.racks || []).find(r => r._id === rackId);
+        const width = newMiner.width || 1;
+        const isMinerInRackSet = () => {
+            if (!rack || !rack.rack_info || !rack.rack_info.name) return false;
+            const rackSet = guessSetByRackName(rack.rack_info.name);
+            if (!rackSet) return false;
+            const minerSet = guessSetByMinerName(newMiner.name);
+            return minerSet !== null && minerSet.title.en === rackSet.title.en;
+        };
+        const fakeId = 'mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const replacementMiner: ApiRoomMiner = {
+            _id: fakeId, miner_id: newMiner.id || (newMiner as any).miner_id || ('mock_model_' + Date.now()), name: newMiner.name,
+            power: newMiner.power, bonus_percent: newMiner.percent || (newMiner as any).bonus_percent || 0,
+            width, level: newMiner.level || 0, type: 'miner', is_in_set: isMinerInRackSet(),
+            updated: newMiner.createdDate || (newMiner as any).updated || new Date().toISOString(), filename: newMiner.fileName || (newMiner as any).filename || 'abyss_walker',
+            placement: { user_rack_id: rackId, x: targetX, y: targetY }
+        };
+        handleRoomChange({ ...room, miners: [...minersWithoutOld, replacementMiner] });
+        setReplacingMinerId(null);
+        setReplaceTargetRackId(null);
+        addNotification(t('simulator.minerAddedSuccess', { name: newMiner.name }), 'success');
     };
 
     const handleAddRack = () => {
@@ -362,9 +475,14 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
     const handleAutoPlaceMiner = (miner: MinerDto) => {
         let racks = room.racks || [];
-        if (isMobile && mobileTargetRackId) {
-            const targetRack = racks.find(r => r._id === mobileTargetRackId);
-            if (targetRack) racks = [targetRack];
+
+        if (replaceTargetRackId) {
+            const targetRack = racks.find(r => r._id === replaceTargetRackId);
+            if (targetRack) {
+                // Try to place it in the target rack first
+                racks = [targetRack, ...racks.filter(r => r._id !== replaceTargetRackId)];
+            }
+            setReplaceTargetRackId(null);
         }
 
         const miners = room.miners || [];
@@ -538,25 +656,59 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         }
     };
 
-    const getMinerStyle = (width: number, mX: number, mY: number, rackHeight: number): React.CSSProperties => {
-        const yOffsetsSize2 = [-25, 15, 55, 95];
-        const yOffsetsSize1 = [-25, 15, 55, 95];
-
-        const yOffsets = width === 2 ? yOffsetsSize2 : yOffsetsSize1;
+    const getMinerStyle = (width: number, mX: number, mY: number, rackHeight: number, isModal: boolean = false): React.CSSProperties => {
         const effectiveY = rackHeight === 3 ? mY + 1 : mY;
-        const finalTop = yOffsets[effectiveY] ?? 0;
-
+        let finalTop = 0;
         let finalLeft = 0;
-        if (width === 2) {
-            finalLeft = effectiveY === 0 ? 12.5 : 10;
+
+        // =========================================================================================
+        // 🛠️ MİNER PİKSEL AYARLARI (ELLE DÜZENLEME ALANI)
+        // Buradaki değerleri değiştirerek miner'ların raflardaki konumlarını ayarlayabilirsiniz.
+        // =========================================================================================
+
+        if (!isModal) {
+            // --- 1) ANA ODA (MAIN ROOM) AYARLARI ---
+            // İkili (Büyük) miner'ların yukarıdan aşağıya raf hizaları (Y)
+            const mainTopsSize2 = [-25, 15, 55, 95];
+
+            // Tekli (Küçük) miner'ların yukarıdan aşağıya raf hizaları (Y)
+            const mainTopsSize1 = [-25, 15, 55, 95];
+
+            // Sol-Sağ hizalamaları (X)
+            const mainLeftSize2 = effectiveY === 0 ? 12.5 : 10; // İkili miner'ın soldan boşluğu
+            const mainLeftSize1_Left = -10;  // Tekli miner soldayken (mX = 0)
+            const mainLeftSize1_Right = 30; // Tekli miner sağdayken (mX = 1)
+
+            finalTop = width === 2 ? (mainTopsSize2[effectiveY] ?? 0) : (mainTopsSize1[effectiveY] ?? 0);
+            finalLeft = width === 2 ? mainLeftSize2 : (mX === 0 ? mainLeftSize1_Left : mainLeftSize1_Right);
         } else {
-            finalLeft = mX === 0 ? -5 : 35;
+            // --- 2) DÜZENLE (EDIT MODAL) AYARLARI ---
+            // İkili (Büyük) miner'ların yukarıdan aşağıya raf hizaları (Y)
+            const modalTopsSize2 = [-30, 10, 50, 90];
+
+            // Tekli (Küçük) miner'ların yukarıdan aşağıya raf hizaları (Y)
+            const modalTopsSize1 = [-30, 10, 50, 90];
+
+            // Sol-Sağ hizalamaları (X)
+            const modalLeftSize2 = 10; // İkili miner'ın soldan boşluğu
+            const modalLeftSize1_Left = -10; // Tekli miner soldayken (mX = 0)
+            const modalLeftSize1_Right = 30; // Tekli miner sağdayken (mX = 1)
+
+            finalTop = width === 2 ? (modalTopsSize2[effectiveY] ?? 0) : (modalTopsSize1[effectiveY] ?? 0);
+            finalLeft = width === 2 ? modalLeftSize2 : (mX === 0 ? modalLeftSize1_Left : modalLeftSize1_Right);
         }
+
+        // =========================================================================================
+
+        // İzometrik perspektifte sol taraftaki (mX === 0) miner görsel olarak daha "önde" olmalıdır.
+        const zIndex = 10 + (effectiveY * 2) + (mX === 0 ? 1 : 0);
 
         return {
             top: `${finalTop}px`,
             left: `${finalLeft}px`,
-            zIndex: 10 + effectiveY
+            zIndex: zIndex,
+            width: "80%",
+            transform: 'none'
         };
     };
 
@@ -703,21 +855,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 return (
                                     <div
                                         key={`rack-${rack._id}`}
-                                        className={`card-rack-item card-rack-item-${idx}`}
-                                        onClick={() => {
-                                            if (isMobile) {
-                                                setMobileTargetRackId(rack._id);
-                                                setIsMobileMinerSearchOpen(true);
-                                            }
-                                        }}
+                                        className={`card-rack-item card-rack-item-${idx} rack-drop-wrapper ${dragTarget?.rackId === rack._id ? 'drag-over' : ''}`}
+                                        onClick={() => setEditingRackId(rack._id)}
                                         onDragOver={(e) => {
                                             e.preventDefault();
+                                            e.stopPropagation();
                                             if (!draggedMiner) return;
-                                            const rect = e.currentTarget.getBoundingClientRect();
-                                            const rackHeight = (rack as any)?.rack_info?.height || 4;
 
-                                            const offsetY = e.clientY - rect.top;
-                                            let cellY = Math.floor(offsetY / (rect.height / rackHeight));
+                                            const rect = e.currentTarget.getBoundingClientRect();
+                                            let cellY = Math.floor((e.clientY - rect.top) / (rect.height / rackHeight));
                                             if (cellY < 0) cellY = 0;
                                             if (cellY >= rackHeight) cellY = rackHeight - 1;
 
@@ -732,9 +878,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                         }}
                                         onDragLeave={() => setDragTarget(null)}
                                         onDrop={(e) => handleDropMiner(e, rack._id)}
-                                        style={isMobile ? {} : {
+                                        style={isMobile ? { cursor: 'pointer' } : {
                                             gridColumn: gridX + 1,
-                                            gridRow: visualY + 1
+                                            gridRow: visualY + 1,
+                                            cursor: 'pointer'
                                         }}
                                     >
                                         <img
@@ -754,27 +901,27 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                             {((rack as any)?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>{t('merge.bonusAmount', { amount: (((rack as any)?.bonus || 0) / 100).toFixed(2) })}</div>}
                                         </div>
 
-                                        <div className="rack-actions-overlay">
-                                            <button className="action-icon-btn" onClick={(e) => { e.stopPropagation(); handleDeleteRack(rack._id); }} title="Delete Rack">✕</button>
-                                        </div>
-
                                         <div className="miners-block-wrapper" style={{ minHeight: '100%' }}>
-                                            {dragTarget && dragTarget.rackId === rack._id && (
-                                                <div style={{
-                                                    position: 'absolute',
-                                                    top: getMinerStyle(dragTarget.width, dragTarget.x, dragTarget.y, rackHeight).top,
-                                                    left: dragTarget.width === 2 ? '4px' : (dragTarget.x === 0 ? '4px' : '48px'),
-                                                    width: dragTarget.width === 2 ? '86px' : '42px',
-                                                    height: '35px',
-                                                    background: 'rgba(40, 167, 69, 0.4)',
-                                                    border: '2px dashed #28a745',
-                                                    boxSizing: 'border-box',
-                                                    borderRadius: 4,
-                                                    zIndex: 100,
-                                                    pointerEvents: 'none',
-                                                    transition: 'all 0.1s'
-                                                }} />
-                                            )}
+                                            {dragTarget && dragTarget.rackId === rack._id && (() => {
+                                                const style = getMinerStyle(dragTarget.width, dragTarget.x, dragTarget.y, rackHeight);
+                                                const dropHighlightOffsetY = 5;
+                                                return (
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        top: `calc(${style.top} + ${dropHighlightOffsetY}px)`,
+                                                        left: dragTarget.width === 2 ? '4px' : (dragTarget.x === 0 ? '4px' : '48px'),
+                                                        width: dragTarget.width === 2 ? '86px' : '42px',
+                                                        height: '35px',
+                                                        background: 'rgba(40, 167, 69, 0.4)',
+                                                        border: '2px dashed #28a745',
+                                                        boxSizing: 'border-box',
+                                                        borderRadius: 4,
+                                                        zIndex: 100,
+                                                        pointerEvents: 'none',
+                                                        transition: 'all 0.1s'
+                                                    }} />
+                                                );
+                                            })()}
 
                                             {rackMiners.map(miner => {
                                                 const mWidth = miner.width || 1;
@@ -790,12 +937,23 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                         draggable
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            setActiveTooltipId(activeTooltipId === miner._id ? null : miner._id);
+                                                            setEditingRackId(rack._id);
                                                         }}
                                                         onDragStart={(e) => {
                                                             e.stopPropagation();
                                                             e.dataTransfer.setData('miner', JSON.stringify(miner));
                                                             setDraggedMiner(miner as any);
+
+                                                            // Hide tooltip temporarily so it doesn't get captured in the drag image
+                                                            const tooltip = (e.currentTarget as HTMLElement).querySelector('.miner-tooltip') as HTMLElement;
+                                                            if (tooltip) tooltip.style.display = 'none';
+
+                                                            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                                                            e.dataTransfer.setDragImage(e.currentTarget as Element, rect.width / 2, rect.height / 2);
+
+                                                            setTimeout(() => {
+                                                                if (tooltip) tooltip.style.display = '';
+                                                            }, 0);
                                                         }}
                                                         onDrag={(e) => {
                                                             if (e.clientY === 0) return;
@@ -807,9 +965,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             }
                                                         }}
                                                     >
-                                                        <div className="miner-actions-overlay">
-                                                            <button className="action-icon-btn" onClick={(e) => { e.stopPropagation(); handleDeleteMiner(miner._id); }}>✕</button>
-                                                        </div>
 
                                                         <img
                                                             className="miner-item"
@@ -930,45 +1085,77 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                         <button
                             className="btn-roller"
                             onClick={handleUndo}
+                            title={t('simulator.undo', 'Geri Al')}
                             disabled={history.length === 0}
                             style={{
-                                padding: isMobile ? '8px 12px' : '12px 20px',
+                                padding: isMobile ? '10px 14px' : '12px 24px',
                                 background: history.length === 0 ? '#444' : '#6c757d',
                                 color: history.length === 0 ? '#888' : '#fff',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: isMobile ? 14 : 16, fontWeight: 'bold',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
                                 boxShadow: history.length === 0 ? 'none' : '0 4px 0 #5a6268',
                                 cursor: history.length === 0 ? 'not-allowed' : 'pointer',
                                 border: 'none', borderRadius: '8px',
                                 flex: isMobile ? '1 1 auto' : 'none'
                             }}
                         >
-                            <span style={{ fontSize: isMobile ? 16 : 20 }}>↩</span> {t('simulator.undo', 'Geri Al')}
+                            ↩
                         </button>
 
                         <button
                             className="btn-roller"
                             onClick={handleReset}
+                            title={t('simulator.reset', 'Sıfırla')}
                             style={{
-                                padding: isMobile ? '8px 12px' : '12px 20px', background: '#d9534f', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: isMobile ? 14 : 16, fontWeight: 'bold',
+                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#d9534f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
                                 boxShadow: '0 4px 0 #a94442', border: 'none', borderRadius: '8px', color: '#fff',
                                 flex: isMobile ? '1 1 auto' : 'none'
                             }}
                         >
-                            <span style={{ fontSize: isMobile ? 16 : 20 }}>✖</span> {t('simulator.reset', 'Sıfırla')}
+                            ✖
+                        </button>
+
+                        <button
+                            className="btn-roller"
+                            onClick={handleSaveLayout}
+                            title={t('simulator.saveLayout', 'Kaydet')}
+                            style={{
+                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#35536F', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
+                                boxShadow: '0 4px 0 #20354A', border: 'none', borderRadius: '8px', color: '#fff',
+                                flex: isMobile ? '1 1 auto' : 'none'
+                            }}
+                        >
+                            💾
+                        </button>
+                        
+                        <button
+                            className="btn-roller"
+                            onClick={handleLoadLayout}
+                            title={t('simulator.loadLayout', 'Yükle')}
+                            style={{
+                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#7798B5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
+                                boxShadow: '0 4px 0 #587994', border: 'none', borderRadius: '8px', color: '#fff',
+                                flex: isMobile ? '1 1 auto' : 'none'
+                            }}
+                        >
+                            📂
                         </button>
 
                         <button
                             className="btn-roller"
                             onClick={() => {
                                 if (currentRoomRacks.length >= validDropZones.length) {
-                                    addNotification(t('simulator.cannotAddMoreRacks'), 'error');
+                                    addNotification(t('simulator.cannotAddMoreRacks', 'Daha fazla raf ekleyemezsiniz.'), 'error');
                                     return;
                                 }
                                 setIsAddRackOpen(true);
                             }}
-                            style={{ padding: '12px 25px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', gap: 8, fontSize: 16, fontWeight: 'bold', border: 'none', borderRadius: '8px' }}
+                            title={t('simulator.addRack', 'Raf Ekle')}
+                            style={{ 
+                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold', border: 'none', borderRadius: '8px',
+                                flex: isMobile ? '1 1 auto' : 'none'
+                             }}
                         >
-                            <span style={{ fontSize: 20 }}>+</span> {t('simulator.addRack')}
+                            ➕
                         </button>
                     </div>
                 </div>
@@ -1021,7 +1208,205 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                 document.body
             )}
 
-            {/* MINER SEARCH AND DRAG-DROP AREA */}
+            {/* RACK EDIT MODAL */}
+            {editingRackId && document.body && createPortal(
+                (() => {
+                    const editingRack = (room.racks || []).find(r => r._id === editingRackId);
+                    if (!editingRack) return null;
+                    const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === editingRackId);
+                    const rackHeight = (editingRack as any)?.rack_info?.height || 4;
+                    const rackBonus = ((editingRack as any)?.bonus || 0) / 100;
+
+                    // Find slot index
+                    const activeRoom = room.rooms ? room.rooms[currentRoomIndex] : null;
+                    const racksInRoom = activeRoom ? (room.racks || []).filter(r => r.placement?.user_room_id === activeRoom._id) : [];
+                    const sortedRacksForNav = [...racksInRoom].sort((a, b) => {
+                        const yA = Number(a.placement?.y || 0);
+                        const yB = Number(b.placement?.y || 0);
+                        if (yA !== yB) return yA - yB;
+                        return Number(a.placement?.x || 0) - Number(b.placement?.x || 0);
+                    });
+                    const currentSlotIdx = sortedRacksForNav.findIndex(r => r._id === editingRackId);
+
+                    // Build slot rows
+                    const slotRows: (typeof rackMiners[0] | null)[][] = [];
+                    for (let y = 0; y < rackHeight; y++) {
+                        const minersAtY = rackMiners.filter(m => m.placement?.y === y);
+                        const has2Wide = minersAtY.some(m => m.width === 2);
+                        if (has2Wide) {
+                            slotRows.push([minersAtY[0] || null]);
+                        } else {
+                            const left = minersAtY.find(m => m.placement?.x === 0) || null;
+                            const right = minersAtY.find(m => m.placement?.x === 1) || null;
+                            if (left || right) {
+                                slotRows.push([left, right]);
+                            } else {
+                                slotRows.push([null, null]);
+                            }
+                        }
+                    }
+
+                    return (
+                        <div className="rack-edit-overlay" onClick={() => { setEditingRackId(null); setReplacingMinerId(null); setReplaceTargetRackId(null); }}>
+                            <div className="rack-edit-modal" onClick={e => e.stopPropagation()}>
+                                <div className="rack-edit-header">
+                                    <h3>{t('simulator.editRack')}</h3>
+                                    <button className="rack-edit-close" onClick={() => { setEditingRackId(null); setReplacingMinerId(null); setReplaceTargetRackId(null); }}>✕</button>
+                                </div>
+                                <div className="rack-edit-body">
+                                    <div className="rack-edit-preview">
+                                        <div className="card-rack-item" style={{ flexShrink: 0, minWidth: 97, minHeight: 155, transform: isMobile ? 'scale(0.8)' : 'scale(1.2)', transformOrigin: 'center center', pointerEvents: 'none' }}>
+                                            <img
+                                                className="rack-item"
+                                                src={`https://static.rollercoin.com/static/img/game/inventory/racks/${editingRack.rack_id}.png?v=1.2.5`}
+                                                alt={editingRack.name}
+                                                style={{ display: 'block' }}
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    if (!target.src.includes('.gif')) target.src = `https://static.rollercoin.com/static/img/game/inventory/racks/${editingRack.rack_id}.gif?v=1.2.5`;
+                                                }}
+                                            />
+                                            <div className="miners-block-wrapper" style={{ minHeight: '100%' }}>
+                                                {rackMiners.map(miner => {
+                                                    const mWidth = miner.width || 1;
+                                                    const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight, true);
+                                                    return (
+                                                        <div
+                                                            key={`preview-${miner._id}`}
+                                                            className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0}`}
+                                                            style={{ ...minerStyle, cursor: 'default' }}
+                                                        >
+                                                            <img
+                                                                className="miner-item"
+                                                                src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
+                                                                alt={miner.name}
+                                                                onError={(e) => {
+                                                                    const target = e.target as HTMLImageElement;
+                                                                    if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
+                                                                }}
+                                                            />
+                                                            {miner.level > 0 && (
+                                                                <div className="miners-badges">
+                                                                    <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="rack-edit-content">
+                                        {/* Navigation */}
+                                        <div className="rack-edit-nav">
+                                            <button className="rack-edit-nav-btn" onClick={() => handleNavigateRack(-1)} disabled={currentSlotIdx <= 0}>‹</button>
+                                            <span className="rack-edit-nav-label">
+                                                {t('simulator.slotLabel', { room: currentRoomIndex + 1, slot: currentSlotIdx + 1 })}
+                                            </span>
+                                            <button className="rack-edit-nav-btn" onClick={() => handleNavigateRack(1)} disabled={currentSlotIdx >= sortedRacksForNav.length - 1}>›</button>
+                                        </div>
+
+                                        {/* Rack info */}
+                                        <div className="rack-edit-info">
+                                            <div className="rack-edit-info-left">
+                                                <span className="rack-edit-rack-name">{editingRack.name}</span>
+                                                {rackBonus > 0 && <span className="rack-edit-rack-bonus">+{rackBonus.toFixed(2)}%</span>}
+                                            </div>
+                                            <div className="rack-edit-info-actions">
+                                                <button className="rack-edit-unmount-btn" onClick={() => handleUnmountMiners(editingRackId)}>
+                                                    <span>⬆</span> {t('simulator.unmountMiners')}
+                                                </button>
+                                                <button className="rack-edit-unmount-btn danger" onClick={() => handleUnmountRack(editingRackId)}>
+                                                    <span>✕</span> {t('simulator.unmountRack')}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Miner slots */}
+                                        <div className="rack-edit-slots">
+                                            {slotRows.map((row, rowIdx) => (
+                                                <div key={rowIdx} className="rack-edit-slot-row">
+                                                    {row.map((miner, colIdx) => {
+                                                        if (miner) {
+                                                            const isBonusActive = firstInstanceMinerIds.has(miner._id);
+                                                            const bonusValue = (miner.bonus_percent || 0) / 100;
+                                                            return (
+                                                                <div key={miner._id} className={`rack-edit-miner-card ${miner.width === 2 ? 'full-width' : ''}`}>
+                                                                    <div className="rack-edit-miner-img-wrapper">
+                                                                        <img
+                                                                            className="rack-edit-miner-img"
+                                                                            src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
+                                                                            alt={miner.name}
+                                                                            onError={(e) => {
+                                                                                const target = e.target as HTMLImageElement;
+                                                                                if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
+                                                                            }}
+                                                                        />
+                                                                        {miner.level > 0 && (
+                                                                            <img className="rack-edit-miner-level" src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="rack-edit-miner-info">
+                                                                        <span className="rack-edit-miner-name">{miner.name}</span>
+                                                                        <div className="rack-edit-miner-stats">
+                                                                            <span className="rack-edit-miner-power">{formatPower(Number(miner.power))}</span>
+                                                                            {bonusValue > 0 && (
+                                                                                <span className={`rack-edit-miner-bonus ${!isBonusActive ? 'inactive' : ''}`}>
+                                                                                    {isBonusActive ? `${bonusValue.toFixed(1)}%` : `${bonusValue.toFixed(1)}%`}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="rack-edit-miner-actions">
+                                                                        <button
+                                                                            className="rack-edit-action-btn"
+                                                                            title={t('simulator.replaceMiner')}
+                                                                            onClick={() => {
+                                                                                setReplacingMinerId(miner._id);
+                                                                                setReplaceTargetRackId(editingRackId);
+                                                                                setEditingRackId(null);
+                                                                                setIsInventoryCollapsed(false);
+                                                                                addNotification(t('simulator.selectMinerToReplace', 'Envanterden yeni madenciyi seçin'), 'info');
+                                                                            }}
+                                                                        >⟳</button>
+                                                                        <button
+                                                                            className="rack-edit-action-btn delete"
+                                                                            onClick={() => { handleDeleteMiner(miner._id); addNotification(t('simulator.minerDeleted'), 'info'); }}
+                                                                        >✕</button>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        } else {
+                                                            return (
+                                                                <div
+                                                                    key={`empty-${rowIdx}-${colIdx}`}
+                                                                    className="rack-edit-miner-card empty"
+                                                                    style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'all 0.2s' }}
+                                                                    onClick={() => {
+                                                                        setReplaceTargetRackId(editingRackId);
+                                                                        setEditingRackId(null);
+                                                                        setIsInventoryCollapsed(false);
+                                                                        addNotification(t('simulator.selectMinerToAdd', 'Eklenecek madenciyi seçin'), 'info');
+                                                                    }}
+                                                                >
+                                                                    <span style={{ color: '#03e1e4', fontSize: 24, fontWeight: 'bold' }}>+</span>
+                                                                    <span style={{ color: '#aaa', fontSize: 13, marginTop: 4 }}>{t('simulator.addMiner', 'Ekle')}</span>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    })}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })(),
+                document.body
+            )}
+
             {isMobile && !isMobileMinerSearchOpen && (
                 <button
                     onClick={() => setIsMobileMinerSearchOpen(true)}
@@ -1031,93 +1416,107 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                 </button>
             )}
 
+            {/* MINER INVENTORY TOOLBAR & MOBILE MODAL */}
             {(!isMobile || isMobileMinerSearchOpen) && (
                 (() => {
-                    const content = (
-                        <div
-                            className={isMobile ? "miner-search-mobile-modal" : "miner-search-area"}
-                            style={isMobile ? {
-                                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: '#1a1b2e', zIndex: 999999, overflowY: 'auto', padding: 20
-                            } : { marginTop: 20 }}
-                        >
-                            {isMobile && (
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid #514e72', paddingBottom: 15 }}>
-                                    <h3 style={{ margin: 0, color: '#fff', fontSize: 20 }}>{t('merge.searchMiner')}</h3>
-                                    <button onClick={() => { setIsMobileMinerSearchOpen(false); setMobileTargetRackId(null); }} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: 32, cursor: 'pointer', lineHeight: 1 }}>×</button>
+                    const desktopContent = (
+                        <div className={`inventory-toolbar-wrapper ${isInventoryCollapsed ? 'collapsed' : ''}`}>
+                            {/* Toolbar bar */}
+                            <div className="inventory-toolbar">
+                                <div className="inventory-toolbar-left">
+                                    {isSearchOpen ? (
+                                        <div className="inv-search-bar">
+                                            <input
+                                                type="text"
+                                                className="inv-search-input"
+                                                value={searchQuery}
+                                                onChange={e => setSearchQuery(e.target.value)}
+                                                onKeyDown={e => e.key === 'Enter' && handleSearchMiners(0)}
+                                                placeholder={t('merge.searchByName')}
+                                                autoFocus
+                                            />
+                                            <button className="inv-search-close" onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}>✕</button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <button className="inv-icon-btn" onClick={() => setIsSearchOpen(true)} title={t('merge.searchMiner')}>
+                                                🔍
+                                            </button>
+                                            <button className={`inv-icon-btn ${isFilterOpen ? 'active' : ''}`} onClick={() => setIsFilterOpen(!isFilterOpen)} title={t('merge.filters')}>
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                            </button>
+                                            <select
+                                                className="inv-sort-select"
+                                                value={`${sortBy}-${isDescending ? 'desc' : 'asc'}`}
+                                                onChange={e => {
+                                                    const [newSort, dir] = e.target.value.split('-');
+                                                    setSortBy(newSort);
+                                                    setIsDescending(dir === 'desc');
+                                                    setTimeout(() => handleSearchMiners(0), 50);
+                                                }}
+                                            >
+                                                <option value="newest-desc">{t('merge.sortOptions.newest')} ↓</option>
+                                                <option value="newest-asc">{t('merge.sortOptions.newest')} ↑</option>
+                                                <option value="power-desc">{t('merge.sortOptions.power')} ↓</option>
+                                                <option value="power-asc">{t('merge.sortOptions.power')} ↑</option>
+                                                <option value="percent-desc">{t('merge.sortOptions.bonus')} ↓</option>
+                                                <option value="percent-asc">{t('merge.sortOptions.bonus')} ↑</option>
+                                                <option value="name-asc">{t('merge.sortOptions.name')} A-Z</option>
+                                                <option value="name-desc">{t('merge.sortOptions.name')} Z-A</option>
+                                            </select>
+                                        </>
+                                    )}
                                 </div>
-                            )}
-                            <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
 
-                                {/* LEFT: FILTER SIDEBAR */}
-                                <div className="rc-filter-container" style={{ flex: '1 1 300px', maxWidth: 400 }}>
-                                    <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 18, borderBottom: '1px solid #3c3e58', paddingBottom: 10 }}>{t('merge.filters')}</h3>
+                                <div className="inv-tabs">
+                                    <button className="inv-tab" disabled>{t('simulator.racksTab')}</button>
+                                    <button className="inv-tab active">{t('simulator.minersTab')}</button>
+                                </div>
 
+                                <div className="inventory-toolbar-right">
+                                    <button className="inv-nav-btn" onClick={() => handleSearchMiners(pageIndex - 1)} disabled={pageIndex === 0 || isSearching}>‹</button>
+                                    <button className="inv-nav-btn" onClick={() => handleSearchMiners(pageIndex + 1)} disabled={pageIndex >= totalPages - 1 || isSearching}>›</button>
+                                    <button className="inv-nav-btn" onClick={() => setIsInventoryCollapsed(!isInventoryCollapsed)}>
+                                        {isInventoryCollapsed ? '▲' : '▼'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Filter panel (expandable) */}
+                            {isFilterOpen && (
+                                <div className="inventory-filter-panel">
                                     {/* Power range */}
-                                    <div className="rc-filter-group">
-                                        <label className="rc-filter-label">{t('merge.filterPower')}:</label>
+                                    <div className="inv-filter-section">
+                                        <label>{t('merge.filterPower')}:</label>
                                         <div className="rc-dual-slider-container">
                                             <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh() || 0) / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh() || 100000000000) / 100000000000) * 100) - Math.min(100, ((getMinPowerGh() || 0) / 100000000000) * 100))}%` }} />
-                                            <input
-                                                type="range"
-                                                className="rc-native-slider rc-slider-min"
-                                                min="0" max="100000000000" step="1000000"
-                                                value={getMinPowerGh() || 0}
-                                                onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh() || 100000000000) - 1000000))}
-                                            />
-                                            <input
-                                                type="range"
-                                                className="rc-native-slider rc-slider-max"
-                                                min="0" max="100000000000" step="1000000"
-                                                value={getMaxPowerGh() || 100000000000}
-                                                onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh() || 0) + 1000000))}
-                                            />
+                                            <input type="range" className="rc-native-slider rc-slider-min" min="0" max="100000000000" step="1000000" value={getMinPowerGh() || 0} onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh() || 100000000000) - 1000000))} />
+                                            <input type="range" className="rc-native-slider rc-slider-max" min="0" max="100000000000" step="1000000" value={getMaxPowerGh() || 100000000000} onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh() || 0) + 1000000))} />
                                         </div>
-                                        <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px' }}>
+                                        <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '6px' }}>
                                             <div style={{ display: 'flex', gap: '4px' }}>
                                                 <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
                                                 <select className="rc-select" value={minPowerUnit} onChange={e => setMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
-                                                    <option value="Gh">Gh</option>
-                                                    <option value="Th">Th</option>
-                                                    <option value="Ph">Ph</option>
-                                                    <option value="Eh">Eh</option>
+                                                    <option value="Gh">Gh</option><option value="Th">Th</option><option value="Ph">Ph</option><option value="Eh">Eh</option>
                                                 </select>
                                             </div>
                                             <div style={{ display: 'flex', gap: '4px' }}>
                                                 <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%' }} />
                                                 <select className="rc-select" value={maxPowerUnit} onChange={e => setMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
-                                                    <option value="Gh">Gh</option>
-                                                    <option value="Th">Th</option>
-                                                    <option value="Ph">Ph</option>
-                                                    <option value="Eh">Eh</option>
+                                                    <option value="Gh">Gh</option><option value="Th">Th</option><option value="Ph">Ph</option><option value="Eh">Eh</option>
                                                 </select>
                                             </div>
                                             <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
                                         </div>
-                                        <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                            <span>{t('merge.min')}: {getMinPowerGh() ? formatPower(getMinPowerGh()!) : '0'}</span>
-                                            <span>{t('merge.max')}: {(getMaxPowerGh() || 100000000000) < 100000000000 ? formatPower(getMaxPowerGh()!) : t('merge.unlimited')}</span>
-                                        </div>
                                     </div>
 
                                     {/* Bonus range */}
-                                    <div className="rc-filter-group">
-                                        <label className="rc-filter-label">{t('merge.filterBonus')}:</label>
+                                    <div className="inv-filter-section">
+                                        <label>{t('merge.filterBonus')}:</label>
                                         <div className="rc-dual-slider-container">
                                             <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, (Number(minBonus || 0) / 500) * 100)}%`, width: `${Math.max(0, Math.min(100, (Number(maxBonus || 500) / 500) * 100) - Math.min(100, (Number(minBonus || 0) / 500) * 100))}%` }} />
-                                            <input
-                                                type="range"
-                                                className="rc-native-slider rc-slider-min"
-                                                min="0" max="500" step="1"
-                                                value={minBonus || 0}
-                                                onChange={e => setMinBonus(Math.min(Number(e.target.value), Number(maxBonus || 500) - 1).toString())}
-                                            />
-                                            <input
-                                                type="range"
-                                                className="rc-native-slider rc-slider-max"
-                                                min="0" max="500" step="1"
-                                                value={maxBonus || 500}
-                                                onChange={e => setMaxBonus(Math.max(Number(e.target.value), Number(minBonus || 0) + 1).toString())}
-                                            />
+                                            <input type="range" className="rc-native-slider rc-slider-min" min="0" max="500" step="1" value={minBonus || 0} onChange={e => setMinBonus(Math.min(Number(e.target.value), Number(maxBonus || 500) - 1).toString())} />
+                                            <input type="range" className="rc-native-slider rc-slider-max" min="0" max="500" step="1" value={maxBonus || 500} onChange={e => setMaxBonus(Math.max(Number(e.target.value), Number(minBonus || 0) + 1).toString())} />
                                         </div>
                                         <div className="rc-filter-inputs">
                                             <input type="number" className="rc-filter-input" value={minBonus} onChange={e => setMinBonus(e.target.value)} placeholder="0" />
@@ -1128,112 +1527,235 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                     </div>
 
                                     {/* Cells count */}
-                                    <div className="rc-filter-group">
-                                        <label className="rc-filter-label">{t('merge.filterCells')}:</label>
-                                        <div className="rc-checkbox-group">
-                                            <label className="rc-checkbox-label">
-                                                <input type="checkbox" checked={minerWidth === '1'} onChange={() => setMinerWidth(minerWidth === '1' ? '' : '1')} />
-                                                <span className="rc-checkbox-custom"></span>
-                                                1
-                                            </label>
-                                            <label className="rc-checkbox-label">
-                                                <input type="checkbox" checked={minerWidth === '2'} onChange={() => setMinerWidth(minerWidth === '2' ? '' : '2')} />
-                                                <span className="rc-checkbox-custom"></span>
-                                                2
-                                            </label>
-                                        </div>
+                                    <div className="inv-filter-cells">
+                                        <label style={{ color: '#ccc', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>{t('merge.filterCells')}:</label>
+                                        <label className="rc-checkbox-label">
+                                            <input type="checkbox" checked={minerWidth === '1'} onChange={() => setMinerWidth(minerWidth === '1' ? '' : '1')} />
+                                            <span className="rc-checkbox-custom"></span>
+                                            1
+                                        </label>
+                                        <label className="rc-checkbox-label">
+                                            <input type="checkbox" checked={minerWidth === '2'} onChange={() => setMinerWidth(minerWidth === '2' ? '' : '2')} />
+                                            <span className="rc-checkbox-custom"></span>
+                                            2
+                                        </label>
                                     </div>
 
-                                    {/* Sort */}
-                                    <div className="rc-filter-group" style={{ borderTop: '1px solid #3c3e58', paddingTop: 20 }}>
-                                        <label className="rc-filter-label" style={{ marginBottom: 10 }}>{t('merge.sorting')}:</label>
-                                        <div className="rc-filter-inputs">
-                                            <select value={sortBy} onChange={e => { setSortBy(e.target.value); setTimeout(() => handleSearchMiners(0), 50); }} className="rc-select">
-                                                <option value="power">{t('merge.sortOptions.power')}</option>
-                                                <option value="percent">{t('merge.sortOptions.bonus')}</option>
-                                                <option value="name">{t('merge.sortOptions.name')}</option>
-                                                <option value="newest">{t('merge.sortOptions.newest')}</option>
-                                            </select>
-                                            <button className="rc-filter-ok" onClick={() => { setIsDescending(!isDescending); setTimeout(() => handleSearchMiners(0), 50); }} style={{ padding: '8px 10px', fontSize: 15 }}>
-                                                {isDescending ? '▼' : '▲'}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    {/* Search by Name */}
-                                    <div className="rc-filter-group" style={{ marginTop: 20 }}>
-                                        <input type="text" className="rc-search-input" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearchMiners(0)} placeholder={t('merge.searchByName')} />
-                                        <button className="rc-filter-search-btn" onClick={() => handleSearchMiners(0)} disabled={isSearching}>
-                                            {isSearching ? t('merge.searching') : t('merge.searchBtn')}
-                                        </button>
+                                    {/* Filter actions (clear + close) */}
+                                    <div className="inv-filter-actions">
+                                        <button className="inv-filter-action-btn danger" onClick={() => { setMinPower(''); setMaxPower(''); setMinBonus(''); setMaxBonus('135'); setMinerWidth(''); }} title={t('simulator.clearFilters')}>🗑</button>
+                                        <button className="inv-filter-action-btn" onClick={() => setIsFilterOpen(false)} title={t('simulator.closeFilters')}>✕</button>
                                     </div>
                                 </div>
+                            )}
 
-                                {/* RIGHT: RESULTS AREA */}
-                                <div className="miner-search-results-wrapper" style={{ flex: '2 1 300px', background: '#15162a', padding: 20, borderRadius: 8, border: '1px solid #514e72' }}>
-                                    <h3 style={{ marginTop: 0, color: '#fff', marginBottom: 5 }}>{t('merge.searchResults')}</h3>
-                                    <p style={{ color: '#aaa', fontSize: 13, marginBottom: 15 }}>{t('merge.dragDropHint')}</p>
-
-                                    <div className="miner-search-results" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, maxHeight: 600, overflowY: 'auto', padding: 5 }}>
-                                        {minerList.length === 0 ? (
-                                            <div style={{ color: '#888', width: '100%', textAlign: 'center', padding: 20 }}>{t('merge.noResultsFound')}</div>
-                                        ) : (
-                                            minerList.map(miner => (
-                                                <div
-                                                    key={miner.id}
-                                                    draggable
-                                                    onDragStart={(e) => { e.dataTransfer.setData('miner', JSON.stringify(miner)); setDraggedMiner(miner); }}
-                                                    onDragEnd={() => { setDraggedMiner(null); setDragTarget(null); }}
-                                                    style={{
-                                                        cursor: 'grab', background: '#2f3045', padding: 10, borderRadius: 4,
-                                                        display: 'flex', flexDirection: 'column', alignItems: 'center', width: 160,
-                                                        border: '1px solid #514e72', transition: 'border 0.2s', position: 'relative'
-                                                    }}
-                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#03e1e4'}
-                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = '#514e72'}
-                                                >
-                                                    <button
-                                                        onClick={(e) => { e.stopPropagation(); handleAutoPlaceMiner(miner); }}
-                                                        style={{
-                                                            position: 'absolute', top: -5, right: -5, background: '#03e1e4', color: '#1a1b2e',
-                                                            border: 'none', borderRadius: '50%', width: 26, height: 26, fontSize: 18,
-                                                            fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                            boxShadow: '0 2px 4px rgba(0,0,0,0.4)', zIndex: 10
-                                                        }}
-                                                        title={t('merge.addToRoom')}
-                                                    >
-                                                        +
-                                                    </button>
+                            {/* Miner cards grid */}
+                            {!isInventoryCollapsed && (
+                                <div className="inventory-miner-grid">
+                                    {minerList.length === 0 ? (
+                                        <div className="inv-miner-card-empty">
+                                            {isSearching ? t('merge.searching') : t('merge.noResultsFound')}
+                                        </div>
+                                    ) : (
+                                        minerList.map(miner => (
+                                            <div
+                                                key={miner.id}
+                                                className="inv-miner-card"
+                                                draggable
+                                                onDragStart={(e) => {
+                                                    e.dataTransfer.setData('miner', JSON.stringify(miner));
+                                                    setDraggedMiner(miner);
+                                                    const imgWrapper = (e.currentTarget as HTMLElement).querySelector('.inv-miner-card-img-wrapper');
+                                                    if (imgWrapper) {
+                                                        const rect = imgWrapper.getBoundingClientRect();
+                                                        e.dataTransfer.setDragImage(imgWrapper as Element, rect.width / 2, rect.height / 2);
+                                                    }
+                                                }}
+                                                onDragEnd={() => { setDraggedMiner(null); setDragTarget(null); }}
+                                                onClick={() => {
+                                                    if (replacingMinerId && replaceTargetRackId) {
+                                                        handleReplaceMiner(miner, replacingMinerId, replaceTargetRackId);
+                                                    } else {
+                                                        handleAutoPlaceMiner(miner);
+                                                    }
+                                                }}
+                                            >
+                                                <div className="inv-miner-card-img-wrapper">
+                                                    {miner.level > 0 && (
+                                                        <div className="inv-miner-card-badge">
+                                                            <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                        </div>
+                                                    )}
                                                     <img
+                                                        className="inv-miner-card-img"
                                                         src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
-                                                        style={{ width: 80, height: 'auto', pointerEvents: 'none' }}
+                                                        alt={miner.name}
                                                         loading="lazy"
                                                         onError={(e) => {
                                                             const target = e.target as HTMLImageElement;
                                                             if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.split('.')[0] || 'crypto_combo'}.png`;
                                                         }}
                                                     />
-                                                    <span style={{ color: '#fff', fontSize: 13, textAlign: 'center', marginTop: 8, fontWeight: 'bold', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{miner.name}</span>
-                                                    <span style={{ color: '#888', fontSize: 12 }}>Lvl {miner.level + 1} • {miner.width} Hücre</span>
-                                                    <span style={{ color: '#03e1e4', fontSize: 13, marginTop: 4 }}>{formatPower(miner.power)}</span>
-                                                    {miner.percent > 0 && <span style={{ color: '#28a745', fontSize: 12 }}>+{(miner.percent / 100).toFixed(2)}% Bonus</span>}
                                                 </div>
-                                            ))
-                                        )}
-                                    </div>
-
-                                    {totalPages > 1 && (
-                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10, marginTop: 15, color: '#fff' }}>
-                                            <button onClick={() => handleSearchMiners(pageIndex - 1)} disabled={pageIndex === 0 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>{t('pagination.previous')}</button>
-                                            <span>{pageIndex + 1} / {totalPages}</span>
-                                            <button onClick={() => handleSearchMiners(pageIndex + 1)} disabled={pageIndex >= totalPages - 1 || isSearching} style={{ padding: '5px 10px', background: '#514e72', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>{t('pagination.next')}</button>
-                                        </div>
+                                                <span className="inv-miner-card-name">{miner.name}</span>
+                                                <span className="inv-miner-card-power">{formatPower(miner.power)}</span>
+                                                {miner.percent > 0 && <span className="inv-miner-card-bonus">+{(miner.percent / 100).toFixed(1)}%</span>}
+                                            </div>
+                                        ))
                                     )}
                                 </div>
+                            )}
+                        </div>
+                    );
+
+                    const mobileContent = (
+                        <div className="mobile-inventory-modal">
+                            <div className="mobile-inv-header">
+                                <button className="mobile-inv-back" onClick={() => setIsMobileMinerSearchOpen(false)}>
+                                    ‹ Back to rooms
+                                </button>
+                                <button className="mobile-inv-close" onClick={() => setIsMobileMinerSearchOpen(false)}>✕</button>
+                            </div>
+
+                            <div className="mobile-inv-tabs-row">
+                                <div className="inv-tabs">
+                                    <button className="inv-tab" disabled>{t('simulator.racksTab')}</button>
+                                    <button className="inv-tab active">{t('simulator.minersTab')}</button>
+                                    <button className="inv-tab" disabled>Info</button>
+                                </div>
+                                <div className="mobile-inv-pagination">
+                                    <button onClick={() => handleSearchMiners(pageIndex - 1)} disabled={pageIndex === 0 || isSearching}>‹</button>
+                                    <span>{pageIndex + 1}/{totalPages || 1}</span>
+                                    <button onClick={() => handleSearchMiners(pageIndex + 1)} disabled={pageIndex >= totalPages - 1 || isSearching}>›</button>
+                                </div>
+                            </div>
+
+                            <div className="mobile-inv-toolbar">
+                                <button className="inv-icon-btn" onClick={() => { setIsSearchOpen(!isSearchOpen); if (isFilterOpen) setIsFilterOpen(false); }}>🔍</button>
+                                <button className={`inv-icon-btn ${isFilterOpen ? 'active' : ''}`} onClick={() => { setIsFilterOpen(!isFilterOpen); if (isSearchOpen) setIsSearchOpen(false); }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                </button>
+                                <select
+                                    className="inv-sort-select"
+                                    value={`${sortBy}-${isDescending ? 'desc' : 'asc'}`}
+                                    onChange={e => {
+                                        const [newSort, dir] = e.target.value.split('-');
+                                        setSortBy(newSort);
+                                        setIsDescending(dir === 'desc');
+                                        setTimeout(() => handleSearchMiners(0), 50);
+                                    }}
+                                >
+                                    <option value="newest-desc">{t('merge.sortOptions.newest')} ↓</option>
+                                    <option value="newest-asc">{t('merge.sortOptions.newest')} ↑</option>
+                                    <option value="power-desc">{t('merge.sortOptions.power')} ↓</option>
+                                    <option value="power-asc">{t('merge.sortOptions.power')} ↑</option>
+                                    <option value="percent-desc">{t('merge.sortOptions.bonus')} ↓</option>
+                                    <option value="percent-asc">{t('merge.sortOptions.bonus')} ↑</option>
+                                    <option value="name-asc">{t('merge.sortOptions.name')} A-Z</option>
+                                    <option value="name-desc">{t('merge.sortOptions.name')} Z-A</option>
+                                </select>
+                            </div>
+
+                            {isSearchOpen && (
+                                <div className="mobile-inv-search">
+                                    <input
+                                        type="text"
+                                        className="inv-search-input"
+                                        value={searchQuery}
+                                        onChange={e => setSearchQuery(e.target.value)}
+                                        onKeyDown={e => e.key === 'Enter' && handleSearchMiners(0)}
+                                        placeholder={t('merge.searchByName')}
+                                        autoFocus
+                                    />
+                                    <button className="inv-search-close" onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}>✕</button>
+                                </div>
+                            )}
+
+                            {isFilterOpen && (
+                                <div className="mobile-inv-filter">
+                                    {/* Simplified filter for mobile or same filter layout */}
+                                    <div className="inv-filter-section">
+                                        <label>{t('merge.filterPower')}:</label>
+                                        <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '6px' }}>
+                                            <div style={{ display: 'flex', gap: '4px' }}>
+                                                <input type="number" className="rc-filter-input" value={minPower} onChange={e => setMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
+                                                <select className="rc-select" value={minPowerUnit} onChange={e => setMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                    <option value="Gh">Gh</option><option value="Th">Th</option><option value="Ph">Ph</option><option value="Eh">Eh</option>
+                                                </select>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '4px' }}>
+                                                <input type="number" className="rc-filter-input" value={maxPower} onChange={e => setMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%' }} />
+                                                <select className="rc-select" value={maxPowerUnit} onChange={e => setMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
+                                                    <option value="Gh">Gh</option><option value="Th">Th</option><option value="Ph">Ph</option><option value="Eh">Eh</option>
+                                                </select>
+                                            </div>
+                                            <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
+                                        </div>
+                                    </div>
+
+                                    <div className="inv-filter-section" style={{ marginTop: 15 }}>
+                                        <label>{t('merge.filterBonus')}:</label>
+                                        <div className="rc-filter-inputs">
+                                            <input type="number" className="rc-filter-input" value={minBonus} onChange={e => setMinBonus(e.target.value)} placeholder="0" />
+                                            <span className="rc-filter-separator">-</span>
+                                            <input type="number" className="rc-filter-input" value={maxBonus} onChange={e => setMaxBonus(e.target.value)} placeholder={t('merge.max')} />
+                                            <button className="rc-filter-ok" onClick={() => handleSearchMiners(0)}>OK</button>
+                                        </div>
+                                    </div>
+
+                                    <div className="inv-filter-actions">
+                                        <button className="inv-filter-action-btn danger" onClick={() => { setMinPower(''); setMaxPower(''); setMinBonus(''); setMaxBonus('135'); setMinerWidth(''); handleSearchMiners(0); }} title={t('simulator.clearFilters')}>🗑</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mobile-inv-grid">
+                                {minerList.length === 0 ? (
+                                    <div className="inv-miner-card-empty">
+                                        {isSearching ? t('merge.searching') : t('merge.noResultsFound')}
+                                    </div>
+                                ) : (
+                                    minerList.map(miner => (
+                                        <div
+                                            key={miner.id}
+                                            className="inv-miner-card"
+                                            onClick={() => {
+                                                if (replacingMinerId && replaceTargetRackId) {
+                                                    handleReplaceMiner(miner, replacingMinerId, replaceTargetRackId);
+                                                    setIsMobileMinerSearchOpen(false);
+                                                } else {
+                                                    handleAutoPlaceMiner(miner);
+                                                    setIsMobileMinerSearchOpen(false);
+                                                }
+                                            }}
+                                        >
+                                            <div className="inv-miner-card-img-wrapper">
+                                                {miner.level > 0 && (
+                                                    <div className="inv-miner-card-badge">
+                                                        <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                    </div>
+                                                )}
+                                                <img
+                                                    className="inv-miner-card-img"
+                                                    src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
+                                                    alt={miner.name}
+                                                    loading="lazy"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.split('.')[0] || 'crypto_combo'}.png`;
+                                                    }}
+                                                />
+                                            </div>
+                                            <span className="inv-miner-card-name">{miner.name}</span>
+                                            <span className="inv-miner-card-power">{formatPower(miner.power)} | <span className="inv-miner-card-bonus">{miner.percent > 0 ? `+${(miner.percent / 100).toFixed(1)}%` : '0%'}</span></span>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     );
-                    return isMobile && isMobileMinerSearchOpen ? createPortal(content, document.body) : content;
+
+                    return isMobile ? (isMobileMinerSearchOpen ? createPortal(mobileContent, document.body) : null) : desktopContent;
                 })()
             )}
         </div>

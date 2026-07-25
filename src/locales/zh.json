@@ -382,7 +382,15 @@
     "newLeaguePower": "新联赛算力",
     "minerLevelPrefix": "{{level}}级 ",
     "disclaimer": "警告：由于游戏中隐藏的机制或缺失的数据，这里计算的值可能不准确。在做决定时请记住这一点。我们的网站对任何潜在的错误绝对不承担任何责任。",
-    "manualDesc": "获取您的房间数据以找到您的基础算力，并通过手动或从数据库中添加矿机来计算您的算力。"
+    "manualDesc": "获取您的房间数据以找到您的基础算力，并通过手动或从数据库中添加矿机来计算您的算力。",
+    "saveLayout": "保存",
+    "loadLayout": "加载",
+    "layoutSaved": "布局保存成功！",
+    "layoutSaveError": "无法保存布局！",
+    "loadConfirm": "加载保存的布局将覆盖您当前的布局。您确定吗？",
+    "layoutLoaded": "保存的布局已加载！",
+    "noSavedLayout": "未找到保存的布局！",
+    "layoutLoadError": "加载布局时出错！"
   },
   "settings": {
     "title": "设置",

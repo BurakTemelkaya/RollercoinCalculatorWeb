@@ -382,7 +382,15 @@
     "newLeaguePower": "Novo Poder da Liga",
     "minerLevelPrefix": "Nível {{level}} ",
     "disclaimer": "Aviso: Os valores calculados aqui podem ser imprecisos devido a mecânicas ocultas no jogo ou dados em falta. Por favor, aja em conformidade. O nosso site não assume qualquer responsabilidade por potenciais erros.",
-    "manualDesc": "Obtenha os dados da sua sala para encontrar o seu poder base e calcule o seu poder adicionando mineradores manualmente ou a partir do banco de dados."
+    "manualDesc": "Obtenha os dados da sua sala para encontrar o seu poder base e calcule o seu poder adicionando mineradores manualmente ou a partir do banco de dados.",
+    "saveLayout": "Salvar",
+    "loadLayout": "Carregar",
+    "layoutSaved": "Layout salvo com sucesso!",
+    "layoutSaveError": "Não foi possível salvar o layout!",
+    "loadConfirm": "Carregar o layout salvo substituirá seu layout atual. Tem certeza?",
+    "layoutLoaded": "Layout salvo carregado!",
+    "noSavedLayout": "Nenhum layout salvo encontrado!",
+    "layoutLoadError": "Ocorreu um erro ao carregar o layout!"
   },
   "settings": {
     "title": "Configurações",

@@ -397,10 +397,6 @@
         gap: 10px !important;
     }
 
-    .rack-drop-wrapper {
-        display: none !important;
-    }
-
     .room-sim-header {
         justify-content: flex-start;
         flex-wrap: wrap;
@@ -708,9 +704,18 @@
     text-align: center;
 }
 
-.rs-value.primary { color: #fff; }
-.rs-value.success { color: #28a745; font-size: 15px; }
-.rs-value.highlight { color: #ffc107; }
+.rs-value.primary {
+    color: #fff;
+}
+
+.rs-value.success {
+    color: #28a745;
+    font-size: 15px;
+}
+
+.rs-value.highlight {
+    color: #ffc107;
+}
 
 .rs-subvalue {
     color: #03e1e4;
@@ -723,7 +728,7 @@
     .room-simulator-wrapper {
         max-width: 100%;
     }
-    
+
     .room-grid-area {
         overflow-x: auto;
     }
@@ -735,7 +740,7 @@
         gap: 15px;
         padding: 15px;
     }
-    
+
     .room-stat-item:not(:first-child) {
         border-left: none;
         border-top: 1px solid #3c3e58;
@@ -749,27 +754,1001 @@
 /* MOBILE PERFORMANCE OPTIMIZATIONS (Max-width: 768px)                       */
 /* ========================================================================= */
 @media (max-width: 768px) {
-  .miner-item {
-      transform: translateZ(0); /* Hardware acceleration */
-      will-change: transform;
-      filter: none !important; /* Animasyonlu GIF'lere CSS filter uygulamak GPU'yu aşırı yorar */
-  }
+    .miner-item {
+        transform: translateZ(0);
+        /* Hardware acceleration */
+        will-change: transform;
+        filter: none !important;
+        /* Animasyonlu GIF'lere CSS filter uygulamak GPU'yu aşırı yorar */
+    }
 
-  .miner-img-wrapper:hover .miner-item {
-      filter: none !important;
-  }
+    .miner-img-wrapper:hover .miner-item {
+        filter: none !important;
+    }
 
-  .miners-badges img {
-      filter: none !important;
-  }
-  
-  /* Tooltip'in ekrandan taşmasını ve bozuk görünmesini engelle */
-  .miner-tooltip {
-      white-space: normal;
-      width: max-content;
-      max-width: 160px;
-      text-align: center;
-      word-break: normal;
-      overflow-wrap: break-word;
-  }
+    .miners-badges img {
+        filter: none !important;
+    }
+
+    /* Tooltip'in ekrandan taşmasını ve bozuk görünmesini engelle */
+    .miner-tooltip {
+        white-space: normal;
+        width: max-content;
+        max-width: 160px;
+        text-align: center;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+}
+
+/* ===================================================================== */
+/* RACK EDIT MODAL                                                        */
+/* ===================================================================== */
+.rack-edit-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.rack-edit-modal {
+    background: #2b2d3e;
+    border: 1px solid #484b6a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 750px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: rackEditSlideIn 0.2s ease-out;
+}
+
+@keyframes rackEditSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.rack-edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #484b6a;
+}
+
+.rack-edit-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.rack-edit-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.rack-edit-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.rack-edit-body {
+    display: flex;
+    gap: 0;
+}
+
+.rack-edit-preview {
+    width: 160px;
+    min-width: 160px;
+    padding: 20px 15px;
+    border-right: 1px solid #484b6a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #252636;
+}
+
+.rack-edit-content {
+    flex: 1;
+    padding: 0;
+    min-width: 0;
+}
+
+/* Navigation */
+.rack-edit-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(72, 75, 106, 0.5);
+}
+
+.rack-edit-nav-btn {
+    background: #3c3e58;
+    border: 1px solid #484b6a;
+    color: #ccc;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.rack-edit-nav-btn:hover {
+    background: #484b6a;
+    color: #fff;
+}
+
+.rack-edit-nav-label {
+    color: #ccc;
+    font-size: 14px;
+    font-weight: 600;
+    background: #3c3e58;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: 1px solid #484b6a;
+}
+
+/* Rack info bar */
+.rack-edit-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(72, 75, 106, 0.5);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rack-edit-info-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rack-edit-rack-name {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.rack-edit-rack-bonus {
+    color: #03e1e4;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.rack-edit-info-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.rack-edit-unmount-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid #484b6a;
+    border-radius: 4px;
+    background: #3c3e58;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.rack-edit-unmount-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.rack-edit-unmount-btn.danger:hover {
+    background: #d9534f;
+    border-color: #d9534f;
+    color: #fff;
+}
+
+/* Miner slots */
+.rack-edit-slots {
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rack-edit-slot-row {
+    display: flex;
+    gap: 8px;
+}
+
+.rack-edit-miner-card {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #3c3e58;
+    border: 1px dashed #555;
+    border-radius: 6px;
+    min-height: 52px;
+    transition: border-color 0.15s;
+}
+
+.rack-edit-miner-card:hover {
+    border-color: #03e1e4;
+}
+
+.rack-edit-miner-card.empty {
+    justify-content: center;
+    opacity: 0.4;
+    border-style: dashed;
+}
+
+.rack-edit-miner-card.full-width {
+    flex: 1 1 100%;
+}
+
+.rack-edit-miner-level {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+}
+
+.rack-edit-miner-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.rack-edit-miner-img-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rack-edit-miner-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.rack-edit-miner-name {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rack-edit-miner-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.rack-edit-miner-power {
+    color: #ccc;
+    font-weight: 700;
+}
+
+.rack-edit-miner-bonus {
+    color: #03e1e4;
+    font-weight: 600;
+}
+
+.rack-edit-miner-bonus.inactive {
+    color: #d9534f;
+    text-decoration: line-through;
+}
+
+.rack-edit-miner-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.rack-edit-action-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #555;
+    color: #aaa;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.rack-edit-action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: #888;
+}
+
+.rack-edit-action-btn.delete:hover {
+    background: rgba(217, 83, 79, 0.3);
+    border-color: #d9534f;
+    color: #d9534f;
+}
+
+/* Mobile rack edit */
+@media (max-width: 640px) {
+    .rack-edit-modal {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .rack-edit-body {
+        flex-direction: column;
+    }
+
+    .rack-edit-preview {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #484b6a;
+        padding: 15px;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .rack-edit-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rack-edit-miner-card {
+        padding: 8px 10px;
+    }
+
+    .rack-edit-slot-row {
+        flex-direction: column;
+    }
+}
+
+/* ===================================================================== */
+/* MINER INVENTORY TOOLBAR                                                */
+/* ===================================================================== */
+.inventory-toolbar-wrapper {
+    margin-top: 20px;
+    background: #252636;
+    border: 1px solid #3c3e58;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Top bar */
+.inventory-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #3c3e58;
+    flex-wrap: nowrap;
+    min-height: 48px;
+}
+
+.inventory-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.inventory-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* Toolbar icon buttons */
+.inv-icon-btn {
+    background: none;
+    border: 1px solid #484b6a;
+    color: #aaa;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.15s;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.inv-icon-btn:hover {
+    background: #3c3e58;
+    color: #fff;
+    border-color: #666;
+}
+
+.inv-icon-btn.active {
+    background: #03e1e4;
+    color: #1a1b2e;
+    border-color: #03e1e4;
+}
+
+/* Sort dropdown */
+.inv-sort-select {
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    color: #ccc;
+    padding: 7px 30px 7px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M5 6L0 0h10z' fill='%23888'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    min-width: 140px;
+}
+
+.inv-sort-select:hover {
+    border-color: #666;
+}
+
+/* Tabs */
+.inv-tabs {
+    display: flex;
+    gap: 0;
+    flex-shrink: 0;
+}
+
+.inv-tab {
+    padding: 7px 18px;
+    border: 1px solid #484b6a;
+    background: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+}
+
+.inv-tab:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.inv-tab:last-child {
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+}
+
+.inv-tab.active {
+    background: #fff;
+    color: #1a1b2e;
+    border-color: #fff;
+}
+
+.inv-tab:hover:not(.active):not(:disabled) {
+    background: #3c3e58;
+    color: #fff;
+}
+
+.inv-tab:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Nav arrows */
+.inv-nav-btn {
+    background: none;
+    border: 1px solid #484b6a;
+    color: #888;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.inv-nav-btn:hover:not(:disabled) {
+    background: #3c3e58;
+    color: #fff;
+}
+
+.inv-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Search bar */
+.inv-search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1d1d29;
+    border: 1px solid #484b6a;
+    border-radius: 6px;
+    padding: 0 10px;
+    height: 36px;
+    min-width: 0;
+}
+
+.inv-search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    min-width: 0;
+}
+
+.inv-search-input::placeholder {
+    color: #666;
+}
+
+.inv-search-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+}
+
+.inv-search-close:hover {
+    color: #fff;
+}
+
+/* Filter panel */
+.inventory-filter-panel {
+    padding: 16px 60px 16px 20px;
+    border-bottom: 1px solid #3c3e58;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    background: #1f2030;
+    position: relative;
+}
+
+.inv-filter-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.inv-filter-section label {
+    display: block;
+    color: #ccc;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.inv-filter-section .rc-dual-slider-container {
+    margin: 8px 0 14px 0;
+}
+
+.inv-filter-section .rc-filter-inputs {
+    gap: 6px;
+}
+
+.inv-filter-section .rc-filter-input {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.inv-filter-section .rc-filter-ok {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.inv-filter-cells {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 80px;
+    flex: 0 0 auto;
+}
+
+.inv-filter-cells .rc-checkbox-label {
+    font-size: 13px;
+    gap: 8px;
+}
+
+.inv-filter-cells .rc-checkbox-custom {
+    width: 18px;
+    height: 18px;
+}
+
+.inv-filter-actions {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: 6px;
+}
+
+.inv-filter-action-btn {
+    background: none;
+    border: 1px solid #484b6a;
+    color: #aaa;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.inv-filter-action-btn:hover {
+    background: #3c3e58;
+    color: #fff;
+}
+
+.inv-filter-action-btn.danger:hover {
+    background: rgba(217, 83, 79, 0.3);
+    color: #d9534f;
+    border-color: #d9534f;
+}
+
+/* Miner grid */
+.inventory-miner-grid {
+    display: flex;
+    gap: 10px;
+    padding: 16px;
+    overflow-x: auto;
+    min-height: 100px;
+    scroll-behavior: smooth;
+}
+
+.inventory-miner-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.inventory-miner-grid::-webkit-scrollbar-track {
+    background: #1d1d29;
+    border-radius: 3px;
+}
+
+.inventory-miner-grid::-webkit-scrollbar-thumb {
+    background: #484b6a;
+    border-radius: 3px;
+}
+
+.inventory-miner-grid::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Miner card */
+.inv-miner-card {
+    flex: 0 0 auto;
+    width: 120px;
+    background: #2f3045;
+    border: 1px solid #484b6a;
+    border-radius: 6px;
+    padding: 10px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.inv-miner-card:hover {
+    border-color: #03e1e4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.inv-miner-card-img-wrapper {
+    position: relative;
+    width: 70px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inv-miner-card-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.inv-miner-card-badge {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+}
+
+.inv-miner-card-badge img {
+    width: 18px;
+    height: 18px;
+}
+
+.inv-miner-card-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #d9534f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    z-index: 2;
+}
+
+.inv-miner-card-name {
+    color: #aaa;
+    font-size: 11px;
+    text-align: center;
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.inv-miner-card-power {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.inv-miner-card-bonus {
+    color: #03e1e4;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.inv-miner-card-empty {
+    color: #666;
+    text-align: center;
+    padding: 30px 20px;
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Collapsed state */
+.inventory-toolbar-wrapper.collapsed .inventory-miner-grid,
+.inventory-toolbar-wrapper.collapsed .inventory-filter-panel {
+    display: none;
+}
+
+/* Mobile toolbar */
+@media (max-width: 768px) {
+    .inventory-toolbar {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px 12px;
+    }
+
+    .inventory-toolbar-left {
+        order: 2;
+        flex: 1 1 100%;
+    }
+
+    .inv-tabs {
+        order: 1;
+        flex: 1;
+    }
+
+    .inventory-toolbar-right {
+        order: 3;
+    }
+
+    .inv-sort-select {
+        min-width: 100px;
+        font-size: 12px;
+    }
+
+    .inventory-filter-panel {
+        flex-direction: column;
+        gap: 14px;
+        padding: 12px 14px;
+    }
+
+    .inv-filter-section {
+        min-width: 100%;
+    }
+
+    .inv-miner-card {
+        width: 100px;
+        padding: 8px 6px 6px;
+    }
+
+    .inv-miner-card-img-wrapper {
+        width: 55px;
+        height: 40px;
+    }
+
+    .inv-miner-card-name {
+        font-size: 10px;
+    }
+
+    .inv-miner-card-power {
+        font-size: 11px;
+    }
+}
+
+/* === MOBILE INVENTORY MODAL === */
+.mobile-inventory-modal {
+    position: fixed;
+    inset: 0;
+    background: #1a1b2e;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.mobile-inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #23253a;
+    border-bottom: 1px solid #3c3e58;
+}
+
+.mobile-inv-back {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-inv-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.mobile-inv-tabs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #23253a;
+    border-bottom: 1px solid #3c3e58;
+}
+
+.mobile-inv-pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.mobile-inv-pagination button {
+    background: none;
+    border: none;
+    color: #03e1e4;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.mobile-inv-pagination button:disabled {
+    color: #555;
+}
+
+.mobile-inv-toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #1e1f32;
+    border-bottom: 1px solid #3c3e58;
+}
+
+.mobile-inv-toolbar .inv-icon-btn,
+.mobile-inv-toolbar .inv-sort-select {
+    flex: 1;
+}
+
+.mobile-inv-search,
+.mobile-inv-filter {
+    padding: 16px;
+    background: #1e1f32;
+    border-bottom: 1px solid #3c3e58;
+}
+
+.mobile-inv-grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-content: start;
+}
+
+.mobile-inv-grid .inv-miner-card {
+    min-width: 0;
+    /* Reset for grid */
+    width: 100%;
 }

@@ -368,7 +368,15 @@
     "newLeaguePower": "Nouvelle puissance de ligue",
     "minerLevelPrefix": "Niveau {{level}} ",
     "disclaimer": "Avertissement : Les valeurs calculées ici peuvent être inexactes en raison de mécanismes de jeu cachés ou de données manquantes. Veuillez agir en conséquence. Notre site n'assume aucune responsabilité pour les erreurs potentielles.",
-    "manualDesc": "Récupérez les données de votre salle pour trouver votre puissance de base et calculez votre puissance en ajoutant des mineurs manuellement ou depuis la base de données."
+    "manualDesc": "Récupérez les données de votre salle pour trouver votre puissance de base et calculez votre puissance en ajoutant des mineurs manuellement ou depuis la base de données.",
+    "saveLayout": "Sauvegarder",
+    "loadLayout": "Charger",
+    "layoutSaved": "Mise en page sauvegardée avec succès!",
+    "layoutSaveError": "Impossible de sauvegarder la mise en page!",
+    "loadConfirm": "Charger la mise en page sauvegardée écrasera votre mise en page actuelle. Êtes-vous sûr?",
+    "layoutLoaded": "Mise en page sauvegardée chargée!",
+    "noSavedLayout": "Aucune mise en page sauvegardée trouvée!",
+    "layoutLoadError": "Une erreur s'est produite lors du chargement de la mise en page!"
   },
   "settings": {
     "title": "Paramètres",

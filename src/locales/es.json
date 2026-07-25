@@ -367,7 +367,15 @@
     "minerLevelPrefix": "Nivel {{level}} ",
     "disclaimer": "Advertencia: Los valores calculados aquí pueden ser inexactos debido a mecánicas ocultas del juego o datos faltantes. Actúe en consecuencia. Nuestro sitio no asume ninguna responsabilidad por posibles errores.",
     "manualDesc": "Obtén los datos de tu sala para encontrar tu poder base y calcula tu poder añadiendo mineros manualmente o desde la base de datos.",
-    "clearAllMiners": "Borrar Todo"
+    "clearAllMiners": "Borrar Todo",
+    "saveLayout": "Guardar",
+    "loadLayout": "Cargar",
+    "layoutSaved": "¡Diseño guardado con éxito!",
+    "layoutSaveError": "¡No se pudo guardar el diseño!",
+    "loadConfirm": "Cargar el diseño guardado sobrescribirá su diseño actual. ¿Está seguro?",
+    "layoutLoaded": "¡Diseño guardado cargado!",
+    "noSavedLayout": "¡No se encontró ningún diseño guardado!",
+    "layoutLoadError": "¡Se produjo un error al cargar el diseño!"
   },
   "settings": {
     "title": "Configuración",
