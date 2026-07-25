@@ -59,7 +59,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   useEffect(() => {
     fetch('https://get.geojs.io/v1/ip/country.json')
       .then(res => res.json())
-      .then(data => setCountry("data.country"))
+      .then(data => setCountry(data.country))
       .catch(() => setCountry('UNKNOWN')); // If adblocker blocks geojs, default to UNKNOWN
   }, []);
 
