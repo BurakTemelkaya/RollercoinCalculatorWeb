@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -39,6 +39,20 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const [editingRackId, setEditingRackId] = useState<string | null>(null);
     const [replacingMinerId, setReplacingMinerId] = useState<string | null>(null);
     const [replaceTargetRackId, setReplaceTargetRackId] = useState<string | null>(null);
+    const inventoryRef = useRef<HTMLDivElement>(null);
+
+    const handleInitiateAddOrReplace = (targetRackId: string | null) => {
+        setReplaceTargetRackId(targetRackId);
+        setEditingRackId(null);
+        setIsInventoryCollapsed(false);
+        if (isMobile) {
+            setIsMobileMinerSearchOpen(true);
+        } else {
+            setTimeout(() => {
+                inventoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    };
 
     // Miner Inventory Toolbar State
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -1363,9 +1377,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                             title={t('simulator.replaceMiner')}
                                                                             onClick={() => {
                                                                                 setReplacingMinerId(miner._id);
-                                                                                setReplaceTargetRackId(editingRackId);
-                                                                                setEditingRackId(null);
-                                                                                setIsInventoryCollapsed(false);
+                                                                                handleInitiateAddOrReplace(editingRackId);
                                                                                 addNotification(t('simulator.selectMinerToReplace', 'Envanterden yeni madenciyi seçin'), 'info');
                                                                             }}
                                                                         >⟳</button>
@@ -1383,9 +1395,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                     className="rack-edit-miner-card empty"
                                                                     style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'all 0.2s' }}
                                                                     onClick={() => {
-                                                                        setReplaceTargetRackId(editingRackId);
-                                                                        setEditingRackId(null);
-                                                                        setIsInventoryCollapsed(false);
+                                                                        handleInitiateAddOrReplace(editingRackId);
                                                                         addNotification(t('simulator.selectMinerToAdd', 'Eklenecek madenciyi seçin'), 'info');
                                                                     }}
                                                                 >
@@ -1420,7 +1430,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             {(!isMobile || isMobileMinerSearchOpen) && (
                 (() => {
                     const desktopContent = (
-                        <div className={`inventory-toolbar-wrapper ${isInventoryCollapsed ? 'collapsed' : ''}`}>
+                        <div ref={inventoryRef} className={`inventory-toolbar-wrapper ${isInventoryCollapsed ? 'collapsed' : ''}`}>
                             {/* Toolbar bar */}
                             <div className="inventory-toolbar">
                                 <div className="inventory-toolbar-left">
@@ -1611,10 +1621,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                     const mobileContent = (
                         <div className="mobile-inventory-modal">
                             <div className="mobile-inv-header">
-                                <button className="mobile-inv-back" onClick={() => setIsMobileMinerSearchOpen(false)}>
+                                <button className="mobile-inv-back" onClick={() => { setIsMobileMinerSearchOpen(false); setReplaceTargetRackId(null); setReplacingMinerId(null); }}>
                                     ‹ Back to rooms
                                 </button>
-                                <button className="mobile-inv-close" onClick={() => setIsMobileMinerSearchOpen(false)}>✕</button>
+                                <button className="mobile-inv-close" onClick={() => { setIsMobileMinerSearchOpen(false); setReplaceTargetRackId(null); setReplacingMinerId(null); }}>✕</button>
                             </div>
 
                             <div className="mobile-inv-tabs-row">
