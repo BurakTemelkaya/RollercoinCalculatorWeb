@@ -36,6 +36,9 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+
+  /* Navbar */
+  --navbar-height: 76px;
 }
 
 * {
@@ -81,8 +84,7 @@ html {
 /* App Layout Wrapper (3-column: left-ad | content | right-ad) */
 .app-layout {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
 }
@@ -346,49 +348,37 @@ a:hover {
   opacity: 0.8;
 }
 
-/* Header */
-.header {
-  padding: 16px 20px 24px;
+/* ─── Fixed Navbar ─── */
+.sticky-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 24px;
-  overflow: hidden;
+  padding: 8px max(20px, calc((100vw - 1200px) / 4));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.header-content {
+/* Spacer to push content below the fixed navbar */
+.navbar-spacer {
+  height: var(--navbar-height);
+  /* matches navbar height: logo 60px + 8px*2 padding */
+}
+
+.sticky-navbar-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 12px;
+  width: 100%;
 }
 
-
-.header-title {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  white-space: nowrap;
-  padding: 0;
-}
-
-.header-title h1 {
-  font-size: 32px;
-  font-weight: 800;
-  background: var(--accent-gradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
-  margin: 0;
-  line-height: 1;
-}
-
+/* Logo */
 .app-main-logo {
-  width: 100px !important;
-  height: 100px !important;
+  width: 60px !important;
+  height: 60px !important;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
@@ -399,15 +389,11 @@ a:hover {
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
 }
 
-
-
-/* Base header parts: auto sizing for Logo and Actions to prevent middle overlap */
 .header-logo {
-  flex: 0 0 auto;
+  flex: 1 1 0;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  min-width: 0;
+  justify-content: flex-start;
   position: relative !important;
   z-index: 9999 !important;
   pointer-events: auto !important;
@@ -415,15 +401,27 @@ a:hover {
 
 .header-logo a {
   pointer-events: auto !important;
+  display: flex;
+  align-items: center;
 }
 
-.header-actions {
-  flex: 0 0 auto;
+/* Nav links inside sticky bar - centered by equal-width siblings */
+.sticky-nav-links {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
-  min-width: 0;
+  gap: 6px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* Actions (lang + auth + hamburger) */
+.header-actions {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
   position: relative !important;
   z-index: 9999 !important;
   pointer-events: auto !important;
@@ -434,75 +432,39 @@ a:hover {
   pointer-events: auto !important;
 }
 
-.header-center {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+/* ─── Page Title Banner (scrolls away) ─── */
+.page-title-banner {
+  text-align: center;
+  padding: 16px 20px 8px;
 }
 
-/* Keep desktop nav perfectly centered by balancing left and right header areas */
-@media (min-width: 1709px) {
-
-  .header-logo,
-  .header-actions {
-    flex: 1 1 0;
-  }
-
-  .header-center {
-    flex: 0 1 auto;
-  }
+.page-title-banner h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.2;
 }
 
-/* Prevent header overlap on medium desktop widths */
-@media (min-width: 1251px) and (max-width: 1708px) {
-  .header-content {
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .header-logo {
-    order: 1;
-    flex: 0 0 auto;
-  }
-
-  .header-actions {
-    order: 2;
-    flex: 0 0 auto;
-    justify-content: flex-end;
-    margin-top: 0;
-  }
-
-  .header-center {
-    order: 3;
-    flex: 1 1 100%;
-  }
-
-  .header-title {
-    width: 100%;
-  }
-
-  .main-nav-links {
-    width: 100%;
-    margin-right: 0;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
-
+/* ─── Responsive: Medium desktops ─── */
 @media (max-width: 1250px) {
-  .header-actions {
-    flex: 1 1 100%;
-    justify-content: center;
-    margin-top: 8px;
+  .sticky-nav-links {
+    gap: 4px;
+  }
+
+  .sticky-nav-links .nav-link {
+    font-size: 13px;
+    padding: 6px 8px;
   }
 }
 
 @media (max-width: 1024px) {
-  .header-title h1 {
-    font-size: 24px;
+  .page-title-banner h1 {
+    font-size: 22px;
   }
 }
 
@@ -599,57 +561,51 @@ a:hover {
     display: flex !important;
   }
 
-  .header-content {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px;
-    overflow: visible;
+  .sticky-navbar {
+    padding: 8px 16px;
   }
 
-  .header {
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    overflow: visible;
-  }
-
-  /* Title moves to full width row below logo and actions */
-  .header-center {
-    flex: 1 1 100%;
-    align-items: center;
-    min-width: 0;
-    order: 3;
+  .sticky-navbar-content {
+    gap: 8px;
+    justify-content: center;
   }
 
   .header-logo {
-    order: 1;
-    flex: 0 0 auto;
-    margin-left: 16px;
+    flex: 1 1 0;
+    display: flex;
+    justify-content: flex-start;
   }
 
   .header-actions {
     flex: 0 0 auto;
-    order: 2;
-  }
-
-  .header-title {
-    width: 100%;
-    white-space: normal;
-    text-align: center;
+    display: flex;
     justify-content: center;
+    margin-left: 0;
   }
 
-  .header-title h1 {
-    font-size: 18px;
+  .page-title-banner {
+    padding: 10px 16px 6px;
+  }
+
+  .page-title-banner h1 {
+    font-size: 17px;
     white-space: normal;
-    text-align: center;
     line-height: 1.2;
     overflow-wrap: break-word;
     word-break: break-word;
   }
 
   .app-main-logo {
-    width: 56px !important;
-    height: 56px !important;
+    width: 48px !important;
+    height: 46px !important;
+  }
+
+  :root {
+    --navbar-height: 60px;
+  }
+
+  .navbar-spacer {
+    height: var(--navbar-height);
   }
 
   .main-content {
@@ -1258,6 +1214,7 @@ a:hover {
   background: var(--bg-secondary);
   border-bottom: 2px solid var(--accent-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  top: var(--navbar-height) !important;
 }
 
 .fixed-thead-clone .earnings-table {
@@ -2512,23 +2469,17 @@ a:hover {
     padding: 0 12px;
   }
 
-  /* Header */
-  .header {
-    padding: 12px 0;
-    margin-bottom: 12px;
+  /* Sticky Navbar */
+  .sticky-navbar {
+    padding: 6px 12px;
   }
 
-  .header-content {
+  .sticky-navbar-content {
     gap: 8px;
   }
 
-  .header-title h1 {
-    font-size: 20px;
-  }
-
-  .header-title svg {
-    width: 22px;
-    height: 22px;
+  .page-title-banner h1 {
+    font-size: 17px;
   }
 
   .header-right-group {
@@ -2885,8 +2836,8 @@ a:hover {
     padding: 0 8px;
   }
 
-  .header-title h1 {
-    font-size: 16px;
+  .page-title-banner h1 {
+    font-size: 15px;
   }
 
   .main-tab {
