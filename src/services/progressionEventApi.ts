@@ -102,6 +102,7 @@ function convertApiMultiplier(apiMult: ApiMultiplier): MultiplierData {
         multiplier: apiMult.multiplier,
         amount: apiMult.amount,
         title: apiMult.title,
+        ttlTime: apiMult.ttlTime,
     };
 }
 

@@ -499,6 +499,9 @@ export default function ProgressionEvent() {
             if (mData.multiplier && mData.amount) {
                 base.MULTIPLIER_STEP_RLT = (100 / mData.multiplier) * mData.amount;
             }
+            if (mData.ttlTime && mData.ttlTime > 0) {
+                base.MULTIPLIER_DURATION_HOURS = Number((mData.ttlTime / 3600000).toFixed(2));
+            }
         }
 
         return base;

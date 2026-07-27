@@ -70,6 +70,7 @@ export interface ApiMultiplier {
   multiplier: number;
   amount: number;
   title: string;
+  ttlTime?: number;
 }
 
 // API task item (flat, camelCase)
@@ -209,6 +210,7 @@ export interface MultiplierData {
   multiplier: number;
   amount: number;
   title: string;
+  ttlTime?: number;
 }
 
 // Task data (internal, snake_case for component compatibility)
