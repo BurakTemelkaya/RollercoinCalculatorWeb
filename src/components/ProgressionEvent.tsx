@@ -318,13 +318,17 @@ export default function ProgressionEvent() {
     const [showChart, setShowChart] = useState(false);
     const [showMarketplace, setShowMarketplace] = useState(false);
 
-    const MAX_MULTIPLIER = useMemo(() => {
-        if (!eventData?.createdDate) return 100;
+    const isNewMultiplierRule = useMemo(() => {
+        if (!eventData?.createdDate) return false;
         const dateStr = eventData.createdDate.endsWith('Z') ? eventData.createdDate : eventData.createdDate + 'Z';
         const eventDate = new Date(dateStr);
         const thresholdDate = new Date('2026-07-14T15:00:00Z');
-        return eventDate.getTime() >= thresholdDate.getTime() ? 1000 : 100;
+        return eventDate.getTime() >= thresholdDate.getTime();
     }, [eventData]);
+
+    const MAX_MULTIPLIER = useMemo(() => {
+        return isNewMultiplierRule ? 1000 : 100;
+    }, [isNewMultiplierRule]);
 
     useEffect(() => {
         if (eventData) {
@@ -475,6 +479,10 @@ export default function ProgressionEvent() {
         const base: Record<string, number> = { ...EVENT_CONSTANTS };
         if (!eventData) return base;
 
+        if (isNewMultiplierRule) {
+            base.MULTIPLIER_DURATION_HOURS = 24;
+        }
+
         if (eventData.taskData) {
             const gameLevel = eventData.taskData.find((t: any) => t.type === 'game_level');
             if (gameLevel) base.GAME_DIFFICULTY = gameLevel.xp_reward;
@@ -494,7 +502,7 @@ export default function ProgressionEvent() {
         }
 
         return base;
-    }, [eventData]);
+    }, [eventData, isNewMultiplierRule]);
 
     // Calculate multiplier table data
     const multiplierData = useMemo(() => {
@@ -667,7 +675,7 @@ export default function ProgressionEvent() {
                     </div>
                     <div className="pe-info-row">
                         <span>{t('event.multiplierDuration')}</span>
-                        <span className="pe-info-value">{EVENT_CONSTANTS.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
+                        <span className="pe-info-value">{dynamicConstants.MULTIPLIER_DURATION_HOURS} {t('event.hourUnit')}</span>
                     </div>
                     {eventData.taskData && eventData.taskData.length > 0 ? (
                         eventData.taskData.map(task => {
