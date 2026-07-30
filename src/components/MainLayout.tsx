@@ -111,6 +111,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
     navigate(pathParts.join('/'));
   };
 
+  const MIGRATION_NOTICES: Record<string, string> = {
+    tr: '31 Temmuz 00:00 ile 03:00 (Türkiye Saati) arasında sunucu taşıma işlemleri gerçekleştirilecektir. Bu saatlerde site çalışmayabilir.',
+    en: 'Server migration will take place on July 30th between 21:00 and 00:00 UTC. The site may be unavailable during these hours.',
+    zh: '服务器迁移将于 7 月 30 日 21:00 至 00:00 (UTC) 进行。在此期间网站可能无法访问。',
+    fr: 'Une migration de serveur aura lieu le 30 juillet entre 21h00 et 00h00 (UTC). Le site pourrait être indisponible pendant ces heures.',
+    id: 'Migrasi server akan dilakukan pada 30 Juli antara pukul 21:00 hingga 00:00 UTC. Situs mungkin tidak dapat diakses selama jam tersebut.',
+    pt: 'A migração do servidor ocorrerá em 30 de julho entre 21:00 e 00:00 UTC. O site poderá ficar indisponível durante essas horas.',
+    ru: 'Перенос сервера состоится 30 июля с 21:00 до 00:00 (UTC). В это время сайт может быть недоступен.',
+    es: 'La migración del servidor se llevará a cabo el 30 de julio entre las 21:00 y las 00:00 UTC. El sitio puede no estar disponible durante estas horas.',
+    de: 'Die Servermigration findet am 30. Juli zwischen 21:00 und 00:00 Uhr (UTC) statt. Die Website ist während dieser Zeit möglicherweise nicht erreichbar.'
+  };
+
   return (
     <div className="app-layout">
       {/* Sticky Navigation Bar - outside flex wrappers so sticky works */}
@@ -242,6 +254,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
             {/* Page Title - scrolls away, not in sticky bar */}
             <div className="page-title-banner">
               <h1>{t('app.title')}</h1>
+            </div>
+
+            {/* Migration Notice Banner */}
+            <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', padding: '12px 20px', textAlign: 'center', fontWeight: '500', fontSize: '14px', lineHeight: '1.5', margin: '0 16px 16px 16px' }}>
+              {MIGRATION_NOTICES[i18n.language] || MIGRATION_NOTICES['en']}
             </div>
 
             {/* Top Banner: Daily Quest + Ad */}
