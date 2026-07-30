@@ -2,7 +2,7 @@ name: Deploy Rollercoin Frontend to VDS via GHCR
 
 on:
   push:
-    branches: ["main"] # Frontend branch'in 'main' ise böyle kalmalı
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,6 @@ jobs:
       - name: Kodu Cek
         uses: actions/checkout@v7
 
-      # 1. ADIM: GHCR'a Giriş Yap
       - name: GHCR Giris
         uses: docker/login-action@v4
         with:
@@ -24,11 +23,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Kullanıcı adını küçük harfe çevir (Docker tag gereksinimi)
       - name: Kullanici adini kucuk harfe cevir
         run: echo "REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >>${GITHUB_ENV}
 
-      # 2. ADIM: Docker İmajını Build Al ve GHCR'a Pushla
       - name: Build ve Push
         uses: docker/build-push-action@v7
         with:
@@ -37,7 +34,15 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.REPO_OWNER }}/rollercoin-frontend:latest
 
-      # 3. ADIM: VDS'e SSH ile Bağlan ve Güncelle
+      - name: Compose Dosyasini VDS'e Kopyala
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VDS_IP }}
+          username: ${{ secrets.VDS_USER }} 
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/app/RollercoinCalculatorWeb"
+
       - name: VDS Deploy (SSH)
         uses: appleboy/ssh-action@v1.2.5
         env:
@@ -45,24 +50,23 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
         with:
           host: ${{ secrets.VDS_IP }}
-          username: ${{ secrets.VDS_USER }} # DİKKAT: Backend'deki gibi 'USERNAME' yaptık!
+          username: ${{ secrets.VDS_USER }} 
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: REPO_OWNER, GH_PAT
           script: |
-            # 1. GHCR'a giriş yap
             echo "$GH_PAT" | docker login ghcr.io -u "$REPO_OWNER" --password-stdin
             
-            # 2. Proje klasörüne git (Dizin adını kontrol et!)
+            # Proje klasörünü oluştur (yoksa) ve içine gir
+            mkdir -p /home/app/RollercoinCalculatorWeb
             cd /home/app/RollercoinCalculatorWeb
             
-            # 3. Frontend imajını güncellemek için IMAGE_TAG oluştur (opsiyonel ama sağlıklı)
-            echo "FRONTEND_IMAGE_TAG=ghcr.io/$REPO_OWNER/rollercoin-frontend:latest" > .env.frontend
+            # Dinamik imaj ismini .env dosyasına yazdır (Küçük harf garantisi)
+            echo "IMAGE_TAG=ghcr.io/$REPO_OWNER/rollercoin-frontend:latest" > .env
             
-            # 4. Yeni imajı çek
             docker pull ghcr.io/$REPO_OWNER/rollercoin-frontend:latest
             
-            # 5. Sadece frontend servisini zorla yeniden yarat (Warp veya Backend etkilenmez)
+            # Sadece frontend servisini ayağa kaldır
             docker compose up -d --force-recreate rollercoin_frontend
+            
             docker system prune -f
-            # 6. Kullanılmayan eski frontend imajlarını sil
-            docker image prune -f
+            docker image prune -a -f
