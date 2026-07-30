@@ -68,5 +68,4 @@ jobs:
             # Sadece frontend servisini ayağa kaldır
             docker compose up -d --force-recreate rollercoin_frontend
             
-            docker system prune -f
-            docker image prune -a -f
+            docker image prune -f
