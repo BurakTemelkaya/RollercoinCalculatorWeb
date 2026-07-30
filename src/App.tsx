@@ -360,7 +360,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         if (!data || !data.changes || data.changes.length === 0) return;
 
         setRewardChangeData(data);
-        
+
         const lastSeenId = localStorage.getItem('rollercoin_web_last_reward_change_id');
         if (lastSeenId !== data.id) {
           setShowRewardChangeModal(true);
@@ -383,7 +383,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260730.222920';
+  const CURRENT_CACHE_VERSION = '20260730.012540';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -440,7 +440,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         try {
           const coinArray = JSON.parse(savedVisibleCoins);
           setVisibleCoins(coinArray);
-        } catch (_) {}
+        } catch (_) { }
       }
 
       // Load custom period configuration
@@ -698,10 +698,10 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const roomFetchTriggeredRef = React.useRef(false);
   useEffect(() => {
     if ((activeTab === 'simulator' || activeTab === 'room_simulator')
-        && fetchedUser?.userProfileResponseDto?.avatar_Id
-        && !fetchedRoom
-        && !isFetchingRoom
-        && !roomFetchTriggeredRef.current) {
+      && fetchedUser?.userProfileResponseDto?.avatar_Id
+      && !fetchedRoom
+      && !isFetchingRoom
+      && !roomFetchTriggeredRef.current) {
       roomFetchTriggeredRef.current = true;
       handleFetchRoom(fetchedUser.userProfileResponseDto.avatar_Id);
     }
@@ -1062,47 +1062,47 @@ function App() {
     <>
       <AnalyticsTracker />
       <Routes>
-      <Route element={<MainLayoutWrapper />}>
-        <Route path="/" element={<AutoRedirect />} />
-        <Route path="/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
-        <Route path="/:lang" element={<CalculatorArea />} />
-        <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
-        <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
-        <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
-        <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
-        <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
-        <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
-        <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
-        <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
-        <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
-        <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
-        <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
-        <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
-        <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
-        <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />
-        <Route path="/:lang/author/:userId" element={<React.Suspense fallback={null}><AuthorBlogList /></React.Suspense>} />
-        <Route path="/:lang/login" element={<React.Suspense fallback={null}><LoginPage /></React.Suspense>} />
-        <Route path="/:lang/register" element={<React.Suspense fallback={null}><RegisterPage /></React.Suspense>} />
-        <Route path="/:lang/forgot-password" element={<React.Suspense fallback={null}><ForgotPasswordPage /></React.Suspense>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
+        <Route element={<MainLayoutWrapper />}>
+          <Route path="/" element={<AutoRedirect />} />
+          <Route path="/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
+          <Route path="/:lang" element={<CalculatorArea />} />
+          <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
+          <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
+          <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
+          <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
+          <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
+          <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
+          <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
+          <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
+          <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+          <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
+          <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
+          <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
+          <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
+          <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />
+          <Route path="/:lang/author/:userId" element={<React.Suspense fallback={null}><AuthorBlogList /></React.Suspense>} />
+          <Route path="/:lang/login" element={<React.Suspense fallback={null}><LoginPage /></React.Suspense>} />
+          <Route path="/:lang/register" element={<React.Suspense fallback={null}><RegisterPage /></React.Suspense>} />
+          <Route path="/:lang/forgot-password" element={<React.Suspense fallback={null}><ForgotPasswordPage /></React.Suspense>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
 
-      {/* Dashboard Routes without MainLayout */}
-      <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/notification-settings" element={<React.Suspense fallback={null}><ProtectedRoute><NotificationSettingsPage /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
-      
-      <Route path="/:lang/admin/blogs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogList /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/blogs/detail/:blogId" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogDetailPage /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
-      <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
-    </Routes>
+        {/* Dashboard Routes without MainLayout */}
+        <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/notification-settings" element={<React.Suspense fallback={null}><ProtectedRoute><NotificationSettingsPage /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
+
+        <Route path="/:lang/admin/blogs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/blogs/detail/:blogId" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminBlogDetailPage /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+      </Routes>
     </>
   );
 }
