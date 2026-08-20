@@ -4,6 +4,12 @@ export interface ApiRoomMinerPlacement {
     y: number;
 }
 
+export interface MinerFramesData {
+    frame_width: number;
+    frame_height: number;
+    frames_count: number | null;
+}
+
 export interface ApiRoomMiner {
     _id: string;
     miner_id: string;
@@ -14,6 +20,7 @@ export interface ApiRoomMiner {
     type: string;
     power: number;
     filename: string;
+    frames_data?: MinerFramesData;
     bonus_percent: number;
     is_in_set: boolean;
     updated: string;

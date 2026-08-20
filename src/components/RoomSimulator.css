@@ -183,6 +183,31 @@
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7)) brightness(1.15);
 }
 
+/* ===== SPRITE SHEET ANIMATION ===== */
+.miner-sprite-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.miner-sprite-sheet {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+@keyframes sprite-slide-anim {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(var(--slide-end, 0));
+    }
+}
+
 /* ===== LEVEL BADGE ===== */
 .miners-badges {
     position: absolute;
@@ -394,7 +419,7 @@
     .racks-grid {
         grid-template-columns: repeat(2, 97px) !important;
         grid-template-rows: auto !important;
-        gap: 10px !important;
+        gap: 24px !important;
     }
 
     .room-sim-header {
@@ -755,9 +780,6 @@
 /* ========================================================================= */
 @media (max-width: 768px) {
     .miner-item {
-        transform: translateZ(0);
-        /* Hardware acceleration */
-        will-change: transform;
         filter: none !important;
         /* Animasyonlu GIF'lere CSS filter uygulamak GPU'yu aşırı yorar */
     }
@@ -1042,9 +1064,23 @@
     position: relative;
 }
 
+/* When sprite container is used as rack-edit-miner-img,
+   constrain to 100% of the 60x60 wrapper while keeping aspect ratio */
+.rack-edit-miner-img.miner-sprite-container {
+    width: 100%;
+    max-width: 60px;
+    height: auto;
+    max-height: 60px;
+}
+
 .rack-edit-miner-img-wrapper {
     position: relative;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
 }
 
 .rack-edit-miner-info {

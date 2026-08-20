@@ -7,6 +7,7 @@ import { guessSetByMinerName, guessSetByRackName, calculateSetBonuses } from '..
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import Notification from './Notification';
+import SpriteSheetMiner from './SpriteSheetMiner';
 import './RoomSimulator.css';
 
 function formatPower(powerGhs: number): string {
@@ -689,7 +690,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             const mainTopsSize1 = [-25, 15, 55, 95];
 
             // Sol-Sağ hizalamaları (X)
-            const mainLeftSize2 = effectiveY === 0 ? 12.5 : 10; // İkili miner'ın soldan boşluğu
+            const mainLeftSize2 = effectiveY === 0 ? 10 : 10; // İkili miner'ın soldan boşluğu
             const mainLeftSize1_Left = -10;  // Tekli miner soldayken (mX = 0)
             const mainLeftSize1_Right = 30; // Tekli miner sağdayken (mX = 1)
 
@@ -701,7 +702,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             const modalTopsSize2 = [-30, 10, 50, 90];
 
             // Tekli (Küçük) miner'ların yukarıdan aşağıya raf hizaları (Y)
-            const modalTopsSize1 = [-30, 10, 50, 90];
+            const modalTopsSize1 = [-30, 10, 50, 95];
 
             // Sol-Sağ hizalamaları (X)
             const modalLeftSize2 = 10; // İkili miner'ın soldan boşluğu
@@ -980,15 +981,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                         }}
                                                     >
 
-                                                        <img
+                                                        <SpriteSheetMiner
+                                                            filename={miner.filename}
+                                                            framesData={miner.frames_data}
                                                             className="miner-item"
-                                                            src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
                                                             alt={miner.name}
                                                             loading="lazy"
-                                                            onError={(e) => {
-                                                                const target = e.target as HTMLImageElement;
-                                                                if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
-                                                            }}
                                                         />
 
                                                         {miner.level > 0 && (
@@ -1140,7 +1138,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                         >
                             💾
                         </button>
-                        
+
                         <button
                             className="btn-roller"
                             onClick={handleLoadLayout}
@@ -1164,10 +1162,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 setIsAddRackOpen(true);
                             }}
                             title={t('simulator.addRack', 'Raf Ekle')}
-                            style={{ 
+                            style={{
                                 padding: isMobile ? '10px 14px' : '12px 24px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold', border: 'none', borderRadius: '8px',
                                 flex: isMobile ? '1 1 auto' : 'none'
-                             }}
+                            }}
                         >
                             ➕
                         </button>
@@ -1290,14 +1288,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0}`}
                                                             style={{ ...minerStyle, cursor: 'default' }}
                                                         >
-                                                            <img
+                                                            <SpriteSheetMiner
+                                                                filename={miner.filename}
+                                                                framesData={miner.frames_data}
                                                                 className="miner-item"
-                                                                src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
                                                                 alt={miner.name}
-                                                                onError={(e) => {
-                                                                    const target = e.target as HTMLImageElement;
-                                                                    if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
-                                                                }}
                                                             />
                                                             {miner.level > 0 && (
                                                                 <div className="miners-badges">
@@ -1347,14 +1342,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             return (
                                                                 <div key={miner._id} className={`rack-edit-miner-card ${miner.width === 2 ? 'full-width' : ''}`}>
                                                                     <div className="rack-edit-miner-img-wrapper">
-                                                                        <img
+                                                                        <SpriteSheetMiner
+                                                                            filename={miner.filename}
+                                                                            framesData={miner.frames_data}
                                                                             className="rack-edit-miner-img"
-                                                                            src={`https://static.rollercoin.com/static/img/market/miners/${miner.filename?.includes('.') ? miner.filename : (miner.filename + '.gif')}?v=1.2.1`}
                                                                             alt={miner.name}
-                                                                            onError={(e) => {
-                                                                                const target = e.target as HTMLImageElement;
-                                                                                if (!target.src.includes('.png')) target.src = `https://static.rollercoin.com/static/img/market/miners/${miner.filename?.split('.')[0] || 'crypto_combo'}.png`;
-                                                                            }}
                                                                         />
                                                                         {miner.level > 0 && (
                                                                             <img className="rack-edit-miner-level" src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
