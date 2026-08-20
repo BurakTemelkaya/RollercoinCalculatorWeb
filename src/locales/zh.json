@@ -204,7 +204,7 @@
       "missingUserPower": "需要用户算力！",
       "missingLeagueData": "需要联赛数据！",
       "tooManyRequests": "请求过多，请稍等。",
-      "userNotFound": "未找到用户。",
+      "userNotFound": "未找到用户。请检查您的用户名（区分大小写）。",
       "turnstileFailed": "安全验证失败。"
     },
     "usernamePlaceholder": "输入用户名",
@@ -562,7 +562,7 @@
     },
     "ascending": "升序",
     "descending": "降序",
-    "cost": "成本",
+    "cost": "合并成本",
     "discountedCost": "折扣后",
     "xpReward": "经验奖励",
     "level": "等级",
