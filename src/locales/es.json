@@ -204,7 +204,7 @@
       "missingUserPower": "¡Se requiere el poder del usuario!",
       "missingLeagueData": "¡Se requieren los datos de poder de la liga!",
       "tooManyRequests": "Demasiadas peticiones a la API, por favor espera.",
-      "userNotFound": "Usuario no encontrado. Por favor verifica el nombre de usuario.",
+      "userNotFound": "Usuario no encontrado. Verifique su nombre de usuario (distingue mayúsculas de minúsculas).",
       "turnstileFailed": "Falló la verificación de Turnstile. Por favor, intenta nuevamente."
     },
     "usernamePlaceholder": "Ingresar usuario",
@@ -562,7 +562,7 @@
     },
     "ascending": "Ascendente",
     "descending": "Descendente",
-    "cost": "Costo",
+    "cost": "Costo de fusión",
     "discountedCost": "Con Descuento",
     "xpReward": "Recompensa XP",
     "level": "Nivel",
