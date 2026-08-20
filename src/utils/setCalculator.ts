@@ -1,51 +1,49 @@
 import { SETS_DATA, RollercoinSet } from '../data/sets';
-import { RollercoinRoomResponse } from '../types/room';
+import { ApiRoomMiner, RollercoinRoomResponse } from '../types/room';
 
 export interface SetBonusResult {
     percent_power: number;
     bonus_power: number;
 }
 
-// Simple heuristic mapping to map miner name keywords to set titles
-// Since the API doesn't provide the exact set ID for a miner, we try to guess it.
-const SET_KEYWORD_MAP: Record<string, string> = {
-    'radio': 'Radio Set',
-    'power-up': 'Power-Up Set',
-    'power up': 'Power-Up Set',
-    'silver': 'Silver Farm Set',
-    'bronze': 'Bronze Farm Set',
-    'royal': 'Royal Set',
-    'note': 'Royal Set', // Royal Note, Spade Note, Heart Note, Club Note
-    'designer': 'Designer Set',
-    'hamior': 'Designer Set',
-    'hames': 'Designer Set',
-    'hamel': 'Designer Set',
-    'hamuis': 'Designer Set',
-    'asgardian': 'Asgardian Set',
-    'runner': 'Runners Set',
-    'globe': 'Globes Set',
-    'bros': 'Super Bros Set',
-    'alien': 'Alien Set',
-    'imperial': 'IMPERIAL Set',
-    'beer': 'Beer Pack Set',
-    'golden': 'Golden Farm Set', // GoldenCarrot, GoldenTomato, etc.
-    'treasure': 'The Lost Treasure Set',
-    'lost': 'The Lost Treasure Set',
-};
-
-export function guessSetByMinerName(minerName: string): RollercoinSet | null {
-    const lowerName = minerName.toLowerCase();
-    
-    // Check keywords
-    for (const [keyword, setTitle] of Object.entries(SET_KEYWORD_MAP)) {
-        if (lowerName.includes(keyword)) {
-            const set = SETS_DATA.find(s => s.title.en === setTitle);
-            if (set) return set;
+/**
+ * Finds a set by checking if the miner's filename exists in the set's miners array.
+ * Fallback to checking miner name in case filename is somehow missing.
+ */
+export function guessSetByMiner(miner: ApiRoomMiner): RollercoinSet | null {
+    for (const set of SETS_DATA) {
+        if (set.miners) {
+            for (const setMiner of set.miners) {
+                if (miner.filename && setMiner.filename === miner.filename) {
+                    return set;
+                }
+                // Fallback to name match if filename didn't match (shouldn't happen often)
+                if (miner.name && setMiner.title.en === miner.name) {
+                    return set;
+                }
+            }
         }
     }
 
-    // Direct match check (fallback)
+    return null;
+}
+
+/**
+ * Kept for backward compatibility, though using guessSetByMiner is much safer.
+ */
+export function guessSetByMinerName(minerName: string): RollercoinSet | null {
+    const lowerName = minerName.toLowerCase();
+    
     for (const set of SETS_DATA) {
+        if (set.miners) {
+            for (const setMiner of set.miners) {
+                if (setMiner.title.en.toLowerCase() === lowerName || setMiner.filename.toLowerCase() === lowerName) {
+                    return set;
+                }
+            }
+        }
+        
+        // Direct title check as fallback
         if (lowerName.includes(set.title.en.toLowerCase().replace(' set', ''))) {
             return set;
         }
@@ -54,19 +52,20 @@ export function guessSetByMinerName(minerName: string): RollercoinSet | null {
     return null;
 }
 
+/**
+ * Finds a set by checking the rack's name or id.
+ */
 export function guessSetByRackName(rackName: string): RollercoinSet | null {
     const lowerName = rackName.toLowerCase();
     
-    // Check keywords
-    for (const [keyword, setTitle] of Object.entries(SET_KEYWORD_MAP)) {
-        if (lowerName.includes(keyword)) {
-            const set = SETS_DATA.find(s => s.title.en === setTitle);
-            if (set) return set;
-        }
-    }
-
-    // Direct match check (fallback)
     for (const set of SETS_DATA) {
+        if (set.rack) {
+            if (set.rack.title.en.toLowerCase() === lowerName) {
+                return set;
+            }
+        }
+        
+        // Direct title check as fallback
         if (lowerName.includes(set.title.en.toLowerCase().replace(' set', ''))) {
             return set;
         }
@@ -97,8 +96,15 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
             
             // Only count UNIQUE miners for set completion
             const uniqueSet = uniqueMinerIdsByRack.get(rackId)!;
-            if (!uniqueSet.has(miner.miner_id)) {
-                uniqueSet.add(miner.miner_id);
+            // Use miner_id as it represents the instance, wait... we need unique items!
+            // The set bonus says "unique miners" meaning different items. 
+            // In API `filename` or `name` represents the unique item type, 
+            // but Rollercoin typically means unique *types* of miners from the set.
+            // But wait, the previous code used `miner_id` which was instance ID? 
+            // Wait, miner_id in API represents instance ID? Wait, no.
+            // Let's check what it should be. The previous code used miner_id.
+            if (!uniqueSet.has(miner.filename || miner.name)) {
+                uniqueSet.add(miner.filename || miner.name);
                 rackMiners.get(rackId)!.push(miner);
             }
         }
@@ -110,8 +116,7 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
         if (uniqueCount === 0) continue;
 
         // Try to guess the set using the first miner on the rack
-        // Assuming all set miners on a rack belong to the same set
-        const guessedSet = guessSetByMinerName(miners[0].name);
+        const guessedSet = guessSetByMiner(miners[0]);
 
         if (guessedSet && guessedSet.levels) {
             // Find the highest level achieved based on unique count
