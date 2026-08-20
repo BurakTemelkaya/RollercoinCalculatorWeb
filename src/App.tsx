@@ -113,7 +113,7 @@ const TAB_ORDER: Record<Tab, number> = {
 import Notification from './components/Notification';
 import LeaguePowerPartition from './components/LeaguePowerPartition';
 
-const SUPPORTED_LANGS = ['en', 'tr', 'zh', 'fr', 'id', 'pt', 'ru', 'es', 'de'];
+const SUPPORTED_LANGS = ['en', 'tr', 'zh', 'fr', 'id', 'pt', 'ru', 'es', 'de', 'cs'];
 
 function AutoRedirect() {
   const navigate = useNavigate();
@@ -383,7 +383,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260818.202329';
+  const CURRENT_CACHE_VERSION = '20260820.161529';
 
   // Load from localStorage on mount
   useEffect(() => {

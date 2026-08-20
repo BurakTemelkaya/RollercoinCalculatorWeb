@@ -17,6 +17,7 @@ export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'ru', label: 'Русский', icon: 'https://flagcdn.com/w20/ru.png' },
   { value: 'es', label: 'Español', icon: 'https://flagcdn.com/w20/es.png' },
   { value: 'de', label: 'Deutsch', icon: 'https://flagcdn.com/w20/de.png' },
+  { value: 'cs', label: 'Čeština', icon: 'https://flagcdn.com/w20/cz.png' },
 ];
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));

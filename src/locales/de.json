@@ -204,7 +204,7 @@
       "missingUserPower": "Benutzermacht ist erforderlich!",
       "missingLeagueData": "Liga-Machtdaten sind erforderlich!",
       "tooManyRequests": "Zu viele Anfragen an die API, bitte warten.",
-      "userNotFound": "Benutzer nicht gefunden. Bitte überprüfen Sie den Benutzernamen.",
+      "userNotFound": "Benutzer nicht gefunden. Überprüfen Sie Ihren Benutzernamen (Groß-/Kleinschreibung beachten).",
       "turnstileFailed": "Turnstile-Überprüfung fehlgeschlagen. Bitte versuchen Sie es erneut."
     },
     "usernamePlaceholder": "Benutzername eingeben",
@@ -548,7 +548,7 @@
     },
     "ascending": "Aufsteigend",
     "descending": "Absteigend",
-    "cost": "Kosten",
+    "cost": "Fusionskosten",
     "discountedCost": "Reduziert",
     "xpReward": "XP-Belohnung",
     "level": "Level",

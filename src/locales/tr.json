@@ -205,7 +205,7 @@
       "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
       "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!",
       "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin.",
-      "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin.",
+      "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin (Büyük/küçük harf duyarlıdır).",
       "turnstileFailed": "Turnstile doğrulaması başarısız oldu. Lütfen tekrar deneyin."
     },
     "usernamePlaceholder": "Kullanıcı adı girin",
@@ -563,7 +563,7 @@
     },
     "ascending": "Artan",
     "descending": "Azalan",
-    "cost": "Maliyet",
+    "cost": "Birleştirme Maliyeti",
     "discountedCost": "İndirimli",
     "xpReward": "XP Ödülü",
     "level": "Seviye",

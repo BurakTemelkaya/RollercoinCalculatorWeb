@@ -204,7 +204,7 @@
       "missingUserPower": "Poder do usuário necessário!",
       "missingLeagueData": "Dados da liga necessários!",
       "tooManyRequests": "Muitas solicitações.",
-      "userNotFound": "Usuário não encontrado.",
+      "userNotFound": "Usuário não encontrado. Verifique seu nome de usuário (diferencia maiúsculas de minúsculas).",
       "turnstileFailed": "Falha de segurança."
     },
     "usernamePlaceholder": "Insira o nome",
@@ -522,7 +522,7 @@
     },
     "ascending": "Crescente",
     "descending": "Decrescente",
-    "cost": "Custo",
+    "cost": "Custo de fusão",
     "discountedCost": "Com Desconto",
     "xpReward": "Recompensa XP",
     "level": "Nível",

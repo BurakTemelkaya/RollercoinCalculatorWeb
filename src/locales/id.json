@@ -204,7 +204,7 @@
       "missingUserPower": "Kekuatan pengguna diperlukan!",
       "missingLeagueData": "Data liga diperlukan!",
       "tooManyRequests": "Terlalu banyak permintaan.",
-      "userNotFound": "Pengguna tidak ditemukan.",
+      "userNotFound": "Pengguna tidak ditemukan. Periksa nama pengguna Anda (peka huruf besar/kecil).",
       "turnstileFailed": "Verifikasi Turnstile gagal."
     },
     "usernamePlaceholder": "Masukkan username",
@@ -522,7 +522,7 @@
     },
     "ascending": "Naik",
     "descending": "Turun",
-    "cost": "Biaya",
+    "cost": "Biaya Penggabungan",
     "discountedCost": "Diskon",
     "xpReward": "Hadiah XP",
     "level": "Level",

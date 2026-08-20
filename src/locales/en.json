@@ -204,7 +204,7 @@
       "missingUserPower": "User power is required!",
       "missingLeagueData": "League power data is required!",
       "tooManyRequests": "Too many requests to the API, please wait.",
-      "userNotFound": "User not found. Please check the username.",
+      "userNotFound": "User not found. Please check your username (Case-sensitive).",
       "turnstileFailed": "Turnstile verification failed. Please try again."
     },
     "usernamePlaceholder": "Enter username",
@@ -562,7 +562,7 @@
     },
     "ascending": "Ascending",
     "descending": "Descending",
-    "cost": "Cost",
+    "cost": "Merge Cost",
     "discountedCost": "Discounted",
     "xpReward": "XP Reward",
     "level": "Level",
