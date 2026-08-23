@@ -259,7 +259,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
 
               {!adsBlocked && country && (
-                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', overflow: 'hidden', flexShrink: 0 }}>
+                <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', flexShrink: 0 }}>
                   {country === 'TR' || country === 'UNKNOWN' ? (
                     <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                   ) : (
