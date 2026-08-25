@@ -110,25 +110,62 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
         }
     }
 
+    // Map user_rack_id to its definition rack_id
+    const userRackToDefRack = new Map<string, string>();
+    if (roomData.racks) {
+        for (const r of roomData.racks) {
+            userRackToDefRack.set(r._id, r.rack_id);
+        }
+    }
+
     // Evaluate sets for each rack
     for (const [rackId, miners] of rackMiners.entries()) {
-        const uniqueCount = miners.length;
-        if (uniqueCount === 0) continue;
+        if (miners.length === 0) continue;
 
         // Try to guess the set using the first miner on the rack
+        // Note: A more robust way is to find the set based on the rack definition itself,
+        // but guessing by miner works as long as we verify the rack matches.
         const guessedSet = guessSetByMiner(miners[0]);
 
-        if (guessedSet && guessedSet.levels) {
-            // Find the highest level achieved based on unique count
-            // Sort levels by condition_amount descending to find the highest met condition
-            const sortedLevels = [...guessedSet.levels].sort((a, b) => b.condition_amount - a.condition_amount);
+        if (guessedSet && guessedSet.levels && guessedSet.rack) {
+            // Verify that this rack is actually the required Set Rack!
+            const definitionRackId = userRackToDefRack.get(rackId);
+            if (definitionRackId !== guessedSet.rack.id) {
+                continue; // Miners are not on the correct Set Rack!
+            }
             
-            const achievedLevel = sortedLevels.find(l => uniqueCount >= l.condition_amount);
+            // Re-count unique miners that ACTUALLY belong to this specific set
+            // (in case a user mixed miners from different sets on the same set rack)
+            const validSetMiners = new Set<string>();
+            for (const miner of miners) {
+                const minerBelongsToSet = guessedSet.miners?.some(sm => 
+                    (miner.filename && sm.filename === miner.filename) || 
+                    (miner.name && sm.title.en === miner.name)
+                );
+                
+                if (minerBelongsToSet) {
+                    validSetMiners.add(miner.filename || miner.name);
+                }
+            }
             
-            if (achievedLevel) {
+            const uniqueCount = validSetMiners.size;
+            if (uniqueCount === 0) continue;
+
+            // Find ALL levels achieved based on unique count
+            const achievedLevels = guessedSet.levels.filter(l => uniqueCount >= l.condition_amount);
+            
+            if (achievedLevels.length > 0) {
+                let totalPercentPower = 0;
+                let totalBonusPower = 0;
+
+                for (const level of achievedLevels) {
+                    totalPercentPower += level.percent_power || 0;
+                    totalBonusPower += level.bonus_power || 0;
+                }
+
                 rackBonuses.set(rackId, {
-                    percent_power: achievedLevel.percent_power || 0,
-                    bonus_power: achievedLevel.bonus_power || 0
+                    percent_power: totalPercentPower,
+                    bonus_power: totalBonusPower
                 });
             }
         }

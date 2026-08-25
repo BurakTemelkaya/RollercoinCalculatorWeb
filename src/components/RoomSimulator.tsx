@@ -989,9 +989,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             loading="lazy"
                                                         />
 
-                                                        {miner.level > 0 && (
+                                                        {(miner.level > 0 || !isBonusActive) && (
                                                             <div className={`miners-badges`}>
-                                                                <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                {miner.level > 0 && (
+                                                                    <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                )}
+                                                                {!isBonusActive && (
+                                                                    <div className="duplicate-badge" title={t('simulator.duplicateMiner', 'Kopya Miner')}>
+                                                                        2x
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         )}
 
@@ -1281,6 +1288,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                             <div className="miners-block-wrapper" style={{ minHeight: '100%' }}>
                                                 {rackMiners.map(miner => {
                                                     const mWidth = miner.width || 1;
+                                                    const isBonusActive = firstInstanceMinerIds.has(miner._id);
                                                     const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight, true);
                                                     return (
                                                         <div
@@ -1294,9 +1302,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                 className="miner-item"
                                                                 alt={miner.name}
                                                             />
-                                                            {miner.level > 0 && (
+                                                            {(miner.level > 0 || !isBonusActive) && (
                                                                 <div className="miners-badges">
-                                                                    <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                    {miner.level > 0 && (
+                                                                        <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                    )}
+                                                                    {!isBonusActive && (
+                                                                        <div className="duplicate-badge" title={t('simulator.duplicateMiner', 'Kopya Miner')}>
+                                                                            2x
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -1350,6 +1365,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                         />
                                                                         {miner.level > 0 && (
                                                                             <img className="rack-edit-miner-level" src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                                        )}
+                                                                        {!isBonusActive && (
+                                                                            <div className="duplicate-badge" style={{ position: 'absolute', top: 5, right: 5 }} title={t('simulator.duplicateMiner', 'Kopya Miner')}>
+                                                                                2x
+                                                                            </div>
                                                                         )}
                                                                     </div>
                                                                     <div className="rack-edit-miner-info">

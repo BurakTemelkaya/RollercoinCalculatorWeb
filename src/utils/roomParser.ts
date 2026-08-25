@@ -6,6 +6,7 @@ export interface ExactPowerStats {
     collectionBonusPercent: number;     // ham integer (418 = 4.18%)
     collectionBonusPowerGh: number;     // baseMiner × (collectionBonus / 10000)
     rackBonusPowerGh: number;
+    setBonusPercent: number;            // Σ set.percent_power
     setPercentBonusPowerGh: number;     // baseMiner × (Σ set.percent_power / 10000)
     setBonusPowerGh: number;            // Σ set.bonus_power (düz Gh/s)
     totalLeaguePowerGh: number;         // Lig gücü (hamster+freon+games+temp hariç)
@@ -16,7 +17,6 @@ export interface ExactPowerStats {
  * Calculates the EXACT League Power from the user's raw room data.
  * 
  * League Power = baseMinerPower + collectionBonus + rackBonus + setPercentBonus + setBonusPower
- * 
  * Everything else (freon, hamster, games, temp) is temporary power and NOT included.
  */
 export function calculateExactRoomPower(roomData: RollercoinRoomResponse): ExactPowerStats {
@@ -26,6 +26,7 @@ export function calculateExactRoomPower(roomData: RollercoinRoomResponse): Exact
             collectionBonusPercent: 0,
             collectionBonusPowerGh: 0,
             rackBonusPowerGh: 0,
+            setBonusPercent: 0,
             setPercentBonusPowerGh: 0,
             setBonusPowerGh: 0,
             totalLeaguePowerGh: 0,
@@ -107,6 +108,7 @@ export function calculateExactRoomPower(roomData: RollercoinRoomResponse): Exact
         collectionBonusPowerGh,
         rackBonusPowerGh,
         setPercentBonusPowerGh,
+        setBonusPercent: totalSetPercentPower,
         setBonusPowerGh: totalSetBonusPowerGh,
         totalLeaguePowerGh,
         placedMinersCount

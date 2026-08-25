@@ -107,11 +107,23 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const simulatedCollectionBonus = exactPower ? exactPower.collectionBonusPercent : 0;
     const originalCollectionBonus = originalExactPower ? originalExactPower.collectionBonusPercent : 0;
     const collectionBonusDelta = simulatedCollectionBonus - originalCollectionBonus;
-    const newGlobalBonusPercent = globalBonusPercent + collectionBonusDelta;
+    
+    // Find the change in set percent bonus from room modifications
+    const simulatedSetBonus = exactPower ? exactPower.setBonusPercent : 0;
+    const originalSetBonus = originalExactPower ? originalExactPower.setBonusPercent : 0;
+    const setBonusDelta = simulatedSetBonus - originalSetBonus;
+    
+    const newGlobalBonusPercent = globalBonusPercent + collectionBonusDelta + setBonusDelta;
 
     // New total power uses updated global base power and updated bonus_percent
     const newGlobalBonusPowerGh = (newGlobalBaseMinerPowerGh * (newGlobalBonusPercent / 10000)) + flatBonusGh;
-    const totalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + tempPowerGh + gamesPowerGh + unlistedPowerGh;
+    
+    // Also include flat set bonus delta (some sets give flat power instead of %)
+    const simulatedSetBonusPower = exactPower ? exactPower.setBonusPowerGh : 0;
+    const originalSetBonusPower = originalExactPower ? originalExactPower.setBonusPowerGh : 0;
+    const setBonusPowerDeltaGh = simulatedSetBonusPower - originalSetBonusPower;
+    
+    const totalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + tempPowerGh + gamesPowerGh + unlistedPowerGh + setBonusPowerDeltaGh;
 
     // 2. LEAGUE POWER DELTA (Room Logic)
     const powerDiffGh = leaguePowerGh - originalLeaguePowerGh;

@@ -55,6 +55,190 @@ export interface RollercoinSet {
 export const SETS_DATA: RollercoinSet[] = [
     {
         "title": {
+            "en": "The Lost Treasure Set",
+            "cn": "The Lost Treasure Set",
+            "es": "The Lost Treasure Set",
+            "pt": "The Lost Treasure Set"
+        },
+        "rack": {
+            "id": "6a3a88d9576051c2077089cf",
+            "power_percent": 2300,
+            "title": {
+                "en": "The Lost Treasure Rack 8",
+                "cn": "The Lost Treasure Rack 8",
+                "es": "The Lost Treasure Rack 8",
+                "pt": "The Lost Treasure Rack 8"
+            }
+        },
+        "levels": [
+            {
+                "title": {
+                    "en": "+20% Bonus Power",
+                    "cn": "+20% Bonus Power",
+                    "es": "+20% Bonus Power",
+                    "pt": "+20% Bonus Power"
+                },
+                "level": 1,
+                "bonus_power": 0,
+                "percent_power": 2000,
+                "additional_set_percent": 0,
+                "condition_type": "unique_miner",
+                "condition_amount": 2
+            },
+            {
+                "title": {
+                    "en": "+50% Bonus Power",
+                    "cn": "+50% Bonus Power",
+                    "es": "+50% Bonus Power",
+                    "pt": "+50% Bonus Power"
+                },
+                "level": 2,
+                "bonus_power": 0,
+                "percent_power": 5000,
+                "additional_set_percent": 0,
+                "condition_type": "unique_miner",
+                "condition_amount": 3
+            },
+            {
+                "title": {
+                    "en": "+80% Bonus Power",
+                    "cn": "+80% Bonus Power",
+                    "es": "+80% Bonus Power",
+                    "pt": "+80% Bonus Power"
+                },
+                "level": 3,
+                "bonus_power": 0,
+                "percent_power": 8000,
+                "additional_set_percent": 0,
+                "condition_type": "unique_miner",
+                "condition_amount": 4
+            }
+        ],
+        "miners": [
+            {
+                "item_id": "6a2ff9fc728342e342f65061",
+                "title": {
+                    "en": "Manners & Mayhem",
+                    "cn": "Manners & Mayhem",
+                    "es": "Manners & Mayhem",
+                    "pt": "Manners & Mayhem"
+                },
+                "filename": "manners_&_mayhem",
+                "level": 4,
+                "bonus_percent": 3100,
+                "power": 50000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ff9fc728342e342f65068",
+                "title": {
+                    "en": "Manners & Mayhem",
+                    "cn": "Manners & Mayhem",
+                    "es": "Manners & Mayhem",
+                    "pt": "Manners & Mayhem"
+                },
+                "filename": "manners_&_mayhem",
+                "level": 5,
+                "bonus_percent": 5000,
+                "power": 150000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffb46728342e342f6562e",
+                "title": {
+                    "en": "Gilded Greed",
+                    "cn": "Gilded Greed",
+                    "es": "Gilded Greed",
+                    "pt": "Gilded Greed"
+                },
+                "filename": "gilded_greed",
+                "level": 4,
+                "bonus_percent": 3500,
+                "power": 120000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffb46728342e342f65635",
+                "title": {
+                    "en": "Gilded Greed",
+                    "cn": "Gilded Greed",
+                    "es": "Gilded Greed",
+                    "pt": "Gilded Greed"
+                },
+                "filename": "gilded_greed",
+                "level": 5,
+                "bonus_percent": 5500,
+                "power": 350000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffbe5728342e342f65839",
+                "title": {
+                    "en": "Wrongway Atlas",
+                    "cn": "Wrongway Atlas",
+                    "es": "Wrongway Atlas",
+                    "pt": "Wrongway Atlas"
+                },
+                "filename": "wrongway_atlas",
+                "level": 4,
+                "bonus_percent": 4400,
+                "power": 300000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffbe5728342e342f65840",
+                "title": {
+                    "en": "Wrongway Atlas",
+                    "cn": "Wrongway Atlas",
+                    "es": "Wrongway Atlas",
+                    "pt": "Wrongway Atlas"
+                },
+                "filename": "wrongway_atlas",
+                "level": 5,
+                "bonus_percent": 6500,
+                "power": 800000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffcf8728342e342f65c2f",
+                "title": {
+                    "en": "Drama Chest",
+                    "cn": "Drama Chest",
+                    "es": "Drama Chest",
+                    "pt": "Drama Chest"
+                },
+                "filename": "drama_chest",
+                "level": 4,
+                "bonus_percent": 5000,
+                "power": 600000000,
+                "type": "merge",
+                "is_in_set": true
+            },
+            {
+                "item_id": "6a2ffcf8728342e342f65c36",
+                "title": {
+                    "en": "Drama Chest",
+                    "cn": "Drama Chest",
+                    "es": "Drama Chest",
+                    "pt": "Drama Chest"
+                },
+                "filename": "drama_chest",
+                "level": 5,
+                "bonus_percent": 8000,
+                "power": 2000000000,
+                "type": "merge",
+                "is_in_set": true
+            }
+        ]
+    },
+    {
+        "title": {
             "en": "Beer Pack Set",
             "cn": "Beer Pack Set",
             "es": "Beer Pack Set",
@@ -720,151 +904,6 @@ export const SETS_DATA: RollercoinSet[] = [
                 "bonus_percent": 3000,
                 "power": 1000000000,
                 "type": "basic",
-                "is_in_set": true
-            }
-        ]
-    },
-    {
-        "title": {
-            "en": "The Lost Treasure Set"
-        },
-        "rack": {
-            "id": "6a3a88d9576051c2077089cf",
-            "power_percent": 2300,
-            "title": {
-                "en": "The Lost Treasure Rack 8"
-            }
-        },
-        "levels": [
-            {
-                "title": {
-                    "en": "+20% Bonus Power"
-                },
-                "level": 1,
-                "bonus_power": 0,
-                "percent_power": 2000,
-                "additional_set_percent": 0,
-                "condition_type": "unique_miner",
-                "condition_amount": 2
-            },
-            {
-                "title": {
-                    "en": "+50% Bonus Power"
-                },
-                "level": 2,
-                "bonus_power": 0,
-                "percent_power": 5000,
-                "additional_set_percent": 0,
-                "condition_type": "unique_miner",
-                "condition_amount": 3
-            },
-            {
-                "title": {
-                    "en": "+80% Bonus Power"
-                },
-                "level": 3,
-                "bonus_power": 0,
-                "percent_power": 8000,
-                "additional_set_percent": 0,
-                "condition_type": "unique_miner",
-                "condition_amount": 4
-            }
-        ],
-        "miners": [
-            {
-                "item_id": "6a2ff9fc728342e342f65061",
-                "title": {
-                    "en": "Manners & Mayhem"
-                },
-                "filename": "manners_&_mayhem",
-                "level": 4,
-                "bonus_percent": 3100,
-                "power": 50000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ff9fc728342e342f65068",
-                "title": {
-                    "en": "Manners & Mayhem"
-                },
-                "filename": "manners_&_mayhem",
-                "level": 5,
-                "bonus_percent": 5000,
-                "power": 150000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffb46728342e342f6562e",
-                "title": {
-                    "en": "Gilded Greed"
-                },
-                "filename": "gilded_greed",
-                "level": 4,
-                "bonus_percent": 3500,
-                "power": 120000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffb46728342e342f65635",
-                "title": {
-                    "en": "Gilded Greed"
-                },
-                "filename": "gilded_greed",
-                "level": 5,
-                "bonus_percent": 5500,
-                "power": 350000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffbe5728342e342f65839",
-                "title": {
-                    "en": "Wrongway Atlas"
-                },
-                "filename": "wrongway_atlas",
-                "level": 4,
-                "bonus_percent": 4400,
-                "power": 300000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffbe5728342e342f65840",
-                "title": {
-                    "en": "Wrongway Atlas"
-                },
-                "filename": "wrongway_atlas",
-                "level": 5,
-                "bonus_percent": 6500,
-                "power": 800000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffcf8728342e342f65c2f",
-                "title": {
-                    "en": "Drama Chest"
-                },
-                "filename": "drama_chest",
-                "level": 4,
-                "bonus_percent": 5000,
-                "power": 600000000,
-                "type": "merge",
-                "is_in_set": true
-            },
-            {
-                "item_id": "6a2ffcf8728342e342f65c36",
-                "title": {
-                    "en": "Drama Chest"
-                },
-                "filename": "drama_chest",
-                "level": 5,
-                "bonus_percent": 8000,
-                "power": 2000000000,
-                "type": "merge",
                 "is_in_set": true
             }
         ]

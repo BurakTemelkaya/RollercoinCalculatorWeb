@@ -240,6 +240,21 @@
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
 }
 
+.duplicate-badge {
+    width: 14px;
+    height: 14px;
+    background-color: #d9534f;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    user-select: none;
+}
+
 /* ===== BUTONLAR VE AKSİYONLAR ===== */
 /* ===== RACK AYAR BUTONU (Kaldırıldı) ===== */
 
