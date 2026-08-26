@@ -1,5 +1,6 @@
 import { RollercoinRoomResponse, ApiRoomRack } from '../types/room';
 import { calculateSetBonuses } from './setCalculator';
+import type { GetRackSetListDto } from '../services/rackApi';
 
 export interface ExactPowerStats {
     baseMinerPowerGh: number;
@@ -19,7 +20,7 @@ export interface ExactPowerStats {
  * League Power = baseMinerPower + collectionBonus + rackBonus + setPercentBonus + setBonusPower
  * Everything else (freon, hamster, games, temp) is temporary power and NOT included.
  */
-export function calculateExactRoomPower(roomData: RollercoinRoomResponse): ExactPowerStats {
+export function calculateExactRoomPower(roomData: RollercoinRoomResponse, dynamicSets?: GetRackSetListDto[]): ExactPowerStats {
     if (!roomData || !roomData.miners) {
         return {
             baseMinerPowerGh: 0,
@@ -75,7 +76,7 @@ export function calculateExactRoomPower(roomData: RollercoinRoomResponse): Exact
     }
 
     // 2. Set Bonuses (calculated globally across all racks)
-    const setBonuses = calculateSetBonuses(roomData);
+    const setBonuses = calculateSetBonuses(roomData, dynamicSets);
     let totalSetPercentPower = 0; // Sum of percent_power from all achieved set levels
     let totalSetBonusPowerGh = 0; // Sum of bonus_power (flat Gh/s) from all achieved set levels
 

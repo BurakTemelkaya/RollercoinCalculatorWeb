@@ -6,8 +6,11 @@ import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { guessSetByMinerName, guessSetByRackName, calculateSetBonuses } from '../utils/setCalculator';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
+import { fetchSellableMiners } from '../services/minerApi';
+import type { GetRackSetListDto } from '../services/rackApi';
 import Notification from './Notification';
 import SpriteSheetMiner from './SpriteSheetMiner';
+import sellableIcon from '../assets/sellable.svg';
 import './RoomSimulator.css';
 
 function formatPower(powerGhs: number): string {
@@ -25,9 +28,10 @@ interface RoomSimulatorProps {
     room: RollercoinRoomResponse;
     onChange: (newRoom: RollercoinRoomResponse) => void;
     userId?: string;
+    dynamicSets?: GetRackSetListDto[];
 }
 
-export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, userId }) => {
+export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, userId, dynamicSets }) => {
     const { t } = useTranslation();
     const [isAddRackOpen, setIsAddRackOpen] = useState(false);
     const [addRackTarget, setAddRackTarget] = useState<{ x: number, y: number } | null>(null);
@@ -296,6 +300,25 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         return (room.miners || [])
             .filter(m => m.placement?.user_rack_id)
             .reduce((sum, m) => sum + (Number(m.power) || 0), 0);
+    }, [room.miners]);
+
+    // Sellable miners: fetch which miners can be sold on marketplace
+    const [sellableMinerIds, setSellableMinerIds] = useState<Set<string>>(new Set());
+    useEffect(() => {
+        const minerIds = [...new Set((room.miners || []).map(m => m.miner_id).filter(Boolean))];
+        if (minerIds.length === 0) {
+            setSellableMinerIds(new Set());
+            return;
+        }
+        fetchSellableMiners(minerIds).then(results => {
+            const sellableSet = new Set<string>();
+            for (const item of results) {
+                if (item.isSellable) {
+                    sellableSet.add(item.minerId);
+                }
+            }
+            setSellableMinerIds(sellableSet);
+        });
     }, [room.miners]);
 
     // === MOBİL TESPİTİ ===
@@ -766,7 +789,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         }
     });
 
-    const setBonuses = calculateSetBonuses(room);
+    const setBonuses = calculateSetBonuses(room, dynamicSets);
     let totalSetPercentPower = 0;
     let totalSetBonusPowerGh = 0;
     for (const setBonus of setBonuses.values()) {
@@ -941,6 +964,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                             {rackMiners.map(miner => {
                                                 const mWidth = miner.width || 1;
                                                 const isBonusActive = firstInstanceMinerIds.has(miner._id);
+                                                const isSellable = sellableMinerIds.has(miner.miner_id);
                                                 const bonusValue = (miner.bonus_percent || 0) / 100;
                                                 const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight);
 
@@ -989,10 +1013,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             loading="lazy"
                                                         />
 
-                                                        {(miner.level > 0 || !isBonusActive) && (
+                                                        {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                             <div className={`miners-badges`}>
                                                                 {miner.level > 0 && (
                                                                     <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                )}
+                                                                {isSellable && (
+                                                                    <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} />
                                                                 )}
                                                                 {!isBonusActive && (
                                                                     <div className="duplicate-badge" title={t('simulator.duplicateMiner', 'Kopya Miner')}>
@@ -1289,6 +1316,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                 {rackMiners.map(miner => {
                                                     const mWidth = miner.width || 1;
                                                     const isBonusActive = firstInstanceMinerIds.has(miner._id);
+                                                    const isSellable = sellableMinerIds.has(miner.miner_id);
                                                     const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight, true);
                                                     return (
                                                         <div
@@ -1302,10 +1330,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                 className="miner-item"
                                                                 alt={miner.name}
                                                             />
-                                                            {(miner.level > 0 || !isBonusActive) && (
+                                                            {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                                 <div className="miners-badges">
                                                                     {miner.level > 0 && (
                                                                         <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                    )}
+                                                                    {isSellable && (
+                                                                        <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} />
                                                                     )}
                                                                     {!isBonusActive && (
                                                                         <div className="duplicate-badge" title={t('simulator.duplicateMiner', 'Kopya Miner')}>
@@ -1353,6 +1384,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                     {row.map((miner, colIdx) => {
                                                         if (miner) {
                                                             const isBonusActive = firstInstanceMinerIds.has(miner._id);
+                                                            const isSellable = sellableMinerIds.has(miner.miner_id);
                                                             const bonusValue = (miner.bonus_percent || 0) / 100;
                                                             return (
                                                                 <div key={miner._id} className={`rack-edit-miner-card ${miner.width === 2 ? 'full-width' : ''}`}>
@@ -1365,6 +1397,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                         />
                                                                         {miner.level > 0 && (
                                                                             <img className="rack-edit-miner-level" src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                                        )}
+                                                                        {isSellable && (
+                                                                            <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} style={{ position: 'absolute', top: 5, left: 5 }} />
                                                                         )}
                                                                         {!isBonusActive && (
                                                                             <div className="duplicate-badge" style={{ position: 'absolute', top: 5, right: 5 }} title={t('simulator.duplicateMiner', 'Kopya Miner')}>

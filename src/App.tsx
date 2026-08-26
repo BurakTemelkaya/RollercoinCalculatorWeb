@@ -995,6 +995,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           isFetchingUser={isFetchingUser}
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
+                          isActive={!collapsedTabs.has('simulator')}
                         />
                       </React.Suspense>
                     </div>
@@ -1011,6 +1012,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           isFetchingRoom={isFetchingRoom}
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
+                          isActive={!collapsedTabs.has('room_simulator')}
                         />
                       </React.Suspense>
                     </div>

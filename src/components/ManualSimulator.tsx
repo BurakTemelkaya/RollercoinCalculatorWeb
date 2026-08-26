@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinUserResponse } from '../types/user';
@@ -12,6 +12,7 @@ import { LeagueInfo, LEAGUES } from '../data/leagues';
 import { getLeagueByPower } from '../utils/leagueHelper';
 import { getLeagueImage } from '../data/leagueImages';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
+import { fetchSetRackList, GetRackSetListDto } from '../services/rackApi';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import Notification from './Notification';
 import './ManualSimulator.css';
@@ -27,6 +28,7 @@ interface ManualSimulatorProps {
     isFetchingUser?: boolean;
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
+    isActive?: boolean;
 }
 
 interface AddedMiner {
@@ -49,11 +51,25 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     onFetchUser,
     isFetchingUser,
     globalUserName = '',
-    setGlobalUserName = () => { }
+    setGlobalUserName = () => { },
+    isActive = true
 }) => {
     const { t } = useTranslation();
     const { canFetch, setFetchStarted } = useApiCooldown();
     const [localUserName, setLocalUserName] = useState(globalUserName);
+
+    const [dynamicSets, setDynamicSets] = useState<GetRackSetListDto[] | undefined>(undefined);
+    const hasFetchedDynamicSets = useRef(false);
+
+    useEffect(() => {
+        if (!isActive || hasFetchedDynamicSets.current) return;
+        hasFetchedDynamicSets.current = true;
+        fetchSetRackList().then(data => {
+            if (data && data.length > 0) {
+                setDynamicSets(data);
+            }
+        });
+    }, [isActive]);
 
     // Tab State: 'manual' or 'search'
     const [activeInputTab, setActiveInputTab] = useState<'manual' | 'search'>('manual');
@@ -255,7 +271,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         const unlistedPowerGh = dto ? (dto.current_Power - (globalBaseMinerPowerGh + apiBonus + tempPowerGh + gamesPowerGh)) : 0;
         if (fetchedRoom) {
             // Calculate League Power from exact room data (League power rule: room only)
-            const exactPower = calculateExactRoomPower(fetchedRoom);
+            const exactPower = calculateExactRoomPower(fetchedRoom, dynamicSets);
             return {
                 baseMinerPowerGh: exactPower.baseMinerPowerGh,
                 collectionBonusPercent: exactPower.collectionBonusPercent,

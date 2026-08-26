@@ -255,6 +255,13 @@
     user-select: none;
 }
 
+.sellable-badge {
+    width: 14px;
+    height: 14px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+    pointer-events: auto;
+}
+
 /* ===== BUTONLAR VE AKSİYONLAR ===== */
 /* ===== RACK AYAR BUTONU (Kaldırıldı) ===== */
 

@@ -1,5 +1,6 @@
 import { SETS_DATA, RollercoinSet } from '../data/sets';
 import { ApiRoomMiner, RollercoinRoomResponse } from '../types/room';
+import type { GetRackSetListDto } from '../services/rackApi';
 
 export interface SetBonusResult {
     percent_power: number;
@@ -74,7 +75,114 @@ export function guessSetByRackName(rackName: string): RollercoinSet | null {
     return null;
 }
 
-export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<string, SetBonusResult> {
+/**
+ * Calculates set bonuses using DYNAMIC data from the backend API.
+ * This is the preferred path when API data is available.
+ */
+function calculateSetBonusesDynamic(
+    roomData: RollercoinRoomResponse,
+    dynamicSets: GetRackSetListDto[]
+): Map<string, SetBonusResult> {
+    const rackBonuses = new Map<string, SetBonusResult>();
+
+    if (!roomData || !roomData.miners) {
+        return rackBonuses;
+    }
+
+    // Build a lookup: rack definition ID → dynamic set data
+    const rackIdToSet = new Map<string, GetRackSetListDto>();
+    for (const setData of dynamicSets) {
+        if (setData.requiredRackId) {
+            rackIdToSet.set(setData.requiredRackId, setData);
+        }
+    }
+
+    // Build a lookup: user_rack_id → rack definition rack_id
+    const userRackToDefRack = new Map<string, string>();
+    if (roomData.racks) {
+        for (const r of roomData.racks) {
+            userRackToDefRack.set(r._id, r.rack_id);
+        }
+    }
+
+    // Build a lookup: set ID → Set of miner filenames belonging to that set
+    const setMinerFilenames = new Map<string, Set<string>>();
+    for (const setData of dynamicSets) {
+        const filenames = new Set<string>();
+        for (const item of (setData.rackSetItems || [])) {
+            if (item.minerFilename) {
+                filenames.add(item.minerFilename);
+            }
+        }
+        setMinerFilenames.set(setData.id, filenames);
+    }
+
+    // Group is_in_set miners by their user_rack_id, tracking unique filenames
+    const rackUniqueMiners = new Map<string, Set<string>>();
+
+    for (const miner of roomData.miners) {
+        if (miner.is_in_set && miner.placement && miner.placement.user_rack_id) {
+            const userRackId = miner.placement.user_rack_id;
+            const defRackId = userRackToDefRack.get(userRackId);
+            if (!defRackId) continue;
+
+            // Check if this rack is a required set rack
+            const setData = rackIdToSet.get(defRackId);
+            if (!setData) continue;
+
+            // Check if this miner actually belongs to this set
+            const validFilenames = setMinerFilenames.get(setData.id);
+            if (!validFilenames || !validFilenames.has(miner.filename)) continue;
+
+            if (!rackUniqueMiners.has(userRackId)) {
+                rackUniqueMiners.set(userRackId, new Set<string>());
+            }
+            rackUniqueMiners.get(userRackId)!.add(miner.filename);
+        }
+    }
+
+    // Evaluate set levels for each qualifying rack
+    for (const [userRackId, uniqueFilenames] of rackUniqueMiners.entries()) {
+        const defRackId = userRackToDefRack.get(userRackId);
+        if (!defRackId) continue;
+
+        const setData = rackIdToSet.get(defRackId);
+        if (!setData || !setData.rackSetLevels) continue;
+
+        const uniqueCount = uniqueFilenames.size;
+        if (uniqueCount === 0) continue;
+
+        // Find ALL levels achieved (summative bonuses)
+        const achievedLevels = setData.rackSetLevels.filter(
+            l => uniqueCount >= l.conditionAmount
+        );
+
+        if (achievedLevels.length > 0) {
+            let totalPercentPower = 0;
+            let totalBonusPower = 0;
+
+            for (const level of achievedLevels) {
+                totalPercentPower += level.bonusPercent || 0;
+                // Dynamic sets use bonusPercent; flat bonus_power is not in the DTO currently
+            }
+
+            rackBonuses.set(userRackId, {
+                percent_power: totalPercentPower,
+                bonus_power: totalBonusPower
+            });
+        }
+    }
+
+    return rackBonuses;
+}
+
+/**
+ * Calculates set bonuses using HARDCODED local data (fallback).
+ * Used when the API is unavailable or returns empty data.
+ */
+function calculateSetBonusesFallback(
+    roomData: RollercoinRoomResponse
+): Map<string, SetBonusResult> {
     const rackBonuses = new Map<string, SetBonusResult>();
 
     if (!roomData || !roomData.miners) {
@@ -96,13 +204,6 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
             
             // Only count UNIQUE miners for set completion
             const uniqueSet = uniqueMinerIdsByRack.get(rackId)!;
-            // Use miner_id as it represents the instance, wait... we need unique items!
-            // The set bonus says "unique miners" meaning different items. 
-            // In API `filename` or `name` represents the unique item type, 
-            // but Rollercoin typically means unique *types* of miners from the set.
-            // But wait, the previous code used `miner_id` which was instance ID? 
-            // Wait, miner_id in API represents instance ID? Wait, no.
-            // Let's check what it should be. The previous code used miner_id.
             if (!uniqueSet.has(miner.filename || miner.name)) {
                 uniqueSet.add(miner.filename || miner.name);
                 rackMiners.get(rackId)!.push(miner);
@@ -123,8 +224,6 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
         if (miners.length === 0) continue;
 
         // Try to guess the set using the first miner on the rack
-        // Note: A more robust way is to find the set based on the rack definition itself,
-        // but guessing by miner works as long as we verify the rack matches.
         const guessedSet = guessSetByMiner(miners[0]);
 
         if (guessedSet && guessedSet.levels && guessedSet.rack) {
@@ -135,7 +234,6 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
             }
             
             // Re-count unique miners that ACTUALLY belong to this specific set
-            // (in case a user mixed miners from different sets on the same set rack)
             const validSetMiners = new Set<string>();
             for (const miner of miners) {
                 const minerBelongsToSet = guessedSet.miners?.some(sm => 
@@ -172,4 +270,21 @@ export function calculateSetBonuses(roomData: RollercoinRoomResponse): Map<strin
     }
 
     return rackBonuses;
+}
+
+/**
+ * Main entry point for set bonus calculation.
+ * Uses dynamic API data when available, falls back to hardcoded data otherwise.
+ * 
+ * @param roomData - The user's room data from Rollercoin API
+ * @param dynamicSets - Optional set rack data from our backend API
+ */
+export function calculateSetBonuses(
+    roomData: RollercoinRoomResponse,
+    dynamicSets?: GetRackSetListDto[]
+): Map<string, SetBonusResult> {
+    if (dynamicSets && dynamicSets.length > 0) {
+        return calculateSetBonusesDynamic(roomData, dynamicSets);
+    }
+    return calculateSetBonusesFallback(roomData);
 }

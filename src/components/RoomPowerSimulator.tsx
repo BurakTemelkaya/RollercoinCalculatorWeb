@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LeagueInfo, LEAGUES } from '../data/leagues';
 import { getLeagueByPower } from '../utils/leagueHelper';
@@ -9,6 +9,7 @@ import { RoomSimulator } from './RoomSimulator';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import { getLeagueImage } from '../data/leagueImages';
+import { fetchSetRackList, GetRackSetListDto } from '../services/rackApi';
 import './RoomPowerSimulator.css';
 
 interface RoomPowerSimulatorProps {
@@ -22,6 +23,7 @@ interface RoomPowerSimulatorProps {
     isFetchingRoom?: boolean;
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
+    isActive?: boolean;
 }
 
 const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
@@ -33,13 +35,28 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     isFetchingUser = false,
     isFetchingRoom = false,
     globalUserName = '',
-    setGlobalUserName = () => { }
+    setGlobalUserName = () => { },
+    isActive = true
 }) => {
     const { t } = useTranslation();
     const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
 
     const [localUserName, setLocalUserName] = useState(globalUserName);
     const [simulatedRoom, setSimulatedRoom] = useState<RollercoinRoomResponse | null>(null);
+    const [dynamicSets, setDynamicSets] = useState<GetRackSetListDto[] | undefined>(undefined);
+    const hasFetchedDynamicSets = useRef(false);
+
+    // Fetch dynamic set rack data when active
+    useEffect(() => {
+        if (!isActive || hasFetchedDynamicSets.current) return;
+        
+        hasFetchedDynamicSets.current = true;
+        fetchSetRackList().then(data => {
+            if (data && data.length > 0) {
+                setDynamicSets(data);
+            }
+        });
+    }, [isActive]);
 
     useEffect(() => {
         setLocalUserName(globalUserName);
@@ -78,13 +95,13 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const globalBonusPercent = dto?.bonus_percent || 0;
 
     // ORIGINAL Room State
-    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom) : null;
+    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, dynamicSets) : null;
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
     const originalRoomBasePowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
     // SIMULATED Room State
-    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom) : null;
+    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, dynamicSets) : null;
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const simulatedRoomBasePowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
     const hamsterBonusPowerGh = exactPower ? exactPower.baseMinerPowerGh * (hamsterBonusPercent / 10000) : 0;
@@ -283,6 +300,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             room={simulatedRoom}
                             onChange={setSimulatedRoom}
                             userId={fetchedUser?.userProfileResponseDto?.avatar_Id}
+                            dynamicSets={dynamicSets}
                         />
 
                         {originalExactPower && Math.abs(powerDiffGh) > 0.001 && (

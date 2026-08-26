@@ -17,11 +17,12 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
       const isTR = country === 'TR';
       const showCoinzilla = isTR || country === 'UNKNOWN';
 
+      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
+      // Right (Always show Coinzilla)
+      (window as any).coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
+
       if (showCoinzilla) {
-        (window as any).coinzilla_display = (window as any).coinzilla_display || [];
         // Left
-        (window as any).coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
-        // Right
         (window as any).coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
         // Mobile
         if (mobileAdVisible) {
@@ -60,11 +61,7 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
         <div style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ width: 'max(170px, calc((100vw - 1200px) / 2))', height: '100%', position: 'fixed', top: 0, right: 0 }}>
             <div id="right-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 99998, pointerEvents: 'auto' }}>
-              {showCoinzilla ? (
-                <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
-              ) : (
-                <iframe data-aa='2448373' src='//ad.a-ads.com/2448373/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
-              )}
+              <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
             </div>
           </div>
         </div>
