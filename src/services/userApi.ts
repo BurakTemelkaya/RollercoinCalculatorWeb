@@ -52,6 +52,7 @@ export interface MinerDto {
     percent: number;
     power: number;
     width: number;
+    type?: string;
     createdDate: string;
 }
 

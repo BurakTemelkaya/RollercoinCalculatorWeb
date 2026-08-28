@@ -63,9 +63,10 @@ function getMinerImageUrl(fileName: string, imageVersion?: number): string {
     return imageVersion ? `${base}?v=${imageVersion}` : base;
 }
 
-/** Builds the Rollercoin CDN level icon URL (only for level > 1) */
-function getLevelIconUrl(level: number): string {
-    return `https://rollercoin.com/static/img/storage/rarity_icons/level_${level}.png?v=1.0.0`;
+/** Builds the level icon URL, supporting old_merge special case */
+function getLevelIconUrl(level: number, type?: string): string {
+    if (type === 'old_merge') return '/miner-levels/level_star.png';
+    return `/miner-levels/level_${level}.webp`;
 }
 
 /** Formats raw API amount to RLT display value */

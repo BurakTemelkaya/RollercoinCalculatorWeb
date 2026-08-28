@@ -1016,7 +1016,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                         {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                             <div className={`miners-badges`}>
                                                                 {miner.level > 0 && (
-                                                                    <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                    <img src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={miner.level.toString()} />
                                                                 )}
                                                                 {isSellable && (
                                                                     <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} />
@@ -1333,7 +1333,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                                 <div className="miners-badges">
                                                                     {miner.level > 0 && (
-                                                                        <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={miner.level.toString()} />
+                                                                        <img src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={miner.level.toString()} />
                                                                     )}
                                                                     {isSellable && (
                                                                         <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} />
@@ -1396,7 +1396,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                             alt={miner.name}
                                                                         />
                                                                         {miner.level > 0 && (
-                                                                            <img className="rack-edit-miner-level" src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                                            <img className="rack-edit-miner-level" src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={`Lvl ${miner.level + 1}`} />
                                                                         )}
                                                                         {isSellable && (
                                                                             <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} style={{ position: 'absolute', top: 5, left: 5 }} />
@@ -1640,7 +1640,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                 <div className="inv-miner-card-img-wrapper">
                                                     {miner.level > 0 && (
                                                         <div className="inv-miner-card-badge">
-                                                            <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                            <img src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={`Lvl ${miner.level + 1}`} />
                                                         </div>
                                                     )}
                                                     <img
@@ -1789,7 +1789,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                             <div className="inv-miner-card-img-wrapper">
                                                 {miner.level > 0 && (
                                                     <div className="inv-miner-card-badge">
-                                                        <img src={`https://static.rollercoin.com/static/img/storage/rarity_icons/level_${miner.level + 1}.png?v=1.0.0`} alt={`Lvl ${miner.level + 1}`} />
+                                                        <img src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={`Lvl ${miner.level + 1}`} />
                                                     </div>
                                                 )}
                                                 <img

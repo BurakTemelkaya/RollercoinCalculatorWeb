@@ -184,7 +184,7 @@ const rewardTypeFallbackIcon = xpImg;
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; coverUrl?: string; localImage?: string; level?: number; scale?: number } {
+): { text: string; subText: string; imageUrl?: string; coverUrl?: string; localImage?: string; level?: number; type?: string; scale?: number } {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -230,6 +230,7 @@ function getRewardDisplay(
                     subText: `${formatPower(miner.power)} | ${bonusPct}%`,
                     imageUrl: getMinerImageUrl(miner.filename, miner.image_version),
                     level: (miner.level || 0) + 1,
+                    type: miner.type,
                 };
             }
             return { text: t('event.rewardTypes.miner'), subText: `x${reward.amount}` };
@@ -897,7 +898,7 @@ export default function ProgressionEvent() {
                                     )}
                                     {finalRewardDisplay.level && finalRewardDisplay.level > 1 && (
                                         <img
-                                            src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${finalRewardDisplay.level}.png?v=1.0.0`}
+                                            src={finalRewardDisplay.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${finalRewardDisplay.level}.webp`}
                                             alt={`Level ${finalRewardDisplay.level}`}
                                             style={{ position: 'absolute', top: '25px', left: '-5px', width: '28px', height: '18px', objectFit: 'contain', zIndex: 3, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
                                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -1026,7 +1027,7 @@ export default function ProgressionEvent() {
                                                                             <div style={{ position: 'relative', display: 'inline-flex' }}>
                                                                                 {(display?.level ?? 0) > 1 && (
                                                                                     <img
-                                                                                        src={`https://rollercoin.com/static/img/storage/rarity_icons/level_${display.level}.png?v=1.0.0`}
+                                                                                        src={display.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${display.level}.webp`}
                                                                                         alt={`Level ${display.level}`}
                                                                                         style={{ position: 'absolute', top: '2px', left: '-10px', width: '22px', height: '14px', objectFit: 'contain', zIndex: 2 }}
                                                                                         onError={(e) => {
