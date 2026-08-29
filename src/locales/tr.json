@@ -408,7 +408,13 @@
     "racksTab": "Raflar",
     "minersTab": "Minerler",
     "clearFilters": "Filtreleri temizle",
-    "closeFilters": "Filtreleri kapat"
+    "closeFilters": "Filtreleri kapat",
+    "rackCapacity": "Kapasite",
+    "rackPowerBonus": "Güç Bonusu",
+    "selectRackToAdd": "Listeden eklenecek bir raf seçin",
+    "searchRack": "Raf ara...",
+    "rackSortDate": "Tarih",
+    "rackSortBonus": "Bonus"
   },
   "settings": {
     "title": "Ayarlar",

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchMerges, fetchMergeById } from '../services/mergeApi';
 import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge';
+import CdnImage from './CdnImage';
 import type { PaginatedResponse } from '../types/pagination';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -816,8 +817,10 @@ export default function MergePage() {
                                                         <span className="merge-card-level-text">Lv.{item.resultItemLevel + 1}</span>
                                                     )
                                                 )}
-                                                <img
-                                                    src={getMinerImageUrl(item.resultItemFileName, item.resultItemImageVersion || undefined)}
+                                                <CdnImage
+                                                    type="miner"
+                                                    itemId={item.resultItemFileName?.split('.')[0] || ''}
+                                                    fallbackUrl={getMinerImageUrl(item.resultItemFileName, item.resultItemImageVersion || undefined)}
                                                     alt={item.resultItemName}
                                                     className="merge-card-img"
                                                     loading="lazy"
@@ -974,8 +977,10 @@ export default function MergePage() {
                                         )
                                     )}
                                     {selectedMerge.resultItemFileName ? (
-                                        <img
-                                            src={getMinerImageUrl(selectedMerge.resultItemFileName, selectedMerge.resultItemImageVersion || undefined)}
+                                        <CdnImage
+                                            type="miner"
+                                            itemId={selectedMerge.resultItemFileName?.split('.')[0] || ''}
+                                            fallbackUrl={getMinerImageUrl(selectedMerge.resultItemFileName, selectedMerge.resultItemImageVersion || undefined)}
                                             alt={selectedMerge.resultItemName}
                                             className="merge-result-img"
                                             onError={(e) => {
@@ -1109,23 +1114,45 @@ export default function MergePage() {
                                                     )
                                                 )}
                                                 {imgSrc ? (
-                                                    <img
-                                                        src={imgSrc}
-                                                        alt={displayName}
-                                                        className="merge-req-img"
-                                                        loading="lazy"
-                                                        onError={(e) => {
-                                                            const target = e.target as HTMLImageElement;
-                                                            target.style.display = 'none';
-                                                            const parent = target.parentElement;
-                                                            if (parent && !parent.querySelector('.merge-req-fallback')) {
-                                                                const span = document.createElement('span');
-                                                                span.className = 'merge-req-fallback';
-                                                                span.textContent = isMiner ? '⛏️' : '🔩';
-                                                                parent.appendChild(span);
-                                                            }
-                                                        }}
-                                                    />
+                                                    isMiner ? (
+                                                        <CdnImage
+                                                            type="miner"
+                                                            itemId={item.fileName?.split('.')[0] || ''}
+                                                            fallbackUrl={imgSrc}
+                                                            alt={displayName}
+                                                            className="merge-req-img"
+                                                            loading="lazy"
+                                                            onError={(e) => {
+                                                                const target = e.target as HTMLImageElement;
+                                                                target.style.display = 'none';
+                                                                const parent = target.parentElement;
+                                                                if (parent && !parent.querySelector('.merge-req-fallback')) {
+                                                                    const span = document.createElement('span');
+                                                                    span.className = 'merge-req-fallback';
+                                                                    span.textContent = '⛏️';
+                                                                    parent.appendChild(span);
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={imgSrc}
+                                                            alt={displayName}
+                                                            className="merge-req-img"
+                                                            loading="lazy"
+                                                            onError={(e) => {
+                                                                const target = e.target as HTMLImageElement;
+                                                                target.style.display = 'none';
+                                                                const parent = target.parentElement;
+                                                                if (parent && !parent.querySelector('.merge-req-fallback')) {
+                                                                    const span = document.createElement('span');
+                                                                    span.className = 'merge-req-fallback';
+                                                                    span.textContent = '🔩';
+                                                                    parent.appendChild(span);
+                                                                }
+                                                            }}
+                                                        />
+                                                    )
                                                 ) : (
                                                     <span className="merge-req-fallback">{isMiner ? '⛏️' : '🔩'}</span>
                                                 )}

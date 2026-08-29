@@ -27,6 +27,20 @@ export function getApiBaseUrl(): string {
 }
 
 /**
+ * Gets the CDN base URL from environment variables, bypassing DEV proxy
+ * Used specifically for static assets like miner/rack images served by the backend
+ */
+export function getCdnBaseUrl(): string {
+  const url = import.meta.env.VITE_API_URL;
+
+  if (!url) {
+    return 'https://localhost:7080'; // Fallback
+  }
+
+  return url;
+}
+
+/**
  * Gets the league endpoint from environment variables
  */
 function getLeagueEndpoint(): string {

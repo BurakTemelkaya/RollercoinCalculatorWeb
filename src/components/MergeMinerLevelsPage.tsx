@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { fetchMergesByMinerName } from '../services/mergeApi';
 import type { MergeDetail } from '../types/merge';
 import { autoScalePower } from '../utils/powerParser';
+import CdnImage from './CdnImage';
 
 import './MergePage.css'; // Reusing some base styles
 import './MergeMinerLevelsPage.css';
@@ -356,8 +357,10 @@ export default function MergeMinerLevelsPage() {
                                                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                                                 />
                                                 {detail.resultItemFileName ? (
-                                                    <img
-                                                        src={getMinerImageUrl(detail.resultItemFileName, detail.resultItemImageVersion || undefined)}
+                                                    <CdnImage
+                                                        type="miner"
+                                                        itemId={detail.resultItemFileName?.split('.')[0] || ''}
+                                                        fallbackUrl={getMinerImageUrl(detail.resultItemFileName, detail.resultItemImageVersion || undefined)}
                                                         alt={detail.resultItemName}
                                                         className="miner-level-img"
                                                     />
@@ -415,7 +418,17 @@ export default function MergeMinerLevelsPage() {
                                                                     />
                                                                 )}
                                                                 {imgSrc ? (
-                                                                    <img src={imgSrc} alt={displayName} className="req-item-img" />
+                                                                    isMiner ? (
+                                                                        <CdnImage
+                                                                            type="miner"
+                                                                            itemId={item.fileName?.split('.')[0] || ''}
+                                                                            fallbackUrl={imgSrc}
+                                                                            alt={displayName}
+                                                                            className="req-item-img"
+                                                                        />
+                                                                    ) : (
+                                                                        <img src={imgSrc} alt={displayName} className="req-item-img" />
+                                                                    )
                                                                 ) : (
                                                                     <span className="req-item-fallback">{isMiner ? '⛏️' : '🔩'}</span>
                                                                 )}
@@ -495,7 +508,13 @@ export default function MergeMinerLevelsPage() {
                                                                         />
                                                                     )}
                                                                     {gItem.imgSrc ? (
-                                                                        <img src={gItem.imgSrc} alt={gItem.displayName} className="req-item-img" />
+                                                                        <CdnImage
+                                                                            type="miner"
+                                                                            itemId={gItem.fileName?.split('.')[0] || ''}
+                                                                            fallbackUrl={gItem.imgSrc}
+                                                                            alt={gItem.displayName}
+                                                                            className="req-item-img"
+                                                                        />
                                                                     ) : (
                                                                         <span className="req-item-fallback">⛏️</span>
                                                                     )}

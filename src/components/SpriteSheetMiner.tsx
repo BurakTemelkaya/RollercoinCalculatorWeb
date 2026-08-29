@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { MinerFramesData } from '../types/room';
+import CdnImage from './CdnImage';
+import { getCdnBaseUrl } from '../config/api';
 
 /**
  * Module-level cache for HTMLImageElements to prevent reloading 
@@ -19,7 +21,6 @@ function loadSpriteImage(url: string): Promise<HTMLImageElement> {
 
     const promise = new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
         img.onload = () => {
             imageCache.set(url, img);
             imagePending.delete(url);
@@ -62,7 +63,9 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     loading,
 }) => {
     const cleanName = (filename || 'crypto_combo').split('.')[0];
-    const spriteUrl = `https://static.rollercoin.com/static/img/game/room/miners/${cleanName}.png?v=1.0.0`;
+    const baseUrl = getCdnBaseUrl();
+    const cdnSpriteUrl = `${baseUrl}/miners/${cleanName}.png`;
+    const rcSpriteUrl = `https://static.rollercoin.com/static/img/game/room/miners/${cleanName}.png?v=1.0.0`;
     const gifUrl = `https://static.rollercoin.com/static/img/market/miners/${filename?.includes('.') ? filename : (filename + '.gif')}?v=1.2.1`;
     const pngFallbackUrl = `https://static.rollercoin.com/static/img/market/miners/${cleanName}.png`;
 
@@ -71,7 +74,7 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     // Try synchronous cache lookup for instant render
     const [image, setImage] = useState<HTMLImageElement | null>(() => {
         if (!canUseSprite) return null;
-        return imageCache.get(spriteUrl) || null;
+        return imageCache.get(cdnSpriteUrl) || imageCache.get(rcSpriteUrl) || null;
     });
     const [fallback, setFallback] = useState(false);
 
@@ -83,12 +86,13 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
         if (!canUseSprite || fallback || image !== null) return;
 
         let cancelled = false;
-        loadSpriteImage(spriteUrl)
+        loadSpriteImage(cdnSpriteUrl)
+            .catch(() => loadSpriteImage(rcSpriteUrl))
             .then(img => { if (!cancelled) setImage(img); })
             .catch(() => { if (!cancelled) setFallback(true); });
 
         return () => { cancelled = true; };
-    }, [spriteUrl, canUseSprite, fallback, image]);
+    }, [cdnSpriteUrl, rcSpriteUrl, canUseSprite, fallback, image]);
 
     // 2. Canvas Animation Loop
     useEffect(() => {
@@ -143,6 +147,22 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
 
     // ── Fallback: original GIF/PNG image ──
     if (!canUseSprite || fallback) {
+        if (cleanName) {
+            return (
+                <CdnImage
+                    type="miner"
+                    itemId={cleanName}
+                    fallbackUrl={gifUrl}
+                    className={className}
+                    alt={alt}
+                    loading={loading}
+                    onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        if (!target.src.includes('.png')) target.src = pngFallbackUrl;
+                    }}
+                />
+            );
+        }
         return (
             <img
                 className={className}

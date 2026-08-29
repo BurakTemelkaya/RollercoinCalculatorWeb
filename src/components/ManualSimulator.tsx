@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinUserResponse } from '../types/user';
 import { RollercoinRoomResponse } from '../types/room';
 import { calculateExactRoomPower } from '../utils/roomParser';
+import CdnImage from './CdnImage';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -665,8 +665,11 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                                 +
                                                             </button>
                                                             {miner.fileName ? (
-                                                                <img
+                                                                <CdnImage
+                                                                    type="miner"
+                                                                    itemId={miner.fileName?.split('.')[0] || ''}
                                                                     src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
+                                                                    fallbackUrl={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
                                                                     style={{ width: 80, height: 'auto', pointerEvents: 'none' }}
                                                                     onError={(e) => {
                                                                         const target = e.target as HTMLImageElement;
@@ -740,8 +743,10 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 ✕
                                             </button>
                                             {miner.fileName ? (
-                                                <img
-                                                    src={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
+                                                <CdnImage
+                                                    type="miner"
+                                                    itemId={miner.fileName?.split('.')[0] || ''}
+                                                    fallbackUrl={`https://static.rollercoin.com/static/img/market/miners/${miner.fileName?.includes('.') ? miner.fileName : (miner.fileName + '.gif')}?v=1.2.1`}
                                                     style={{ width: 50, height: 'auto', pointerEvents: 'none', marginTop: 5 }}
                                                     onError={(e) => {
                                                         const target = e.target as HTMLImageElement;

@@ -3,7 +3,9 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { fetchProgressionEvent, fetchProgressionEventById, fetchCurrencyDiscounts, type ParsedProgressionEvent } from '../services/progressionEventApi';
+import CdnImage from './CdnImage';
 import { extractEventIdFromSlug } from '../utils/slugUtils';
+import { getCdnBaseUrl } from '../config/api';
 import type {
     ProgressionReward,
     LevelConfig,
@@ -24,7 +26,7 @@ import './ProgressionEvent.css';
 import batteryImg from '../assets/items/battery.png';
 import bonusPowerImg from '../assets/items/bonus_power.png';
 import xpImg from '../assets/items/xp.png';
-import speedupImg from '../assets/items/speedup_item.gif';
+import speedupImg from '../assets/utility_items/67d1c54536daea2ef871b292.gif';
 import rareFanImg from '../assets/items/rare_fan.png';
 import legendaryFanImg from '../assets/items/legendary_fan.png';
 import commonFanImg from '../assets/items/common_fan.png';
@@ -100,7 +102,7 @@ function getCdnUrl(path: string): string {
 
 function getMutationComponentImage(itemId: string | null, title?: string): string | null {
     const t = (title || '').toLowerCase();
-    
+
     if (t.includes('wire')) {
         if (t.includes('uncommon')) return uncommonWireImg;
         if (t.includes('rare')) return rareWireImg;
@@ -135,7 +137,7 @@ function getMutationComponentImage(itemId: string | null, title?: string): strin
 
 function getMutationComponentDisplayName(itemId: string | null, title?: string): string {
     if (title) return title;
-    
+
     if (itemId === '6196269b67433d2dc52e0130') return 'Legendary Fan';
     if (itemId === '61b35e3767433d2dc57f86a2') return 'Rare Fan';
     if (itemId === '61b3604967433d2dc58893b0') return 'Common Wire';
@@ -184,7 +186,7 @@ const rewardTypeFallbackIcon = xpImg;
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; coverUrl?: string; localImage?: string; level?: number; type?: string; scale?: number } {
+): { text: string; subText: string; imageUrl?: string; rcImageUrl?: string; coverUrl?: string; rcCoverUrl?: string; localImage?: string; level?: number; type?: string; itemId?: string; itemType?: 'miner' | 'rack'; scale?: number } {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -231,6 +233,8 @@ function getRewardDisplay(
                     imageUrl: getMinerImageUrl(miner.filename, miner.image_version),
                     level: (miner.level || 0) + 1,
                     type: miner.type,
+                    itemId: miner.filename?.split('.')[0] || '',
+                    itemType: 'miner',
                 };
             }
             return { text: t('event.rewardTypes.miner'), subText: `x${reward.amount}` };
@@ -242,15 +246,35 @@ function getRewardDisplay(
                 text: rackName,
                 subText: `${t('event.rewardTypes.rack')}${capacityText}`,
                 imageUrl: reward.item_id ? getRackImageUrl(reward.item_id) : undefined,
+                itemId: reward.item_id ?? undefined,
+                itemType: 'rack',
             };
         }
         case 'utility_item': {
             const utilityName = reward.title.en || t('event.rewardTypes.utilityItem');
-            const utilityImage = reward.item_media_url ? getCdnUrl(reward.item_media_url) : undefined;
+
+            let utilityImage = undefined;
+            let rcUtilityImage = undefined;
+
+            if (reward.item_media_url) {
+                rcUtilityImage = getCdnUrl(reward.item_media_url);
+                const parts = reward.item_media_url.split('/');
+                const filename = parts[parts.length - 1];
+                utilityImage = `${getCdnBaseUrl()}/utility_items/${filename}`;
+            } else if (reward.item_id) {
+                if (/^[a-fA-F0-9]{24}$/.test(reward.item_id)) {
+                    utilityImage = `${getCdnBaseUrl()}/utility_items/${reward.item_id}.gif`;
+                } else {
+                    const ext = reward.item_id.includes('.') ? '' : '.png';
+                    utilityImage = `${getCdnBaseUrl()}/utility_items/${reward.item_id}${ext}`;
+                }
+            }
+
             return {
                 text: utilityName,
                 subText: `x${reward.amount}`,
                 imageUrl: utilityImage,
+                rcImageUrl: rcUtilityImage,
                 localImage: !utilityImage ? speedupImg : undefined,
             };
         }
@@ -265,18 +289,36 @@ function getRewardDisplay(
         }
         case 'mystery_box': {
             const boxName = reward.title.en || t('event.rewardTypes.mysteryBox');
-            const boxUrl = reward.box_image_url || reward.cover_image_url || reward.item_media_url;
-            const coverUrl = reward.cover_image_url || reward.item_media_url;
             
-            const boxImage = boxUrl ? getCdnUrl(boxUrl) : undefined;
-            const coverImage = coverUrl ? getCdnUrl(coverUrl) : undefined;
+            let mysteryBoxImage = undefined;
+            let rcMysteryBoxImage = undefined;
+            let coverImage = undefined;
+            let rcCoverImage = undefined;
+
+            const bottomUrl = reward.box_image_url || reward.item_media_url;
+            if (bottomUrl) {
+                const parts = bottomUrl.split('/');
+                const filename = parts[parts.length - 1];
+                mysteryBoxImage = `${getCdnBaseUrl()}/mystery_boxes/${filename}`;
+                rcMysteryBoxImage = getCdnUrl(bottomUrl);
+            }
+
+            const topUrl = reward.cover_image_url;
+            if (topUrl && topUrl !== bottomUrl) {
+                const parts = topUrl.split('/');
+                const filename = parts[parts.length - 1];
+                coverImage = `${getCdnBaseUrl()}/mystery_boxes/${filename}`;
+                rcCoverImage = getCdnUrl(topUrl);
+            }
 
             return {
                 text: `${boxName} x${reward.amount}`,
                 subText: boxName,
-                imageUrl: boxImage,
-                coverUrl: (boxImage && coverImage && boxImage !== coverImage) ? coverImage : undefined,
-                localImage: !boxImage ? getMysteryBoxLocalFallback(undefined, reward.title.en) : undefined,
+                imageUrl: mysteryBoxImage,
+                rcImageUrl: rcMysteryBoxImage,
+                coverUrl: coverImage,
+                rcCoverUrl: rcCoverImage,
+                localImage: !mysteryBoxImage ? getMysteryBoxLocalFallback(undefined, reward.title.en) : undefined,
             };
         }
         case 'trophy':
@@ -400,7 +442,7 @@ export default function ProgressionEvent() {
                 const endDate = eventData.endDate.replace(/Z$/, '');
                 console.log('[CurrencyDiscount] Fetching discounts:', { startDate, endDate });
                 const discounts = await fetchCurrencyDiscounts(startDate, endDate);
-                
+
                 // Filter out discounts that ended before or right as the event started
                 // We add a 1-hour tolerance to handle events starting slightly before their official 15:00:00 UTC time
                 const eventStartMs = new Date(rawStart + 'Z').getTime();
@@ -687,7 +729,7 @@ export default function ProgressionEvent() {
                             if (task.type === 'game_level') label = t('event.gameDifficulty');
                             if (task.type === 'spend_rlt') label = t('event.spend1Rlt');
                             if (task.type === 'marketplace') label = t('event.marketplace');
-                            
+
                             return (
                                 <div className="pe-info-row" key={task.id}>
                                     <span>{label}</span>
@@ -837,12 +879,12 @@ export default function ProgressionEvent() {
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={`${eventData.name} | Rollercoin Calculator`} />
                 <meta property="og:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
-                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event`} />
-                <meta property="og:image" content={`https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1`} />
-                <meta name="twitter:card" content="summary" />
-                <meta name="twitter:title" content={`${eventData.name} | Rollercoin Calculator`} />
-                <meta name="twitter:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
-                <meta name="twitter:image" content={`https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1`} />
+                <meta property="og:image" content={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`} />
+                <meta property="og:url" content={window.location.href} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${eventData.name} - Rollercoin Calculator`} />
+                <meta name="twitter:description" content={`Track rewards and optimize your strategy for the ${eventData.name} progression event in Rollercoin.`} />
+                <meta name="twitter:image" content={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`} />
             </>
             {/* Ad-Blocker Warning */}
             {adBlockWarning && (
@@ -864,9 +906,18 @@ export default function ProgressionEvent() {
             )}
 
             {/* Event Header */}
-            <div className="pe-header" style={{
-                backgroundImage: `url(https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1)`
-            }}>
+            <div className="pe-header">
+                <img
+                    src={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`}
+                    alt="Event Background"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+                    onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        if (!target.src.includes('static.rollercoin.com')) {
+                            target.src = `https://static.rollercoin.com/static/img/pe/${eventData.id}/progression-event-modal-bg.png?v=1`;
+                        }
+                    }}
+                />
                 <div className="pe-header-top-row">
                     <div className="pe-header-actions pe-header-left">
                         <Link to={`/${lang}`} className="pe-header-back-btn" title={t('event.backToCalc')}>
@@ -892,7 +943,17 @@ export default function ProgressionEvent() {
                         {finalRewardDisplay && finalRewardDisplay.imageUrl && (
                             <div className="pe-header-final-reward">
                                 <div className="pe-final-reward-img-wrapper" style={{ marginTop: '4px' }}>
-                                    <img src={finalRewardDisplay.imageUrl} alt={finalRewardDisplay.text} className="pe-final-reward-img" />
+                                    {finalRewardDisplay.itemType && finalRewardDisplay.itemId && finalRewardDisplay.imageUrl ? (
+                                        <CdnImage
+                                            type={finalRewardDisplay.itemType}
+                                            itemId={finalRewardDisplay.itemId}
+                                            fallbackUrl={finalRewardDisplay.imageUrl}
+                                            alt={finalRewardDisplay.text}
+                                            className="pe-final-reward-img"
+                                        />
+                                    ) : (
+                                        <img src={finalRewardDisplay.imageUrl} alt={finalRewardDisplay.text} className="pe-final-reward-img" />
+                                    )}
                                     {finalRewardDisplay.coverUrl && (
                                         <img src={finalRewardDisplay.coverUrl} alt={finalRewardDisplay.text} className="pe-final-reward-img" style={{ position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }} />
                                     )}
@@ -1036,35 +1097,71 @@ export default function ProgressionEvent() {
                                                                                         }}
                                                                                     />
                                                                                 )}
-                                                                                <img
-                                                                                    src={display.imageUrl}
-                                                                                    alt={display.text}
-                                                                                    className="pe-reward-img-api"
-                                                                                    style={display.scale ? { transform: `scale(${display.scale})` } : undefined}
-                                                                                    loading="lazy"
-                                                                                    onError={(e) => {
-                                                                                        const target = e.target as HTMLImageElement;
-                                                                                        target.style.display = 'none';
-                                                                                        // Show fallback text icon
-                                                                                        const parent = target.parentElement;
-                                                                                        if (parent && !parent.querySelector('span.fallback-icon')) {
-                                                                                            const span = document.createElement('span');
-                                                                                            span.className = 'fallback-icon';
-                                                                                            span.style.fontSize = '32px';
-                                                                                            span.textContent = '📦';
-                                                                                            parent.appendChild(span);
-                                                                                        }
-                                                                                    }}
-                                                                                />
+                                                                                {display.itemType && display.itemId && display.imageUrl ? (
+                                                                                    <CdnImage
+                                                                                        type={display.itemType}
+                                                                                        itemId={display.itemId}
+                                                                                        fallbackUrl={display.imageUrl}
+                                                                                        alt={display.text}
+                                                                                        className="pe-reward-img-api"
+                                                                                        style={display.scale ? { transform: `scale(${display.scale})` } : undefined}
+                                                                                        loading="lazy"
+                                                                                        onError={(e) => {
+                                                                                            const target = e.target as HTMLImageElement;
+                                                                                            target.style.display = 'none';
+                                                                                            const parent = target.parentElement;
+                                                                                            if (parent && !parent.querySelector('span.fallback-icon')) {
+                                                                                                const span = document.createElement('span');
+                                                                                                span.className = 'fallback-icon';
+                                                                                                span.style.fontSize = '32px';
+                                                                                                span.textContent = '📦';
+                                                                                                parent.appendChild(span);
+                                                                                            }
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    <img
+                                                                                        src={display.imageUrl}
+                                                                                        alt={display.text}
+                                                                                        className="pe-reward-img-api"
+                                                                                        style={display.scale ? { transform: `scale(${display.scale})` } : undefined}
+                                                                                        loading="lazy"
+                                                                                        onError={(e) => {
+                                                                                            const target = e.target as HTMLImageElement;
+                                                                                            if (display.rcImageUrl && target.src !== display.rcImageUrl) {
+                                                                                                target.src = display.rcImageUrl;
+                                                                                            } else {
+                                                                                                target.style.display = 'none';
+                                                                                                // Show fallback text icon
+                                                                                                const parent = target.parentElement;
+                                                                                                if (parent && !parent.querySelector('span.fallback-icon')) {
+                                                                                                    const span = document.createElement('span');
+                                                                                                    span.className = 'fallback-icon';
+                                                                                                    span.style.fontSize = '32px';
+                                                                                                    span.textContent = '📦';
+                                                                                                    parent.appendChild(span);
+                                                                                                }
+                                                                                            }
+                                                                                        }}
+                                                                                    />
+                                                                                )}
                                                                                 {display.coverUrl && (
-                                                                                    <img 
-                                                                                        src={display.coverUrl} 
-                                                                                        alt={display.text} 
-                                                                                        className="pe-reward-img-api" 
-                                                                                        style={{ 
+                                                                                    <img
+                                                                                        src={display.coverUrl}
+                                                                                        alt={display.text}
+                                                                                        className="pe-reward-img-api"
+                                                                                        style={{
                                                                                             position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none',
                                                                                             ...(display.scale ? { transform: `scale(${display.scale})` } : {})
-                                                                                        }} 
+                                                                                        }}
+                                                                                        onError={(e) => {
+                                                                                            const target = e.target as HTMLImageElement;
+                                                                                            if (display.rcCoverUrl && target.src !== display.rcCoverUrl) {
+                                                                                                target.src = display.rcCoverUrl;
+                                                                                            } else {
+                                                                                                target.style.display = 'none';
+                                                                                            }
+                                                                                        }}
                                                                                     />
                                                                                 )}
                                                                             </div>

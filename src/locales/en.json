@@ -407,7 +407,13 @@
     "racksTab": "Racks",
     "minersTab": "Miners",
     "clearFilters": "Clear filters",
-    "closeFilters": "Close filters"
+    "closeFilters": "Close filters",
+    "rackCapacity": "Capacity",
+    "rackPowerBonus": "Power Bonus",
+    "selectRackToAdd": "Select a rack to add from the list",
+    "searchRack": "Search racks...",
+    "rackSortDate": "Date",
+    "rackSortBonus": "Bonus"
   },
   "settings": {
     "title": "Settings",

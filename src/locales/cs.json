@@ -407,7 +407,13 @@
     "racksTab": "Regály",
     "minersTab": "Horníci",
     "clearFilters": "Vymazat filtry",
-    "closeFilters": "Zavřít filtry"
+    "closeFilters": "Zavřít filtry",
+    "rackCapacity": "Kapacita",
+    "rackPowerBonus": "Bonus k výkonu",
+    "selectRackToAdd": "Vyberte stojan k přidání ze seznamu",
+    "searchRack": "Hledat stojany...",
+    "rackSortDate": "Datum",
+    "rackSortBonus": "Bonus"
   },
   "settings": {
     "title": "Nastavení",

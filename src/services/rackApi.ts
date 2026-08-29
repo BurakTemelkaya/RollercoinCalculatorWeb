@@ -5,7 +5,8 @@
  */
 
 import { buildApiUrl } from '../config/api';
-import { apiGet } from './apiClient';
+import { apiGet, apiFetch } from './apiClient';
+import { PaginatedResponse } from '../types/pagination';
 
 // ---- DTO types matching the backend response ----
 
@@ -75,4 +76,31 @@ export async function fetchSetRackList(): Promise<GetRackSetListDto[]> {
     })();
     
     return fetchPromise;
+}
+
+// ---- Rack List API (paginated, with filters) ----
+
+export interface RackFilterParams {
+    Name?: string;
+    SortBy?: 'Date' | 'RackBonus';
+    IsDescending?: boolean;
+    PageIndex: number;
+}
+
+/**
+ * Fetches a paginated list of all racks from the backend.
+ * Supports filtering by name, sorting by date or rack bonus, and pagination.
+ * 
+ * @param params - Filter, sort and pagination parameters
+ * @returns Paginated rack list response
+ */
+export async function fetchRackList(params: RackFilterParams): Promise<PaginatedResponse<GetRackListDto>> {
+    let queryParams = `PageRequest.PageIndex=${params.PageIndex}&PageRequest.PageSize=20`;
+    if (params.Name) queryParams += `&Name=${encodeURIComponent(params.Name)}`;
+    if (params.SortBy) queryParams += `&SortBy=${params.SortBy}`;
+    if (params.IsDescending !== undefined) queryParams += `&IsDescending=${params.IsDescending}`;
+
+    const url = buildApiUrl(`/api/Rack?${queryParams}`);
+    const response = await apiFetch(url);
+    return response.json() as Promise<PaginatedResponse<GetRackListDto>>;
 }

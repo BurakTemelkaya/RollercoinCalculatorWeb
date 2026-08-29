@@ -122,7 +122,7 @@
     transition: all 0.2s;
 }
 
-.rack-drop-wrapper:hover {
+.rack-drop-wrapper:hover, .rack-drop-active {
     border-color: #03e1e4;
     background-color: rgba(3, 225, 228, 0.1);
 }
@@ -1517,15 +1517,18 @@
 /* Miner grid */
 .inventory-miner-grid {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     padding: 16px;
-    overflow-x: auto;
+    overflow-y: auto;
     min-height: 100px;
+    max-height: 40vh;
     scroll-behavior: smooth;
 }
 
 .inventory-miner-grid::-webkit-scrollbar {
     height: 6px;
+    width: 6px;
 }
 
 .inventory-miner-grid::-webkit-scrollbar-track {
@@ -1571,6 +1574,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.inv-rack-card .inv-miner-card-img-wrapper {
+    height: 80px;
 }
 
 .inv-miner-card-img {
