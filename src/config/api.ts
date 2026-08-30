@@ -31,13 +31,19 @@ export function getApiBaseUrl(): string {
  * Used specifically for static assets like miner/rack images served by the backend
  */
 export function getCdnBaseUrl(): string {
-  const url = import.meta.env.VITE_API_URL;
+  // First try the dedicated CDN URL, fallback to API URL, then fallback to localhost
+  const cdnUrl = import.meta.env.VITE_CDN_URL;
+  if (cdnUrl) {
+    return cdnUrl;
+  }
 
+  const url = import.meta.env.VITE_API_URL;
   if (!url) {
     return 'https://localhost:7080'; // Fallback
   }
 
-  return url;
+  // If we only have API URL, automatically transform it to CDN URL on production for best practice fallback
+  return url.replace('api.rollercoincalculator.app', 'cdn.rollercoincalculator.app');
 }
 
 /**

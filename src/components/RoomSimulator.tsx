@@ -1486,15 +1486,19 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                                             className="rack-edit-miner-img"
                                                                             alt={miner.name}
                                                                         />
-                                                                        {miner.level > 0 && (
-                                                                            <img className="rack-edit-miner-level" src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={`Lvl ${miner.level + 1}`} />
-                                                                        )}
-                                                                        {isSellable && (
-                                                                            <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} style={{ position: 'absolute', top: 5, left: 5 }} />
-                                                                        )}
-                                                                        {!isBonusActive && (
-                                                                            <div className="duplicate-badge" style={{ position: 'absolute', top: 5, right: 5 }} title={t('simulator.duplicateMiner', 'Kopya Miner')}>
-                                                                                2x
+                                                                        {(miner.level > 0 || !isBonusActive || isSellable) && (
+                                                                            <div className="miners-badges" style={{ top: 2, left: 2, flexWrap: 'wrap', maxWidth: '56px' }}>
+                                                                                {miner.level > 0 && (
+                                                                                    <img src={miner.type === 'old_merge' ? '/miner-levels/level_star.png' : `/miner-levels/level_${miner.level + 1}.webp`} alt={`Lvl ${miner.level + 1}`} style={{ width: 14, height: 14 }} />
+                                                                                )}
+                                                                                {isSellable && (
+                                                                                    <img className="sellable-badge" src={sellableIcon} alt="Sellable" title={t('simulator.sellableMiner', 'Satılabilir')} />
+                                                                                )}
+                                                                                {!isBonusActive && (
+                                                                                    <div className="duplicate-badge" title={t('simulator.duplicateMiner', 'Kopya Miner')}>
+                                                                                        2x
+                                                                                    </div>
+                                                                                )}
                                                                             </div>
                                                                         )}
                                                                     </div>
