@@ -745,8 +745,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const getVisualPosition = (x: number, y: number, level: number) => {
         if (level === 0) {
             if (y === 0) return { visualX: x, visualY: 0 };
-            if (y === 2) return { visualX: x + 4, visualY: 0 };
-            if (y === 1) return { visualX: x, visualY: 1 };
+            if (y === 1) return { visualX: x + 4, visualY: 0 };
+            if (y === 2) return { visualX: x, visualY: 1 };
             return { visualX: x, visualY: y };
         } else {
             if (y === 0) {
@@ -766,10 +766,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const getApiPosition = (visualX: number, visualY: number, level: number) => {
         if (level === 0) {
             if (visualY === 0) {
-                if (visualX >= 4) return { apiX: visualX - 4, apiY: 2 };
+                if (visualX >= 4) return { apiX: visualX - 4, apiY: 1 };
                 return { apiX: visualX, apiY: 0 };
             }
-            if (visualY === 1) return { apiX: visualX, apiY: 1 };
+            if (visualY === 1) return { apiX: visualX, apiY: 2 };
             return { apiX: visualX, apiY: visualY };
         } else {
             if (visualY === 0) {
