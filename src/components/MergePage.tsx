@@ -60,8 +60,9 @@ function applyForgeDiscount(rawAmount: number, forgeLevel: number): number {
 
 /** Builds a CDN URL for a miner GIF by filename, with optional version cache-buster */
 function getMinerImageUrl(fileName: string, imageVersion?: number): string {
-    const base = `https://static.rollercoin.com/static/img/market/miners/${fileName}.gif`;
-    return imageVersion ? `${base}?v=${imageVersion}` : base;
+    const v = imageVersion ? imageVersion : 1;
+    const sanitizedFilename = fileName?.replace(/['’]/g, '') || '';
+    return `https://static.rollercoin.com/static/img/market/miners/${sanitizedFilename}.gif?v=${v}`;
 }
 
 /** Builds the level icon URL, supporting old_merge special case */

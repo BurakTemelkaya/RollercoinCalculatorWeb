@@ -89,7 +89,8 @@ function formatPoints(num: number): string {
 
 function getMinerImageUrl(filename: string, imageVersion?: number): string {
     const v = imageVersion ? imageVersion : 1;
-    return `https://static.rollercoin.com/static/img/market/miners/${filename}.gif?v=${v}`;
+    const sanitizedFilename = filename?.replace(/['’]/g, '') || '';
+    return `https://static.rollercoin.com/static/img/market/miners/${sanitizedFilename}.gif?v=${v}`;
 }
 
 function getRackImageUrl(id: string): string {

@@ -43,8 +43,9 @@ function applyForgeDiscount(rawAmount: number, forgeLevel: number): number {
 }
 
 function getMinerImageUrl(fileName: string, imageVersion?: number): string {
-    const base = `https://static.rollercoin.com/static/img/market/miners/${fileName}.gif`;
-    return imageVersion ? `${base}?v=${imageVersion}` : base;
+    const v = imageVersion ? imageVersion : 1;
+    const sanitizedFilename = fileName?.replace(/['’]/g, '') || '';
+    return `https://static.rollercoin.com/static/img/market/miners/${sanitizedFilename}.gif?v=${v}`;
 }
 
 function getLevelIconUrl(level: number, type?: string): string {

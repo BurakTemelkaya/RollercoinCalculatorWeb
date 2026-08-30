@@ -26,8 +26,10 @@ export default function CdnImage({
     const mainExt = getExt(fallbackUrl);
     const hoverExt = hoverFallbackUrl ? getExt(hoverFallbackUrl) : '';
 
-    const cdnMainUrl = `${baseUrl}/${type}s/${itemId}${mainExt}`;
-    const cdnHoverUrl = hoverFallbackUrl ? `${baseUrl}/${type}s/${itemId}${hoverExt}` : undefined;
+    const sanitizedItemId = itemId?.replace(/['’]/g, '') || '';
+    
+    const cdnMainUrl = `${baseUrl}/${type}s/${sanitizedItemId}${mainExt}`;
+    const cdnHoverUrl = hoverFallbackUrl ? `${baseUrl}/${type}s/${sanitizedItemId}${hoverExt}` : undefined;
 
     const [src, setSrc] = useState<string>('');
     
@@ -39,7 +41,7 @@ export default function CdnImage({
             setSrc(fallbackUrl);
             return;
         }
-        const newCdnMain = `${baseUrl}/${type}s/${itemId}${mainExt}`;
+        const newCdnMain = `${baseUrl}/${type}s/${sanitizedItemId}${mainExt}`;
         if (failedUrls.has(newCdnMain)) {
             setSrc(fallbackUrl);
         } else {
