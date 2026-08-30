@@ -441,7 +441,7 @@ export default function ProgressionEvent() {
                 const startMs = new Date(rawStart).getTime() - 86400000;
                 const startDate = new Date(startMs).toISOString().replace(/Z$/, '').split('.')[0];
                 const endDate = eventData.endDate.replace(/Z$/, '');
-                console.log('[CurrencyDiscount] Fetching discounts:', { startDate, endDate });
+
                 const discounts = await fetchCurrencyDiscounts(startDate, endDate);
 
                 // Filter out discounts that ended before or right as the event started
@@ -453,7 +453,7 @@ export default function ProgressionEvent() {
                     return discountEndMs > eventStartMs + 3600000; // Must end strictly > 1 hour after event start
                 });
 
-                console.log('[CurrencyDiscount] Filtered:', filteredDiscounts);
+
                 setCurrencyDiscounts(filteredDiscounts);
                 if (filteredDiscounts.length > 0) {
                     setDiscount(filteredDiscounts[0].amount);

@@ -8,8 +8,8 @@ export default defineConfig({
     react(),
     VitePWA({
       strategies: 'injectManifest',       // Kendi SW kodumuz var (push notifications)
-      registerType: 'autoUpdate',          // Otomatik güncelle
-      srcDir: 'src',                       // SW kaynak dosya konumu
+      registerType: 'prompt',             // Kullanıcıya hissettirmeden route bazlı güncelleme
+      srcDir: 'src',                      // SW kaynak dosya konumu
       filename: 'sw.ts',                   // SW dosya adı
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],

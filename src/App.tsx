@@ -82,6 +82,7 @@ import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
 import RoomPowerSimulator from './components/RoomPowerSimulator';
 import ManualSimulator from './components/ManualSimulator';
+import ServiceWorkerUpdater from './components/ServiceWorkerUpdater';
 import './index.css';
 
 // Local storage keys
@@ -1063,6 +1064,7 @@ function App() {
   return (
     <>
       <AnalyticsTracker />
+      <ServiceWorkerUpdater />
       <Routes>
         <Route element={<MainLayoutWrapper />}>
           <Route path="/" element={<AutoRedirect />} />

@@ -4,8 +4,13 @@ import { clientsClaim } from 'workbox-core'
 
 declare const self: ServiceWorkerGlobalScope
 
-// Yeni SW hemen aktifleşsin (autoUpdate stratejisi)
-self.skipWaiting()
+// SW, React'tan 'SKIP_WAITING' mesajı alana kadar bekleyecek
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})
+
 clientsClaim()
 
 // Eski cache'leri temizle
