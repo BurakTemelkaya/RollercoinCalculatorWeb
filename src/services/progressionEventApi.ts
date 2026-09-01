@@ -62,9 +62,6 @@ function convertApiMiner(apiMiner: ApiMiner): MinerItem {
  * Converts an API reward (camelCase, flat) to internal ProgressionReward format.
  */
 function convertApiReward(apiReward: ApiReward): ProgressionReward {
-    if (apiReward.rewardType === 'mystery_box') {
-        console.log('MYSTERY BOX RAW API REWARD:', apiReward);
-    }
     const emptyText = { en: '', cn: '' };
     return {
         id: apiReward.id,

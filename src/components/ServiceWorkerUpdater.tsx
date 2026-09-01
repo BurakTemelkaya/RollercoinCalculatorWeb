@@ -14,7 +14,6 @@ export default function ServiceWorkerUpdater() {
       if (r) {
         console.log('SW Registered. Will check for updates every hour.');
         setInterval(() => {
-          console.log('Checking for SW updates...');
           r.update();
         }, 60 * 60 * 1000);
       }
@@ -28,14 +27,25 @@ export default function ServiceWorkerUpdater() {
   });
 
   useEffect(() => {
-    // Sadece pathname gerçekten değiştiğinde (kullanıcı linke tıkladığında) kontrol et.
-    // needRefresh true olduğunda arka planda tetiklenmesini engelliyoruz.
     if (previousPathnameRef.current !== location.pathname) {
       previousPathnameRef.current = location.pathname;
       
       if (needRefresh) {
         console.log('Route changed and update is pending. Applying new SW now...');
+        // updateServiceWorker, SW'ye SKIP_WAITING mesajı gönderir.
+        // Eklentinin "controlling" event'ı sayfayı otomatik yeniler.
+        // Ama controlling event'ı asenkron çalıştığı için bazen bir sonraki
+        // navigasyonda yakalanıyordu. Bunu çözmek için SW kontrolü devralana
+        // kadar kısa bir süre bekleyip, kontrolün devralınıp devralınmadığını
+        // kontrol ediyoruz. Eğer devralınmadıysa biz kendimiz reload yapıyoruz.
         updateServiceWorker(true);
+        
+        // Güvenlik ağı: Eğer controlling event 2 saniye içinde reload tetiklemediyse,
+        // biz kendimiz reload yapalım. Bu sayede 3. sayfaya geçmeden güncellenir.
+        setTimeout(() => {
+          console.log('Safety net: reloading page for SW update.');
+          window.location.reload();
+        }, 2000);
       }
     }
   }, [location.pathname, needRefresh, updateServiceWorker]);
