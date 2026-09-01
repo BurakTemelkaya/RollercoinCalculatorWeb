@@ -38,6 +38,7 @@ export interface ApiReward {
   ttlTime: number;
   itemName: string | null;
   itemPreviewUrl: string | null;
+  boxImageUrl?: string | null;
   itemBoxUrl: string | null;
   itemCoverUrl: string | null;
   rackCapacity: number | null;
@@ -97,6 +98,7 @@ export interface ProgressionReward {
   description: LocalizedText;
   range_count: { min: number; max: number };
   item_media_url?: string | null;
+  single_piece_url?: string | null;
   box_image_url?: string | null;
   cover_image_url?: string | null;
   rack_capacity?: number | null;

@@ -54,10 +54,6 @@ import diamondChestImg from '../assets/items/diamond_mine_chest_abbb269d-2d0d-47
 
 type EventTab = 'rewards' | 'multiplier';
 
-// Cache for the fetched event data
-const STORAGE_KEY = 'rollercoin_web_progression_event';
-const STORAGE_TIMESTAMP_KEY = 'rollercoin_web_progression_event_ts';
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Removed fixed RLT_PRICE constant
 
@@ -184,10 +180,28 @@ function getRewardTypeImage(type: string): string | null {
 
 const rewardTypeFallbackIcon = xpImg;
 
+interface RewardDisplay {
+    text: string;
+    subText: string;
+    localImage?: string;
+    imageUrl?: string;
+    rcImageUrl?: string;
+    coverUrl?: string;
+    rcCoverUrl?: string;
+    level?: number;
+    type?: string;
+    itemId?: string;
+    itemType?: 'miner' | 'rack';
+    scale?: number;
+    isMysteryBox?: boolean;
+    singlePieceUrl?: string;
+    singlePieceRcUrl?: string;
+}
+
 function getRewardDisplay(
     reward: ProgressionReward,
     t: (key: string, opts?: Record<string, unknown>) => string
-): { text: string; subText: string; imageUrl?: string; rcImageUrl?: string; coverUrl?: string; rcCoverUrl?: string; localImage?: string; level?: number; type?: string; itemId?: string; itemType?: 'miner' | 'rack'; scale?: number } {
+): RewardDisplay {
     switch (reward.type) {
         case 'power': {
             const durationDays = reward.ttl_time > 0 ? Math.round(reward.ttl_time / 86400000) : 0;
@@ -290,36 +304,45 @@ function getRewardDisplay(
         }
         case 'mystery_box': {
             const boxName = reward.title.en || t('event.rewardTypes.mysteryBox');
-            
-            let mysteryBoxImage = undefined;
-            let rcMysteryBoxImage = undefined;
-            let coverImage = undefined;
-            let rcCoverImage = undefined;
 
-            const bottomUrl = reward.box_image_url || reward.item_media_url;
-            if (bottomUrl) {
-                const parts = bottomUrl.split('/');
-                const filename = parts[parts.length - 1];
-                mysteryBoxImage = `${getCdnBaseUrl()}/mystery_boxes/${filename}`;
-                rcMysteryBoxImage = getCdnUrl(bottomUrl);
+            let singlePieceUrl = undefined;
+            let singlePieceRcUrl = undefined;
+            let bottomUrl = undefined;
+            let rcBottomUrl = undefined;
+            let coverUrl = undefined;
+            let rcCoverUrl = undefined;
+
+            if (reward.single_piece_url) {
+                const parts = reward.single_piece_url.split('/');
+                singlePieceUrl = `${getCdnBaseUrl()}/mystery_boxes/${parts[parts.length - 1]}`;
+                singlePieceRcUrl = getCdnUrl(reward.single_piece_url);
+            }
+            console.log('MYSTERY BOX PARSED REWARD:', { rawUrl: reward.single_piece_url, singlePieceUrl, singlePieceRcUrl, bottomRawUrl: reward.box_image_url || reward.item_media_url });
+
+            const bottomRawUrl = reward.box_image_url || reward.item_media_url;
+            if (bottomRawUrl) {
+                const parts = bottomRawUrl.split('/');
+                bottomUrl = `${getCdnBaseUrl()}/mystery_boxes/${parts[parts.length - 1]}`;
+                rcBottomUrl = getCdnUrl(bottomRawUrl);
             }
 
-            const topUrl = reward.cover_image_url;
-            if (topUrl && topUrl !== bottomUrl) {
-                const parts = topUrl.split('/');
-                const filename = parts[parts.length - 1];
-                coverImage = `${getCdnBaseUrl()}/mystery_boxes/${filename}`;
-                rcCoverImage = getCdnUrl(topUrl);
+            if (reward.cover_image_url) {
+                const parts = reward.cover_image_url.split('/');
+                coverUrl = `${getCdnBaseUrl()}/mystery_boxes/${parts[parts.length - 1]}`;
+                rcCoverUrl = getCdnUrl(reward.cover_image_url);
             }
 
             return {
                 text: `${boxName} x${reward.amount}`,
                 subText: boxName,
-                imageUrl: mysteryBoxImage,
-                rcImageUrl: rcMysteryBoxImage,
-                coverUrl: coverImage,
-                rcCoverUrl: rcCoverImage,
-                localImage: !mysteryBoxImage ? getMysteryBoxLocalFallback(undefined, reward.title.en) : undefined,
+                isMysteryBox: true,
+                singlePieceUrl,
+                singlePieceRcUrl,
+                imageUrl: bottomUrl, // using imageUrl for bottom to keep it compatible
+                rcImageUrl: rcBottomUrl,
+                coverUrl,
+                rcCoverUrl,
+                localImage: !singlePieceUrl && !bottomUrl ? getMysteryBoxLocalFallback(undefined, reward.title.en) : undefined,
             };
         }
         case 'trophy':
@@ -383,23 +406,7 @@ export default function ProgressionEvent() {
     // Fetch event data — by specific ID or latest
     useEffect(() => {
         const loadEvent = async () => {
-            // Only use cache for the latest event (no eventId)
-            if (!eventId) {
-                try {
-                    const cachedData = localStorage.getItem(STORAGE_KEY);
-                    const cachedTimestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY);
-                    if (cachedData && cachedTimestamp) {
-                        const elapsed = Date.now() - parseInt(cachedTimestamp, 10);
-                        if (elapsed < CACHE_DURATION) {
-                            setEventData(JSON.parse(cachedData));
-                            setLoading(false);
-                            return;
-                        }
-                    }
-                } catch {
-                    // Ignore cache errors
-                }
-            }
+
 
             try {
                 setLoading(true);
@@ -408,11 +415,7 @@ export default function ProgressionEvent() {
                     ? await fetchProgressionEventById(eventId)
                     : await fetchProgressionEvent();
                 setEventData(data);
-                // Only cache the latest event
-                if (!eventId) {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                    localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
-                }
+
             } catch (err) {
                 console.error('Failed to fetch progression event:', err);
                 setError(err instanceof Error ? err.message : t('event.fetchError'));
@@ -1085,7 +1088,66 @@ export default function ProgressionEvent() {
                                                             <td className="pe-rewards-col">
                                                                 <div className="pe-reward-item-container">
                                                                     <div className="pe-reward-img-wrapper">
-                                                                        {display?.imageUrl ? (
+                                                                        {display?.isMysteryBox ? (
+                                                                            <div style={{ position: 'relative', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                                                {display?.singlePieceUrl ? (
+                                                                                    <img
+                                                                                        src={display.singlePieceUrl}
+                                                                                        alt={display.text}
+                                                                                        className="pe-reward-img-api pe-reward-base-img"
+                                                                                        loading="lazy"
+                                                                                        onError={(e) => {
+                                                                                            const target = e.target as HTMLImageElement;
+                                                                                            if (target.dataset.attempt !== 'rc') {
+                                                                                                target.dataset.attempt = 'rc';
+                                                                                                target.src = display.singlePieceRcUrl || '';
+                                                                                            } else {
+                                                                                                target.style.display = 'none';
+                                                                                            }
+                                                                                        }}
+                                                                                        style={{ transform: 'scale(0.7)' }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    <>
+                                                                                        <img
+                                                                                            src={display?.imageUrl}
+                                                                                            alt={display?.text}
+                                                                                            className="pe-reward-img-api pe-reward-base-img"
+                                                                                            loading="lazy"
+                                                                                            onError={(e) => {
+                                                                                                const target = e.target as HTMLImageElement;
+                                                                                                if (target.dataset.attempt !== 'rc') {
+                                                                                                    target.dataset.attempt = 'rc';
+                                                                                                    target.src = display?.rcImageUrl || '';
+                                                                                                } else {
+                                                                                                    target.style.display = 'none';
+                                                                                                }
+                                                                                            }}
+                                                                                        />
+                                                                                        {display?.coverUrl && (
+                                                                                            <img
+                                                                                                src={display.coverUrl}
+                                                                                                alt={display.text}
+                                                                                                className="pe-reward-img-api pe-reward-cover-img"
+                                                                                                style={{
+                                                                                                    position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none',
+                                                                                                    ...(display?.scale ? { transform: `scale(${display.scale})` } : {})
+                                                                                                }}
+                                                                                                onError={(e) => {
+                                                                                                    const target = e.target as HTMLImageElement;
+                                                                                                    if (target.dataset.attempt !== 'rc') {
+                                                                                                        target.dataset.attempt = 'rc';
+                                                                                                        target.src = display?.rcCoverUrl || '';
+                                                                                                    } else {
+                                                                                                        target.style.display = 'none';
+                                                                                                    }
+                                                                                                }}
+                                                                                            />
+                                                                                        )}
+                                                                                    </>
+                                                                                )}
+                                                                            </div>
+                                                                        ) : display?.imageUrl ? (
                                                                             <div style={{ position: 'relative', display: 'inline-flex' }}>
                                                                                 {(display?.level ?? 0) > 1 && (
                                                                                     <img
@@ -1129,38 +1191,14 @@ export default function ProgressionEvent() {
                                                                                         loading="lazy"
                                                                                         onError={(e) => {
                                                                                             const target = e.target as HTMLImageElement;
-                                                                                            if (display.rcImageUrl && target.src !== display.rcImageUrl) {
-                                                                                                target.src = display.rcImageUrl;
-                                                                                            } else {
-                                                                                                target.style.display = 'none';
-                                                                                                // Show fallback text icon
-                                                                                                const parent = target.parentElement;
-                                                                                                if (parent && !parent.querySelector('span.fallback-icon')) {
-                                                                                                    const span = document.createElement('span');
-                                                                                                    span.className = 'fallback-icon';
-                                                                                                    span.style.fontSize = '32px';
-                                                                                                    span.textContent = '📦';
-                                                                                                    parent.appendChild(span);
-                                                                                                }
-                                                                                            }
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-                                                                                {display.coverUrl && (
-                                                                                    <img
-                                                                                        src={display.coverUrl}
-                                                                                        alt={display.text}
-                                                                                        className="pe-reward-img-api"
-                                                                                        style={{
-                                                                                            position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none',
-                                                                                            ...(display.scale ? { transform: `scale(${display.scale})` } : {})
-                                                                                        }}
-                                                                                        onError={(e) => {
-                                                                                            const target = e.target as HTMLImageElement;
-                                                                                            if (display.rcCoverUrl && target.src !== display.rcCoverUrl) {
-                                                                                                target.src = display.rcCoverUrl;
-                                                                                            } else {
-                                                                                                target.style.display = 'none';
+                                                                                            target.style.display = 'none';
+                                                                                            const parent = target.parentElement;
+                                                                                            if (parent && !parent.querySelector('span.fallback-icon')) {
+                                                                                                const span = document.createElement('span');
+                                                                                                span.className = 'fallback-icon';
+                                                                                                span.style.fontSize = '32px';
+                                                                                                span.textContent = '📦';
+                                                                                                parent.appendChild(span);
                                                                                             }
                                                                                         }}
                                                                                     />
