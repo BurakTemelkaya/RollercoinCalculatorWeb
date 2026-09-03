@@ -67,7 +67,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         const target = e.currentTarget;
         const localPng = `${getCdnBaseUrl()}/miners/${cleanName}.png`;
         const rcPng = `https://static.rollercoin.com/static/img/market/miners/${cleanName}.png`;
-        
+
         if (target.src.includes('.gif') || target.src.includes('?v=')) {
             target.src = localPng;
         } else if (target.src === localPng) {
@@ -77,13 +77,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
     const handleRackImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>, rackId: string) => {
         const target = e.currentTarget;
-        const localGif = `${getCdnBaseUrl()}/racks/${rackId}.gif`;
-        const rcGif = `https://static.rollercoin.com/static/img/game/inventory/racks/${rackId}.gif?v=1.2.5`;
-        
+        const localPng = `${getCdnBaseUrl()}/racks/${rackId}.png`;
+        const rcPng = `https://static.rollercoin.com/static/img/game/inventory/racks/${rackId}.png?v=1.2.5`;
+
         if (target.src.includes('.png') || target.src.includes('?v=')) {
-            target.src = localGif;
-        } else if (target.src === localGif) {
-            target.src = rcGif;
+            target.src = localPng;
+        } else if (target.src === localPng) {
+            target.src = rcPng;
         } else {
             target.style.display = 'none';
         }
