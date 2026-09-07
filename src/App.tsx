@@ -66,6 +66,8 @@ const AdminCommentList = lazyWithRetry(() => import('./components/admin/AdminCom
 const AdminReviewList = lazyWithRetry(() => import('./components/admin/AdminReviewList'));
 const AdminRollercoinToken = lazyWithRetry(() => import('./components/admin/AdminRollercoinToken'));
 const AdminUserList = lazyWithRetry(() => import('./components/admin/AdminUserList'));
+const AdminLogList = lazyWithRetry(() => import('./components/admin/AdminLogList'));
+const AdminLogDetailPage = lazyWithRetry(() => import('./components/admin/AdminLogDetailPage'));
 const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
@@ -1106,6 +1108,8 @@ function App() {
         <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/logs" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminLogList /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/logs/:fileName" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminLogDetailPage /></ProtectedRoute></React.Suspense>} />
       </Routes>
     </>
   );
