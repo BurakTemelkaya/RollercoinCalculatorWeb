@@ -413,7 +413,17 @@
     "selectRackToAdd": "Sélectionnez une étagère à ajouter dans la liste",
     "searchRack": "Rechercher des étagères...",
     "rackSortDate": "Date",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Bonus d'ensemble",
+    "collectionBonus": "Bonus de collection",
+    "clearAllConfirm": "Êtes-vous sûr de vouloir supprimer tous les mineurs ajoutés ?",
+    "duplicateMiner": "Mineur en double",
+    "manualInput": "Saisie manuelle",
+    "roomFetchError": "Une erreur s'est produite lors de la récupération des données de la salle.",
+    "roomFetchedSuccess": "Données de la salle récupérées avec succès !",
+    "selectMinerToAdd": "Sélectionnez le mineur à ajouter",
+    "selectMinerToReplace": "Sélectionnez un nouveau mineur dans l'inventaire",
+    "sellableMiner": "Vendable"
   },
   "settings": {
     "title": "Paramètres",
