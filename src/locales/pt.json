@@ -410,7 +410,17 @@
     "selectRackToAdd": "Selecione uma prateleira para adicionar da lista",
     "searchRack": "Buscar prateleiras...",
     "rackSortDate": "Data",
-    "rackSortBonus": "Bônus"
+    "rackSortBonus": "Bônus",
+    "setBonus": "Bônus de conjunto",
+    "collectionBonus": "Bônus de coleção",
+    "clearAllConfirm": "Tem certeza de que deseja excluir todos os mineradores adicionados?",
+    "duplicateMiner": "Minerador duplicado",
+    "manualInput": "Entrada manual",
+    "roomFetchError": "Erro ao buscar os dados da sala.",
+    "roomFetchedSuccess": "Dados da sala obtidos com sucesso!",
+    "selectMinerToAdd": "Selecione o minerador para adicionar",
+    "selectMinerToReplace": "Selecione o novo minerador do inventário",
+    "sellableMiner": "Vendível"
   },
   "settings": {
     "title": "Configurações",

@@ -410,7 +410,17 @@
     "selectRackToAdd": "从列表中选择要添加的机架",
     "searchRack": "搜索机架...",
     "rackSortDate": "日期",
-    "rackSortBonus": "加成"
+    "rackSortBonus": "加成",
+    "setBonus": "套装加成",
+    "collectionBonus": "收藏加成",
+    "clearAllConfirm": "您确定要删除所有已添加的矿机吗？",
+    "duplicateMiner": "重复矿机",
+    "manualInput": "手动输入",
+    "roomFetchError": "获取房间数据时出错。",
+    "roomFetchedSuccess": "房间数据获取成功！",
+    "selectMinerToAdd": "选择要添加的矿机",
+    "selectMinerToReplace": "从库存中选择新矿机",
+    "sellableMiner": "可出售"
   },
   "settings": {
     "title": "设置",

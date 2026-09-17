@@ -413,7 +413,17 @@
     "selectRackToAdd": "Select a rack to add from the list",
     "searchRack": "Search racks...",
     "rackSortDate": "Date",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Set Bonus",
+    "collectionBonus": "Collection Bonus",
+    "clearAllConfirm": "Are you sure you want to delete all added miners?",
+    "duplicateMiner": "Duplicate Miner",
+    "manualInput": "Manual Input",
+    "roomFetchError": "An error occurred while fetching room data.",
+    "roomFetchedSuccess": "Room data fetched successfully!",
+    "selectMinerToAdd": "Select miner to add",
+    "selectMinerToReplace": "Select new miner from inventory",
+    "sellableMiner": "Sellable"
   },
   "settings": {
     "title": "Settings",

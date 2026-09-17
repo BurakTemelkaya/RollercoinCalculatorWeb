@@ -918,7 +918,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                     </div>
                     {(totalSetPercentPower > 0 || totalSetBonusPowerGh > 0) && (
                         <div className="room-stat-item">
-                            <span className="rs-label">{t('simulator.setBonus')}</span>
+                            <span className="rs-label">{t('simulator.setBonus', 'Set Bonus')}</span>
                             <span className="rs-value success">
                                 {totalSetPercentPower > 0 ? `+${(totalSetPercentPower / 100).toFixed(2)}% ` : ''}
                                 {totalSetBonusPowerGh > 0 ? `+${formatPower(totalSetBonusPowerGh)}` : ''}

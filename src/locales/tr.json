@@ -414,7 +414,17 @@
     "selectRackToAdd": "Listeden eklenecek bir raf seçin",
     "searchRack": "Raf ara...",
     "rackSortDate": "Tarih",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Set Bonusu",
+    "collectionBonus": "Koleksiyon Bonusu",
+    "clearAllConfirm": "Tüm eklenen madencileri silmek istediğinize emin misiniz?",
+    "duplicateMiner": "Kopya Miner",
+    "manualInput": "Manuel Giriş",
+    "roomFetchError": "Oda verileri çekilirken hata oluştu.",
+    "roomFetchedSuccess": "Odadan veriler başarıyla çekildi!",
+    "selectMinerToAdd": "Eklenecek madenciyi seçin",
+    "selectMinerToReplace": "Envanterden yeni madenciyi seçin",
+    "sellableMiner": "Satılabilir"
   },
   "settings": {
     "title": "Ayarlar",

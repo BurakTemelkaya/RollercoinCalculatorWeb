@@ -395,7 +395,17 @@
     "selectRackToAdd": "Selecciona un estante para agregar de la lista",
     "searchRack": "Buscar estantes...",
     "rackSortDate": "Fecha",
-    "rackSortBonus": "Bono"
+    "rackSortBonus": "Bono",
+    "setBonus": "Bono de set",
+    "collectionBonus": "Bono de colección",
+    "clearAllConfirm": "¿Estás seguro de que quieres eliminar todos los mineros añadidos?",
+    "duplicateMiner": "Minero duplicado",
+    "manualInput": "Entrada manual",
+    "roomFetchError": "Ocurrió un error al obtener los datos de la habitación.",
+    "roomFetchedSuccess": "¡Datos de la habitación obtenidos con éxito!",
+    "selectMinerToAdd": "Selecciona el minero para añadir",
+    "selectMinerToReplace": "Selecciona un nuevo minero del inventario",
+    "sellableMiner": "Vendible"
   },
   "settings": {
     "title": "Configuración",

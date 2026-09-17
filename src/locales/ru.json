@@ -410,7 +410,17 @@
     "selectRackToAdd": "Выберите стойку для добавления из списка",
     "searchRack": "Поиск стоек...",
     "rackSortDate": "Дата",
-    "rackSortBonus": "Бонус"
+    "rackSortBonus": "Бонус",
+    "setBonus": "Бонус сета",
+    "collectionBonus": "Бонус коллекции",
+    "clearAllConfirm": "Вы уверены, что хотите удалить всех добавленных майнеров?",
+    "duplicateMiner": "Дубликат майнера",
+    "manualInput": "Ручной ввод",
+    "roomFetchError": "Произошла ошибка при получении данных комнаты.",
+    "roomFetchedSuccess": "Данные комнаты успешно получены!",
+    "selectMinerToAdd": "Выберите майнера для добавления",
+    "selectMinerToReplace": "Выберите нового майнера из инвентаря",
+    "sellableMiner": "Продаваемый"
   },
   "settings": {
     "title": "Настройки",
