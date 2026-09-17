@@ -413,7 +413,17 @@
     "selectRackToAdd": "Pilih rak untuk ditambahkan dari daftar",
     "searchRack": "Cari rak...",
     "rackSortDate": "Tanggal",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Bonus Set",
+    "collectionBonus": "Bonus Koleksi",
+    "clearAllConfirm": "Apakah Anda yakin ingin menghapus semua penambang yang ditambahkan?",
+    "duplicateMiner": "Penambang Duplikat",
+    "manualInput": "Input Manual",
+    "roomFetchError": "Terjadi kesalahan saat mengambil data ruangan.",
+    "roomFetchedSuccess": "Data ruangan berhasil diambil!",
+    "selectMinerToAdd": "Pilih penambang untuk ditambahkan",
+    "selectMinerToReplace": "Pilih penambang baru dari inventaris",
+    "sellableMiner": "Dapat Dijual"
   },
   "settings": {
     "title": "Pengaturan",
