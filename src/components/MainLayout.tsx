@@ -83,17 +83,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
     if (adsBlocked || !country) return;
 
     const timer = setTimeout(() => {
-      const isTR = country === 'TR';
-      const showCoinzilla = isTR || country === 'UNKNOWN';
-
-      if (showCoinzilla) {
-        (window as any).coinzilla_display = (window as any).coinzilla_display || [];
-        const c_display_preferences: any = {};
-        c_display_preferences.zone = "83069e710174ee88650";
-        c_display_preferences.width = "300";
-        c_display_preferences.height = "250";
-        (window as any).coinzilla_display.push(c_display_preferences);
-      }
+      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
+      const c_display_preferences: any = {};
+      c_display_preferences.zone = "83069e710174ee88650";
+      c_display_preferences.width = "300";
+      c_display_preferences.height = "250";
+      (window as any).coinzilla_display.push(c_display_preferences);
     }, 100);
 
     return () => clearTimeout(timer);
@@ -260,14 +255,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
               {!adsBlocked && country && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', flexShrink: 0 }}>
-                  {country === 'TR' || country === 'UNKNOWN' ? (
-                    <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
-                  ) : (
-                    <div id="frame" style={{ width: '300px', margin: 'auto', zIndex: 99998, height: 'auto' }}>
-                      <iframe data-aa='2449310' src='//ad.a-ads.com/2449310/?size=300x250&background_color=1e2433&title_color=fffffe'
-                        style={{ border: 0, padding: 0, width: '300px', height: '250px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
-                    </div>
-                  )}
+                  <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
                 </div>
               )}
 
