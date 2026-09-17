@@ -413,7 +413,17 @@
     "selectRackToAdd": "Vyberte stojan k přidání ze seznamu",
     "searchRack": "Hledat stojany...",
     "rackSortDate": "Datum",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Setový bonus",
+    "collectionBonus": "Bonus sbírky",
+    "clearAllConfirm": "Opravdu chcete smazat všechny přidané těžaře?",
+    "duplicateMiner": "Duplicitní těžař",
+    "manualInput": "Ruční zadání",
+    "roomFetchError": "Při načítání dat místnosti došlo k chybě.",
+    "roomFetchedSuccess": "Data místnosti byla úspěšně načtena!",
+    "selectMinerToAdd": "Vyberte těžaře k přidání",
+    "selectMinerToReplace": "Vyberte nového těžaře z inventáře",
+    "sellableMiner": "Prodejný"
   },
   "settings": {
     "title": "Nastavení",
