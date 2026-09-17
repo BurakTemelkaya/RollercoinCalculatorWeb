@@ -413,7 +413,17 @@
     "selectRackToAdd": "Wählen Sie ein Regal zum Hinzufügen aus der Liste",
     "searchRack": "Regale suchen...",
     "rackSortDate": "Datum",
-    "rackSortBonus": "Bonus"
+    "rackSortBonus": "Bonus",
+    "setBonus": "Set-Bonus",
+    "collectionBonus": "Sammlungs-Bonus",
+    "clearAllConfirm": "Sind Sie sicher, dass Sie alle hinzugefügten Miner löschen möchten?",
+    "duplicateMiner": "Duplizierter Miner",
+    "manualInput": "Manuelle Eingabe",
+    "roomFetchError": "Beim Abrufen der Raumdaten ist ein Fehler aufgetreten.",
+    "roomFetchedSuccess": "Raumdaten erfolgreich abgerufen!",
+    "selectMinerToAdd": "Miner zum Hinzufügen auswählen",
+    "selectMinerToReplace": "Neuen Miner aus dem Inventar auswählen",
+    "sellableMiner": "Verkaufbar"
   },
   "settings": {
     "title": "Einstellungen",
