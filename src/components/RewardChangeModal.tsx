@@ -76,7 +76,7 @@ const RewardChangeModal: React.FC<RewardChangeModalProps> = ({ isOpen, onClose, 
         setCollapsedLeagues(prev => {
             const next = new Set(prev);
             const isCurrentlyCollapsed = next.has(leagueId);
-            
+
             // Mobile screens (<= 768px) use a 1-column layout, so we toggle individually
             const isDesktop = typeof window !== 'undefined' && window.matchMedia('(min-width: 769px)').matches;
 
@@ -85,11 +85,11 @@ const RewardChangeModal: React.FC<RewardChangeModalProps> = ({ isOpen, onClose, 
                 else next.add(leagueId);
                 return next;
             }
-            
+
             // Find the index of the clicked league
             const index = leagueGroups.findIndex(g => g.leagueId === leagueId);
             if (index === -1) return next;
-            
+
             // Find the paired league (even index pairs with even+1, odd pairs with odd-1)
             const pairIndex = index % 2 === 0 ? index + 1 : index - 1;
             const pairedLeague = leagueGroups[pairIndex];
@@ -147,10 +147,6 @@ const RewardChangeModal: React.FC<RewardChangeModalProps> = ({ isOpen, onClose, 
                             <span className="meta-label">{t('rewardChange.changedAt')}:</span>
                             <span className="meta-value">{formatDate(data.changedAt)}</span>
                         </div>
-                        <div className="reward-change-meta-item">
-                            <span className="meta-label">{t('rewardChange.expiresAt')}:</span>
-                            <span className="meta-value">{formatDate(data.expiresAt)}</span>
-                        </div>
                     </div>
 
                     {/* League groups */}
@@ -172,51 +168,51 @@ const RewardChangeModal: React.FC<RewardChangeModalProps> = ({ isOpen, onClose, 
                                         <span className={`reward-league-toggle ${isCollapsed ? 'collapsed' : ''}`}>
                                             ▼
                                         </span>
-                                </div>
-
-                                {!isCollapsed && (
-                                    <div className="reward-changes-list">
-                                        {group.changes.map(change => {
-                                            const currencyName = CURRENCY_ID_MAP[change.currencyId] || `ID:${change.currencyId}`;
-                                            const coinIcon = COIN_ICONS[currencyName] || COIN_ICONS['RLT'];
-                                            const pctChange = calculateChangePercent(change.oldReward, change.newReward);
-                                            const isIncrease = pctChange > 0;
-                                            const isDecrease = pctChange < 0;
-                                            const badgeClass = isIncrease ? 'increase' : isDecrease ? 'decrease' : 'neutral';
-                                            const pctDisplay = isIncrease
-                                                ? `+${pctChange.toFixed(2)}%`
-                                                : `${pctChange.toFixed(2)}%`;
-
-                                            return (
-                                                <div key={change.id} className="reward-change-row">
-                                                    <div className="reward-coin-info">
-                                                        <img
-                                                            src={coinIcon}
-                                                            alt={currencyName}
-                                                            className="reward-coin-icon"
-                                                        />
-                                                        <span className="reward-coin-name">{currencyName}</span>
-                                                    </div>
-                                                    <div className="reward-values">
-                                                        <span className="reward-old-value">
-                                                            {formatReward(change.oldReward, currencyName)}
-                                                        </span>
-                                                        <span className="reward-arrow">→</span>
-                                                        <span className="reward-new-value">
-                                                            {formatReward(change.newReward, currencyName)}
-                                                        </span>
-                                                        <span className={`reward-change-badge ${badgeClass}`}>
-                                                            {pctDisplay}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
                                     </div>
-                                )}
-                            </div>
-                        );
-                    })}
+
+                                    {!isCollapsed && (
+                                        <div className="reward-changes-list">
+                                            {group.changes.map(change => {
+                                                const currencyName = CURRENCY_ID_MAP[change.currencyId] || `ID:${change.currencyId}`;
+                                                const coinIcon = COIN_ICONS[currencyName] || COIN_ICONS['RLT'];
+                                                const pctChange = calculateChangePercent(change.oldReward, change.newReward);
+                                                const isIncrease = pctChange > 0;
+                                                const isDecrease = pctChange < 0;
+                                                const badgeClass = isIncrease ? 'increase' : isDecrease ? 'decrease' : 'neutral';
+                                                const pctDisplay = isIncrease
+                                                    ? `+${pctChange.toFixed(2)}%`
+                                                    : `${pctChange.toFixed(2)}%`;
+
+                                                return (
+                                                    <div key={change.id} className="reward-change-row">
+                                                        <div className="reward-coin-info">
+                                                            <img
+                                                                src={coinIcon}
+                                                                alt={currencyName}
+                                                                className="reward-coin-icon"
+                                                            />
+                                                            <span className="reward-coin-name">{currencyName}</span>
+                                                        </div>
+                                                        <div className="reward-values">
+                                                            <span className="reward-old-value">
+                                                                {formatReward(change.oldReward, currencyName)}
+                                                            </span>
+                                                            <span className="reward-arrow">→</span>
+                                                            <span className="reward-new-value">
+                                                                {formatReward(change.newReward, currencyName)}
+                                                            </span>
+                                                            <span className={`reward-change-badge ${badgeClass}`}>
+                                                                {pctDisplay}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
