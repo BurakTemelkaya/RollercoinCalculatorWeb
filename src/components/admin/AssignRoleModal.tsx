@@ -99,7 +99,7 @@ export default function AssignRoleModal({ isOpen, onClose, user, onSuccess }: As
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', inset: 0 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 999999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', inset: 0 }}>
       <div className="modal-content" onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: '420px', background: '#0f172a', borderRadius: '16px', padding: '24px', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
         <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ margin: 0, fontSize: '1.4rem', color: '#f8fafc' }}>{t('admin.assignRole', 'Rol Ata')}</h2>

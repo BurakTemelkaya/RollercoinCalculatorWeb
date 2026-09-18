@@ -8,7 +8,11 @@ import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 import { HashPower } from '../types';
 import { toBaseUnit } from '../utils/powerParser';
+import { LeagueInfo } from '../data/leagues';
+import { ApiLeagueData } from '../types/api';
 import RadixSelect from './RadixSelect';
+
+const LeagueAnalysisModal = React.lazy(() => import('./LeagueAnalysisModal'));
 
 type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
@@ -26,6 +30,10 @@ interface EarningsTableProps {
     isActiveTab?: boolean;
     visibleCoins?: string[] | null;
     onVisibleCoinsChange?: (coins: string[] | null) => void;
+    apiLeagues?: LeagueInfo[] | null;
+    rawApiData?: ApiLeagueData[] | null;
+    currentLeagueId?: string;
+    onSelectLeaguePower?: (league: LeagueInfo, maxPowerGh: number, customPower?: HashPower) => void;
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
@@ -42,6 +50,10 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     isActiveTab = true,
     visibleCoins,
     onVisibleCoinsChange,
+    apiLeagues,
+    rawApiData,
+    currentLeagueId,
+    onSelectLeaguePower,
 }) => {
     const { t } = useTranslation();
     const tablesRef = useRef<HTMLDivElement>(null);
@@ -55,6 +67,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     const [selectedSourceAdd, setSelectedSourceAdd] = useState<string>('BTC');
     const [selectedTargetAdd, setSelectedTargetAdd] = useState<string>('BTC');
     const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
+    const [isLeagueAnalysisOpen, setIsLeagueAnalysisOpen] = useState<boolean>(false);
 
     // Sticky header state
     const theadRef = useRef<HTMLTableSectionElement>(null);
@@ -606,6 +619,15 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 const renderHeaderActions = () => (
                     <div className="section-header-actions">
                         <button
+                            className="settings-icon-btn"
+                            onClick={() => setIsLeagueAnalysisOpen(true)}
+                            title={t('leagueAnalysis.buttonTooltip', 'Lig Bazlı Kazanç Analizi')}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"></path>
+                            </svg>
+                        </button>
+                        <button
                             className={`settings-icon-btn ${isSimulatorOpen ? 'active' : ''}`}
                             onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
                             title={t('simulator.panelTitle')}
@@ -895,6 +917,21 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             </>
             );
             })()}
+            {/* League Analysis Modal */}
+            {isLeagueAnalysisOpen && (
+                <React.Suspense fallback={null}>
+                    <LeagueAnalysisModal
+                        isOpen={isLeagueAnalysisOpen}
+                        onClose={() => setIsLeagueAnalysisOpen(false)}
+                        apiLeagues={apiLeagues || null}
+                        rawApiData={rawApiData || null}
+                        prices={prices}
+                        blockDurations={blockDurations}
+                        currentLeagueId={currentLeagueId}
+                        onSelectLeague={onSelectLeaguePower}
+                    />
+                </React.Suspense>
+            )}
         </section>
     );
 };

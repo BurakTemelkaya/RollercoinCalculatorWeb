@@ -175,8 +175,8 @@ export function parsePowerText(text: string): { coins: CoinData[], userPower: Ha
 
                     // Helper map for unit case
                     const unitMap: Record<string, string> = {
-                        'eh': 'Eh', 'zh': 'Zh', 'ph': 'Ph', 'th': 'Th', 'gh': 'Gh',
-                        'Eh': 'Eh', 'Zh': 'Zh', 'Ph': 'Ph', 'Th': 'Th', 'Gh': 'Gh'
+                        'yh': 'Yh', 'zh': 'Zh', 'eh': 'Eh', 'ph': 'Ph', 'th': 'Th', 'gh': 'Gh',
+                        'Yh': 'Yh', 'Zh': 'Zh', 'Eh': 'Eh', 'Ph': 'Ph', 'Th': 'Th', 'Gh': 'Gh'
                     };
                     const unitRaw = powerMatch[2];
                     const unit = (unitMap[unitRaw] || unitMap[unitRaw.toLowerCase()] || 'Gh') as any;

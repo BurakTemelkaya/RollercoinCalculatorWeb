@@ -165,13 +165,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     };
 
     useEffect(() => {
-        if (currentUserPower) {
-            setPowerValue(currentUserPower.value.toString());
-            setPowerUnit(currentUserPower.unit);
+        const target = currentUserPower || displayPower;
+        if (target) {
+            setPowerValue(target.value.toString());
+            setPowerUnit(target.unit);
         }
-    }, [currentUserPower]);
+    }, [currentUserPower?.value, currentUserPower?.unit, displayPower?.value, displayPower?.unit]);
 
-    const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh'];
+    const units: PowerUnit[] = ['Gh', 'Th', 'Ph', 'Eh', 'Zh', 'Yh'];
 
     // Extract username from rollercoin profile URL
     const extractUsernameFromProfileLink = (link: string): string | null => {
@@ -211,11 +212,16 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         const val = parseFloat(powerValue);
         if (isNaN(val) || val <= 0) return;
 
+        // If parent already has this exact value and unit, avoid re-triggering
+        if (currentUserPower && currentUserPower.value === val && currentUserPower.unit === powerUnit) {
+            return;
+        }
+
         const timeoutId = setTimeout(() => {
             onDataParsed(currentCoins, { value: val, unit: powerUnit }, true);
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [powerValue, powerUnit, fetchMode, currentCoins, onDataParsed]);
+    }, [powerValue, powerUnit, fetchMode, currentCoins, onDataParsed, currentUserPower]);
 
     const handleFetchUserLocal = async (showSuccessNotif: boolean = true) => {
         setGlobalUserName(localUserName.trim());

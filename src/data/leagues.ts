@@ -10,6 +10,29 @@ export interface LeagueInfo {
     }[];
 }
 
+export interface LeagueTierConfig {
+    id: string;
+    name: string;
+}
+
+export const LEAGUE_TIER_CONFIGS: LeagueTierConfig[] = [
+    { id: 'legend', name: 'Legend' },
+    { id: 'emerald', name: 'Emerald' },
+    { id: 'titan', name: 'Titan' },
+    { id: 'diamond', name: 'Diamond' },
+    { id: 'platinum', name: 'Platinum' },
+    { id: 'gold', name: 'Gold' },
+    { id: 'silver', name: 'Silver' },
+    { id: 'bronze', name: 'Bronze' },
+];
+
+/**
+ * Get tier name from full league name (e.g. "Diamond I" -> "Diamond", "Legend" -> "Legend")
+ */
+export function getLeagueTierName(leagueName: string): string {
+    return leagueName.split(' ')[0] || leagueName;
+}
+
 // Helper to scale payouts to block rewards
 // Based on RLT/RST (1e6 scale) matching our calculations
 // Only RLT, RST, HMT seem consistent with 1e6 scale compared to calc.

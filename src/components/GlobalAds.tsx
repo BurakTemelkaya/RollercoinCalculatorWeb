@@ -42,10 +42,10 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
   return (
     <>
       {/* Desktop Left Sticky */}
-      <div className="desktop-side-ad" style={{ position: 'absolute', zIndex: 99999, pointerEvents: 'none' }}>
+      <div className="desktop-side-ad" style={{ position: 'absolute', zIndex: 40, pointerEvents: 'none' }}>
         <div style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ width: 'max(170px, calc((100vw - 1200px) / 2))', height: '100%', position: 'fixed', top: 0, left: 0 }}>
-            <div id="left-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 99998, pointerEvents: 'auto' }}>
+            <div id="left-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 40, pointerEvents: 'auto' }}>
               {showCoinzilla ? (
                 <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
               ) : (
@@ -57,10 +57,10 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
       </div>
 
       {/* Desktop Right Sticky */}
-      <div className="desktop-side-ad" style={{ position: 'absolute', zIndex: 99999, pointerEvents: 'none' }}>
+      <div className="desktop-side-ad" style={{ position: 'absolute', zIndex: 40, pointerEvents: 'none' }}>
         <div style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ width: 'max(170px, calc((100vw - 1200px) / 2))', height: '100%', position: 'fixed', top: 0, right: 0 }}>
-            <div id="right-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 99998, pointerEvents: 'auto' }}>
+            <div id="right-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 40, pointerEvents: 'auto' }}>
               <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
             </div>
           </div>
@@ -69,12 +69,12 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
 
       {/* Mobile Sticky Bottom */}
       {mobileAdVisible && (
-        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 99999, bottom: 0, left: 0, right: 0 }}>
+        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 40, bottom: 0, left: 0, right: 0 }}>
           <div className="mobile-ad-container" style={{ width: '100%', background: '#1e2433', borderTop: '1px solid #334155', padding: '10px 0', display: 'flex', justifyContent: 'center', boxShadow: '0 -4px 12px rgba(0,0,0,0.5)', paddingBottom: 'calc(10px + env(safe-area-inset-bottom))' }}>
             <div style={{ position: 'relative', width: '320px', height: '50px' }}>
               <button 
                 onClick={() => setMobileAdVisible(false)}
-                style={{ position: 'absolute', right: '-12px', top: '-22px', background: '#0f172a', border: '1px solid #334155', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#cbd5e1', padding: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)', zIndex: 99999 }}
+                style={{ position: 'absolute', right: '-12px', top: '-22px', background: '#0f172a', border: '1px solid #334155', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#cbd5e1', padding: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)', zIndex: 41 }}
                 aria-label="Close Ad"
               >
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

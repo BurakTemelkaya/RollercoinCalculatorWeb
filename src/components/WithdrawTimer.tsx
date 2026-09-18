@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import { EarningsResult, DEFAULT_MIN_WITHDRAW } from '../types';
-import { formatDuration, formatCryptoAmount } from '../utils/calculator';
+import { formatDuration, formatCryptoAmount, isWithdrawableCoin } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 
 interface WithdrawTimerProps {
@@ -55,8 +55,8 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     const [editingMinCoin, setEditingMinCoin] = useState<string | null>(null);
     const [tempMinValue, setTempMinValue] = useState<string>('');
 
-    // Filter only crypto coins (not game tokens) and exclude non-withdrawable currencies
-    const cryptoCoins = earnings.filter(e => !e.isGameToken && e.displayName !== 'ALGO' && e.displayName !== 'USDT');
+    // Filter only withdrawable crypto coins using the unified isWithdrawableCoin helper
+    const cryptoCoins = earnings.filter(e => isWithdrawableCoin(e.displayName));
 
     if (cryptoCoins.length === 0) {
         return null;

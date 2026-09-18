@@ -1,4 +1,4 @@
-import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS } from '../types';
+import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS, DEFAULT_MIN_WITHDRAW } from '../types';
 import { powerRatio, formatHashPower } from './powerParser';
 import { TFunction } from 'i18next';
 
@@ -29,6 +29,43 @@ export function getBlocksPerPeriod(period: Period, blockDurationSeconds: number 
  */
 export function isGameToken(currency: string): boolean {
     return GAME_TOKENS.includes(currency.toUpperCase());
+}
+
+// Non-withdrawable cryptocurrencies in RollerCoin (cannot be withdrawn to external wallets)
+export const NON_WITHDRAWABLE_COINS = ['USDT', 'ALGO'];
+
+/**
+ * Check if a coin can be withdrawn from RollerCoin (matches WithdrawTimer logic)
+ * A coin is considered withdrawable if:
+ * 1. It is not an in-game token (RLT, RST, HMT)
+ * 2. It is not an explicitly non-withdrawable coin (USDT, ALGO)
+ * 3. It appears in the withdraw timer (has a default minimum withdraw limit or custom min withdraw)
+ */
+export function isWithdrawableCoin(currency: string): boolean {
+    if (!currency) return false;
+    const upper = currency.toUpperCase();
+
+    // Game tokens cannot be withdrawn
+    if (isGameToken(upper)) return false;
+
+    // Explicitly non-withdrawable coins (USDT, ALGO)
+    if (NON_WITHDRAWABLE_COINS.includes(upper)) return false;
+
+    // Must be in DEFAULT_MIN_WITHDRAW
+    if (upper in DEFAULT_MIN_WITHDRAW) return true;
+
+    // Check if user set a custom minimum withdraw limit in localStorage
+    try {
+        const saved = localStorage.getItem('rollercoin_web_custom_min_withdraws');
+        if (saved) {
+            const custom = JSON.parse(saved);
+            if (custom[upper] !== undefined && custom[upper] > 0) return true;
+        }
+    } catch {
+        // Ignore localStorage error
+    }
+
+    return false;
 }
 
 /**

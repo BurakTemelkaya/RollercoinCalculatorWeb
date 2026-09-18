@@ -10,7 +10,7 @@ import { calculateAllEarnings } from './utils/calculator';
 import { getLeagueByPower, getBlockRewardsForLeague } from './utils/leagueHelper';
 import { LEAGUES, LeagueInfo, CURRENCY_MAP } from './data/leagues';
 import { ApiLeagueData } from './types/api';
-import { convertApiLeagueToCoinData } from './services/leagueApi';
+import { convertApiLeagueToCoinData, fetchLeaguesFromApi } from './services/leagueApi';
 import { fetchUserFromApi, fetchUserRoomFromApi } from './services/userApi';
 import { fetchRewardChange } from './services/rewardChangeApi';
 import { RewardChangeEvent } from './types/rewardChange';
@@ -386,7 +386,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260917.165000';
+  const CURRENT_CACHE_VERSION = '20260918.151302';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -759,6 +759,85 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     }
   };
 
+  const handleSelectLeaguePower = (targetLeague: LeagueInfo, maxPowerGh: number, customPower?: HashPower) => {
+    // 1. Calculate HashPower from maxPowerGh or use direct customPower
+    const power = customPower || autoScalePower(maxPowerGh * 1e9);
+
+    // 2. Set power and mode
+    setUserPower(power);
+    setFetchMode('power');
+    localStorage.setItem(STORAGE_KEYS.USER_POWER, JSON.stringify(power));
+    localStorage.setItem('rollercoin_web_userpower_timestamp', String(new Date().getTime()));
+
+    // 3. Set league
+    setLeague(targetLeague);
+    setIsAutoLeague(false);
+    localStorage.setItem(STORAGE_KEYS.LEAGUE_ID, targetLeague.id);
+    localStorage.setItem(STORAGE_KEYS.AUTO_LEAGUE, 'false');
+
+    // 4. Update coins immediately if rawApiData is available, or fetch it dynamically
+    if (rawApiData && rawApiData.length > 0) {
+      const matchingApiLeague = rawApiData.find(l => String(l.id) === String(targetLeague.id));
+      if (matchingApiLeague) {
+        const newCoins = convertApiLeagueToCoinData(matchingApiLeague);
+        if (newCoins.length > 0) {
+          setCoins(newCoins);
+        }
+      }
+    } else {
+      fetchLeaguesFromApi()
+        .then(rawData => {
+          const apiLeaguesResolved = rawData.map(l => ({
+            id: l.id,
+            name: l.title,
+            minPower: l.minPower,
+            currencies: l.currencies.map(c => ({
+              name: c.name,
+              payout: c.payoutAmount,
+              duration: c.duration,
+            })),
+          }));
+          setApiLeagues(apiLeaguesResolved);
+          setRawApiData(rawData);
+          localStorage.setItem(STORAGE_KEYS.API_LEAGUES, JSON.stringify(apiLeaguesResolved));
+          localStorage.setItem('rollercoin_web_raw_api_data', JSON.stringify(rawData));
+          const matching = rawData.find(l => String(l.id) === String(targetLeague.id));
+          if (matching) {
+            const newCoins = convertApiLeagueToCoinData(matching);
+            if (newCoins.length > 0) setCoins(newCoins);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch leagues in handleSelectLeaguePower:', err);
+        });
+    }
+
+    // 5. Ensure calculator tab is active
+    setActiveTab('calculator');
+    setCollapsedTabs(prev => {
+      const next = new Set(prev);
+      next.delete('calculator');
+      return next;
+    });
+
+    // 6. Notify user
+    showNotification(
+      t('leagueAnalysis.appliedToMainSuccess', '{{league}} ligi tavan gücü ({{power}}) ana sayfaya uygulandı!', {
+        league: targetLeague.name,
+        power: `${power.value} ${power.unit}`,
+      }),
+      'success'
+    );
+
+    // 7. Scroll smoothly to calculator table
+    setTimeout(() => {
+      const tableElem = document.querySelector('.earnings-table-section');
+      if (tableElem) {
+        tableElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  };
+
   // Sync League Logic Merged into main Auto-Detect Effect above.
   // Previous separate useEffect removed to prevent conflicts and auto-league disabling.
 
@@ -984,6 +1063,10 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         customPeriodDays={customPeriodDays}
                         customPeriodHours={customPeriodHours}
                         isActiveTab={activeTab === 'calculator'}
+                        apiLeagues={apiLeagues}
+                        rawApiData={rawApiData}
+                        currentLeagueId={league.id}
+                        onSelectLeaguePower={handleSelectLeaguePower}
                       />
                       <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
                     </div>
