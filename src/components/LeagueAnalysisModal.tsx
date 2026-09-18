@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { LEAGUES, LeagueInfo, CURRENCY_MAP, LEAGUE_TIER_CONFIGS, getLeagueTierName } from '../data/leagues';
 import { ApiLeagueData } from '../types/api';
-import { PowerUnit, HashPower } from '../types';
+import { PowerUnit, HashPower, DEFAULT_MIN_WITHDRAW } from '../types';
 import { COIN_ICONS } from '../utils/constants';
-import { formatCryptoAmount, formatUSD, getBlocksPerPeriod, isWithdrawableCoin, isGameToken } from '../utils/calculator';
+import { formatCryptoAmount, formatUSD, getBlocksPerPeriod, isWithdrawableCoin, isGameToken, formatDuration } from '../utils/calculator';
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { getBlockRewardsForLeague } from '../utils/leagueHelper';
 import { getLeagueImage } from '../data/leagueImages';
@@ -64,7 +64,17 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
     const [selectedTier, setSelectedTier] = useState<string>('all');
     const [activePeriod, setActivePeriod] = useState<PeriodType>('daily');
 
-    // Custom Ceilings State (like WithdrawTimer's customMinWithdraws)
+    // Prevent background scrolling when modal is open
+    React.useEffect(() => {
+        if (isOpen) {
+            const prevOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = prevOverflow;
+            };
+        }
+    }, [isOpen]);
+
     const [customCeilings, setCustomCeilings] = useState<Record<string, { value: number; unit: PowerUnit }>>(() => {
         try {
             const saved = localStorage.getItem('rollercoin_web_league_custom_ceilings');
@@ -303,8 +313,13 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
         // Reward per block
         const rewardPerBlock = blockReward * share;
 
-        // Get block duration
-        const duration = blockDurations[displayName] || DEFAULT_BLOCK_TIME_SECONDS;
+        // Get block duration: prioritize league-specific currency duration from API, fallback to currencyData, then blockDurations, then default
+        const apiCurrency = apiLeagueData?.currencies.find(c => c.name === currencyName);
+        const duration = (apiCurrency && apiCurrency.duration > 0)
+            ? apiCurrency.duration
+            : (currencyData.duration && currencyData.duration > 0)
+                ? currencyData.duration
+                : (blockDurations[displayName] || DEFAULT_BLOCK_TIME_SECONDS);
 
         // Blocks per period
         const dailyBlocks = getBlocksPerPeriod('daily', duration);
@@ -449,6 +464,18 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
             perUnitText = t('leagueAnalysis.perMonth', '/ ay');
         }
 
+        // Check if withdrawable and compute withdrawal time (baseline calculation using official default min withdraw)
+        const isWithdrawable = isWithdrawableCoin(earning.displayName);
+        let withdrawDurationText: string | null = null;
+        let minWithdrawVal = 0;
+        if (isWithdrawable && earning.dailyAmount > 0) {
+            minWithdrawVal = DEFAULT_MIN_WITHDRAW[earning.displayName] ?? 0;
+            if (minWithdrawVal > 0) {
+                const days = minWithdrawVal / earning.dailyAmount;
+                withdrawDurationText = formatDuration(days, t);
+            }
+        }
+
         return (
             <div className="la-earning-item">
                 <div className="la-earning-label" title={tooltip}>
@@ -457,12 +484,22 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                 </div>
 
                 <div className="la-earning-coin-info">
-                    <img
-                        src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']}
-                        alt={earning.displayName}
-                        className="la-earning-coin-icon"
-                    />
-                    <span className="la-earning-coin-name">{earning.displayName}</span>
+                    <div className="la-earning-coin-left">
+                        <img
+                            src={COIN_ICONS[earning.displayName] || COIN_ICONS['RLT']}
+                            alt={earning.displayName}
+                            className="la-earning-coin-icon"
+                        />
+                        <span className="la-earning-coin-name">{earning.displayName}</span>
+                    </div>
+                    {withdrawDurationText && (
+                        <span
+                            className="la-earning-withdraw-timer"
+                            title={`${t('withdraw.minWithdraw', 'Min Çekim')}: ${minWithdrawVal} ${earning.displayName}`}
+                        >
+                            ⏱️ {withdrawDurationText}
+                        </span>
+                    )}
                 </div>
 
                 {/* Primary prominent value */}
@@ -548,6 +585,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                 triggerClassName="sim-select"
                                 className="sim-select-wrapper"
                                 showSelectedIcon={true}
+                                zIndex={1000005}
                             />
                         </div>
                         <button className="league-analysis-close-btn" onClick={onClose} aria-label="Close">
@@ -702,28 +740,30 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                             style={{ cursor: onSelectLeague ? 'pointer' : 'default' }}
                                             title={onSelectLeague ? t('leagueAnalysis.applyToMainTooltip', 'Bu ligin tavan gücünü ana sayfadaki hesaplayıcıya uygula ve tüm coinleri incele') : undefined}
                                         >
-                                            <img
-                                                src={getLeagueImage(league.id)}
-                                                alt={league.name}
-                                                className="la-card-badge"
-                                            />
-                                            <div className="la-card-title-group">
-                                                <div className="la-card-title-row">
-                                                    <h3 className="la-card-name">{league.name}</h3>
-                                                    {isCurrentLeague && (
-                                                        <span className="la-card-current-badge">
-                                                            {t('leagueAnalysis.currentLeague', 'Mevcut Lig')}
-                                                        </span>
-                                                    )}
+                                            <div className="la-card-header-left">
+                                                <img
+                                                    src={getLeagueImage(league.id)}
+                                                    alt={league.name}
+                                                    className="la-card-badge"
+                                                />
+                                                <div className="la-card-title-group">
+                                                    <div className="la-card-title-row">
+                                                        <h3 className="la-card-name">{league.name}</h3>
+                                                        {isCurrentLeague && (
+                                                            <span className="la-card-current-badge">
+                                                                {t('leagueAnalysis.currentLeague', 'Mevcut Lig')}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="la-card-power-range">
+                                                        <span className="la-power-label">{t('leagueAnalysis.leagueRange', 'Lig Aralığı')}:</span>{' '}
+                                                        {powerInfo.minPowerStr} — {powerInfo.maxPowerStr}
+                                                    </p>
                                                 </div>
-                                                <p className="la-card-power-range">
-                                                    <span className="la-power-label">{t('leagueAnalysis.leagueRange', 'Lig Aralığı')}:</span>{' '}
-                                                    {powerInfo.minPowerStr} — {powerInfo.maxPowerStr}
-                                                </p>
                                             </div>
 
-                                            <div className="la-card-header-actions">
-                                                {/* Clearly labeled calculated power */}
+                                            <div className="la-card-header-center">
+                                                {/* Clearly labeled calculated power (centered) */}
                                                 <div
                                                     className={`la-card-calc-power${powerInfo.isCustom ? ' is-custom' : ''}`}
                                                     title={t('leagueAnalysis.infoBanner', 'Tüm kazançlar, her ligin tavan (maksimum) gücüne ulaşıldığı varsayılarak hesaplanmıştır.')}
@@ -804,7 +844,9 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                                         </div>
                                                     )}
                                                 </div>
+                                            </div>
 
+                                            <div className="la-card-header-right">
                                                 {onSelectLeague && (
                                                     <button
                                                         type="button"

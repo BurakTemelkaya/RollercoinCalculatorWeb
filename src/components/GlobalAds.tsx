@@ -69,12 +69,12 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
 
       {/* Mobile Sticky Bottom */}
       {mobileAdVisible && (
-        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 40, bottom: 0, left: 0, right: 0 }}>
-          <div className="mobile-ad-container" style={{ width: '100%', background: '#1e2433', borderTop: '1px solid #334155', padding: '10px 0', display: 'flex', justifyContent: 'center', boxShadow: '0 -4px 12px rgba(0,0,0,0.5)', paddingBottom: 'calc(10px + env(safe-area-inset-bottom))' }}>
-            <div style={{ position: 'relative', width: '320px', height: '50px' }}>
+        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 40, bottom: 0, left: 0, right: 0, maxWidth: '100vw', overflow: 'hidden' }}>
+          <div className="mobile-ad-container" style={{ width: '100%', maxWidth: '100%', background: '#1e2433', borderTop: '1px solid #334155', padding: '10px 0', display: 'flex', justifyContent: 'center', boxShadow: '0 -4px 12px rgba(0,0,0,0.5)', paddingBottom: 'calc(10px + env(safe-area-inset-bottom))', boxSizing: 'border-box' }}>
+            <div style={{ position: 'relative', width: '320px', maxWidth: '100%', height: '50px' }}>
               <button 
                 onClick={() => setMobileAdVisible(false)}
-                style={{ position: 'absolute', right: '-12px', top: '-22px', background: '#0f172a', border: '1px solid #334155', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#cbd5e1', padding: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)', zIndex: 41 }}
+                style={{ position: 'absolute', right: '0px', top: '-24px', background: '#0f172a', border: '1px solid #334155', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#cbd5e1', padding: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)', zIndex: 41 }}
                 aria-label="Close Ad"
               >
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

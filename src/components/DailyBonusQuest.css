@@ -2,8 +2,10 @@
 
 .dbq-card {
     flex: 1;
-    min-width: 280px;
+    min-width: 0;
     max-width: 600px;
+    width: 100%;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #151929 0%, #1a1e2e 100%);
     border: 1.5px solid #2dd8d0;
     border-radius: 12px;

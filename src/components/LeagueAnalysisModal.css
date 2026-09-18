@@ -1,7 +1,14 @@
 /* League Analysis Modal */
 .league-analysis-overlay {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -30,6 +37,8 @@
     animation: la-slideUp 0.25s ease-out;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 @keyframes la-slideUp {
@@ -104,11 +113,15 @@
 /* Body */
 .league-analysis-body {
     overflow-y: auto;
+    overflow-x: hidden !important;
     padding: 16px 24px 24px;
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Scrollbar */
@@ -259,6 +272,7 @@
 .la-card-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 14px;
     margin-bottom: 14px;
     padding-bottom: 12px;
@@ -274,6 +288,30 @@
 
 .la-card--selectable .la-card-header:hover {
     background: rgba(167, 139, 250, 0.08);
+}
+
+.la-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.la-card-header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin: 0 auto;
+}
+
+.la-card-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    min-width: 0;
 }
 
 .la-card-badge {
@@ -324,15 +362,6 @@
     color: var(--text-tertiary, #777);
 }
 
-.la-card-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
 /* Calculated Power Badge (Centered & Editable) */
 .la-card-calc-power {
     display: flex;
@@ -343,7 +372,7 @@
     gap: 3px;
     background: rgba(167, 139, 250, 0.08);
     border: 1px solid rgba(167, 139, 250, 0.2);
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 8px;
     flex-shrink: 0;
     transition: all 0.2s ease;
@@ -363,6 +392,7 @@
     color: #c4b5fd;
     font-weight: 500;
     text-align: center;
+    width: 100%;
 }
 
 .la-card-calc-power.is-custom .la-calc-power-label {
@@ -378,6 +408,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    width: 100%;
 }
 
 .la-calc-power-val {
@@ -592,6 +623,14 @@
 .la-earning-coin-info {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.la-earning-coin-left {
+    display: flex;
+    align-items: center;
     gap: 8px;
 }
 
@@ -605,6 +644,20 @@
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary, #e0e0e0);
+}
+
+.la-earning-withdraw-timer {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* Primary Values */
@@ -784,15 +837,23 @@
 }
 
 @media (max-width: 680px) {
+    .league-analysis-overlay {
+        padding: 8px;
+    }
+
     .league-analysis-modal {
-        max-height: 92vh;
+        max-height: 94vh;
         border-radius: 12px;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
     }
 
     .league-analysis-header {
         flex-wrap: wrap;
         gap: 10px;
-        padding: 14px 16px 12px;
+        padding: 12px 14px 10px;
     }
 
     .league-analysis-header-right {
@@ -801,26 +862,82 @@
     }
 
     .league-analysis-body {
-        padding: 14px 16px;
+        padding: 12px 10px;
+        overflow-x: hidden !important;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .la-card {
-        padding: 14px;
+        padding: 12px 10px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     .la-card-header {
         flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .la-card-header-left {
+        width: 100%;
+        flex: none;
+    }
+
+    .la-card-header-center {
+        width: 100%;
+        flex: none;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .la-card-header-right {
+        width: 100%;
+        flex: none;
+        justify-content: center;
     }
 
     .la-card-calc-power {
         width: 100%;
-        align-items: flex-start;
+        box-sizing: border-box;
+        align-items: center;
         flex-direction: row;
         justify-content: space-between;
+        gap: 6px;
+        padding: 6px 10px;
+    }
+
+    .la-calc-power-label {
+        font-size: 0.72rem;
+        white-space: normal;
+        width: auto;
+        justify-content: flex-start;
+    }
+
+    .la-calc-power-val-row {
+        width: auto;
+        justify-content: flex-end;
+    }
+
+    .la-card-apply-btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .la-card-earnings {
         grid-template-columns: 1fr;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .la-earning-item {
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     .league-analysis-coin-select {
@@ -830,7 +947,7 @@
 
 @media (max-width: 420px) {
     .league-analysis-overlay {
-        padding: 6px;
+        padding: 4px;
     }
 
     .la-filter-pills {

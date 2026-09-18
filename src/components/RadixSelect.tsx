@@ -47,7 +47,7 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
     triggerClassName,
     contentClassName,
     showSelectedIcon = true,
-    zIndex = 99999,
+    zIndex = 1000005,
     fullWidth = false,
 }) => {
     const selectedOption = options.find(o => o.value === value);

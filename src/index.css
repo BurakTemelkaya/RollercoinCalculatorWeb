@@ -53,11 +53,16 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
-  overflow-x: clip;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
 }
 
 html {
-  overflow-x: clip;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 /* Custom Scrollbar */
@@ -86,7 +91,10 @@ html {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 /* Side Ads - Desktop only */
@@ -315,7 +323,8 @@ html {
 .app-wrapper {
   width: 100%;
   max-width: 100%;
-  overflow-x: clip;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* App Container */
@@ -1150,6 +1159,9 @@ a:hover {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .section-title {
@@ -1575,7 +1587,7 @@ a:hover {
   --tab-count: 3;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(var(--tab-count), 1fr);
+  grid-template-columns: repeat(var(--tab-count), minmax(0, 1fr));
   gap: var(--tab-gap);
   background: var(--bg-card);
   padding: var(--tab-padding);
@@ -1583,6 +1595,7 @@ a:hover {
   border: 1px solid var(--border-color);
   width: 100%;
   max-width: 600px;
+  box-sizing: border-box;
   /* Constrain width but allow equal flex items */
   margin: 0 auto 32px;
   z-index: 5;
@@ -1687,10 +1700,11 @@ a:hover {
 
 /* Tab Slider */
 .tab-slider-viewport {
-  overflow: clip;
+  overflow: hidden;
   width: 100%;
   max-width: 100%;
   position: relative;
+  box-sizing: border-box;
 }
 
 .tab-slider-track {
@@ -1703,7 +1717,9 @@ a:hover {
 .tab-panel {
   flex: 0 0 100%;
   min-width: 0;
-  overflow: clip;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .tab-panel.collapsed {
@@ -2482,6 +2498,23 @@ a:hover {
     font-size: 17px;
   }
 
+  .top-banner-row {
+    padding: 0 4px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .quick-actions-row {
+    gap: 6px;
+    width: 100%;
+  }
+
+  .quick-action-btn {
+    padding: 8px 8px;
+    font-size: 11px;
+    min-width: 0;
+  }
+
   .header-right-group {
     gap: 12px;
     flex-wrap: nowrap;
@@ -2731,35 +2764,52 @@ a:hover {
     justify-content: flex-start;
   }
 
+  .section-title-icon {
+    display: none !important;
+  }
+
   .section-header-row {
-    padding: 12px 14px;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-start;
+    padding: 10px 12px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    position: relative;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .section-header-row .section-title {
     padding: 0;
     background: none;
     border-bottom: none;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
+    min-width: 0;
     justify-content: flex-start;
     font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .settings-icon-btn {
-    width: 32px;
-    height: 32px;
+  .section-header-row .section-title svg {
+    display: none !important;
   }
 
   .section-header-actions {
-    position: absolute;
-    right: 14px;
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
   }
 
-  .section-header-row {
-    position: relative;
+  .settings-icon-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    flex-shrink: 0;
   }
 
   /* Input elements */
