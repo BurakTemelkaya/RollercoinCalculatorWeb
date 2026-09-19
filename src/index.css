@@ -92,7 +92,7 @@ html {
   flex-direction: column;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   box-sizing: border-box;
 }

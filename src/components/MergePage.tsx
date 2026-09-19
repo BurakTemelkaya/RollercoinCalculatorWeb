@@ -40,7 +40,7 @@ import bonusImg from '../assets/items/bonus.svg';
 import craftingImg from '../assets/items/crafting.svg';
 import xpImg from '../assets/items/xp.png';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const SEARCH_DEBOUNCE_MS = 400;
 
 /** Forge level discount rates: level 1 = 0%, level 2 = 5%, etc. */
@@ -197,38 +197,39 @@ export default function MergePage() {
 
     const [minPower, setMinPower] = useState('');
     const [maxPower, setMaxPower] = useState('');
-    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
-    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Gh');
+    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Ph');
+    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Ph');
     const [minBonus, setMinBonus] = useState('');
     const [maxBonus, setMaxBonus] = useState('');
     const [minerWidth, setMinerWidth] = useState('');
 
     const [tempMinPower, setTempMinPower] = useState('');
     const [tempMaxPower, setTempMaxPower] = useState('');
-    const [tempMinPowerUnit, setTempMinPowerUnit] = useState<PowerUnit>('Gh');
-    const [tempMaxPowerUnit, setTempMaxPowerUnit] = useState<PowerUnit>('Gh');
+    const [tempMinPowerUnit, setTempMinPowerUnit] = useState<PowerUnit>('Ph');
+    const [tempMaxPowerUnit, setTempMaxPowerUnit] = useState<PowerUnit>('Ph');
 
     const getMinPowerGh = (val: string, unit: PowerUnit) => val ? (toBaseUnit({ value: Number(val), unit }) / 1e9) : undefined;
     const getMaxPowerGh = (val: string, unit: PowerUnit) => val ? (toBaseUnit({ value: Number(val), unit }) / 1e9) : undefined;
 
+    const bestFilterUnit = (asHs: number): { value: number; unit: PowerUnit } => {
+        if (asHs >= 1e18) return { value: asHs / 1e18, unit: 'Eh' };
+        if (asHs >= 1e15) return { value: asHs / 1e15, unit: 'Ph' };
+        if (asHs >= 1e12) return { value: asHs / 1e12, unit: 'Th' };
+        return { value: asHs / 1e9, unit: 'Gh' };
+    };
+
     const handleMinPowerSlider = (ghVal: number) => {
         const asHs = ghVal * 1e9;
-        let converted = asHs;
-        if (tempMinPowerUnit === 'Th') converted = asHs / 1e12;
-        else if (tempMinPowerUnit === 'Ph') converted = asHs / 1e15;
-        else if (tempMinPowerUnit === 'Eh') converted = asHs / 1e18;
-        else converted = ghVal;
-        setTempMinPower(converted.toString());
+        const best = bestFilterUnit(asHs);
+        setTempMinPower(best.value.toString());
+        setTempMinPowerUnit(best.unit);
     };
 
     const handleMaxPowerSlider = (ghVal: number) => {
         const asHs = ghVal * 1e9;
-        let converted = asHs;
-        if (tempMaxPowerUnit === 'Th') converted = asHs / 1e12;
-        else if (tempMaxPowerUnit === 'Ph') converted = asHs / 1e15;
-        else if (tempMaxPowerUnit === 'Eh') converted = asHs / 1e18;
-        else converted = ghVal;
-        setTempMaxPower(converted.toString());
+        const best = bestFilterUnit(asHs);
+        setTempMaxPower(best.value.toString());
+        setTempMaxPowerUnit(best.unit);
     };
     const [tempMinBonus, setTempMinBonus] = useState('');
     const [tempMaxBonus, setTempMaxBonus] = useState('');
@@ -344,6 +345,78 @@ export default function MergePage() {
             setSearchQuery(value);
             setCurrentPage(0);
         }, SEARCH_DEBOUNCE_MS);
+    }, []);
+
+    // JS-based sticky filter (CSS sticky doesn't work due to body overflow propagation)
+    const filterRef = useRef<HTMLDivElement>(null);
+    const filterSentinelRef = useRef<HTMLDivElement>(null);
+    const filterParentRef = useRef<HTMLDivElement>(null);
+    const [filterStyle, setFilterStyle] = useState<React.CSSProperties>({});
+    const [sentinelHeight, setSentinelHeight] = useState<number | undefined>(undefined);
+
+    useEffect(() => {
+        const NAVBAR_H = 86;
+        const handleScroll = () => {
+            const sentinel = filterSentinelRef.current;
+            const parent = filterParentRef.current;
+            const filter = filterRef.current;
+            if (!sentinel || !parent || !filter) return;
+
+            const sentinelRect = sentinel.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            const filterH = filter.getBoundingClientRect().height;
+
+            // Disable sticky behavior when layout wraps (mobile/tablet or narrow parent due to sidebars)
+            if (window.innerWidth < 992 || parentRect.width < 780) {
+                setSentinelHeight(undefined);
+                setFilterStyle({});
+                return;
+            }
+
+            const viewportH = window.innerHeight;
+            const availableH = viewportH - NAVBAR_H;
+
+            // Center vertically if it fits, otherwise stick to top (NAVBAR_H)
+            let fixedTop = NAVBAR_H;
+            if (filterH < availableH) {
+                fixedTop = NAVBAR_H + (availableH - filterH) / 2;
+            }
+
+            const shouldFix = sentinelRect.top < fixedTop;
+            const wouldOverflow = parentRect.bottom < fixedTop + filterH;
+
+            if (shouldFix) {
+                setSentinelHeight(filterH);
+                if (wouldOverflow) {
+                    const maxOffset = Math.max(0, parentRect.height - filterH);
+                    setFilterStyle({
+                        position: 'absolute',
+                        top: maxOffset,
+                        left: sentinel.offsetLeft, // distance from relative parent
+                        width: sentinelRect.width,
+                        zIndex: 50
+                    });
+                } else {
+                    setFilterStyle({
+                        position: 'fixed',
+                        top: fixedTop,
+                        left: sentinelRect.left,
+                        width: sentinelRect.width,
+                        zIndex: 50
+                    });
+                }
+            } else {
+                setSentinelHeight(undefined);
+                setFilterStyle({});
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleScroll);
+        };
     }, []);
 
     // Fetch list
@@ -494,8 +567,8 @@ export default function MergePage() {
             </div>
 
             {/* Main Tabs and Controls Row */}
-            <div className="merge-tabs-controls-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="merge-tabs-controls-row" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', margin: '0 auto', width: '100%' }}>
                     <div className="merge-main-tabs" style={{ display: 'flex', gap: '12px' }}>
                         <button
                             onClick={() => setActiveTab('miners')}
@@ -526,10 +599,10 @@ export default function MergePage() {
                     </div>
 
                     {/* Forge Level Selector and Level 1 Toggle */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                                {t('merge.showLevel1Cost')}
+                            <span style={{ display: 'flex', alignItems: 'center' }} title={t('merge.showLevel1Cost')}>
+                                <img src={commonWireImg} alt="Common Part" width="20" height="20" />
                             </span>
                             <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                                 <input
@@ -560,226 +633,229 @@ export default function MergePage() {
                             </label>
                         </div>
                         <div className="merge-forge-selector">
-                        <img src={craftingImg} alt="Forge" width="18" height="18" className="merge-forge-label" />
-                        <select
-                            className="merge-forge-select"
-                            value={forgeLevel}
-                            onChange={(e) => handleForgeLevelChange(parseInt(e.target.value, 10) as ForgeLevel)}
-                            title={t('merge.forgeLevel', 'Forge Seviyesi')}
-                        >
-                            {[1, 2, 3, 4, 5].map(lv => (
-                                <option key={lv} value={lv}>
-                                    Lv.{lv}{FORGE_DISCOUNTS[lv] > 0 ? ` (-${FORGE_DISCOUNTS[lv] * 100}%)` : ''}
-                                </option>
-                            ))}
-                        </select>
+                            <img src={craftingImg} alt="Forge" width="18" height="18" className="merge-forge-label" />
+                            <select
+                                className="merge-forge-select"
+                                value={forgeLevel}
+                                onChange={(e) => handleForgeLevelChange(parseInt(e.target.value, 10) as ForgeLevel)}
+                                title={t('merge.forgeLevel', 'Forge Seviyesi')}
+                            >
+                                {[1, 2, 3, 4, 5].map(lv => (
+                                    <option key={lv} value={lv}>
+                                        Lv.{lv}{FORGE_DISCOUNTS[lv] > 0 ? ` (-${FORGE_DISCOUNTS[lv] * 100}%)` : ''}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
             {activeTab === 'miners' && (
-                <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                <div ref={filterParentRef} className="merge-layout-container">
                     {/* LEFT: FILTER SIDEBAR */}
-                    <div className="rc-filter-container" style={{ flex: '1 1 250px', maxWidth: 350 }}>
-                        {/* Search */}
-                        <div className="rc-filter-group">
-                            <div className="merge-search-wrapper" style={{ minWidth: 0 }}>
-                                <span className="merge-search-icon">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                    </svg>
-                                </span>
-                                <input
-                                    type="text"
-                                    className="merge-search"
-                                    placeholder={t('merge.search')}
-                                    value={searchInput}
-                                    onChange={(e) => handleSearchChange(e.target.value)}
-                                    style={{ width: '100%' }}
-                                />
+                    <div ref={filterSentinelRef} className="merge-sidebar-wrapper" style={{ minHeight: sentinelHeight }}>
+                        <div ref={filterRef} className="rc-filter-container" style={filterStyle}>
+                            {/* Search */}
+                            <div className="rc-filter-group">
+                                <div className="merge-search-wrapper" style={{ minWidth: 0 }}>
+                                    <span className="merge-search-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                        </svg>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="merge-search"
+                                        placeholder={t('merge.search')}
+                                        value={searchInput}
+                                        onChange={(e) => handleSearchChange(e.target.value)}
+                                        style={{ width: '100%' }}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Sort */}
-                        <div className="rc-filter-group">
-                            <label className="rc-filter-label">{t('merge.sorting')}:</label>
-                            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-                                <select
-                                    className="merge-sort-select"
-                                    value={sortBy}
-                                    onChange={(e) => {
-                                        setSortBy(e.target.value as SortByOption);
-                                        setCurrentPage(0);
-                                    }}
-                                    style={{ flex: 1 }}
+                            {/* Sort */}
+                            <div className="rc-filter-group">
+                                <label className="rc-filter-label">{t('merge.sorting')}:</label>
+                                <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <select
+                                        className="merge-sort-select"
+                                        value={sortBy}
+                                        onChange={(e) => {
+                                            setSortBy(e.target.value as SortByOption);
+                                            setCurrentPage(0);
+                                        }}
+                                        style={{ flex: 1 }}
+                                    >
+                                        <option value="newest">{t('merge.sortOptions.newest')}</option>
+                                        <option value="name">{t('merge.sortOptions.name')}</option>
+                                        <option value="power">{t('merge.sortOptions.power')}</option>
+                                        <option value="percent">{t('merge.sortOptions.bonus')}</option>
+                                    </select>
+
+                                    <button
+                                        className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
+                                        onClick={() => setIsDescending(!isDescending)}
+                                        title={getSortLabel()}
+                                        style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
+                                    >
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M12 5v14M19 12l-7 7-7-7" />
+                                        </svg>
+                                        <span>{getSortLabel()}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Quick actions row */}
+                            <div className="rc-filter-group" style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                                <button
+                                    className="merge-sort-dir-btn"
+                                    onClick={toggleLevelDisplay}
+                                    title={t('merge.toggleLevelDisplay', 'Seviye Görünümünü Değiştir (Lv / Roma)')}
+                                    style={{ minWidth: '40px', fontWeight: 'bold', gap: '6px' }}
                                 >
-                                    <option value="newest">{t('merge.sortOptions.newest')}</option>
-                                    <option value="name">{t('merge.sortOptions.name')}</option>
-                                    <option value="power">{t('merge.sortOptions.power')}</option>
-                                    <option value="percent">{t('merge.sortOptions.bonus')}</option>
-                                </select>
+                                    <span style={{ fontSize: '12px' }}>👁️</span>
+                                    {levelDisplayMode === 'roman' ? (
+                                        <img
+                                            src={getLevelIconUrl(2)}
+                                            alt="Roman"
+                                            style={{ width: '18px', height: '12px', objectFit: 'contain' }}
+                                        />
+                                    ) : (
+                                        <span style={{
+                                            background: '#4f46e5',
+                                            color: 'white',
+                                            fontSize: '10px',
+                                            fontWeight: 700,
+                                            padding: '2px 4px',
+                                            borderRadius: '4px',
+                                            lineHeight: 1,
+                                            border: '1px solid rgba(255,255,255,0.2)',
+                                            display: 'inline-block'
+                                        }}>
+                                            Lv.2
+                                        </span>
+                                    )}
+                                </button>
 
                                 <button
-                                    className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
-                                    onClick={() => setIsDescending(!isDescending)}
-                                    title={getSortLabel()}
-                                    style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
+                                    className="merge-sort-dir-btn"
+                                    onClick={openPartPriceSettings}
+                                    title={t('merge.partPrices', 'Parça Fiyatları')}
+                                    style={{ minWidth: '40px', fontWeight: 'bold' }}
                                 >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M12 5v14M19 12l-7 7-7-7" />
-                                    </svg>
-                                    <span>{getSortLabel()}</span>
+                                    ⚙️
                                 </button>
                             </div>
-                        </div>
 
-                        {/* Quick actions row */}
-                        <div className="rc-filter-group" style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-                            <button
-                                className="merge-sort-dir-btn"
-                                onClick={toggleLevelDisplay}
-                                title={t('merge.toggleLevelDisplay', 'Seviye Görünümünü Değiştir (Lv / Roma)')}
-                                style={{ minWidth: '40px', fontWeight: 'bold', gap: '6px' }}
-                            >
-                                <span style={{ fontSize: '12px' }}>👁️</span>
-                                {levelDisplayMode === 'roman' ? (
-                                    <img
-                                        src={getLevelIconUrl(2)}
-                                        alt="Roman"
-                                        style={{ width: '18px', height: '12px', objectFit: 'contain' }}
+                            <div style={{ borderTop: '1px solid #3c3e58', margin: '12px 0' }} />
+
+                            <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 16, color: '#94a3b8' }}>{t('merge.filters', 'Filtreler')}</h3>
+
+                            {/* Power range */}
+                            <div className="rc-filter-group">
+                                <label className="rc-filter-label">{t('merge.filterPower')}:</label>
+                                <div className="rc-dual-slider-container">
+                                    <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) / 100000000000) * 100) - Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 100000000000) * 100))}%` }} />
+                                    <input
+                                        type="range"
+                                        className="rc-native-slider rc-slider-min"
+                                        min="0" max="100000000000" step="1000000"
+                                        value={getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0}
+                                        onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) - 1000000))}
                                     />
-                                ) : (
-                                    <span style={{
-                                        background: '#4f46e5',
-                                        color: 'white',
-                                        fontSize: '10px',
-                                        fontWeight: 700,
-                                        padding: '2px 4px',
-                                        borderRadius: '4px',
-                                        lineHeight: 1,
-                                        border: '1px solid rgba(255,255,255,0.2)',
-                                        display: 'inline-block'
-                                    }}>
-                                        Lv.2
-                                    </span>
-                                )}
-                            </button>
-
-                            <button
-                                className="merge-sort-dir-btn"
-                                onClick={openPartPriceSettings}
-                                title={t('merge.partPrices', 'Parça Fiyatları')}
-                                style={{ minWidth: '40px', fontWeight: 'bold' }}
-                            >
-                                ⚙️
-                            </button>
-                        </div>
-
-                        <div style={{ borderTop: '1px solid #3c3e58', margin: '12px 0' }} />
-
-                        <h3 style={{ marginTop: 0, marginBottom: 20, fontSize: 16, color: '#94a3b8' }}>{t('merge.filters', 'Filtreler')}</h3>
-
-                        {/* Power range */}
-                        <div className="rc-filter-group">
-                            <label className="rc-filter-label">{t('merge.filterPower')}:</label>
-                            <div className="rc-dual-slider-container">
-                                <div className="rc-dual-slider-fill" style={{ left: `${((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 16830000000) * 100}%`, width: `${(((getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) - (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0)) / 16830000000) * 100}%` }} />
-                                <input
-                                    type="range"
-                                    className="rc-native-slider rc-slider-min"
-                                    min="0" max="16830000000" step="1000000"
-                                    value={getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0}
-                                    onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) - 1000000))}
-                                />
-                                <input
-                                    type="range"
-                                    className="rc-native-slider rc-slider-max"
-                                    min="0" max="16830000000" step="1000000"
-                                    value={getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000}
-                                    onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) + 1000000))}
-                                />
-                            </div>
-                            <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px' }}>
-                                <div style={{ display: 'flex', gap: '4px' }}>
-                                    <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" style={{ width: '100%' }} />
-                                    <select className="rc-select" value={tempMinPowerUnit} onChange={e => setTempMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
-                                        <option value="Gh">Gh</option>
-                                        <option value="Th">Th</option>
-                                        <option value="Ph">Ph</option>
-                                        <option value="Eh">Eh</option>
-                                    </select>
+                                    <input
+                                        type="range"
+                                        className="rc-native-slider rc-slider-max"
+                                        min="0" max="100000000000" step="1000000"
+                                        value={getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000}
+                                        onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) + 1000000))}
+                                    />
                                 </div>
-                                <div style={{ display: 'flex', gap: '4px' }}>
-                                    <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%' }} />
-                                    <select className="rc-select" value={tempMaxPowerUnit} onChange={e => setTempMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 4px' }}>
-                                        <option value="Gh">Gh</option>
-                                        <option value="Th">Th</option>
-                                        <option value="Ph">Ph</option>
-                                        <option value="Eh">Eh</option>
-                                    </select>
+                                <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '4px', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', gap: '2px' }}>
+                                        <input type="number" className="rc-filter-input" value={tempMinPower} onChange={e => setTempMinPower(e.target.value)} placeholder="0" style={{ width: '100%', minWidth: 0 }} />
+                                        <select className="rc-select" value={tempMinPowerUnit} onChange={e => setTempMinPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 2px', fontSize: '12px', minWidth: '42px' }}>
+                                            <option value="Gh">Gh</option>
+                                            <option value="Th">Th</option>
+                                            <option value="Ph">Ph</option>
+                                            <option value="Eh">Eh</option>
+                                        </select>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '2px' }}>
+                                        <input type="number" className="rc-filter-input" value={tempMaxPower} onChange={e => setTempMaxPower(e.target.value)} placeholder={t('merge.max')} style={{ width: '100%', minWidth: 0 }} />
+                                        <select className="rc-select" value={tempMaxPowerUnit} onChange={e => setTempMaxPowerUnit(e.target.value as PowerUnit)} style={{ padding: '0 2px', fontSize: '12px', minWidth: '42px' }}>
+                                            <option value="Gh">Gh</option>
+                                            <option value="Th">Th</option>
+                                            <option value="Ph">Ph</option>
+                                            <option value="Eh">Eh</option>
+                                        </select>
+                                    </div>
+                                    <button className="rc-filter-ok" onClick={applyFilters} style={{ padding: '6px 10px', fontSize: '12px' }}>OK</button>
                                 </div>
-                                <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
+                                <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
+                                    <span>{t('merge.min')}: {getMinPowerGh(tempMinPower, tempMinPowerUnit) ? formatPower(getMinPowerGh(tempMinPower, tempMinPowerUnit)!) : '0'}</span>
+                                    <span>{t('merge.max')}: {(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) < 100000000000 ? formatPower(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit)!) : t('merge.unlimited')}</span>
+                                </div>
                             </div>
-                            <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('merge.min')}: {getMinPowerGh(tempMinPower, tempMinPowerUnit) ? formatPower(getMinPowerGh(tempMinPower, tempMinPowerUnit)!) : '0'}</span>
-                                <span>{t('merge.max')}: {(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 16830000000) < 16830000000 ? formatPower(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit)!) : t('merge.unlimited')}</span>
-                            </div>
-                        </div>
 
-                        {/* Bonus range */}
-                        <div className="rc-filter-group">
-                            <label className="rc-filter-label">{t('merge.filterBonus')}:</label>
-                            <div className="rc-dual-slider-container">
-                                <div className="rc-dual-slider-fill" style={{ left: `${Math.min(Math.max((Number(tempMinBonus || 0) / 200) * 100, 0), 100)}%`, width: `${Math.min(Math.max(((Math.min(Number(tempMaxBonus || 200), 200) - Math.min(Number(tempMinBonus || 0), 200)) / 200) * 100, 0), 100)}%` }} />
-                                <input
-                                    type="range"
-                                    className="rc-native-slider rc-slider-min"
-                                    min="0" max="200" step="1"
-                                    value={tempMinBonus || 0}
-                                    onChange={e => setTempMinBonus(Math.min(Number(e.target.value), Number(tempMaxBonus || 200) - 1).toString())}
-                                />
-                                <input
-                                    type="range"
-                                    className="rc-native-slider rc-slider-max"
-                                    min="0" max="200" step="1"
-                                    value={tempMaxBonus || 200}
-                                    onChange={e => setTempMaxBonus(Math.max(Number(e.target.value), Number(tempMinBonus || 0) + 1).toString())}
-                                />
+                            {/* Bonus range */}
+                            <div className="rc-filter-group">
+                                <label className="rc-filter-label">{t('merge.filterBonus')}:</label>
+                                <div className="rc-dual-slider-container">
+                                    <div className="rc-dual-slider-fill" style={{ left: `${Math.min(Math.max((Number(tempMinBonus || 0) / 200) * 100, 0), 100)}%`, width: `${Math.min(Math.max(((Math.min(Number(tempMaxBonus || 200), 200) - Math.min(Number(tempMinBonus || 0), 200)) / 200) * 100, 0), 100)}%` }} />
+                                    <input
+                                        type="range"
+                                        className="rc-native-slider rc-slider-min"
+                                        min="0" max="200" step="1"
+                                        value={tempMinBonus || 0}
+                                        onChange={e => setTempMinBonus(Math.min(Number(e.target.value), Number(tempMaxBonus || 200) - 1).toString())}
+                                    />
+                                    <input
+                                        type="range"
+                                        className="rc-native-slider rc-slider-max"
+                                        min="0" max="200" step="1"
+                                        value={tempMaxBonus || 200}
+                                        onChange={e => setTempMaxBonus(Math.max(Number(e.target.value), Number(tempMinBonus || 0) + 1).toString())}
+                                    />
+                                </div>
+                                <div className="rc-filter-inputs">
+                                    <input type="number" className="rc-filter-input" value={tempMinBonus} onChange={e => setTempMinBonus(e.target.value)} placeholder="0" />
+                                    <span className="rc-filter-separator">-</span>
+                                    <input type="number" className="rc-filter-input" value={tempMaxBonus} onChange={e => setTempMaxBonus(e.target.value)} placeholder={t('merge.max')} />
+                                    <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
+                                </div>
                             </div>
-                            <div className="rc-filter-inputs">
-                                <input type="number" className="rc-filter-input" value={tempMinBonus} onChange={e => setTempMinBonus(e.target.value)} placeholder="0" />
-                                <span className="rc-filter-separator">-</span>
-                                <input type="number" className="rc-filter-input" value={tempMaxBonus} onChange={e => setTempMaxBonus(e.target.value)} placeholder={t('merge.max')} />
-                                <button className="rc-filter-ok" onClick={applyFilters}>OK</button>
-                            </div>
-                        </div>
 
-                        {/* Cells count */}
-                        <div className="rc-filter-group">
-                            <label className="rc-filter-label">{t('merge.filterCells')}:</label>
-                            <div className="rc-checkbox-group">
-                                <label className="rc-checkbox-label">
-                                    <input type="checkbox" checked={tempMinerWidth === '1'} onChange={() => {
-                                        setTempMinerWidth(tempMinerWidth === '1' ? '' : '1');
-                                    }} />
-                                    <span className="rc-checkbox-custom"></span>
-                                    1
-                                </label>
-                                <label className="rc-checkbox-label">
-                                    <input type="checkbox" checked={tempMinerWidth === '2'} onChange={() => {
-                                        setTempMinerWidth(tempMinerWidth === '2' ? '' : '2');
-                                    }} />
-                                    <span className="rc-checkbox-custom"></span>
-                                    2
-                                </label>
-                                <button className="rc-filter-ok" onClick={applyFilters} style={{ marginLeft: 'auto' }}>OK</button>
+                            {/* Cells count */}
+                            <div className="rc-filter-group">
+                                <label className="rc-filter-label">{t('merge.filterCells')}:</label>
+                                <div className="rc-checkbox-group">
+                                    <label className="rc-checkbox-label">
+                                        <input type="checkbox" checked={tempMinerWidth === '1'} onChange={() => {
+                                            setTempMinerWidth(tempMinerWidth === '1' ? '' : '1');
+                                        }} />
+                                        <span className="rc-checkbox-custom"></span>
+                                        1
+                                    </label>
+                                    <label className="rc-checkbox-label">
+                                        <input type="checkbox" checked={tempMinerWidth === '2'} onChange={() => {
+                                            setTempMinerWidth(tempMinerWidth === '2' ? '' : '2');
+                                        }} />
+                                        <span className="rc-checkbox-custom"></span>
+                                        2
+                                    </label>
+                                    <button className="rc-filter-ok" onClick={applyFilters} style={{ marginLeft: 'auto' }}>OK</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+
                     {/* RIGHT: CONTENT */}
-                    <div style={{ flex: '2 1 500px', minWidth: 0 }}>
+                    <div className="merge-content-wrapper">
                         {/* Content */}
                         {error ? (
                             <div className="merge-error">
@@ -911,54 +987,59 @@ export default function MergePage() {
             {selectedMerge && (
                 <div className="merge-detail-overlay" onClick={handleCloseDetail}>
                     <div className="merge-detail-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="merge-detail-header">
-                            <h3>{selectedMerge.resultItemName} {mergeCount > 1 && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 400 }}>×{mergeCount}</span>}</h3>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <Link
-                                    to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemName)}`}
-                                    className="btn-primary"
-                                    style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', textDecoration: 'none' }}
-                                >
-                                    {t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
-                                </Link>
-                                
-                                {selectedMerge.resultItemLevel === 1 && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
-                                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                                            {t('merge.showLevel1Cost')}
-                                        </span>
-                                        <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={showLevel1Cost}
-                                                onChange={() => setShowLevel1Cost(!showLevel1Cost)}
-                                                style={{ display: 'none' }}
-                                            />
-                                            <div style={{
-                                                width: '32px',
-                                                height: '18px',
-                                                background: showLevel1Cost ? '#06b6d4' : 'rgba(255,255,255,0.1)',
-                                                borderRadius: '10px',
-                                                position: 'relative',
-                                                transition: 'background 0.3s'
-                                            }}>
+                        <div className="merge-detail-header" style={{ alignItems: 'flex-start' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', flex: 1, paddingRight: '12px' }}>
+                                <h3 style={{ marginRight: 'auto' }}>
+                                    {selectedMerge.resultItemName} {mergeCount > 1 && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 400 }}>×{mergeCount}</span>}
+                                </h3>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <Link
+                                        to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemName)}`}
+                                        className="btn-primary"
+                                        style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                        title={t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                                        <span>{t('merge.allLevels', 'Tüm Seviyeler')}</span>
+                                    </Link>
+
+                                    {selectedMerge.resultItemLevel === 1 && (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center' }} title={t('merge.showLevel1Cost')}>
+                                                <img src={commonWireImg} alt="Common Part" width="20" height="20" />
+                                            </span>
+                                            <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={showLevel1Cost}
+                                                    onChange={() => setShowLevel1Cost(!showLevel1Cost)}
+                                                    style={{ display: 'none' }}
+                                                />
                                                 <div style={{
-                                                    width: '14px',
-                                                    height: '14px',
-                                                    background: '#fff',
-                                                    borderRadius: '50%',
-                                                    position: 'absolute',
-                                                    top: '2px',
-                                                    left: showLevel1Cost ? '16px' : '2px',
-                                                    transition: 'left 0.3s'
-                                                }} />
-                                            </div>
-                                        </label>
-                                    </div>
-                                )}
-                                
-                                <button className="merge-detail-close" onClick={handleCloseDetail}>×</button>
+                                                    width: '32px',
+                                                    height: '18px',
+                                                    background: showLevel1Cost ? '#06b6d4' : 'rgba(255,255,255,0.1)',
+                                                    borderRadius: '10px',
+                                                    position: 'relative',
+                                                    transition: 'background 0.3s'
+                                                }}>
+                                                    <div style={{
+                                                        width: '14px',
+                                                        height: '14px',
+                                                        background: '#fff',
+                                                        borderRadius: '50%',
+                                                        position: 'absolute',
+                                                        top: '2px',
+                                                        left: showLevel1Cost ? '16px' : '2px',
+                                                        transition: 'left 0.3s'
+                                                    }} />
+                                                </div>
+                                            </label>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+                            <button className="merge-detail-close" onClick={handleCloseDetail} style={{ marginTop: '-4px' }}>×</button>
                         </div>
 
                         <div className="merge-detail-body">
@@ -1085,7 +1166,7 @@ export default function MergePage() {
 
                                     const discountedCount = isMutationComponent ? applyForgeDiscount(item.count, forgeLevel) : item.count;
                                     const effectiveCount = discountedCount * mergeCount;
-                                    
+
                                     const isLevel1Part = isMutationComponent && item.level === 0;
                                     const shouldShowCost = !isLevel1Part || showLevel1Cost;
                                     const totalItemCost = unitPriceRlt !== null && shouldShowCost ? unitPriceRlt * effectiveCount : null;

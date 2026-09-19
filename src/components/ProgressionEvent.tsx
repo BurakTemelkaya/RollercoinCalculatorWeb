@@ -377,7 +377,7 @@ export default function ProgressionEvent() {
     };
 
     // Multiplier settings
-    const [rltPrice, setRltPrice] = useState<number>(1.05);
+    const [rltPrice, setRltPrice] = useState<number>(1);
     const [boxPrice, setBoxPrice] = useState<number>(BOX_PRICE_OPTIONS[0]);
     const [discount, setDiscount] = useState<number>(35);
     const [filterMin, setFilterMin] = useState<number>(1);
