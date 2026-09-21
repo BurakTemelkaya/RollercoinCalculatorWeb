@@ -404,6 +404,8 @@
     "slotLabel": "Ruangan {{room}} / Slot: {{slot}}",
     "replaceMiner": "Ganti",
     "minerDeleted": "Penambang dihapus dari rak.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Rak",
     "minersTab": "Penambang",
     "clearFilters": "Hapus filter",
