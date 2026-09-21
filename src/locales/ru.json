@@ -404,6 +404,8 @@
     "slotLabel": "Комната {{room}} / Слот: {{slot}}",
     "replaceMiner": "Заменить",
     "minerDeleted": "Майнер удален со стойки.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Стойки",
     "minersTab": "Майнеры",
     "clearFilters": "Очистить фильтры",
