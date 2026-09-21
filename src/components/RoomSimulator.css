@@ -1711,6 +1711,74 @@
     }
 }
 
+/* Desktop drawer stays anchored to the simulator and expands over the room. */
+@media (min-width: 992px) {
+    .room-simulator-wrapper {
+        padding-bottom: 70px;
+    }
+
+    .desktop-inventory-dock {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        z-index: 1100;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 -8px 30px #0005;
+        display: flex;
+        flex-direction: column;
+        max-height: min(65dvh, 100%);
+    }
+
+    .desktop-inventory-dock .inventory-toolbar {
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .desktop-inventory-dock.closed,
+    .desktop-inventory-dock.preview {
+        cursor: pointer;
+    }
+
+    .desktop-inventory-dock .inventory-miner-grid {
+        box-sizing: border-box;
+        min-height: 0;
+        /* A single miner row stays visible while leaving the bottom rack slots usable. */
+        height: 150px;
+        max-height: 35dvh;
+        flex-shrink: 0;
+        transition: height 180ms ease, padding 180ms ease;
+        overscroll-behavior: contain;
+    }
+
+    .desktop-inventory-dock.closed .inventory-miner-grid {
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .desktop-inventory-dock.preview .inventory-miner-grid {
+        height: 28px;
+        overflow: hidden;
+        padding-bottom: 0;
+    }
+
+    .desktop-inventory-dock .inventory-filter-panel {
+        overflow-y: auto;
+        min-height: 0;
+        overscroll-behavior: contain;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .desktop-inventory-dock .inventory-miner-grid {
+        transition: none;
+    }
+}
+
 /* === MOBILE INVENTORY MODAL === */
 .mobile-inventory-modal {
     position: fixed;

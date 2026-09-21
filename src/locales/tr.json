@@ -405,6 +405,8 @@
     "slotLabel": "Oda {{room}} / Slot: {{slot}}",
     "replaceMiner": "Değiştir",
     "minerDeleted": "Miner raftan kaldırıldı.",
+    "openInventory": "Miner ve raf menüsünü aç",
+    "closeInventory": "Miner ve raf menüsünü kapat",
     "racksTab": "Raflar",
     "minersTab": "Minerler",
     "clearFilters": "Filtreleri temizle",

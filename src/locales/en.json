@@ -404,6 +404,8 @@
     "slotLabel": "Room {{room}} / Slot: {{slot}}",
     "replaceMiner": "Replace",
     "minerDeleted": "Miner removed from rack.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Racks",
     "minersTab": "Miners",
     "clearFilters": "Clear filters",

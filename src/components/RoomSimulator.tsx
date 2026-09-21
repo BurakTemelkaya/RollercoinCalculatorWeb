@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -36,7 +36,8 @@ interface RoomSimulatorProps {
 
 export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, userId, dynamicSets }) => {
     const { t } = useTranslation();
-    const [isInventoryCollapsed, setIsInventoryCollapsed] = useState(false);
+    const [isInventoryCollapsed, setIsInventoryCollapsed] = useState(true);
+    const [isInventoryHovered, setIsInventoryHovered] = useState(false);
     const [addRackTarget, setAddRackTarget] = useState<{ x: number, y: number } | null>(null);
     const [isMobileMinerSearchOpen, setIsMobileMinerSearchOpen] = useState(false);
     const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
@@ -47,7 +48,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
     const [editingRackId, setEditingRackId] = useState<string | null>(null);
     const [replacingMinerId, setReplacingMinerId] = useState<string | null>(null);
     const [replaceTargetRackId, setReplaceTargetRackId] = useState<string | null>(null);
-    const inventoryRef = useRef<HTMLDivElement>(null);
 
     const handleInitiateAddOrReplace = (targetRackId: string | null) => {
         setReplaceTargetRackId(targetRackId);
@@ -56,10 +56,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         setInventoryTab('miners');
         if (isMobile) {
             setIsMobileMinerSearchOpen(true);
-        } else {
-            setTimeout(() => {
-                inventoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
         }
     };
 
@@ -957,10 +953,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                     setIsInventoryCollapsed(false);
                                     if (isMobile) {
                                         setIsMobileMinerSearchOpen(true);
-                                    } else {
-                                        setTimeout(() => {
-                                            inventoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                        }, 100);
                                     }
                                     addNotification(t('simulator.selectRackToAdd'), 'info');
                                 }}
@@ -1318,10 +1310,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 setIsInventoryCollapsed(false);
                                 if (isMobile) {
                                     setIsMobileMinerSearchOpen(true);
-                                } else {
-                                    setTimeout(() => {
-                                        inventoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    }, 100);
                                 }
                             }}
                             title={t('simulator.addRack', 'Raf Ekle')}
@@ -1572,7 +1560,23 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             {(!isMobile || isMobileMinerSearchOpen) && (
                 (() => {
                     const desktopContent = (
-                        <div ref={inventoryRef} className={`inventory-toolbar-wrapper ${isInventoryCollapsed ? 'collapsed' : ''}`}>
+                        <div
+                            className={`inventory-toolbar-wrapper desktop-inventory-dock ${isInventoryCollapsed ? (isInventoryHovered ? 'preview' : 'closed') : 'expanded'}`}
+                            onMouseEnter={() => setIsInventoryHovered(true)}
+                            onMouseLeave={() => setIsInventoryHovered(false)}
+                            onKeyDown={e => {
+                                if (e.key === 'Escape') {
+                                    setIsInventoryCollapsed(true);
+                                    setIsInventoryHovered(false);
+                                    setIsFilterOpen(false);
+                                }
+                            }}
+                            onClickCapture={e => {
+                                if (!(e.target as HTMLElement).closest('[data-inventory-toggle]')) {
+                                    setIsInventoryCollapsed(false);
+                                }
+                            }}
+                        >
                             {/* Toolbar bar */}
                             <div className="inventory-toolbar">
                                 <div className="inventory-toolbar-left">
@@ -1685,14 +1689,26 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                         onClick={() => inventoryTab === 'miners' ? handleSearchMiners(pageIndex + 1) : handleSearchRacks(rackPageIndex + 1)}
                                         disabled={inventoryTab === 'miners' ? (pageIndex >= totalPages - 1 || isSearching) : (rackPageIndex >= rackTotalPages - 1 || isRackSearching)}
                                     >›</button>
-                                    <button className="inv-nav-btn" onClick={() => setIsInventoryCollapsed(!isInventoryCollapsed)}>
+                                    <button
+                                        className="inv-nav-btn"
+                                        data-inventory-toggle
+                                        aria-expanded={!isInventoryCollapsed}
+                                        aria-controls="desktop-inventory-content"
+                                        aria-label={t(isInventoryCollapsed ? 'simulator.openInventory' : 'simulator.closeInventory')}
+                                        title={t(isInventoryCollapsed ? 'simulator.openInventory' : 'simulator.closeInventory')}
+                                        onClick={() => {
+                                            setIsInventoryCollapsed(!isInventoryCollapsed);
+                                            setIsInventoryHovered(false);
+                                            setIsFilterOpen(false);
+                                        }}
+                                    >
                                         {isInventoryCollapsed ? '▲' : '▼'}
                                     </button>
                                 </div>
                             </div>
 
                             {/* Filter panel (expandable) */}
-                            {isFilterOpen && (
+                            {isFilterOpen && !isInventoryCollapsed && (
                                 <div className="inventory-filter-panel">
                                     {/* Power range */}
                                     <div className="inv-filter-section">
@@ -1759,8 +1775,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                             )}
 
                             {/* Content grid */}
-                            {!isInventoryCollapsed && (
-                                <div className="inventory-miner-grid">
+                            {(
+                                <div id="desktop-inventory-content" className="inventory-miner-grid" inert={isInventoryCollapsed}>
                                     {inventoryTab === 'miners' ? (
                                         minerList.length === 0 ? (
                                             <div className="inv-miner-card-empty">
