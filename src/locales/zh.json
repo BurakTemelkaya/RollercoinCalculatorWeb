@@ -404,6 +404,8 @@
     "slotLabel": "房间 {{room}} / 插槽: {{slot}}",
     "replaceMiner": "替换",
     "minerDeleted": "矿机已从机架中移除。",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "机架",
     "minersTab": "矿机",
     "clearFilters": "清除过滤器",
