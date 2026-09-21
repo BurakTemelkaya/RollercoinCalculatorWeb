@@ -404,6 +404,8 @@
     "slotLabel": "Salle {{room}} / Emplacement: {{slot}}",
     "replaceMiner": "Remplacer",
     "minerDeleted": "Mineur retiré de l'étagère.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Étagères",
     "minersTab": "Mineurs",
     "clearFilters": "Effacer les filtres",
