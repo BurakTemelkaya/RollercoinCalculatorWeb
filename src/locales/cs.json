@@ -404,6 +404,8 @@
     "slotLabel": "Místnost {{room}} / Slot: {{slot}}",
     "replaceMiner": "Nahradit",
     "minerDeleted": "Miner odstraněn z regálu.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Regály",
     "minersTab": "Horníci",
     "clearFilters": "Vymazat filtry",
