@@ -404,6 +404,8 @@
     "slotLabel": "Sala {{room}} / Espaço: {{slot}}",
     "replaceMiner": "Substituir",
     "minerDeleted": "Minerador removido da prateleira.",
+    "openInventory": "Open miner and rack menu",
+    "closeInventory": "Close miner and rack menu",
     "racksTab": "Prateleiras",
     "minersTab": "Mineradores",
     "clearFilters": "Limpar filtros",
