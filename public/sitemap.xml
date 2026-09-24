@@ -410,4 +410,40 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/merges"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/merges"/>
   </url>
+  <url>
+    <loc>https://rollercoincalculator.app/en/hamsters</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/hamsters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/hamsters"/>
+  </url>
+  <url>
+    <loc>https://rollercoincalculator.app/tr/hamsters</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/hamsters"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/hamsters"/>
+  </url>
+  <url>
+    <loc>https://rollercoincalculator.app/en/hamsters/expeditions</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters/expeditions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/hamsters/expeditions"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/hamsters/expeditions"/>
+  </url>
+  <url>
+    <loc>https://rollercoincalculator.app/tr/hamsters/expeditions</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters/expeditions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/hamsters/expeditions"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/hamsters/expeditions"/>
+  </url>
 </urlset>

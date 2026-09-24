@@ -72,6 +72,8 @@ const BlogEditor = lazyWithRetry(() => import('./components/admin/BlogEditor'));
 const AuthorBlogList = lazyWithRetry(() => import('./components/AuthorBlogList'));
 const UserBlogList = lazyWithRetry(() => import('./components/UserBlogList'));
 const MergePage = lazyWithRetry(() => import('./components/MergePage'));
+const HamstersPage = lazyWithRetry(() => import('./components/HamstersPage'));
+const HamsterExpeditionsPage = lazyWithRetry(() => import('./components/HamsterExpeditionsPage'));
 const MergeMinerLevelsPage = lazyWithRetry(() => import('./components/MergeMinerLevelsPage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
@@ -386,7 +388,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260919.152222';
+  const CURRENT_CACHE_VERSION = '20260924.024615';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -1165,6 +1167,8 @@ function App() {
           <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
           <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
           <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
+          <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
+          <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />
           <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
           <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
           <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />

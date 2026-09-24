@@ -1,0 +1,433 @@
+[
+  {
+    "slug": "hamsterita-set",
+    "order": 0,
+    "name": {
+      "en": "Hamsterita's Set",
+      "tr": "Hamsterita Seti",
+      "ru": "Набор «Хамстерита»",
+      "de": "Hamsteritas Set",
+      "es": "Conjunto de Hamsterita",
+      "fr": "Ensemble d'Hamsterita",
+      "pt": "Conjunto da Hamsterita",
+      "id": "Set Hamsterita",
+      "zh": "仓鼠丽塔套装",
+      "cs": "Sada Hamsterity"
+    },
+    "members": [
+      "mamita",
+      "kitsumi",
+      "valkirita"
+    ],
+    "icon": null,
+    "completion": {
+      "text": {
+        "en": "Expedition XP +25%",
+        "tr": "Keşif XP +25%",
+        "ru": "Опыт экспедиции +25%",
+        "de": "Expeditions-EP +25%",
+        "es": "XP de expedición +25%",
+        "fr": "XP d'expédition +25%",
+        "pt": "XP de expedição +25%",
+        "id": "XP Ekspedisi +25%",
+        "zh": "探险经验 +25%",
+        "cs": "XP z expedice +25%"
+      },
+      "rewardRlt": "75.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Expedition XP +10%",
+          "tr": "Keşif XP +10%",
+          "ru": "Опыт экспедиции +10%",
+          "de": "Expeditions-EP +10%",
+          "es": "XP de expedición +10%",
+          "fr": "XP d'expédition +10%",
+          "pt": "XP de expedição +10%",
+          "id": "XP Ekspedisi +10%",
+          "zh": "探险经验 +10%",
+          "cs": "XP z expedice +10%"
+        },
+        "rewardRlt": "25.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Expedition XP +15%",
+          "tr": "Keşif XP +15%",
+          "ru": "Опыт экспедиции +15%",
+          "de": "Expeditions-EP +15%",
+          "es": "XP de expedición +15%",
+          "fr": "XP d'expédition +15%",
+          "pt": "XP de expedição +15%",
+          "id": "XP Ekspedisi +15%",
+          "zh": "探险经验 +15%",
+          "cs": "XP z expedice +15%"
+        },
+        "rewardRlt": "50.00"
+      }
+    ]
+  },
+  {
+    "slug": "walker-set",
+    "order": 1,
+    "name": {
+      "en": "Walker's Set",
+      "tr": "Walker Seti",
+      "ru": "Набор «Уокер»",
+      "de": "Walkers Set",
+      "es": "Conjunto de Walker",
+      "fr": "Ensemble de Walker",
+      "pt": "Conjunto do Walker",
+      "id": "Set Walker",
+      "zh": "沃克套装",
+      "cs": "Walkerova sada"
+    },
+    "members": [
+      "banjo-walker",
+      "sir-catch-a-lot",
+      "birthday-bob"
+    ],
+    "icon": "rollercoin/hamsters/icons/xp_percent.webp",
+    "completion": {
+      "text": {
+        "en": "Earned XP +25%",
+        "tr": "Kazanılan XP +25%",
+        "ru": "Получаемый опыт +25%",
+        "de": "Verdiente EP +25%",
+        "es": "XP obtenida +25%",
+        "fr": "XP gagnée +25%",
+        "pt": "XP ganha +25%",
+        "id": "XP Diperoleh +25%",
+        "zh": "获得经验 +25%",
+        "cs": "Získané XP +25%"
+      },
+      "rewardRlt": "21.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Earned XP +10%",
+          "tr": "Kazanılan XP +10%",
+          "ru": "Получаемый опыт +10%",
+          "de": "Verdiente EP +10%",
+          "es": "XP obtenida +10%",
+          "fr": "XP gagnée +10%",
+          "pt": "XP ganha +10%",
+          "id": "XP Diperoleh +10%",
+          "zh": "获得经验 +10%",
+          "cs": "Získané XP +10%"
+        },
+        "rewardRlt": "1.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Earned XP +15%",
+          "tr": "Kazanılan XP +15%",
+          "ru": "Получаемый опыт +15%",
+          "de": "Verdiente EP +15%",
+          "es": "XP obtenida +15%",
+          "fr": "XP gagnée +15%",
+          "pt": "XP ganha +15%",
+          "id": "XP Diperoleh +15%",
+          "zh": "获得经验 +15%",
+          "cs": "Získané XP +15%"
+        },
+        "rewardRlt": "20.00"
+      }
+    ]
+  },
+  {
+    "slug": "lucky-set",
+    "order": 2,
+    "name": {
+      "en": "Lucky Set",
+      "tr": "Lucky Seti",
+      "ru": "Набор «Везунчик»",
+      "de": "Glücks-Set",
+      "es": "Conjunto Suertudo",
+      "fr": "Ensemble Chanceux",
+      "pt": "Conjunto da Sorte",
+      "id": "Set Keberuntungan",
+      "zh": "幸运套装",
+      "cs": "Sada Štístko"
+    },
+    "members": [
+      "cowham",
+      "guile",
+      "lucky-red"
+    ],
+    "icon": "rollercoin/hamsters/icons/speed_percent.webp",
+    "completion": {
+      "text": {
+        "en": "Expedition Time -25%",
+        "tr": "Keşif süresi -25%",
+        "ru": "Время экспедиции -25%",
+        "de": "Expeditionszeit -25%",
+        "es": "Tiempo de expedición -25%",
+        "fr": "Temps d'expédition -25%",
+        "pt": "Tempo de expedição -25%",
+        "id": "Waktu Ekspedisi -25%",
+        "zh": "探险时间 -25%",
+        "cs": "Doba expedice -25%"
+      },
+      "rewardRlt": "27.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Expedition Time -10%",
+          "tr": "Keşif süresi -10%",
+          "ru": "Время экспедиции -10%",
+          "de": "Expeditionszeit -10%",
+          "es": "Tiempo de expedición -10%",
+          "fr": "Temps d'expédition -10%",
+          "pt": "Tempo de expedição -10%",
+          "id": "Waktu Ekspedisi -10%",
+          "zh": "探险时间 -10%",
+          "cs": "Doba expedice -10%"
+        },
+        "rewardRlt": "2.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Expedition Time -15%",
+          "tr": "Keşif süresi -15%",
+          "ru": "Время экспедиции -15%",
+          "de": "Expeditionszeit -15%",
+          "es": "Tiempo de expedición -15%",
+          "fr": "Temps d'expédition -15%",
+          "pt": "Tempo de expedição -15%",
+          "id": "Waktu Ekspedisi -15%",
+          "zh": "探险时间 -15%",
+          "cs": "Doba expedice -15%"
+        },
+        "rewardRlt": "25.00"
+      }
+    ]
+  },
+  {
+    "slug": "ascension-set",
+    "order": 3,
+    "name": {
+      "en": "Ascension Set",
+      "tr": "Yükseliş Seti",
+      "ru": "Набор «Восхождение»",
+      "de": "Aufstiegsset",
+      "es": "Conjunto Ascensión",
+      "fr": "Ensemble Ascension",
+      "pt": "Conjunto Ascensão",
+      "id": "Set Ascension",
+      "zh": "飞升套装",
+      "cs": "Sada Vzestup"
+    },
+    "members": [
+      "badncle",
+      "goodncle",
+      "uncle-azoth"
+    ],
+    "icon": "rollercoin/hamsters/icons/survive_percent.webp",
+    "completion": {
+      "text": {
+        "en": "Survival +15%",
+        "tr": "Hayatta kalma +15%",
+        "ru": "Выживание +15%",
+        "de": "Überleben +15%",
+        "es": "Supervivencia +15%",
+        "fr": "Survie +15%",
+        "pt": "Sobrevivência +15%",
+        "id": "Bertahan Hidup +15%",
+        "zh": "生存率 +15%",
+        "cs": "Přežití +15%"
+      },
+      "rewardRlt": "25.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Survival +5%",
+          "tr": "Hayatta kalma +5%",
+          "ru": "Выживание +5%",
+          "de": "Überleben +5%",
+          "es": "Supervivencia +5%",
+          "fr": "Survie +5%",
+          "pt": "Sobrevivência +5%",
+          "id": "Bertahan Hidup +5%",
+          "zh": "生存率 +5%",
+          "cs": "Přežití +5%"
+        },
+        "rewardRlt": "5.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Survival +10%",
+          "tr": "Hayatta kalma +10%",
+          "ru": "Выживание +10%",
+          "de": "Überleben +10%",
+          "es": "Supervivencia +10%",
+          "fr": "Survie +10%",
+          "pt": "Sobrevivência +10%",
+          "id": "Bertahan Hidup +10%",
+          "zh": "生存率 +10%",
+          "cs": "Přežití +10%"
+        },
+        "rewardRlt": "20.00"
+      }
+    ]
+  },
+  {
+    "slug": "pirate-set",
+    "order": 4,
+    "name": {
+      "en": "Pirate Set",
+      "tr": "Korsan Seti",
+      "ru": "Пиратский набор",
+      "de": "Piraten-Set",
+      "es": "Conjunto Pirata",
+      "fr": "Ensemble Pirate",
+      "pt": "Conjunto Pirata",
+      "id": "Set Bajak Laut",
+      "zh": "海盗套装",
+      "cs": "Pirátská sada"
+    },
+    "members": [
+      "eliza-bit",
+      "davy-coins",
+      "captain-jack-pot"
+    ],
+    "icon": "rollercoin/hamsters/icons/rest_relay.webp",
+    "completion": {
+      "text": {
+        "en": "Restores 15 min of rest to all Hamsters in the set when this Hamster goes on Expedition.",
+        "tr": "Bu hamster keşfe çıktığında settaki tüm hamsterlere 15 dk dinlenme kazandırır.",
+        "ru": "Восстанавливает 15 мин. отдыха всем хомякам в наборе, когда этот хомяк отправляется в экспедицию.",
+        "de": "Stellt allen Hamstern im Set 15 Min. Ruhezeit wieder her, wenn dieser Hamster auf eine Expedition geht.",
+        "es": "Restaura 15 min de descanso a todos los hámsteres del conjunto cuando este hámster sale de expedición.",
+        "fr": "Restaure 15 min de repos à tous les hamsters du set lorsque ce hamster part en expédition.",
+        "pt": "Restaura 15 min de descanso para todos os hamsters do conjunto quando este hamster vai em expedição.",
+        "id": "Memulihkan 15 menit istirahat untuk semua Hamster di set saat Hamster ini pergi Ekspedisi.",
+        "zh": "当此仓鼠出征探险时，为该套装中的所有仓鼠恢复 15 分钟休息时间。",
+        "cs": "Obnoví 15 min odpočinku všem křečkům v sadě, když tento křeček vyrazí na expedici."
+      },
+      "rewardRlt": "30.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Restores 5 min of rest to all Hamsters in the set when this Hamster goes on Expedition.",
+          "tr": "Bu hamster keşfe çıktığında settaki tüm hamsterlere 5 dk dinlenme kazandırır.",
+          "ru": "Восстанавливает 5 мин. отдыха всем хомякам в наборе, когда этот хомяк отправляется в экспедицию.",
+          "de": "Stellt allen Hamstern im Set 5 Min. Ruhezeit wieder her, wenn dieser Hamster auf eine Expedition geht.",
+          "es": "Restaura 5 min de descanso a todos los hámsteres del conjunto cuando este hámster sale de expedición.",
+          "fr": "Restaure 5 min de repos à tous les hamsters du set lorsque ce hamster part en expédition.",
+          "pt": "Restaura 5 min de descanso para todos os hamsters do conjunto quando este hamster vai em expedição.",
+          "id": "Memulihkan 5 menit istirahat untuk semua Hamster di set saat Hamster ini pergi Ekspedisi.",
+          "zh": "当此仓鼠出征探险时，为该套装中的所有仓鼠恢复 5 分钟休息时间。",
+          "cs": "Obnoví 5 min odpočinku všem křečkům v sadě, když tento křeček vyrazí na expedici."
+        },
+        "rewardRlt": "5.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Restores 10 min of rest to all Hamsters in the set when this Hamster goes on Expedition.",
+          "tr": "Bu hamster keşfe çıktığında settaki tüm hamsterlere 10 dk dinlenme kazandırır.",
+          "ru": "Восстанавливает 10 мин. отдыха всем хомякам в наборе, когда этот хомяк отправляется в экспедицию.",
+          "de": "Stellt allen Hamstern im Set 10 Min. Ruhezeit wieder her, wenn dieser Hamster auf eine Expedition geht.",
+          "es": "Restaura 10 min de descanso a todos los hámsteres del conjunto cuando este hámster sale de expedición.",
+          "fr": "Restaure 10 min de repos à tous les hamsters du set lorsque ce hamster part en expédition.",
+          "pt": "Restaura 10 min de descanso para todos os hamsters do conjunto quando este hamster vai em expedição.",
+          "id": "Memulihkan 10 menit istirahat untuk semua Hamster di set saat Hamster ini pergi Ekspedisi.",
+          "zh": "当此仓鼠出征探险时，为该套装中的所有仓鼠恢复 10 分钟休息时间。",
+          "cs": "Obnoví 10 min odpočinku všem křečkům v sadě, když tento křeček vyrazí na expedici."
+        },
+        "rewardRlt": "25.00"
+      }
+    ]
+  },
+  {
+    "slug": "night-shift-set",
+    "order": 5,
+    "name": {
+      "en": "The Night Shift Set",
+      "tr": "Gece Vardiyası Seti",
+      "ru": "Набор «Ночная смена»",
+      "de": "Nachtschicht-Set",
+      "es": "Conjunto Turno de Noche",
+      "fr": "Ensemble Quart de Nuit",
+      "pt": "Conjunto Turno da Noite",
+      "id": "Set Shift Malam",
+      "zh": "夜班套装",
+      "cs": "Sada Noční směna"
+    },
+    "members": [
+      "solaire",
+      "lady-minerra"
+    ],
+    "icon": "rollercoin/hamsters/icons/loot_percent.webp",
+    "completion": {
+      "text": {
+        "en": "Extra Loot +10%",
+        "tr": "Ekstra Ganimet +%10",
+        "ru": "Доп. добыча +10%",
+        "de": "Extra-Beute +10%",
+        "es": "Botín extra +10%",
+        "fr": "Butin supplémentaire +10%",
+        "pt": "Espólio extra +10%",
+        "id": "Loot Ekstra +10%",
+        "zh": "额外战利品 +10%",
+        "cs": "Extra kořist +10%"
+      },
+      "rewardRlt": "5.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 2,
+        "text": {
+          "en": "Extra Loot +10%",
+          "tr": "Ekstra Ganimet +%10",
+          "ru": "Доп. добыча +10%",
+          "de": "Extra-Beute +10%",
+          "es": "Botín extra +10%",
+          "fr": "Butin supplémentaire +10%",
+          "pt": "Espólio extra +10%",
+          "id": "Loot Ekstra +10%",
+          "zh": "额外战利品 +10%",
+          "cs": "Extra kořist +10%"
+        },
+        "rewardRlt": "5.00"
+      }
+    ]
+  }
+]

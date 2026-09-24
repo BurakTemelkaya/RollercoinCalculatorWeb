@@ -13,6 +13,7 @@ export default defineConfig({
       filename: 'sw.ts',                   // SW dosya adı
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+        globIgnores: ['**/assets/rollercoin/hamsters/**'],
       },
       manifest: false,                     // Mevcut public/manifest.json'u kullan
       devOptions: {

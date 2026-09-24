@@ -21,6 +21,8 @@ export const SUPPORTED_LANGUAGES: SelectOption[] = [
 ];
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
+const HAMSTERS_NOTICE_KEY = 'rollercoin_hamsters_notice_seen';
+const HAMSTERS_NOTICE_EXPIRES = Date.UTC(2026, 9, 1);
 
 import { NAV_ICONS } from '../utils/icons';
 
@@ -41,6 +43,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showHamstersNotice, setShowHamstersNotice] = useState(() =>
+    typeof window !== 'undefined' && Date.now() < HAMSTERS_NOTICE_EXPIRES && localStorage.getItem(HAMSTERS_NOTICE_KEY) !== '1'
+  );
+  const dismissHamstersNotice = () => {
+    localStorage.setItem(HAMSTERS_NOTICE_KEY, '1');
+    setShowHamstersNotice(false);
+  };
+
+  useEffect(() => {
+    if (!showHamstersNotice) return;
+    const timer = window.setTimeout(() => setShowHamstersNotice(false), Math.max(0, HAMSTERS_NOTICE_EXPIRES - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [showHamstersNotice]);
 
   // Sync language with URL
   useEffect(() => {
@@ -122,6 +137,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
             <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+            <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
             <Link to={`/${i18n.language}/faq`} className="nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
             <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
@@ -184,6 +200,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+            <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>

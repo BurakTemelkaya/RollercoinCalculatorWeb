@@ -1,0 +1,16 @@
+.hamster-sprite {
+  display: block;
+  position: relative;
+  flex: none;
+  width: var(--hamster-size);
+  height: var(--hamster-size);
+  overflow: hidden;
+  background-size: var(--hamster-sheet-width) var(--hamster-sheet-height);
+  background-position: var(--hamster-start-x) var(--hamster-y);
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  animation: hamster-walk var(--hamster-duration) steps(var(--hamster-frames), end) infinite;
+}
+.hamster-idle { width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
+@keyframes hamster-walk { to { background-position-x: var(--hamster-end-x); } }
+@media (prefers-reduced-motion: reduce) { .hamster-sprite { animation: none; } }

@@ -26,4 +26,8 @@ Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zek
    - Parça birleştirme simülatörünün hesaplama ve kâr mantığı
    - Forge indirimleri ve reçete hesaplamaları
 
+6. **[Hamster Kataloğu](file:///.agents/Hamsters.md)**
+   - Hamster verisi, sprite animasyonu ve sefer haritaları
+   - Yeni hamster ve harita ekleme adımları
+
 Yapay zeka asistanları bu index dosyasını kullanarak projenin ilgili bölümleri hakkında daha hızlı ve spesifik bilgi edinebilir.
