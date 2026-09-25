@@ -131,6 +131,10 @@
     opacity: 1 !important;
 }
 
+.rack-drop-hover {
+    pointer-events: none;
+}
+
 .rack-item {
     position: absolute;
     bottom: 0;
@@ -1753,6 +1757,32 @@
     .desktop-inventory-dock .inventory-toolbar {
         flex-shrink: 0;
         cursor: pointer;
+    }
+
+    .desktop-inventory-dock .inv-miner-card {
+        cursor: grab;
+        user-select: none;
+    }
+
+    .desktop-inventory-dock .inv-miner-card img {
+        -webkit-user-drag: none;
+    }
+
+    .desktop-inventory-dock.dragging-item .drag-source {
+        cursor: grabbing;
+    }
+
+    .desktop-inventory-dock.dragging-item {
+        background: rgba(37, 38, 54, 0.18);
+        border-color: transparent;
+        box-shadow: none;
+        /* Let lower racks receive the pointer while the drawer's source card stays mounted. */
+        z-index: 0;
+    }
+
+    .desktop-inventory-dock.dragging-item .inventory-toolbar,
+    .desktop-inventory-dock.dragging-item .inv-miner-card:not(.drag-source) {
+        opacity: 0.2;
     }
 
     .desktop-inventory-dock.closed,

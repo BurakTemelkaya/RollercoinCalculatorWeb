@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -280,6 +280,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [totalPages, setTotalPages] = useState(1);
     const [draggedMiner, setDraggedMiner] = useState<MinerDto | null>(null);
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
+    const [isDragClearanceActive, setIsDragClearanceActive] = useState(false);
+    const [dragSourceKey, setDragSourceKey] = useState<string | null>(null);
+    const activeInventoryDragCleanup = useRef<(() => void) | null>(null);
+    const suppressInventoryClick = useRef(false);
+    useEffect(() => () => activeInventoryDragCleanup.current?.(), []);
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
 
     const handleSearchMiners = async (page = 0) => {
@@ -576,6 +581,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const handleDropMiner = (e: React.DragEvent<HTMLDivElement>, rackId: string) => {
         e.preventDefault();
         setDragTarget(null);
+        setIsDragClearanceActive(false);
+        setDragSourceKey(null);
         const minerData = e.dataTransfer.getData('miner');
         if (minerData) {
             try {
@@ -645,6 +652,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
     const submitAddMinerApi = (miner: MinerDto, targetRackId: string, forceX?: number, forceY?: number) => {
         const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === targetRackId);
+        const movingMiner = miner as MinerDto & Partial<ApiRoomMiner>;
+        const isMove = Boolean(movingMiner.placement?.user_rack_id);
+        const occupiedMiners = isMove ? rackMiners.filter(m => m._id !== movingMiner._id) : rackMiners;
         const rack: any = (room.racks || []).find(r => r._id === targetRackId);
         const rackHeight = rack?.rack_info?.height || 4;
         const width = miner.width || 1;
@@ -653,8 +663,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         let targetY = forceY ?? -1;
 
         if (targetX !== -1 && targetY !== -1) {
-            const taken = rackMiners.some(m => m.placement?.y === targetY && m.placement?.x === targetX);
-            const blocked = rackMiners.some(m => m.placement?.y === targetY && (m.width === 2 || width === 2));
+            const taken = occupiedMiners.some(m => m.placement?.y === targetY && m.placement?.x === targetX);
+            const blocked = occupiedMiners.some(m => m.placement?.y === targetY && (m.width === 2 || width === 2));
             if (taken || blocked) {
                 addNotification(t('simulator.cellTaken'), 'error');
                 return;
@@ -662,11 +672,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } else {
             for (let y = 0; y < rackHeight; y++) {
                 if (width === 2) {
-                    if (!rackMiners.some(m => m.placement?.y === y)) { targetY = y; targetX = 0; break; }
+                    if (!occupiedMiners.some(m => m.placement?.y === y)) { targetY = y; targetX = 0; break; }
                 } else {
                     for (let x = 0; x < 2; x++) {
-                        const taken = rackMiners.some(m => m.placement?.y === y && m.placement?.x === x);
-                        const blocked = rackMiners.some(m => m.placement?.y === y && m.width === 2);
+                        const taken = occupiedMiners.some(m => m.placement?.y === y && m.placement?.x === x);
+                        const blocked = occupiedMiners.some(m => m.placement?.y === y && m.width === 2);
                         if (!taken && !blocked) { targetY = y; targetX = x; break; }
                     }
                     if (targetY !== -1) break;
@@ -676,24 +686,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
         if (targetY === -1) { addNotification(t('simulator.rackFull'), 'error'); return; }
 
-        let isMove = false;
-        if ((miner as any).placement?.user_rack_id) {
-            isMove = true;
-        }
-
         if (isMove && targetRackId === (miner as any).placement.user_rack_id && targetX === (miner as any).placement.x && targetY === (miner as any).placement.y) {
             setDraggedMiner(null);
             setDragTarget(null);
             return;
-        }
-
-        if (isMove) {
-            const takenByOther = rackMiners.some(m => m._id !== (miner as any)._id && m.placement?.y === targetY && m.placement?.x === targetX);
-            const blockedByOther = rackMiners.some(m => m._id !== (miner as any)._id && m.placement?.y === targetY && (m.width === 2 || width === 2));
-            if (takenByOther || blockedByOther) {
-                addNotification(t('simulator.cellTaken'), 'error');
-                return;
-            }
         }
 
         const isMinerInRackSet = () => {
@@ -732,6 +728,137 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         }
         setDraggedMiner(null);
         setDragTarget(null);
+    };
+
+    const handleInventoryPointerDown = (
+        event: React.PointerEvent<HTMLDivElement>,
+        item: { type: 'miner'; value: MinerDto } | { type: 'rack'; value: GetRackListDto }
+    ) => {
+        if (isMobile || event.button !== 0) return;
+        event.preventDefault();
+
+        activeInventoryDragCleanup.current?.();
+        const source = event.currentTarget;
+        const simulator = source.closest('.room-simulator-wrapper');
+        if (!simulator) return;
+        const pointerId = event.pointerId;
+        const startX = event.clientX;
+        const startY = event.clientY;
+        let started = false;
+        let ghost: HTMLElement | null = null;
+        let highlightedZone: HTMLElement | null = null;
+
+        source.setPointerCapture(pointerId);
+
+        const isInside = (element: HTMLElement, x: number, y: number) => {
+            const rect = element.getBoundingClientRect();
+            return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+        };
+
+        const findRackAt = (x: number, y: number) =>
+            Array.from(simulator.querySelectorAll<HTMLElement>('.racks-grid [data-rack-id]'))
+                .find(element => isInside(element, x, y));
+
+        const findEmptyZoneAt = (x: number, y: number) => {
+            if (findRackAt(x, y)) return null;
+            return Array.from(simulator.querySelectorAll<HTMLElement>('.racks-grid [data-rack-drop-x]'))
+                .find(element => isInside(element, x, y)) || null;
+        };
+
+        const cleanup = () => {
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointercancel', onPointerCancel);
+            if (source.hasPointerCapture(pointerId)) source.releasePointerCapture(pointerId);
+            ghost?.remove();
+            highlightedZone?.classList.remove('rack-drop-active');
+            activeInventoryDragCleanup.current = null;
+            if (started) {
+                setDraggedMiner(null);
+                setDragTarget(null);
+                setIsDragClearanceActive(false);
+                setDragSourceKey(null);
+            }
+        };
+
+        const onPointerMove = (moveEvent: PointerEvent) => {
+            if (moveEvent.pointerId !== pointerId) return;
+            if (!started && Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY) < 6) return;
+            moveEvent.preventDefault();
+
+            if (!started) {
+                started = true;
+                const rect = source.getBoundingClientRect();
+                ghost = source.cloneNode(true) as HTMLElement;
+                ghost.removeAttribute('id');
+                ghost.setAttribute('aria-hidden', 'true');
+                ghost.style.cssText = `position:fixed;z-index:2147483647;pointer-events:none;opacity:.9;width:${rect.width}px;height:${rect.height}px;box-sizing:border-box;margin:0;transition:none;transform:translate(-50%,-50%);`;
+                document.body.appendChild(ghost);
+                setIsDragClearanceActive(true);
+                setDragSourceKey(`${item.type}:${item.value.id}`);
+                if (item.type === 'miner') setDraggedMiner(item.value);
+            }
+
+            if (ghost) {
+                ghost.style.left = `${moveEvent.clientX}px`;
+                ghost.style.top = `${moveEvent.clientY}px`;
+            }
+
+            if (item.type === 'miner') {
+                const target = findRackAt(moveEvent.clientX, moveEvent.clientY);
+                const rackId = target?.dataset.rackId;
+                const rack = (room.racks || []).find(candidate => candidate._id === rackId);
+                if (!target || !rack) {
+                    setDragTarget(null);
+                    return;
+                }
+                const rect = target.getBoundingClientRect();
+                const height = (rack as ApiRoomRack & { rack_info?: { height?: number } }).rack_info?.height || 4;
+                const y = Math.max(0, Math.min(height - 1, Math.floor((moveEvent.clientY - rect.top) / (rect.height / height))));
+                const x = item.value.width === 2 ? 0 : Math.max(0, Math.min(1, Math.floor((moveEvent.clientX - rect.left) / (rect.width / 2))));
+                setDragTarget(previous => previous?.rackId === rack._id && previous.x === x && previous.y === y
+                    ? previous : { rackId: rack._id, x, y, width: item.value.width || 1 });
+            } else {
+                const zone = findEmptyZoneAt(moveEvent.clientX, moveEvent.clientY);
+                if (highlightedZone !== zone) {
+                    highlightedZone?.classList.remove('rack-drop-active');
+                    zone?.classList.add('rack-drop-active');
+                    highlightedZone = zone;
+                }
+            }
+        };
+
+        const onPointerUp = (upEvent: PointerEvent) => {
+            if (upEvent.pointerId !== pointerId) return;
+            const wasDragging = started;
+            const target = wasDragging && item.type === 'miner' ? findRackAt(upEvent.clientX, upEvent.clientY) : null;
+            const zone = wasDragging && item.type === 'rack' ? findEmptyZoneAt(upEvent.clientX, upEvent.clientY) : null;
+            cleanup();
+            if (!wasDragging) return;
+            suppressInventoryClick.current = true;
+            window.setTimeout(() => { suppressInventoryClick.current = false; }, 0);
+
+            if (item.type === 'miner' && target?.dataset.rackId) {
+                const rack = (room.racks || []).find(candidate => candidate._id === target.dataset.rackId);
+                if (!rack) return;
+                const rect = target.getBoundingClientRect();
+                const height = (rack as ApiRoomRack & { rack_info?: { height?: number } }).rack_info?.height || 4;
+                const y = Math.max(0, Math.min(height - 1, Math.floor((upEvent.clientY - rect.top) / (rect.height / height))));
+                const x = item.value.width === 2 ? 0 : Math.max(0, Math.min(1, Math.floor((upEvent.clientX - rect.left) / (rect.width / 2))));
+                submitAddMinerApi(item.value, rack._id, x, y);
+            } else if (item.type === 'rack' && zone) {
+                handleAddRackFromList(item.value, { x: Number(zone.dataset.rackDropX), y: Number(zone.dataset.rackDropY) });
+            }
+        };
+
+        const onPointerCancel = (cancelEvent: PointerEvent) => {
+            if (cancelEvent.pointerId === pointerId) cleanup();
+        };
+
+        activeInventoryDragCleanup.current = cleanup;
+        window.addEventListener('pointermove', onPointerMove, { passive: false });
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerCancel);
     };
 
     const getRowConfig = (level: number, y: number) => {
@@ -969,6 +1096,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                             <div
                                 key={`dz-${zone.x}-${zone.y}`}
                                 className="rack-drop-wrapper card-rack-item"
+                                data-rack-drop-x={zone.x}
+                                data-rack-drop-y={zone.y}
                                 style={{
                                     gridColumn: zone.gridX + 1,
                                     gridRow: zone.y + 1,
@@ -994,6 +1123,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 }}
                                 onDrop={(e) => {
                                     e.preventDefault();
+                                    setIsDragClearanceActive(false);
+                                    setDragSourceKey(null);
                                     e.currentTarget.classList.remove('rack-drop-active');
                                     const rackData = e.dataTransfer.getData('rack');
                                     if (rackData) {
@@ -1036,6 +1167,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                     <div
                                         key={`rack-${rack._id}`}
                                         className={`card-rack-item card-rack-item-${idx} rack-drop-wrapper ${dragTarget?.rackId === rack._id ? 'drag-over' : ''}`}
+                                        data-rack-id={rack._id}
                                         onClick={() => setEditingRackId(rack._id)}
                                         onDragOver={(e) => {
                                             e.preventDefault();
@@ -1059,7 +1191,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                 && previous.width === (draggedMiner.width || 1)
                                                 ? previous : { rackId: rack._id, x: cellX, y: cellY, width: draggedMiner.width || 1 });
                                         }}
-                                        onDragLeave={() => setDragTarget(null)}
+                                        onDragLeave={(e) => {
+                                            const rect = e.currentTarget.getBoundingClientRect();
+                                            if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+                                                setDragTarget(null);
+                                            }
+                                        }}
                                         onDrop={(e) => handleDropMiner(e, rack._id)}
                                         style={isMobile ? { cursor: 'pointer' } : {
                                             gridColumn: gridX + 1,
@@ -1125,6 +1262,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             e.stopPropagation();
                                                             e.dataTransfer.setData('miner', JSON.stringify(miner));
                                                             setDraggedMiner(miner as any);
+                                                            setIsDragClearanceActive(true);
 
                                                             // Hide tooltip temporarily so it doesn't get captured in the drag image
                                                             const tooltip = (e.currentTarget as HTMLElement).querySelector('.miner-tooltip') as HTMLElement;
@@ -1146,6 +1284,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                                 window.scrollBy(0, 10);
                                                             }
                                                         }}
+                                                        onDragEnd={() => { setDraggedMiner(null); setDragTarget(null); setIsDragClearanceActive(false); setDragSourceKey(null); }}
                                                     >
 
                                                         <SpriteSheetMiner
@@ -1592,7 +1731,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 (() => {
                     const desktopContent = (
                         <div
-                            className={`inventory-toolbar-wrapper desktop-inventory-dock ${isInventoryCollapsed ? (isInventoryHovered ? 'preview' : 'closed') : 'expanded'}`}
+                            className={`inventory-toolbar-wrapper desktop-inventory-dock ${isInventoryCollapsed ? (isInventoryHovered ? 'preview' : 'closed') : 'expanded'} ${isDragClearanceActive ? 'dragging-item' : ''}`}
                             onMouseEnter={() => setIsInventoryHovered(true)}
                             onMouseLeave={() => setIsInventoryHovered(false)}
                             onKeyDown={e => {
@@ -1817,19 +1956,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             minerList.map(miner => (
                                                 <div
                                                     key={miner.id}
-                                                    className="inv-miner-card"
-                                                    draggable
-                                                    onDragStart={(e) => {
-                                                        e.dataTransfer.setData('miner', JSON.stringify(miner));
-                                                        setDraggedMiner(miner);
-                                                        const imgWrapper = (e.currentTarget as HTMLElement).querySelector('.inv-miner-card-img-wrapper');
-                                                        if (imgWrapper) {
-                                                            const rect = imgWrapper.getBoundingClientRect();
-                                                            e.dataTransfer.setDragImage(imgWrapper as Element, rect.width / 2, rect.height / 2);
-                                                        }
-                                                    }}
-                                                    onDragEnd={() => { setDraggedMiner(null); setDragTarget(null); }}
+                                                    className={`inv-miner-card ${dragSourceKey === `miner:${miner.id}` ? 'drag-source' : ''}`}
+                                                    onPointerDown={e => handleInventoryPointerDown(e, { type: 'miner', value: miner })}
+                                                    onDragStart={e => e.preventDefault()}
                                                     onClick={() => {
+                                                        if (suppressInventoryClick.current) return;
                                                         if (replacingMinerId && replaceTargetRackId) {
                                                             handleReplaceMiner(miner, replacingMinerId, replaceTargetRackId);
                                                         } else {
@@ -1869,12 +2000,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             rackList.map(rack => (
                                                 <div
                                                     key={rack.id}
-                                                    className="inv-rack-card inv-miner-card"
-                                                    draggable
-                                                    onDragStart={(e) => {
-                                                        e.dataTransfer.setData('rack', JSON.stringify(rack));
-                                                    }}
-                                                    onClick={() => handleAutoPlaceRack(rack)}
+                                                    className={`inv-rack-card inv-miner-card ${dragSourceKey === `rack:${rack.id}` ? 'drag-source' : ''}`}
+                                                    onPointerDown={e => handleInventoryPointerDown(e, { type: 'rack', value: rack })}
+                                                    onDragStart={e => e.preventDefault()}
+                                                    onClick={() => { if (!suppressInventoryClick.current) handleAutoPlaceRack(rack); }}
                                                 >
                                                     <div className="inv-miner-card-img-wrapper">
                                                         <CdnImage
