@@ -27,6 +27,8 @@ function formatPower(powerGhs: number): string {
     return `${formatted} ${scaled.unit}/s`;
 }
 
+const EMPTY_MINERS: ApiRoomMiner[] = [];
+
 interface RoomSimulatorProps {
     room: RollercoinRoomResponse;
     onChange: (newRoom: RollercoinRoomResponse) => void;
@@ -34,7 +36,7 @@ interface RoomSimulatorProps {
     dynamicSets?: GetRackSetListDto[];
 }
 
-export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, userId, dynamicSets }) => {
+export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets }) => {
     const { t } = useTranslation();
     const [isInventoryCollapsed, setIsInventoryCollapsed] = useState(true);
     const [isInventoryHovered, setIsInventoryHovered] = useState(false);
@@ -341,13 +343,19 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
     // Sellable miners: fetch which miners can be sold on marketplace
     const [sellableMinerIds, setSellableMinerIds] = useState<Set<string>>(new Set());
+    const sellableMinerKey = useMemo(
+        () => [...new Set((room.miners || EMPTY_MINERS).map(miner => miner.miner_id).filter(Boolean))].sort().join(','),
+        [room.miners]
+    );
     useEffect(() => {
-        const minerIds = [...new Set((room.miners || []).map(m => m.miner_id).filter(Boolean))];
+        const minerIds = sellableMinerKey ? sellableMinerKey.split(',') : [];
         if (minerIds.length === 0) {
             setSellableMinerIds(new Set());
             return;
         }
+        let cancelled = false;
         fetchSellableMiners(minerIds).then(results => {
+            if (cancelled) return;
             const sellableSet = new Set<string>();
             for (const item of results) {
                 if (item.isSellable) {
@@ -356,7 +364,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             }
             setSellableMinerIds(sellableSet);
         });
-    }, [room.miners]);
+        return () => { cancelled = true; };
+    }, [sellableMinerKey]);
 
     // === MOBİL TESPİTİ ===
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 991);
@@ -838,14 +847,25 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         };
     };
 
-    if (!room) return null;
     const userRooms = room.rooms && room.rooms.length > 0 ? room.rooms : [];
     const currentRoom = userRooms[currentRoomIndex] || null;
-    if (!currentRoom) return null;
-    const currentRoomLevel = currentRoom.room_info?.level || 0;
+    const currentRoomLevel = currentRoom?.room_info?.level || 0;
     const maxRows = currentRoomLevel === 0 ? 2 : 3;
-    const currentRoomRacks = (room.racks || []).filter(r => r.placement?.user_room_id === currentRoom._id);
-    const currentRoomMiners = room.miners || [];
+    const currentRoomRacks = useMemo(
+        () => (room.racks || []).filter(r => r.placement?.user_room_id === currentRoom?._id),
+        [room.racks, currentRoom?._id]
+    );
+    const currentRoomMiners = room.miners || EMPTY_MINERS;
+    const minersByRack = useMemo(() => {
+        const groups = new Map<string, ApiRoomMiner[]>();
+        for (const miner of currentRoomMiners) {
+            const rackId = miner.placement?.user_rack_id;
+            if (!rackId) continue;
+            if (!groups.has(rackId)) groups.set(rackId, []);
+            groups.get(rackId)!.push(miner);
+        }
+        return groups;
+    }, [currentRoomMiners]);
 
     const colsCount = 8;
 
@@ -857,38 +877,45 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
         }
     }
 
-    let roomBasePower = 0;
-    let roomRackBonusPower = 0;
-    let totalRoomBonus = 0;
+    const {
+        roomBasePower, roomRackBonusPower, totalRoomBonus, totalSetPercentPower,
+        totalSetBonusPowerGh, roomMinerBonusPower, setPercentPowerGh,
+        roomPowerWithBonus, effectiveRackBonusPercent
+    } = useMemo(() => {
+        let roomBasePower = 0;
+        let roomRackBonusPower = 0;
+        let totalRoomBonus = 0;
+        const rackById = new Map(currentRoomRacks.map(rack => [rack._id, rack]));
 
-    currentRoomMiners.forEach(miner => {
-        const rack = currentRoomRacks.find(r => r._id === miner.placement?.user_rack_id);
-        if (rack) {
-            roomBasePower += Number(miner.power) || 0;
+        for (const miner of currentRoomMiners) {
+            const rack = rackById.get(miner.placement?.user_rack_id || '');
+            if (!rack) continue;
+            const power = Number(miner.power) || 0;
+            roomBasePower += power;
             const rackBonus = (rack as any)?.bonus || 0;
-            if (rackBonus > 0) {
-                roomRackBonusPower += (Number(miner.power) || 0) * (rackBonus / 10000);
-            }
-
-            const isFirst = firstInstanceMinerIds.has(miner._id);
-            if (isFirst && ((miner as any).percent > 0 || miner.bonus_percent > 0)) {
+            if (rackBonus > 0) roomRackBonusPower += power * (rackBonus / 10000);
+            if (firstInstanceMinerIds.has(miner._id) && ((miner as any).percent > 0 || miner.bonus_percent > 0)) {
                 totalRoomBonus += (miner as any).percent || miner.bonus_percent || 0;
             }
         }
-    });
 
-    const setBonuses = calculateSetBonuses(room, dynamicSets);
-    let totalSetPercentPower = 0;
-    let totalSetBonusPowerGh = 0;
-    for (const setBonus of setBonuses.values()) {
-        totalSetPercentPower += setBonus.percent_power;
-        totalSetBonusPowerGh += setBonus.bonus_power;
-    }
+        let totalSetPercentPower = 0;
+        let totalSetBonusPowerGh = 0;
+        for (const setBonus of calculateSetBonuses(room, dynamicSets).values()) {
+            totalSetPercentPower += setBonus.percent_power;
+            totalSetBonusPowerGh += setBonus.bonus_power;
+        }
+        const roomMinerBonusPower = globalBasePower * (totalRoomBonus / 10000);
+        const setPercentPowerGh = roomBasePower * (totalSetPercentPower / 10000);
+        return {
+            roomBasePower, roomRackBonusPower, totalRoomBonus, totalSetPercentPower,
+            totalSetBonusPowerGh, roomMinerBonusPower, setPercentPowerGh,
+            roomPowerWithBonus: roomBasePower + roomRackBonusPower + roomMinerBonusPower + setPercentPowerGh + totalSetBonusPowerGh,
+            effectiveRackBonusPercent: roomBasePower > 0 ? (roomRackBonusPower / roomBasePower) * 100 : 0
+        };
+    }, [room, dynamicSets, currentRoomRacks, currentRoomMiners, firstInstanceMinerIds, globalBasePower]);
 
-    const roomMinerBonusPower = globalBasePower * (totalRoomBonus / 10000);
-    const setPercentPowerGh = roomBasePower * (totalSetPercentPower / 10000);
-    const roomPowerWithBonus = roomBasePower + roomRackBonusPower + roomMinerBonusPower + setPercentPowerGh + totalSetBonusPowerGh;
-    const effectiveRackBonusPercent = roomBasePower > 0 ? (roomRackBonusPower / roomBasePower) * 100 : 0;
+    if (!currentRoom) return null;
 
     return (
         <div className="room-simulator-wrapper" onClick={() => setActiveTooltipId(null)}>
@@ -1000,7 +1027,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                 const { visualX, visualY } = getVisualPosition(rackX, rackY, currentRoomLevel);
 
                                 const rackHeight = (rack as any)?.rack_info?.height || 4;
-                                const rackMiners = currentRoomMiners.filter(m => m.placement?.user_rack_id === rack._id);
+                                const rackMiners = minersByRack.get(rack._id) || [];
 
                                 const config = getRowConfig(currentRoomLevel, visualY);
                                 const gridX = visualX + config.offset;
@@ -1027,7 +1054,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
 
                                             if (draggedMiner.width === 2) cellX = 0;
 
-                                            setDragTarget({ rackId: rack._id, x: cellX, y: cellY, width: draggedMiner.width || 1 });
+                                            setDragTarget(previous => previous?.rackId === rack._id
+                                                && previous.x === cellX && previous.y === cellY
+                                                && previous.width === (draggedMiner.width || 1)
+                                                ? previous : { rackId: rack._id, x: cellX, y: cellY, width: draggedMiner.width || 1 });
                                         }}
                                         onDragLeave={() => setDragTarget(null)}
                                         onDrop={(e) => handleDropMiner(e, rack._id)}
@@ -1124,6 +1154,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
                                                             className="miner-item"
                                                             alt={miner.name}
                                                             loading="lazy"
+                                                            paused={Boolean(editingRackId) || isMobileMinerSearchOpen}
                                                         />
 
                                                         {(miner.level > 0 || !isBonusActive || isSellable) && (
@@ -2086,6 +2117,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = ({ room, onChange, us
             )}
         </div>
     );
-};
+});
 
 export default RoomSimulator;

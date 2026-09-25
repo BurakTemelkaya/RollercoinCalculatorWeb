@@ -1717,6 +1717,25 @@
         padding-bottom: 70px;
     }
 
+    .room-grid-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding-top: 20px;
+    }
+
+    .room-grid-area-inner {
+        align-self: center;
+        max-width: 100%;
+    }
+
+    .room-grid-area .rc-bottom-controls {
+        order: -1;
+        align-self: stretch;
+        margin-top: 0 !important;
+    }
+
     .desktop-inventory-dock {
         position: absolute;
         bottom: 0;

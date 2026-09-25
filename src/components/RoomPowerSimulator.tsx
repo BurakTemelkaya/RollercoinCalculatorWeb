@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LeagueInfo, LEAGUES } from '../data/leagues';
 import { getLeagueByPower } from '../utils/leagueHelper';
@@ -95,13 +95,19 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const globalBonusPercent = dto?.bonus_percent || 0;
 
     // ORIGINAL Room State
-    const originalExactPower = fetchedRoom ? calculateExactRoomPower(fetchedRoom, dynamicSets) : null;
+    const originalExactPower = useMemo(
+        () => fetchedRoom ? calculateExactRoomPower(fetchedRoom, dynamicSets) : null,
+        [fetchedRoom, dynamicSets]
+    );
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
     const originalRoomBasePowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
     // SIMULATED Room State
-    const exactPower = simulatedRoom ? calculateExactRoomPower(simulatedRoom, dynamicSets) : null;
+    const exactPower = useMemo(
+        () => simulatedRoom ? calculateExactRoomPower(simulatedRoom, dynamicSets) : null,
+        [simulatedRoom, dynamicSets]
+    );
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const simulatedRoomBasePowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
     const hamsterBonusPowerGh = exactPower ? exactPower.baseMinerPowerGh * (hamsterBonusPercent / 10000) : 0;

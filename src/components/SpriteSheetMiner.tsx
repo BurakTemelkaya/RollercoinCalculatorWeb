@@ -10,6 +10,90 @@ import { getCdnBaseUrl } from '../config/api';
 const imageCache = new Map<string, HTMLImageElement>();
 const imageErrors = new Set<string>();
 const imagePending = new Map<string, Promise<HTMLImageElement>>();
+const MAX_CACHED_SPRITES = 80;
+
+type VisibilityCallback = (visible: boolean) => void;
+const visibilityCallbacks = new Map<Element, Set<VisibilityCallback>>();
+const visibilityState = new Map<Element, boolean>();
+let visibilityObserver: IntersectionObserver | null = null;
+
+function observeVisibility(element: Element, callback: VisibilityCallback): () => void {
+    if (!('IntersectionObserver' in window)) {
+        callback(true);
+        return () => {};
+    }
+    if (!visibilityObserver) {
+        visibilityObserver = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+                visibilityState.set(entry.target, entry.isIntersecting);
+                visibilityCallbacks.get(entry.target)?.forEach(listener => listener(entry.isIntersecting));
+            }
+        }, { rootMargin: '100px' });
+    }
+    let callbacks = visibilityCallbacks.get(element);
+    if (!callbacks) {
+        callbacks = new Set();
+        visibilityCallbacks.set(element, callbacks);
+        visibilityObserver.observe(element);
+    }
+    callbacks.add(callback);
+    if (visibilityState.has(element)) callback(visibilityState.get(element)!);
+    return () => {
+        callbacks!.delete(callback);
+        if (callbacks!.size === 0) {
+            visibilityObserver?.unobserve(element);
+            visibilityCallbacks.delete(element);
+            visibilityState.delete(element);
+        }
+        if (visibilityCallbacks.size === 0) {
+            visibilityObserver?.disconnect();
+            visibilityObserver = null;
+        }
+    };
+}
+
+type Animation = { visible: boolean; draw: () => void };
+const animations = new Set<Animation>();
+let animationTimer: number | null = null;
+
+function scheduleAnimations() {
+    if (animationTimer !== null || document.hidden || ![...animations].some(animation => animation.visible)) return;
+    animationTimer = window.setTimeout(() => {
+        animationTimer = null;
+        if (!document.hidden) {
+            animations.forEach(animation => { if (animation.visible) animation.draw(); });
+            scheduleAnimations();
+        }
+    }, 100);
+}
+
+function handleVisibilityChange() {
+    if (document.hidden && animationTimer !== null) {
+        clearTimeout(animationTimer);
+        animationTimer = null;
+    } else {
+        scheduleAnimations();
+    }
+}
+
+function registerAnimation(canvas: HTMLCanvasElement, draw: () => void): () => void {
+    const animation: Animation = { visible: false, draw };
+    if (animations.size === 0) document.addEventListener('visibilitychange', handleVisibilityChange);
+    animations.add(animation);
+    const stopObserving = observeVisibility(canvas, visible => {
+        animation.visible = visible;
+        if (visible) scheduleAnimations();
+    });
+    return () => {
+        stopObserving();
+        animations.delete(animation);
+        if (animations.size === 0) {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            if (animationTimer !== null) clearTimeout(animationTimer);
+            animationTimer = null;
+        }
+    };
+}
 
 function loadSpriteImage(url: string): Promise<HTMLImageElement> {
     const cached = imageCache.get(url);
@@ -23,6 +107,9 @@ function loadSpriteImage(url: string): Promise<HTMLImageElement> {
         const img = new Image();
         img.onload = () => {
             imageCache.set(url, img);
+            if (imageCache.size > MAX_CACHED_SPRITES) {
+                imageCache.delete(imageCache.keys().next().value!);
+            }
             imagePending.delete(url);
             resolve(img);
         };
@@ -47,6 +134,7 @@ interface SpriteSheetMinerProps {
     className?: string;
     alt: string;
     loading?: 'lazy' | 'eager';
+    paused?: boolean;
 }
 
 /**
@@ -61,6 +149,7 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     className = 'miner-item',
     alt,
     loading,
+    paused = false,
 }) => {
     const cleanName = (filename || 'crypto_combo').split('.')[0];
     const baseUrl = getCdnBaseUrl();
@@ -79,11 +168,16 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     const [fallback, setFallback] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const frameRef = useRef(0);
+    const [isNearViewport, setIsNearViewport] = useState(loading !== 'lazy');
+
+    useEffect(() => {
+        if (loading !== 'lazy' || !canUseSprite || !canvasRef.current) return;
+        return observeVisibility(canvasRef.current, setIsNearViewport);
+    }, [loading, canUseSprite, fallback]);
 
     // 1. Load the Sprite Image
     useEffect(() => {
-        if (!canUseSprite || fallback || image !== null) return;
+        if (!canUseSprite || fallback || image !== null || !isNearViewport) return;
 
         let cancelled = false;
         loadSpriteImage(cdnSpriteUrl)
@@ -92,7 +186,7 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
             .catch(() => { if (!cancelled) setFallback(true); });
 
         return () => { cancelled = true; };
-    }, [cdnSpriteUrl, rcSpriteUrl, canUseSprite, fallback, image]);
+    }, [cdnSpriteUrl, rcSpriteUrl, canUseSprite, fallback, image, isNearViewport]);
 
     // 2. Canvas Animation Loop
     useEffect(() => {
@@ -111,39 +205,17 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
         const deducedFrames = Math.floor(image.naturalWidth / frame_width);
         const animFrames = frames_count || Math.max(1, deducedFrames - 2);
         
-        // 100ms per frame
-        const durationMs = 100;
-
-        let animationFrameId: number;
-        let lastDrawTime = 0;
-
-        const render = (time: DOMHighResTimeStamp) => {
-            if (time - lastDrawTime >= durationMs) {
-                // Clear the canvas
-                ctx.clearRect(0, 0, frame_width, frame_height);
-                
-                // Draw current frame slice
-                const sx = frameRef.current * frame_width;
-                ctx.drawImage(
-                    image, 
-                    sx, 0, frame_width, frame_height, 
-                    0, 0, frame_width, frame_height
-                );
-                
-                // Advance frame
-                frameRef.current = (frameRef.current + 1) % animFrames;
-                lastDrawTime = time;
-            }
-            animationFrameId = requestAnimationFrame(render);
+        let frame = 0;
+        const draw = () => {
+            ctx.clearRect(0, 0, frame_width, frame_height);
+            ctx.drawImage(image, frame * frame_width, 0, frame_width, frame_height,
+                0, 0, frame_width, frame_height);
+            frame = (frame + 1) % animFrames;
         };
-
-        // Start animation loop
-        animationFrameId = requestAnimationFrame(render);
-
-        return () => {
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, [image, framesData]);
+        draw(); // Keep a still frame visible even when the canvas is off screen.
+        if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        return registerAnimation(canvas, draw);
+    }, [image, framesData, paused]);
 
     // ── Fallback: original GIF/PNG image ──
     if (!canUseSprite || fallback) {
@@ -211,4 +283,4 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     );
 };
 
-export default SpriteSheetMiner;
+export default React.memo(SpriteSheetMiner);
