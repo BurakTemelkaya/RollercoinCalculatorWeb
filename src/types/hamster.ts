@@ -61,6 +61,7 @@ export interface Hamster {
   builderSlots: HamsterBuilderSlot[];
   ultimate: HamsterTrait | null;
   ultimateChargePoints: number | null;
+  ultimateTiers?: { tier: number; chargeRequired: number; rewardCount: number; rewardMultiplier?: number; conversionTarget?: string }[];
   skins: HamsterSkin[];
 }
 
@@ -82,4 +83,3 @@ export interface HamsterSet {
     rewardRlt: string;
   }[];
 }
-

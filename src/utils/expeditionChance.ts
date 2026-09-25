@@ -37,7 +37,7 @@ export function difficultyInfluence(difficulty: number): number {
 export function abilitySurvivalBonus(hamster: Hamster, level: number, builderSurvival = false): number {
   const passive = hamster.abilities
     .filter(ability => ability.code === 'survival')
-    .reduce((sum, ability) => sum + Number(ability.text.en?.match(/\d+(?:\.\d+)?/)?.[0] ?? 0), 0);
+    .reduce((sum, ability) => sum + Number(ability.text.en?.match(/[+-]?\d+(?:\.\d+)?/)?.[0] ?? 0), 0);
   if (!builderSurvival) return passive;
   const option = hamster.builderSlots.flatMap(slot => slot.builds.map(build => build.buff)).find(buff => buff.code === 'survival');
   if (!option) return passive;

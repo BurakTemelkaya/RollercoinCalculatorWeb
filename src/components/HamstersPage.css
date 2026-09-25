@@ -246,6 +246,11 @@
 .hamster-trait img { width: 24px; height: 24px; object-fit: contain; image-rendering: pixelated; }
 .hamster-muted { color: var(--text-muted, #a0aec0); }
 .hamster-charge-points { margin: 10px 0 0; color: var(--text-muted, #a0aec0); font-size: 12px; }
+.hamster-ultimate-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.hamster-ultimate-tiers > div { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 10px; border: 1px solid var(--hamster-border); border-radius: var(--radius-md, 10px); background: var(--hamster-card); font-size: 12px; }
+.hamster-ultimate-tiers strong { color: var(--hamster-accent, #a5b4fc); }
+.hamster-ultimate-tiers small { color: var(--text-muted, #a0aec0); }
+.hamster-set-coming { padding: 9px; border: 1px dashed var(--hamster-border); border-radius: var(--radius-md, 10px); color: var(--text-muted, #a0aec0); font-size: 12px; }
 .hamster-builder { margin-top: 22px; }
 .hamster-builder-slot { padding: 12px 0; border-top: 1px solid var(--hamster-border); }
 .hamster-builder-slot h4 { margin: 0 0 10px; color: var(--text-secondary, #cbd5e1); font-size: 13px; }
@@ -316,7 +321,9 @@
   .hamster-stage-panel,
   .hamster-details-panel { padding: 12px; }
   .hamster-builder-builds { grid-template-columns: 1fr; }
-  .hamster-panel-heading { align-items: start; }
+  .hamster-panel-heading { flex-direction: column; align-items: stretch; gap: 8px; }
+  .hamster-heading-meta { justify-content: space-between; }
+  .hamster-set-popover { left: 0; right: auto; width: min(330px, calc(100vw - 48px)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hamster-card { transition: none; }

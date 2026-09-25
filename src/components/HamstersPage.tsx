@@ -126,12 +126,13 @@ export default function HamstersPage() {
                       <summary>{t('hamsters.memberOfSet', { name: set.name[language] || set.name.en })}</summary>
                       <div className="hamster-set-popover">
                         <strong>{set.name[language] || set.name.en}</strong>
-                        <span>{t('hamsters.setMembers')}</span>
+                        <span>{t('hamsters.setMembers')} ({set.members.length}/{set.levels.at(-1)?.totalMembers ?? set.members.length})</span>
                         <div className="hamster-set-members">
                           {set.members.map(slug => {
                             const member = HAMSTERS_BY_SLUG.get(slug);
                             return member && <button type="button" key={slug} aria-label={member.name} onClick={event => { event.currentTarget.closest('details')?.removeAttribute('open'); selectSetMember(slug); }}><HamsterSprite skin={member.skins[0]} name={member.name} size={54} /><span>{member.name}</span></button>;
                           })}
+                          {set.members.length < (set.levels.at(-1)?.totalMembers ?? 0) && <span className="hamster-set-coming">{t('hamsters.memberComing')}</span>}
                         </div>
                         <div className="hamster-set-rewards">
                           <strong>{t('hamsters.setRewards')}</strong>
@@ -207,7 +208,15 @@ export default function HamstersPage() {
                 {selected.ultimate && <Trait trait={selected.ultimate} language={language} />}
                 {!selected.abilities.length && !selected.ultimate && <span className="hamster-muted">{t('hamsters.noAbilities')}</span>}
               </div>
-              {selected.ultimateChargePoints !== null && <p className="hamster-charge-points">{t('hamsters.chargePoints', { value: selected.ultimateChargePoints })}</p>}
+              {selected.ultimateTiers?.length ? <div className="hamster-ultimate-tiers">
+                {selected.ultimateTiers.map(tier => <div key={tier.tier}>
+                  <strong>{t('hamsters.tier')} {tier.tier}</strong>
+                  <span>{tier.conversionTarget
+                    ? t('hamsters.convertRewards', { count: tier.rewardCount, target: tier.conversionTarget })
+                    : t('hamsters.rewardCount', { count: tier.rewardCount })}</span>
+                  <small>{t('hamsters.chargePoints', { value: tier.chargeRequired })}</small>
+                </div>)}
+              </div> : selected.ultimateChargePoints !== null && <p className="hamster-charge-points">{t('hamsters.chargePoints', { value: selected.ultimateChargePoints })}</p>}
               {selected.builderSlots.length > 0 && (
                 <div className="hamster-builder">
                   <h3>{t('hamsters.builder')}</h3>

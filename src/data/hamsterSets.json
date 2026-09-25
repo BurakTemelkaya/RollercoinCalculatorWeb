@@ -396,24 +396,24 @@
     "icon": "rollercoin/hamsters/icons/loot_percent.webp",
     "completion": {
       "text": {
-        "en": "Extra Loot +10%",
-        "tr": "Ekstra Ganimet +%10",
-        "ru": "Доп. добыча +10%",
-        "de": "Extra-Beute +10%",
-        "es": "Botín extra +10%",
-        "fr": "Butin supplémentaire +10%",
-        "pt": "Espólio extra +10%",
-        "id": "Loot Ekstra +10%",
-        "zh": "额外战利品 +10%",
-        "cs": "Extra kořist +10%"
+        "en": "Extra Loot +25%",
+        "tr": "Ekstra Ganimet +%25",
+        "ru": "Доп. добыча +25%",
+        "de": "Extra-Beute +25%",
+        "es": "Botín extra +25%",
+        "fr": "Butin supplémentaire +25%",
+        "pt": "Espólio extra +25%",
+        "id": "Loot Ekstra +25%",
+        "zh": "额外战利品 +25%",
+        "cs": "Extra kořist +25%"
       },
-      "rewardRlt": "5.00"
+      "rewardRlt": "30.00"
     },
     "levels": [
       {
         "level": 1,
         "requiredMembers": 2,
-        "totalMembers": 2,
+        "totalMembers": 3,
         "text": {
           "en": "Extra Loot +10%",
           "tr": "Ekstra Ganimet +%10",
@@ -427,6 +427,24 @@
           "cs": "Extra kořist +10%"
         },
         "rewardRlt": "5.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Extra Loot +15%",
+          "tr": "Ekstra Ganimet +%15",
+          "ru": "Доп. добыча +15%",
+          "de": "Extra-Beute +15%",
+          "es": "Botín extra +15%",
+          "fr": "Butin supplémentaire +15%",
+          "pt": "Espólio extra +15%",
+          "id": "Loot Ekstra +15%",
+          "zh": "额外战利品 +15%",
+          "cs": "Extra kořist +15%"
+        },
+        "rewardRlt": "25.00"
       }
     ]
   }

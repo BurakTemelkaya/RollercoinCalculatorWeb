@@ -10831,5 +10831,543 @@
         }
       }
     ]
+  },
+  {
+    "slug": "solaire",
+    "name": "SOLaire",
+    "generation": 2,
+    "order": 30,
+    "stats": {
+      "health": 35,
+      "strength": 70,
+      "luck": 70
+    },
+    "abilities": [
+      {
+        "code": "season_xp_chest",
+        "text": {
+          "en": "Season XP Chest",
+          "tr": "Sezon XP Sandığı",
+          "ru": "Сундук сезонного опыта",
+          "de": "Saison-XP-Truhe",
+          "es": "Cofre de XP de temporada",
+          "fr": "Coffre d’XP de saison",
+          "pt": "Baú de XP da temporada",
+          "id": "Peti XP Musim",
+          "zh": "赛季经验宝箱",
+          "cs": "Truhla sezónních XP"
+        },
+        "icon": "rollercoin/hamsters/icons/season_xp_chest.webp"
+      },
+      {
+        "code": "relax_time",
+        "text": {
+          "en": "Relax Time -25%",
+          "tr": "Dinlenme Süresi -%25",
+          "ru": "Время отдыха -25%",
+          "de": "Ruhezeit -25%",
+          "es": "Tiempo de descanso -25%",
+          "fr": "Temps de repos -25 %",
+          "pt": "Tempo de descanso -25%",
+          "id": "Waktu Istirahat -25%",
+          "zh": "休息时间 -25%",
+          "cs": "Doba odpočinku -25 %"
+        },
+        "icon": "rollercoin/hamsters/icons/cooldown_percent.webp"
+      },
+      {
+        "code": "survival",
+        "text": {
+          "en": "Survive Chance +5%",
+          "tr": "Hayatta Kalma Şansı +%5",
+          "ru": "Шанс выживания +5%",
+          "de": "Überlebenschance +5%",
+          "es": "Probabilidad de supervivencia +5%",
+          "fr": "Chance de survie +5 %",
+          "pt": "Chance de sobrevivência +5%",
+          "id": "Peluang Bertahan Hidup +5%",
+          "zh": "生存几率 +5%",
+          "cs": "Šance na přežití +5 %"
+        },
+        "icon": "rollercoin/hamsters/icons/survive_percent.webp"
+      }
+    ],
+    "builderSlots": [],
+    "ultimate": {
+      "code": "chests_multiplier",
+      "text": {
+        "en": "Chests Multiplier ×3",
+        "tr": "Sandık Çarpanı ×3",
+        "ru": "Множитель сундуков ×3",
+        "de": "Truhen-Multiplikator ×3",
+        "es": "Multiplicador de cofres ×3",
+        "fr": "Multiplicateur de coffres ×3",
+        "pt": "Multiplicador de baús ×3",
+        "id": "Pengali Peti ×3",
+        "zh": "宝箱倍数 ×3",
+        "cs": "Násobič truhel ×3"
+      },
+      "icon": "rollercoin/hamsters/icons/chests_multiplier.webp"
+    },
+    "ultimateChargePoints": 18,
+    "ultimateTiers": [
+      {
+        "tier": 1,
+        "chargeRequired": 18,
+        "rewardCount": 3,
+        "rewardMultiplier": 3
+      },
+      {
+        "tier": 2,
+        "chargeRequired": 24,
+        "rewardCount": 5,
+        "rewardMultiplier": 3
+      },
+      {
+        "tier": 3,
+        "chargeRequired": 30,
+        "rewardCount": 8,
+        "rewardMultiplier": 3
+      }
+    ],
+    "skins": [
+      {
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/solaire/lvl01/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/solaire/lvl01/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/solaire/lvl01/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_tap_reaction.png",
+            "frames": 11,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/solaire/lvl01/sprite_win_loop.png",
+            "frames": 5,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ]
+  },
+  {
+    "slug": "lady-minerra",
+    "name": "Lady Minerra",
+    "generation": 2,
+    "order": 31,
+    "stats": {
+      "health": 80,
+      "strength": 70,
+      "luck": 55
+    },
+    "abilities": [
+      {
+        "code": "keep_it_going",
+        "text": {
+          "en": "Keep It Going: No rest after a successful Expedition. After a failed Expedition, she needs three times the normal rest time.",
+          "tr": "Durmak yok: Başarılı bir seferden sonra dinlenmez. Başarısız olursa normal dinlenme süresinin üç katına ihtiyaç duyar.",
+          "ru": "Продолжай движение: после успешной экспедиции не отдыхает. После неудачной требуется втрое больше обычного времени отдыха.",
+          "de": "Immer weiter: Nach einer erfolgreichen Expedition braucht sie keine Ruhezeit. Nach einer gescheiterten Expedition benötigt sie die dreifache Ruhezeit.",
+          "es": "Sin parar: no descansa después de una expedición exitosa. Tras una expedición fallida, necesita el triple del tiempo de descanso normal.",
+          "fr": "Toujours en route : aucun repos après une expédition réussie. Après un échec, elle a besoin du triple du temps de repos normal.",
+          "pt": "Sempre em frente: não descansa após uma expedição bem-sucedida. Após uma expedição fracassada, precisa do triplo do tempo normal de descanso.",
+          "id": "Terus Melaju: Tidak beristirahat setelah Ekspedisi berhasil. Setelah gagal, ia perlu tiga kali waktu istirahat normal.",
+          "zh": "继续前进：探险成功后无需休息；失败后需要正常休息时间的三倍。",
+          "cs": "Jen tak dál: Po úspěšné expedici neodpočívá. Po neúspěšné potřebuje trojnásobek běžné doby odpočinku."
+        },
+        "icon": null
+      },
+      {
+        "code": "survival",
+        "text": {
+          "en": "Survive Chance -5%",
+          "tr": "Hayatta Kalma Şansı -%5",
+          "ru": "Шанс выживания -5%",
+          "de": "Überlebenschance -5%",
+          "es": "Probabilidad de supervivencia -5%",
+          "fr": "Chance de survie -5 %",
+          "pt": "Chance de sobrevivência -5%",
+          "id": "Peluang Bertahan Hidup -5%",
+          "zh": "生存几率 -5%",
+          "cs": "Šance na přežití -5 %"
+        },
+        "icon": "rollercoin/hamsters/icons/survive_percent.webp"
+      },
+      {
+        "code": "buyback_discount",
+        "text": {
+          "en": "Buyback Discount -50%",
+          "tr": "Geri Alım İndirimi -%50",
+          "ru": "Скидка на выкуп -50%",
+          "de": "Rückkauf-Rabatt -50%",
+          "es": "Descuento de recompra -50%",
+          "fr": "Réduction de rachat -50 %",
+          "pt": "Desconto de recompra -50%",
+          "id": "Diskon Beli Kembali -50%",
+          "zh": "回购折扣 -50%",
+          "cs": "Sleva na zpětný odkup -50 %"
+        },
+        "icon": "rollercoin/hamsters/icons/buyback_discount.webp"
+      }
+    ],
+    "builderSlots": [],
+    "ultimate": {
+      "code": "loot_conversion",
+      "text": {
+        "en": "Loot Conversion: Converts part of Expedition loot into RLT.",
+        "tr": "Ganimet Dönüşümü: Sefer ganimetinin bir bölümünü RLT’ye dönüştürür.",
+        "ru": "Конвертация добычи: превращает часть добычи экспедиции в RLT.",
+        "de": "Beuteumwandlung: Wandelt einen Teil der Expeditionsbeute in RLT um.",
+        "es": "Conversión de botín: convierte parte del botín de la expedición en RLT.",
+        "fr": "Conversion du butin : convertit une partie du butin d’expédition en RLT.",
+        "pt": "Conversão de espólio: converte parte do espólio da expedição em RLT.",
+        "id": "Konversi Loot: Mengubah sebagian loot Ekspedisi menjadi RLT.",
+        "zh": "战利品转换：将部分探险战利品转换为 RLT。",
+        "cs": "Převod kořisti: Přemění část kořisti z expedice na RLT."
+      },
+      "icon": "rollercoin/hamsters/icons/loot_conversion.webp"
+    },
+    "ultimateChargePoints": 24,
+    "ultimateTiers": [
+      {
+        "tier": 1,
+        "chargeRequired": 24,
+        "rewardCount": 2,
+        "conversionTarget": "RLT"
+      },
+      {
+        "tier": 2,
+        "chargeRequired": 30,
+        "rewardCount": 3,
+        "conversionTarget": "RLT"
+      },
+      {
+        "tier": 3,
+        "chargeRequired": 36,
+        "rewardCount": 5,
+        "conversionTarget": "RLT"
+      }
+    ],
+    "skins": [
+      {
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl01/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl01/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 10,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl10/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl10/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 20,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl20/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl20/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 30,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl30/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl30/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 40,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl40/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl40/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/lady_minerra/lvl50/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_tap_reaction.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/lady_minerra/lvl50/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ]
   }
 ]
