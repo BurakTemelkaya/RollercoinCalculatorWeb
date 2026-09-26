@@ -1718,26 +1718,220 @@
 /* Desktop drawer stays anchored to the simulator and expands over the room. */
 @media (min-width: 992px) {
     .room-simulator-wrapper {
+        box-sizing: border-box;
+        width: 100%;
         padding-bottom: 70px;
+    }
+
+    .room-main-controls {
+        display: grid !important;
+        grid-template-columns: max-content minmax(0, 1fr) max-content;
+        column-gap: 8px !important;
+        white-space: nowrap;
+    }
+
+    .room-main-controls > :last-child {
+        justify-self: end;
+        flex-wrap: nowrap !important;
+    }
+
+    .room-main-controls .room-numbers button {
+        min-width: 38px;
+        min-height: 36px;
+    }
+
+    .room-highlight-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .room-highlight-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        min-height: 30px;
+        padding: 5px 8px;
+        border: 1px solid #484b6a;
+        border-radius: 7px;
+        background: #1d1f33;
+        color: #d2d3e2;
+        font: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .room-highlight-short-label {
+        display: none;
+    }
+
+    .room-highlight-button:hover,
+    .room-highlight-button:focus-visible {
+        border-color: var(--highlight-color);
+    }
+
+    .room-highlight-button.active {
+        background: var(--highlight-background);
+        border-color: var(--highlight-color);
+        box-shadow: 0 0 0 1px var(--highlight-background);
+        color: #fff;
+    }
+
+    .room-highlight-button.sellable {
+        --highlight-color: #39d98a;
+        --highlight-background: rgba(57, 217, 138, 0.13);
+    }
+
+    .room-highlight-button.duplicate {
+        --highlight-color: #ff6675;
+        --highlight-background: rgba(255, 102, 117, 0.13);
+    }
+
+    .room-highlight-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--highlight-color);
+        box-shadow: 0 0 5px var(--highlight-color);
+        flex: none;
+    }
+
+    .racks-grid {
+        gap: 18px;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-sellable {
+        --miner-highlight-color: #28dc58;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-duplicate {
+        --miner-highlight-color: #ef4248;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-sellable::after,
+    .racks-grid .miner-img-wrapper.highlight-duplicate::after,
+    .racks-grid .miner-img-wrapper.highlight-sellable.highlight-duplicate::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 36px;
+        max-height: 100%;
+        transform: translateY(-50%);
+        border: 2px solid var(--miner-highlight-color);
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-sellable.highlight-duplicate::before,
+    .racks-grid .miner-img-wrapper.highlight-sellable.highlight-duplicate::after {
+        box-sizing: border-box;
+        right: auto;
+        width: 50%;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-sellable.highlight-duplicate::before {
+        left: 0;
+        border-color: #28dc58;
+        border-right: 0;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .racks-grid .miner-img-wrapper.highlight-sellable.highlight-duplicate::after {
+        left: 50%;
+        border-color: #ef4248;
+        border-left: 0;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .room-sim-header-desktop {
+        display: block;
+        padding: 6px 12px;
+        container-type: inline-size;
+    }
+
+    .room-sim-header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 32px;
+        gap: 12px;
+    }
+
+    .room-details-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        border: 1px solid #484b6a;
+        border-radius: 6px;
+        background: #252636;
+        color: var(--text-color);
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .room-details-toggle:hover,
+    .room-details-toggle:focus-visible {
+        border-color: #03e1e4;
+    }
+
+    .room-sim-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 8px;
+    }
+
+    .room-sim-details[hidden] {
+        display: none;
+    }
+
+    .room-sim-header-desktop > .rc-bottom-controls,
+    .room-sim-details .room-stats-container {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    .room-sim-details .room-stats-container {
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 12px;
+    }
+
+    .room-sim-details .room-stat-item:not(:first-child) {
+        padding-left: 12px;
     }
 
     .room-grid-area {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 24px;
-        padding-top: 20px;
+        gap: 0;
+        padding: 32px 4px 160px;
+        overflow-x: visible;
     }
 
     .room-grid-area-inner {
         align-self: center;
-        max-width: 100%;
+        position: relative;
+        flex: none;
     }
 
-    .room-grid-area .rc-bottom-controls {
-        order: -1;
-        align-self: stretch;
-        margin-top: 0 !important;
+    .room-grid-area-inner .racks-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
     }
 
     .desktop-inventory-dock {
@@ -1752,6 +1946,10 @@
         display: flex;
         flex-direction: column;
         max-height: min(65dvh, 100%);
+    }
+
+    .desktop-inventory-dock.expanded {
+        height: 220px;
     }
 
     .desktop-inventory-dock .inventory-toolbar {
@@ -1785,11 +1983,6 @@
         opacity: 0.2;
     }
 
-    .desktop-inventory-dock.closed,
-    .desktop-inventory-dock.preview {
-        cursor: pointer;
-    }
-
     .desktop-inventory-dock .inventory-miner-grid {
         box-sizing: border-box;
         min-height: 0;
@@ -1801,24 +1994,93 @@
         overscroll-behavior: contain;
     }
 
-    .desktop-inventory-dock.closed .inventory-miner-grid {
-        height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        overflow: hidden;
-        visibility: hidden;
-    }
-
-    .desktop-inventory-dock.preview .inventory-miner-grid {
-        height: 28px;
-        overflow: hidden;
-        padding-bottom: 0;
-    }
-
     .desktop-inventory-dock .inventory-filter-panel {
         overflow-y: auto;
         min-height: 0;
         overscroll-behavior: contain;
+    }
+
+    .inventory-filters-open .desktop-inventory-dock .inventory-filter-panel {
+        flex: 1;
+    }
+
+    .inventory-filters-open .desktop-inventory-dock .inventory-miner-grid {
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        visibility: hidden;
+    }
+}
+
+@media (min-width: 992px) {
+    @container (max-width: 850px) {
+        .room-highlight-controls {
+            gap: 5px;
+        }
+
+        .room-highlight-button {
+            padding-inline: 5px;
+        }
+
+        .room-highlight-label {
+            display: none;
+        }
+
+        .room-highlight-short-label {
+            display: inline;
+        }
+    }
+
+    @container (max-width: 700px) {
+        .room-main-controls {
+            column-gap: 4px !important;
+            padding-inline: 5px !important;
+        }
+
+        .room-main-controls > :first-child > span {
+            display: none;
+        }
+
+        .room-main-controls > :first-child {
+            gap: 4px !important;
+        }
+
+        .room-main-controls .room-numbers {
+            gap: 3px !important;
+        }
+
+        .room-main-controls .room-numbers button {
+            padding: 8px 10px !important;
+        }
+
+        .room-main-controls > :last-child {
+            gap: 3px !important;
+        }
+
+        .room-main-controls > :last-child button {
+            padding: 6px 8px !important;
+        }
+
+        .room-highlight-controls {
+            gap: 3px;
+        }
+
+        .room-highlight-button {
+            gap: 3px;
+            padding-inline: 3px;
+            font-size: 10px;
+        }
+    }
+
+    @container (max-width: 500px) {
+        .room-highlight-short-label {
+            display: none;
+        }
+
+        .room-highlight-button {
+            min-width: 25px;
+            padding-inline: 7px;
+        }
     }
 }
 

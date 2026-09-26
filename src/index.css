@@ -5329,5 +5329,13 @@ body.hide-global-ads .aads-mobile-only {
   }
 }
 
+@media (min-width: 992px) {
+  .tab-slider-viewport.room-tab-wide {
+    width: calc(100% + 48px);
+    max-width: none;
+    margin-inline: -24px;
+  }
+}
+
 .hamster-nav-link { position: relative; padding-right: 20px; }
 .hamster-nav-notice { position: absolute; top: 2px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: #c05cff; box-shadow: 0 0 0 2px var(--bg-primary, #0d111b); }

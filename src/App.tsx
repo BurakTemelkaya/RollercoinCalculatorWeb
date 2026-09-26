@@ -388,7 +388,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20260925.010034';
+  const CURRENT_CACHE_VERSION = '20260926.213306';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -1036,7 +1036,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
 
             {/* Content based on Tab - Slider */}
-            <div className="tab-slider-viewport">
+            <div className={`tab-slider-viewport${activeTab === 'room_simulator' ? ' room-tab-wide' : ''}`}>
               <div
                 className="tab-slider-track"
                 style={{ transform: `translateX(-${TAB_ORDER[activeTab] * 100}%)` }}

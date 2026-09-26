@@ -156,7 +156,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const isLeagueChange = originalLeague && currentLeague.id !== originalLeague.id;
 
     return (
-        <section className="power-simulator">
+        <section className="power-simulator room-power-simulator">
             <div className="ms-header">
                 <h2><span className="section-icon">🏠</span> {t('simulator.roomTitle', 'Oda Simülatörü')}</h2>
                 <p>{t('simulator.desc')}</p>
@@ -237,7 +237,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
                 {/* Simulated Room Area */}
                 {simulatedRoom && exactPower && (
-                    <div className="simulated-room-container" style={{ minWidth: 0, width: '100%' }}>
+                    <div className="simulated-room-container">
                         <div className="league-power-dashboard">
                             <div className="lpd-header">
                                 <div className="lpd-league">

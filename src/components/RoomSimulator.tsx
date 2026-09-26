@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -28,6 +28,14 @@ function formatPower(powerGhs: number): string {
 }
 
 const EMPTY_MINERS: ApiRoomMiner[] = [];
+const DESKTOP_RACK_COLUMNS = 8;
+const DESKTOP_RACK_WIDTH = 97;
+const DESKTOP_RACK_HEIGHT = 155;
+const DESKTOP_RACK_GAP = 18;
+const DESKTOP_MAX_RACK_SCALE = 1;
+const DESKTOP_ROOM_ROWS = 3;
+const DESKTOP_ROOM_WIDTH = DESKTOP_RACK_COLUMNS * DESKTOP_RACK_WIDTH + (DESKTOP_RACK_COLUMNS - 1) * DESKTOP_RACK_GAP;
+const DESKTOP_ROOM_HEIGHT = DESKTOP_ROOM_ROWS * DESKTOP_RACK_HEIGHT + (DESKTOP_ROOM_ROWS - 1) * DESKTOP_RACK_GAP;
 
 interface RoomSimulatorProps {
     room: RollercoinRoomResponse;
@@ -38,8 +46,9 @@ interface RoomSimulatorProps {
 
 export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets }) => {
     const { t } = useTranslation();
-    const [isInventoryCollapsed, setIsInventoryCollapsed] = useState(true);
-    const [isInventoryHovered, setIsInventoryHovered] = useState(false);
+    const [areRoomDetailsOpen, setAreRoomDetailsOpen] = useState(false);
+    const [highlightSellableMiners, setHighlightSellableMiners] = useState(false);
+    const [highlightDuplicateMiners, setHighlightDuplicateMiners] = useState(false);
     const [addRackTarget, setAddRackTarget] = useState<{ x: number, y: number } | null>(null);
     const [isMobileMinerSearchOpen, setIsMobileMinerSearchOpen] = useState(false);
     const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
@@ -54,7 +63,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const handleInitiateAddOrReplace = (targetRackId: string | null) => {
         setReplaceTargetRackId(targetRackId);
         setEditingRackId(null);
-        setIsInventoryCollapsed(false);
         setInventoryTab('miners');
         if (isMobile) {
             setIsMobileMinerSearchOpen(true);
@@ -282,6 +290,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
     const [isDragClearanceActive, setIsDragClearanceActive] = useState(false);
     const [dragSourceKey, setDragSourceKey] = useState<string | null>(null);
+    const roomGridAreaRef = useRef<HTMLDivElement>(null);
+    const roomGridInnerRef = useRef<HTMLDivElement>(null);
+    const racksGridRef = useRef<HTMLDivElement>(null);
     const activeInventoryDragCleanup = useRef<(() => void) | null>(null);
     const suppressInventoryClick = useRef(false);
     useEffect(() => () => activeInventoryDragCleanup.current?.(), []);
@@ -338,6 +349,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 }
             });
         return firstIds;
+    }, [room.miners]);
+
+    const duplicateMinerKeys = useMemo(() => {
+        const counts = new Map<string, number>();
+        for (const miner of room.miners || EMPTY_MINERS) {
+            if (!miner.placement?.user_rack_id) continue;
+            const key = `${miner.miner_id}_${miner.level || 0}`;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        }
+        return new Set([...counts].filter(([, count]) => count > 1).map(([key]) => key));
     }, [room.miners]);
 
     const globalBasePower = useMemo(() => {
@@ -788,11 +809,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
             if (!started) {
                 started = true;
-                const rect = source.getBoundingClientRect();
-                ghost = source.cloneNode(true) as HTMLElement;
+                // Drag only the artwork (and its level badge), not the inventory card text.
+                const artwork = source.querySelector<HTMLElement>('.inv-miner-card-img-wrapper') || source;
+                const rect = artwork.getBoundingClientRect();
+                ghost = artwork.cloneNode(true) as HTMLElement;
                 ghost.removeAttribute('id');
                 ghost.setAttribute('aria-hidden', 'true');
-                ghost.style.cssText = `position:fixed;z-index:2147483647;pointer-events:none;opacity:.9;width:${rect.width}px;height:${rect.height}px;box-sizing:border-box;margin:0;transition:none;transform:translate(-50%,-50%);`;
+                ghost.style.cssText = `position:fixed;z-index:2147483647;pointer-events:none;opacity:.9;width:${rect.width}px;height:${rect.height}px;box-sizing:border-box;margin:0;background:none;border:0;transition:none;transform:translate(-50%,-50%);`;
                 document.body.appendChild(ghost);
                 setIsDragClearanceActive(true);
                 setDragSourceKey(`${item.type}:${item.value.id}`);
@@ -994,7 +1017,56 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         return groups;
     }, [currentRoomMiners]);
 
-    const colsCount = 8;
+    useLayoutEffect(() => {
+        const area = roomGridAreaRef.current;
+        const inner = roomGridInnerRef.current;
+        const grid = racksGridRef.current;
+        if (!area || !inner || !grid) return;
+        if (isMobile) {
+            // Desktop sizing is applied directly for smooth resizing; clear it when
+            // switching to the mobile grid so controls follow the full rack height.
+            inner.style.removeProperty('width');
+            inner.style.removeProperty('height');
+            grid.style.removeProperty('transform');
+            grid.style.removeProperty('width');
+            grid.style.removeProperty('left');
+            grid.style.removeProperty('top');
+            return;
+        }
+
+        let frame = 0;
+        let observedWidth = -1;
+        const applyScale = () => {
+            frame = 0;
+            const styles = window.getComputedStyle(area);
+            const availableWidth = area.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
+            if (availableWidth <= 0) return;
+            const scale = Math.min(DESKTOP_MAX_RACK_SCALE, availableWidth / DESKTOP_ROOM_WIDTH);
+            inner.style.width = `${availableWidth}px`;
+            inner.style.height = `${DESKTOP_ROOM_HEIGHT * scale}px`;
+            grid.style.width = `${DESKTOP_ROOM_WIDTH}px`;
+            grid.style.left = `${Math.max(0, (availableWidth - DESKTOP_ROOM_WIDTH * scale) / 2)}px`;
+            grid.style.top = currentRoomLevel === 0 ? `${(DESKTOP_RACK_HEIGHT + DESKTOP_RACK_GAP) * scale / 2}px` : '0px';
+            grid.style.transform = `scale(${scale})`;
+        };
+
+        const scheduleScale = () => {
+            if (!frame) frame = window.requestAnimationFrame(applyScale);
+        };
+
+        applyScale();
+
+        const observer = new ResizeObserver(([entry]) => {
+            if (entry.contentRect.width === observedWidth) return;
+            observedWidth = entry.contentRect.width;
+            scheduleScale();
+        });
+        observer.observe(area);
+        return () => {
+            observer.disconnect();
+            if (frame) window.cancelAnimationFrame(frame);
+        };
+    }, [isMobile, currentRoomLevel]);
 
     const validDropZones: { x: number, y: number, gridX: number }[] = [];
     for (let y = 0; y < maxRows; y++) {
@@ -1003,6 +1075,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             validDropZones.push({ x, y, gridX: x + config.offset });
         }
     }
+    const getGridPosition = (originalColumn: number, originalRow: number) => ({
+        gridColumn: originalColumn,
+        gridRow: originalRow,
+    });
 
     const {
         roomBasePower, roomRackBonusPower, totalRoomBonus, totalSetPercentPower,
@@ -1044,52 +1120,272 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
     if (!currentRoom) return null;
 
-    return (
-        <div className="room-simulator-wrapper" onClick={() => setActiveTooltipId(null)}>
-            <div className="room-sim-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 15, position: 'relative', zIndex: 10 }}>
-                <span className="modal-title">
-                    {t('simulator.roomTitle')}
-                </span>
-
-                <div className="room-stats-container">
-                    <div className="room-stat-item">
-                        <span className="rs-label">{t('simulator.roomBasePower')}</span>
-                        <span className="rs-value primary">{formatPower(Number(roomBasePower))}</span>
-                    </div>
-                    <div className="room-stat-item">
-                        <span className="rs-label">{t('simulator.rackBonuses')}</span>
-                        <span className="rs-value success">+{effectiveRackBonusPercent.toFixed(2)}%</span>
-                        <span className="rs-subvalue">+{formatPower(roomRackBonusPower)}</span>
-                    </div>
-                    <div className="room-stat-item">
-                        <span className="rs-label">{t('simulator.minerBonuses')}</span>
-                        <span className="rs-value success">+{(totalRoomBonus / 100).toFixed(2)}%</span>
-                        <span className="rs-subvalue">+{formatPower(roomMinerBonusPower)}</span>
-                    </div>
-                    {(totalSetPercentPower > 0 || totalSetBonusPowerGh > 0) && (
-                        <div className="room-stat-item">
-                            <span className="rs-label">{t('simulator.setBonus', 'Set Bonus')}</span>
-                            <span className="rs-value success">
-                                {totalSetPercentPower > 0 ? `+${(totalSetPercentPower / 100).toFixed(2)}% ` : ''}
-                                {totalSetBonusPowerGh > 0 ? `+${formatPower(totalSetBonusPowerGh)}` : ''}
-                            </span>
-                            {totalSetPercentPower > 0 && <span className="rs-subvalue">+{formatPower(setPercentPowerGh)}</span>}
-                        </div>
-                    )}
-                    <div className="room-stat-item">
-                        <span className="rs-label">{t('simulator.roomTotalPower')}</span>
-                        <span className="rs-value highlight">{formatPower(roomPowerWithBonus)}</span>
-                    </div>
+    const roomStats = (
+        <div className="room-stats-container">
+            <div className="room-stat-item">
+                <span className="rs-label">{t('simulator.roomBasePower')}</span>
+                <span className="rs-value primary">{formatPower(Number(roomBasePower))}</span>
+            </div>
+            <div className="room-stat-item">
+                <span className="rs-label">{t('simulator.rackBonuses')}</span>
+                <span className="rs-value success">+{effectiveRackBonusPercent.toFixed(2)}%</span>
+                <span className="rs-subvalue">+{formatPower(roomRackBonusPower)}</span>
+            </div>
+            <div className="room-stat-item">
+                <span className="rs-label">{t('simulator.minerBonuses')}</span>
+                <span className="rs-value success">+{(totalRoomBonus / 100).toFixed(2)}%</span>
+                <span className="rs-subvalue">+{formatPower(roomMinerBonusPower)}</span>
+            </div>
+            {(totalSetPercentPower > 0 || totalSetBonusPowerGh > 0) && (
+                <div className="room-stat-item">
+                    <span className="rs-label">{t('simulator.setBonus', 'Set Bonus')}</span>
+                    <span className="rs-value success">
+                        {totalSetPercentPower > 0 ? `+${(totalSetPercentPower / 100).toFixed(2)}% ` : ''}
+                        {totalSetBonusPowerGh > 0 ? `+${formatPower(totalSetBonusPowerGh)}` : ''}
+                    </span>
+                    {totalSetPercentPower > 0 && <span className="rs-subvalue">+{formatPower(setPercentPowerGh)}</span>}
                 </div>
+            )}
+            <div className="room-stat-item">
+                <span className="rs-label">{t('simulator.roomTotalPower')}</span>
+                <span className="rs-value highlight">{formatPower(roomPowerWithBonus)}</span>
+            </div>
+        </div>
+    );
+
+    const roomControls = (
+        <div className="rc-bottom-controls room-main-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#252636', padding: isMobile ? '15px 25px' : '8px 10px', borderRadius: isMobile ? '12px' : '8px', border: '1px solid #3c3e58', marginTop: isMobile ? 30 : 6, flexWrap: 'wrap', gap: isMobile ? 15 : 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 20 : 8, width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+                <span style={{ color: '#aaa', fontWeight: 'bold', fontSize: isMobile ? 18 : 14 }}>{t('simulator.rooms')}</span>
+                {userRooms.length > 0 && (
+                    <div className="room-numbers" style={{ display: isMobile ? 'grid' : 'flex', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'none', gap: isMobile ? 10 : 6, width: isMobile ? '100%' : 'auto' }}>
+                        {userRooms.map((r, idx) => (
+                            <button
+                                key={r._id || idx}
+                                onClick={() => setCurrentRoomIndex(idx)}
+                                aria-label={`${t('simulator.rooms')} ${idx + 1}`}
+                                style={{
+                                    background: currentRoomIndex === idx ? '#fff' : '#1d1f33',
+                                    color: currentRoomIndex === idx ? '#1a1b2e' : '#aaa',
+                                    border: '1px solid #3c3e58',
+                                    borderRadius: '8px',
+                                    padding: isMobile ? '10px 18px' : '7px 11px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    fontSize: isMobile ? 18 : 15
+                                }}
+                            >
+                                {idx + 1}
+                            </button>
+                        ))}
+                        {(userRooms.length < 4) && (
+                            <button
+                                onClick={handleAddRoom}
+                                aria-label={t('simulator.addRoom', 'Oda Ekle')}
+                                style={{
+                                    background: '#03e1e4',
+                                    color: '#1a1b2e',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: isMobile ? '10px 18px' : '7px 11px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    fontSize: isMobile ? 18 : 15,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title={t('simulator.addRoom', 'Oda Ekle')}
+                            >
+                                +
+                            </button>
+                        )}
+                        {(userRooms.length > 1) && (
+                            <button
+                                onClick={handleDeleteRoom}
+                                aria-label={t('simulator.deleteRoom', 'Odayı Sil')}
+                                style={{
+                                    background: '#d9534f',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: isMobile ? '10px 18px' : '7px 11px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    fontSize: isMobile ? 18 : 15,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title={t('simulator.deleteRoom', 'Odayı Sil')}
+                            >
+                                🗑
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
 
-            <div className="room-grid-area">
-                <div className="room-grid-area-inner">
+            {!isMobile && (
+                <div className="room-highlight-controls" role="group" aria-label={t('simulator.minerHighlights')}>
+                    <button
+                        type="button"
+                        className={`room-highlight-button sellable ${highlightSellableMiners ? 'active' : ''}`}
+                        aria-pressed={highlightSellableMiners}
+                        aria-label={t('simulator.highlightSellableMiners')}
+                        title={t('simulator.highlightSellableMiners')}
+                        onClick={() => setHighlightSellableMiners(value => !value)}
+                    >
+                        <span className="room-highlight-dot" aria-hidden="true" />
+                        <span className="room-highlight-label">{t('simulator.highlightSellableMiners')}</span>
+                        <span className="room-highlight-short-label">{t('simulator.sellableShort')}</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={`room-highlight-button duplicate ${highlightDuplicateMiners ? 'active' : ''}`}
+                        aria-pressed={highlightDuplicateMiners}
+                        aria-label={t('simulator.highlightDuplicateMiners')}
+                        title={t('simulator.highlightDuplicateMiners')}
+                        onClick={() => setHighlightDuplicateMiners(value => !value)}
+                    >
+                        <span className="room-highlight-dot" aria-hidden="true" />
+                        <span className="room-highlight-label">{t('simulator.highlightDuplicateMiners')}</span>
+                        <span className="room-highlight-short-label">{t('simulator.duplicateShort')}</span>
+                    </button>
+                </div>
+            )}
+
+            <div style={{ display: 'flex', gap: isMobile ? 10 : 6, flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
+                <button
+                    className="btn-roller"
+                    onClick={handleUndo}
+                    title={t('simulator.undo', 'Geri Al')}
+                    aria-label={t('simulator.undo', 'Geri Al')}
+                    disabled={history.length === 0}
+                    style={{
+                        padding: isMobile ? '10px 14px' : '8px 12px',
+                        background: history.length === 0 ? '#444' : '#6c757d',
+                        color: history.length === 0 ? '#888' : '#fff',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold',
+                        boxShadow: history.length === 0 ? 'none' : '0 4px 0 #5a6268',
+                        cursor: history.length === 0 ? 'not-allowed' : 'pointer',
+                        border: 'none', borderRadius: '8px',
+                        flex: isMobile ? '1 1 auto' : 'none'
+                    }}
+                >
+                    ↩
+                </button>
+
+                <button
+                    className="btn-roller"
+                    onClick={handleReset}
+                    title={t('simulator.reset', 'Sıfırla')}
+                    aria-label={t('simulator.reset', 'Sıfırla')}
+                    style={{
+                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#d9534f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold',
+                        boxShadow: '0 4px 0 #a94442', border: 'none', borderRadius: '8px', color: '#fff',
+                        flex: isMobile ? '1 1 auto' : 'none'
+                    }}
+                >
+                    ✖
+                </button>
+
+                <button
+                    className="btn-roller"
+                    onClick={handleSaveLayout}
+                    title={t('simulator.saveLayout', 'Kaydet')}
+                    aria-label={t('simulator.saveLayout', 'Kaydet')}
+                    style={{
+                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#35536F', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold',
+                        boxShadow: '0 4px 0 #20354A', border: 'none', borderRadius: '8px', color: '#fff',
+                        flex: isMobile ? '1 1 auto' : 'none'
+                    }}
+                >
+                    💾
+                </button>
+
+                <button
+                    className="btn-roller"
+                    onClick={handleLoadLayout}
+                    title={t('simulator.loadLayout', 'Yükle')}
+                    aria-label={t('simulator.loadLayout', 'Yükle')}
+                    style={{
+                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#7798B5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold',
+                        boxShadow: '0 4px 0 #587994', border: 'none', borderRadius: '8px', color: '#fff',
+                        flex: isMobile ? '1 1 auto' : 'none'
+                    }}
+                >
+                    📂
+                </button>
+
+                <button
+                    className="btn-roller"
+                    onClick={() => {
+                        if (currentRoomRacks.length >= validDropZones.length) {
+                            addNotification(t('simulator.cannotAddMoreRacks', 'Daha fazla raf ekleyemezsiniz.'), 'error');
+                            return;
+                        }
+                        setInventoryTab('racks');
+                        if (isMobile) {
+                            setIsMobileMinerSearchOpen(true);
+                        }
+                    }}
+                    title={t('simulator.addRack', 'Raf Ekle')}
+                    aria-label={t('simulator.addRack', 'Raf Ekle')}
+                    style={{
+                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold', border: 'none', borderRadius: '8px',
+                        flex: isMobile ? '1 1 auto' : 'none'
+                    }}
+                >
+                    ➕
+                </button>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className={`room-simulator-wrapper ${!isMobile && isFilterOpen ? 'inventory-filters-open' : ''}`} onClick={() => setActiveTooltipId(null)}>
+            {isMobile ? (
+                <div className="room-sim-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 15, position: 'relative', zIndex: 10 }}>
+                    <span className="modal-title">{t('simulator.roomTitle')}</span>
+                    {roomStats}
+                </div>
+            ) : (
+                <div className="room-sim-header room-sim-header-desktop">
+                    <div className="room-sim-header-bar">
+                        <span className="modal-title">{t('simulator.roomTitle')}</span>
+                        <button
+                            type="button"
+                            className="room-details-toggle"
+                            aria-expanded={areRoomDetailsOpen}
+                            aria-controls="room-sim-details"
+                            onClick={() => setAreRoomDetailsOpen(open => !open)}
+                        >
+                            {t(areRoomDetailsOpen ? 'simulator.hideRoomDetails' : 'simulator.showRoomDetails')}
+                            <span aria-hidden="true">{areRoomDetailsOpen ? '▴' : '▾'}</span>
+                        </button>
+                    </div>
+                    {roomControls}
+                    <div id="room-sim-details" className="room-sim-details" hidden={!areRoomDetailsOpen}>
+                        {roomStats}
+                    </div>
+                </div>
+            )}
+
+            <div className="room-grid-area" ref={roomGridAreaRef}>
+                <div className="room-grid-area-inner" ref={roomGridInnerRef}>
                     <div
                         className="racks-grid"
+                        ref={racksGridRef}
                         style={isMobile ? {} : {
-                            gridTemplateColumns: `repeat(${colsCount}, 97px)`,
-                            gridTemplateRows: `repeat(${maxRows}, 155px)`
+                            gridTemplateColumns: `repeat(${DESKTOP_RACK_COLUMNS}, ${DESKTOP_RACK_WIDTH}px)`,
+                            gridTemplateRows: `repeat(${DESKTOP_ROOM_ROWS}, ${DESKTOP_RACK_HEIGHT}px)`,
+                            gap: DESKTOP_RACK_GAP,
+                            width: DESKTOP_ROOM_WIDTH,
+                            height: DESKTOP_ROOM_HEIGHT
                         }}
                     >
                         {!isMobile && validDropZones.map((zone) => (
@@ -1099,14 +1395,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 data-rack-drop-x={zone.x}
                                 data-rack-drop-y={zone.y}
                                 style={{
-                                    gridColumn: zone.gridX + 1,
-                                    gridRow: zone.y + 1,
+                                    ...getGridPosition(zone.gridX + 1, zone.y + 1),
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
                                     setAddRackTarget({ x: zone.x, y: zone.y });
                                     setInventoryTab('racks');
-                                    setIsInventoryCollapsed(false);
                                     if (isMobile) {
                                         setIsMobileMinerSearchOpen(true);
                                     }
@@ -1162,6 +1456,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
                                 const config = getRowConfig(currentRoomLevel, visualY);
                                 const gridX = visualX + config.offset;
+                                const rackTooltipOpensDown = isMobile ? rackY === 0 || rackY >= 2 : visualY === 0;
 
                                 return (
                                     <div
@@ -1199,8 +1494,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         }}
                                         onDrop={(e) => handleDropMiner(e, rack._id)}
                                         style={isMobile ? { cursor: 'pointer' } : {
-                                            gridColumn: gridX + 1,
-                                            gridRow: visualY + 1,
+                                            ...getGridPosition(gridX + 1, visualY + 1),
                                             cursor: 'pointer'
                                         }}
                                     >
@@ -1213,7 +1507,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             onError={(e) => handleRackImgError(e, rack.rack_id)}
                                         />
 
-                                        <div className={`rack-tooltip ${rackY === 0 || rackY >= 2 ? 'rack-tooltip-down' : ''}`}>
+                                        <div className={`rack-tooltip ${rackTooltipOpensDown ? 'rack-tooltip-down' : ''}`}>
                                             <div style={{ color: '#03e1e4', fontWeight: 'bold' }}>{rack.name}</div>
                                             <div style={{ color: '#aaa' }}>{t('merge.cell')}: {(rack as any)?.rack_info?.capacity || 8}</div>
                                             {((rack as any)?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>{t('merge.bonusAmount', { amount: (((rack as any)?.bonus || 0) / 100).toFixed(2) })}</div>}
@@ -1247,11 +1541,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                 const isSellable = sellableMinerIds.has(miner.miner_id);
                                                 const bonusValue = (miner.bonus_percent || 0) / 100;
                                                 const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight);
+                                                const minerY = miner.placement?.y || 0;
+                                                const minerTooltipOpensDown = isMobile ? minerY === 0 || minerY >= 2 : minerY === 0;
 
                                                 return (
                                                     <div
                                                         key={miner._id}
-                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${activeTooltipId === miner._id ? 'active-tooltip' : ''}`}
+                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''}`}
                                                         style={{ ...minerStyle, cursor: 'grab' }}
                                                         draggable
                                                         onClick={(e) => {
@@ -1264,15 +1560,25 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             setDraggedMiner(miner as any);
                                                             setIsDragClearanceActive(true);
 
-                                                            // Hide tooltip temporarily so it doesn't get captured in the drag image
-                                                            const tooltip = (e.currentTarget as HTMLElement).querySelector('.miner-tooltip') as HTMLElement;
-                                                            if (tooltip) tooltip.style.display = 'none';
+                                                            // Keep only the miner artwork and level badge in the native drag image.
+                                                            const hiddenElements = (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
+                                                                '.miner-tooltip, .miners-badges .sellable-badge, .miners-badges .duplicate-badge'
+                                                            );
+                                                            const previousDisplays = Array.from(hiddenElements, element => element.style.display);
+                                                            hiddenElements.forEach(element => { element.style.display = 'none'; });
 
-                                                            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-                                                            e.dataTransfer.setDragImage(e.currentTarget as Element, rect.width / 2, rect.height / 2);
+                                                            const dragElement = e.currentTarget as HTMLElement;
+                                                            const wasSellableHighlighted = dragElement.classList.contains('highlight-sellable');
+                                                            const wasDuplicateHighlighted = dragElement.classList.contains('highlight-duplicate');
+                                                            dragElement.classList.remove('highlight-sellable', 'highlight-duplicate');
+
+                                                            const rect = dragElement.getBoundingClientRect();
+                                                            e.dataTransfer.setDragImage(dragElement, rect.width / 2, rect.height / 2);
 
                                                             setTimeout(() => {
-                                                                if (tooltip) tooltip.style.display = '';
+                                                                hiddenElements.forEach((element, index) => { element.style.display = previousDisplays[index]; });
+                                                                if (wasSellableHighlighted) dragElement.classList.add('highlight-sellable');
+                                                                if (wasDuplicateHighlighted) dragElement.classList.add('highlight-duplicate');
                                                             }, 0);
                                                         }}
                                                         onDrag={(e) => {
@@ -1312,7 +1618,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             </div>
                                                         )}
 
-                                                        <div className={`miner-tooltip ${(miner.placement?.y || 0) === 0 || (miner.placement?.y || 0) >= 2 ? 'miner-tooltip-down' : ''}`}>
+                                                        <div className={`miner-tooltip ${minerTooltipOpensDown ? 'miner-tooltip-down' : ''}`}>
                                                             <div className="miner-name">{miner.name}</div>
                                                             <div className="miner-stat-row">
                                                                 <span>{t('merge.power')}:</span>
@@ -1338,160 +1644,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                     </div>
                 </div>
 
-                <div className="rc-bottom-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#252636', padding: '15px 25px', borderRadius: '12px', border: '1px solid #3c3e58', marginTop: 30, flexWrap: 'wrap', gap: 15 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-                        <span style={{ color: '#aaa', fontWeight: 'bold', fontSize: 18 }}>{t('simulator.rooms')}</span>
-                        {userRooms.length > 0 && (
-                            <div className="room-numbers" style={{ display: isMobile ? 'grid' : 'flex', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'none', gap: 10, width: isMobile ? '100%' : 'auto' }}>
-                                {userRooms.map((r, idx) => (
-                                    <button
-                                        key={r._id || idx}
-                                        onClick={() => setCurrentRoomIndex(idx)}
-                                        style={{
-                                            background: currentRoomIndex === idx ? '#fff' : '#1d1f33',
-                                            color: currentRoomIndex === idx ? '#1a1b2e' : '#aaa',
-                                            border: '1px solid #3c3e58',
-                                            borderRadius: '8px',
-                                            padding: '10px 18px',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            fontSize: 18
-                                        }}
-                                    >
-                                        {idx + 1}
-                                    </button>
-                                ))}
-                                {(userRooms.length < 4) && (
-                                    <button
-                                        onClick={handleAddRoom}
-                                        style={{
-                                            background: '#03e1e4',
-                                            color: '#1a1b2e',
-                                            border: 'none',
-                                            borderRadius: '8px',
-                                            padding: '10px 18px',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            fontSize: 18,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                        title={t('simulator.addRoom', 'Oda Ekle')}
-                                    >
-                                        +
-                                    </button>
-                                )}
-                                {(userRooms.length > 1) && (
-                                    <button
-                                        onClick={handleDeleteRoom}
-                                        style={{
-                                            background: '#d9534f',
-                                            color: '#fff',
-                                            border: 'none',
-                                            borderRadius: '8px',
-                                            padding: '10px 18px',
-                                            fontWeight: 'bold',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s',
-                                            fontSize: 18,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                        title={t('simulator.deleteRoom', 'Odayı Sil')}
-                                    >
-                                        🗑
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
-                        <button
-                            className="btn-roller"
-                            onClick={handleUndo}
-                            title={t('simulator.undo', 'Geri Al')}
-                            disabled={history.length === 0}
-                            style={{
-                                padding: isMobile ? '10px 14px' : '12px 24px',
-                                background: history.length === 0 ? '#444' : '#6c757d',
-                                color: history.length === 0 ? '#888' : '#fff',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
-                                boxShadow: history.length === 0 ? 'none' : '0 4px 0 #5a6268',
-                                cursor: history.length === 0 ? 'not-allowed' : 'pointer',
-                                border: 'none', borderRadius: '8px',
-                                flex: isMobile ? '1 1 auto' : 'none'
-                            }}
-                        >
-                            ↩
-                        </button>
-
-                        <button
-                            className="btn-roller"
-                            onClick={handleReset}
-                            title={t('simulator.reset', 'Sıfırla')}
-                            style={{
-                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#d9534f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
-                                boxShadow: '0 4px 0 #a94442', border: 'none', borderRadius: '8px', color: '#fff',
-                                flex: isMobile ? '1 1 auto' : 'none'
-                            }}
-                        >
-                            ✖
-                        </button>
-
-                        <button
-                            className="btn-roller"
-                            onClick={handleSaveLayout}
-                            title={t('simulator.saveLayout', 'Kaydet')}
-                            style={{
-                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#35536F', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
-                                boxShadow: '0 4px 0 #20354A', border: 'none', borderRadius: '8px', color: '#fff',
-                                flex: isMobile ? '1 1 auto' : 'none'
-                            }}
-                        >
-                            💾
-                        </button>
-
-                        <button
-                            className="btn-roller"
-                            onClick={handleLoadLayout}
-                            title={t('simulator.loadLayout', 'Yükle')}
-                            style={{
-                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#7798B5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold',
-                                boxShadow: '0 4px 0 #587994', border: 'none', borderRadius: '8px', color: '#fff',
-                                flex: isMobile ? '1 1 auto' : 'none'
-                            }}
-                        >
-                            📂
-                        </button>
-
-                        <button
-                            className="btn-roller"
-                            onClick={() => {
-                                if (currentRoomRacks.length >= validDropZones.length) {
-                                    addNotification(t('simulator.cannotAddMoreRacks', 'Daha fazla raf ekleyemezsiniz.'), 'error');
-                                    return;
-                                }
-                                setInventoryTab('racks');
-                                setIsInventoryCollapsed(false);
-                                if (isMobile) {
-                                    setIsMobileMinerSearchOpen(true);
-                                }
-                            }}
-                            title={t('simulator.addRack', 'Raf Ekle')}
-                            style={{
-                                padding: isMobile ? '10px 14px' : '12px 24px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 22, fontWeight: 'bold', border: 'none', borderRadius: '8px',
-                                flex: isMobile ? '1 1 auto' : 'none'
-                            }}
-                        >
-                            ➕
-                        </button>
-                    </div>
-                </div>
+                {isMobile && roomControls}
             </div>
 
             {/* NOTIFICATIONS */}
@@ -1731,19 +1884,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 (() => {
                     const desktopContent = (
                         <div
-                            className={`inventory-toolbar-wrapper desktop-inventory-dock ${isInventoryCollapsed ? (isInventoryHovered ? 'preview' : 'closed') : 'expanded'} ${isDragClearanceActive ? 'dragging-item' : ''}`}
-                            onMouseEnter={() => setIsInventoryHovered(true)}
-                            onMouseLeave={() => setIsInventoryHovered(false)}
+                            className={`inventory-toolbar-wrapper desktop-inventory-dock expanded ${isDragClearanceActive ? 'dragging-item' : ''}`}
                             onKeyDown={e => {
                                 if (e.key === 'Escape') {
-                                    setIsInventoryCollapsed(true);
-                                    setIsInventoryHovered(false);
                                     setIsFilterOpen(false);
-                                }
-                            }}
-                            onClickCapture={e => {
-                                if (!(e.target as HTMLElement).closest('[data-inventory-toggle]')) {
-                                    setIsInventoryCollapsed(false);
                                 }
                             }}
                         >
@@ -1859,26 +2003,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         onClick={() => inventoryTab === 'miners' ? handleSearchMiners(pageIndex + 1) : handleSearchRacks(rackPageIndex + 1)}
                                         disabled={inventoryTab === 'miners' ? (pageIndex >= totalPages - 1 || isSearching) : (rackPageIndex >= rackTotalPages - 1 || isRackSearching)}
                                     >›</button>
-                                    <button
-                                        className="inv-nav-btn"
-                                        data-inventory-toggle
-                                        aria-expanded={!isInventoryCollapsed}
-                                        aria-controls="desktop-inventory-content"
-                                        aria-label={t(isInventoryCollapsed ? 'simulator.openInventory' : 'simulator.closeInventory')}
-                                        title={t(isInventoryCollapsed ? 'simulator.openInventory' : 'simulator.closeInventory')}
-                                        onClick={() => {
-                                            setIsInventoryCollapsed(!isInventoryCollapsed);
-                                            setIsInventoryHovered(false);
-                                            setIsFilterOpen(false);
-                                        }}
-                                    >
-                                        {isInventoryCollapsed ? '▲' : '▼'}
-                                    </button>
                                 </div>
                             </div>
 
                             {/* Filter panel (expandable) */}
-                            {isFilterOpen && !isInventoryCollapsed && (
+                            {isFilterOpen && (
                                 <div className="inventory-filter-panel">
                                     {/* Power range */}
                                     <div className="inv-filter-section">
@@ -1946,7 +2075,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
                             {/* Content grid */}
                             {(
-                                <div id="desktop-inventory-content" className="inventory-miner-grid" inert={isInventoryCollapsed}>
+                                <div id="desktop-inventory-content" className="inventory-miner-grid">
                                     {inventoryTab === 'miners' ? (
                                         minerList.length === 0 ? (
                                             <div className="inv-miner-card-empty">
