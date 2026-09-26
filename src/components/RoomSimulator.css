@@ -227,14 +227,9 @@
     left: 0px;
 }
 
-/* Küçük Minerlar için AYRI AYRI Rozet Ayarı */
-.miner-img-wrapper.size-1.pos-0 .miners-badges {
+/* Tekli miner rozetleri iki yuvada da aynı hizada kalır. */
+.miner-img-wrapper.size-1 .miners-badges {
     top: 10px;
-    left: 15px;
-}
-
-.miner-img-wrapper.size-1.pos-1 .miners-badges {
-    top: 15px;
     left: 15px;
 }
 
@@ -1856,6 +1851,29 @@
         border-color: #ef4248;
         border-left: 0;
         border-radius: 0 4px 4px 0;
+    }
+
+    .racks-grid .miner-img-wrapper.size-1.highlight-sellable:not(.highlight-duplicate)::after,
+    .racks-grid .miner-img-wrapper.size-1.highlight-duplicate:not(.highlight-sellable)::after {
+        box-sizing: border-box;
+        left: 50%;
+        right: auto;
+        width: 38px;
+        transform: translate(-50%, -50%);
+    }
+
+    .racks-grid .miner-img-wrapper.size-1.highlight-sellable.highlight-duplicate::before,
+    .racks-grid .miner-img-wrapper.size-1.highlight-sellable.highlight-duplicate::after {
+        width: 19px;
+        transform: translateY(-50%);
+    }
+
+    .racks-grid .miner-img-wrapper.size-1.highlight-sellable.highlight-duplicate::before {
+        left: calc(50% - 19px);
+    }
+
+    .racks-grid .miner-img-wrapper.size-1.highlight-sellable.highlight-duplicate::after {
+        left: 50%;
     }
 
     .room-sim-header-desktop {
