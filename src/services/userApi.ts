@@ -54,6 +54,7 @@ export interface MinerDto {
     width: number;
     type?: string;
     createdDate: string;
+    isCanBeSoldOnMp?: boolean | null;
 }
 
 export interface MinerFilterParams {
