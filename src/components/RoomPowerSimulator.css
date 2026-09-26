@@ -856,9 +856,15 @@
 }
 
 @media (min-width: 992px) {
+    .room-power-simulator > .simulator-content {
+        padding: 0;
+        border-top: 0;
+        background: transparent;
+    }
+
     .room-tab-wide .room-power-simulator .simulated-room-container > .room-simulator-wrapper {
-        width: calc(100% + 88px);
-        margin-inline: -44px;
+        width: calc(100% + 48px);
+        margin-inline: -24px;
         max-width: none;
     }
 }

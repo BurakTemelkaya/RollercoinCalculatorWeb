@@ -1728,6 +1728,12 @@
         grid-template-columns: max-content minmax(0, 1fr) max-content;
         column-gap: 8px !important;
         white-space: nowrap;
+        margin-top: 8px !important;
+        padding: 8px 2px 2px !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-top: 1px solid #3c3e58 !important;
+        border-radius: 0 !important;
     }
 
     .room-main-controls > :last-child {
@@ -1962,6 +1968,10 @@
         user-select: none;
     }
 
+    .desktop-inventory-dock .inv-rack-card .inv-miner-card-img-wrapper {
+        height: 68px;
+    }
+
     .desktop-inventory-dock .inv-miner-card img {
         -webkit-user-drag: none;
     }
@@ -1987,11 +1997,19 @@
         box-sizing: border-box;
         min-height: 0;
         /* A single miner row stays visible while leaving the bottom rack slots usable. */
-        height: 150px;
+        height: auto;
         max-height: 35dvh;
-        flex-shrink: 0;
+        flex: 1 1 auto;
+        align-content: flex-start;
+        scroll-behavior: auto;
+        scroll-snap-type: y mandatory;
+        scroll-padding-top: 12px;
         transition: height 180ms ease, padding 180ms ease;
         overscroll-behavior: contain;
+    }
+
+    .desktop-inventory-dock .inventory-miner-grid > .inv-miner-card {
+        scroll-snap-align: start;
     }
 
     .desktop-inventory-dock .inventory-filter-panel {
@@ -2005,6 +2023,7 @@
     }
 
     .inventory-filters-open .desktop-inventory-dock .inventory-miner-grid {
+        flex: none;
         height: 0;
         padding-top: 0;
         padding-bottom: 0;
