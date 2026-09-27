@@ -2,15 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { MinerFramesData } from '../types/room';
 import CdnImage from './CdnImage';
 import { getCdnBaseUrl } from '../config/api';
-
-/**
- * Module-level cache for HTMLImageElements to prevent reloading 
- * and decoding the same sprite PNG multiple times.
- */
-const imageCache = new Map<string, HTMLImageElement>();
-const imageErrors = new Set<string>();
-const imagePending = new Map<string, Promise<HTMLImageElement>>();
-const MAX_CACHED_SPRITES = 80;
+import { getCachedSpriteImageByUrl, loadSpriteImage } from './spriteImageCache';
 
 type VisibilityCallback = (visible: boolean) => void;
 const visibilityCallbacks = new Map<Element, Set<VisibilityCallback>>();
@@ -95,36 +87,6 @@ function registerAnimation(canvas: HTMLCanvasElement, draw: () => void): () => v
     };
 }
 
-function loadSpriteImage(url: string): Promise<HTMLImageElement> {
-    const cached = imageCache.get(url);
-    if (cached) return Promise.resolve(cached);
-    if (imageErrors.has(url)) return Promise.reject('cached_error');
-
-    const pending = imagePending.get(url);
-    if (pending) return pending;
-
-    const promise = new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-            imageCache.set(url, img);
-            if (imageCache.size > MAX_CACHED_SPRITES) {
-                imageCache.delete(imageCache.keys().next().value!);
-            }
-            imagePending.delete(url);
-            resolve(img);
-        };
-        img.onerror = () => {
-            imageErrors.add(url);
-            imagePending.delete(url);
-            reject('load_error');
-        };
-        img.src = url;
-    });
-
-    imagePending.set(url, promise);
-    return promise;
-}
-
 interface SpriteSheetMinerProps {
     /** Miner filename (e.g. "dragon_shrine" or "dragon_shrine.gif") */
     filename: string;
@@ -163,7 +125,7 @@ const SpriteSheetMiner: React.FC<SpriteSheetMinerProps> = ({
     // Try synchronous cache lookup for instant render
     const [image, setImage] = useState<HTMLImageElement | null>(() => {
         if (!canUseSprite) return null;
-        return imageCache.get(cdnSpriteUrl) || imageCache.get(rcSpriteUrl) || null;
+        return getCachedSpriteImageByUrl(cdnSpriteUrl) || getCachedSpriteImageByUrl(rcSpriteUrl);
     });
     const [fallback, setFallback] = useState(false);
 

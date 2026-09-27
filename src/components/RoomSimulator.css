@@ -101,6 +101,38 @@
 .racks-grid {
     display: inline-grid;
     gap: 12px;
+    position: relative;
+}
+
+.room-shared-miner-canvas {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: calc(100% + 80px);
+    height: calc(100% + 80px);
+    z-index: 4;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+/* Keep rack artwork below the canvas and the existing hit targets above it. */
+.racks-grid.has-shared-miner-canvas .card-rack-item,
+.racks-grid.has-shared-miner-canvas .card-rack-item:hover {
+    z-index: auto !important;
+}
+
+.room-shared-sprite {
+    aspect-ratio: 126 / 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Artwork lives on the shared canvas; filtering empty hit targets wastes layers. */
+.shared-sprite-target .room-shared-sprite,
+.miner-img-wrapper.shared-sprite-target:hover .room-shared-sprite {
+    filter: none;
+    transition: none;
 }
 
 /* ===== RAF SABİT BOYUTU (TAM ROLLERCOIN: 97x155px) ===== */
@@ -1874,6 +1906,30 @@
 
     .racks-grid .miner-img-wrapper.size-1.highlight-sellable.highlight-duplicate::after {
         left: 50%;
+    }
+
+    /* Match the hover frame to the artwork-sized sellable/duplicate frames. */
+    .racks-grid .miner-img-wrapper.shared-sprite-target:not(.highlight-sellable):not(.highlight-duplicate):hover .room-shared-sprite::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 36px;
+        max-height: 100%;
+        transform: translateY(-50%);
+        border: 2px solid rgba(3, 225, 228, 0.8);
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .racks-grid .miner-img-wrapper.size-1.shared-sprite-target:not(.highlight-sellable):not(.highlight-duplicate):hover .room-shared-sprite::after {
+        box-sizing: border-box;
+        left: 50%;
+        right: auto;
+        width: 38px;
+        transform: translate(-50%, -50%);
     }
 
     .room-sim-header-desktop {

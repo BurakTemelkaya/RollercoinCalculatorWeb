@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -11,6 +11,8 @@ import type { GetRackSetListDto, GetRackListDto } from '../services/rackApi';
 import { fetchRackList } from '../services/rackApi';
 import Notification from './Notification';
 import SpriteSheetMiner from './SpriteSheetMiner';
+import { getCachedSpriteImage } from './spriteImageCache';
+import SharedRoomMinerCanvas from './SharedRoomMinerCanvas';
 import CdnImage from './CdnImage';
 import sellableIcon from '../assets/sellable.svg';
 import { getCdnBaseUrl } from '../config/api';
@@ -289,6 +291,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [totalPages, setTotalPages] = useState(1);
     const [draggedMiner, setDraggedMiner] = useState<MinerDto | null>(null);
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
+    const [failedRoomSpriteIds, setFailedRoomSpriteIds] = useState<Set<string>>(() => new Set());
     const nativeDragTargetKey = useRef<string | null>(null);
     const [isDragClearanceActive, setIsDragClearanceActive] = useState(false);
     const roomGridAreaRef = useRef<HTMLDivElement>(null);
@@ -1082,6 +1085,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         }
         return groups;
     }, [currentRoomMiners]);
+    const sharedCanvasMiners = useMemo(() => currentRoomRacks.flatMap(rack =>
+        (minersByRack.get(rack._id) || []).filter(miner =>
+            !failedRoomSpriteIds.has(miner._id)
+            && Boolean(miner.frames_data?.frame_width && miner.frames_data.frame_height)
+        )
+    ), [currentRoomRacks, minersByRack, failedRoomSpriteIds]);
+    const handleSharedSpriteErrors = useCallback((ids: string[]) => {
+        setFailedRoomSpriteIds(previous => new Set([...previous, ...ids]));
+    }, []);
 
     useLayoutEffect(() => {
         const area = roomGridAreaRef.current;
@@ -1444,7 +1456,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             <div className="room-grid-area" ref={roomGridAreaRef}>
                 <div className="room-grid-area-inner" ref={roomGridInnerRef}>
                     <div
-                        className="racks-grid"
+                        className={`racks-grid ${sharedCanvasMiners.length > 0 ? 'has-shared-miner-canvas' : ''}`}
                         ref={racksGridRef}
                         style={isMobile ? {} : {
                             gridTemplateColumns: `repeat(${DESKTOP_RACK_COLUMNS}, ${DESKTOP_RACK_WIDTH}px)`,
@@ -1454,6 +1466,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                             height: DESKTOP_ROOM_HEIGHT
                         }}
                     >
+                        {sharedCanvasMiners.length > 0 && (
+                            <SharedRoomMinerCanvas
+                                miners={sharedCanvasMiners}
+                                paused={Boolean(editingRackId) || isMobileMinerSearchOpen}
+                                onSpriteErrors={handleSharedSpriteErrors}
+                            />
+                        )}
                         {!isMobile && validDropZones.map((zone) => (
                             <div
                                 key={`dz-${zone.x}-${zone.y}`}
@@ -1610,11 +1629,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                 const minerStyle = getMinerStyle(mWidth, miner.placement?.x || 0, miner.placement?.y || 0, rackHeight);
                                                 const minerY = miner.placement?.y || 0;
                                                 const minerTooltipOpensDown = isMobile ? minerY === 0 || minerY >= 2 : minerY === 0;
+                                                const usesSharedSprite = Boolean(miner.frames_data?.frame_width && miner.frames_data.frame_height && !failedRoomSpriteIds.has(miner._id));
 
                                                 return (
                                                     <div
                                                         key={miner._id}
-                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''}`}
+                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${usesSharedSprite ? 'shared-sprite-target' : ''} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''}`}
                                                         style={{ ...minerStyle, cursor: 'grab' }}
                                                         draggable
                                                         onClick={(e) => {
@@ -1628,26 +1648,32 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             setDraggedMiner(miner as any);
                                                             setIsDragClearanceActive(true);
 
-                                                            // Keep only the miner artwork and level badge in the native drag image.
-                                                            const hiddenElements = (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
-                                                                '.miner-tooltip, .miners-badges .sellable-badge, .miners-badges .duplicate-badge'
-                                                            );
-                                                            const previousDisplays = Array.from(hiddenElements, element => element.style.display);
-                                                            hiddenElements.forEach(element => { element.style.display = 'none'; });
-
                                                             const dragElement = e.currentTarget as HTMLElement;
-                                                            const wasSellableHighlighted = dragElement.classList.contains('highlight-sellable');
-                                                            const wasDuplicateHighlighted = dragElement.classList.contains('highlight-duplicate');
-                                                            dragElement.classList.remove('highlight-sellable', 'highlight-duplicate');
-
                                                             const rect = dragElement.getBoundingClientRect();
-                                                            e.dataTransfer.setDragImage(dragElement, rect.width / 2, rect.height / 2);
-
-                                                            setTimeout(() => {
-                                                                hiddenElements.forEach((element, index) => { element.style.display = previousDisplays[index]; });
-                                                                if (wasSellableHighlighted) dragElement.classList.add('highlight-sellable');
-                                                                if (wasDuplicateHighlighted) dragElement.classList.add('highlight-duplicate');
-                                                            }, 0);
+                                                            const dragImage = dragElement.cloneNode(true) as HTMLElement;
+                                                            dragImage.classList.remove('highlight-sellable', 'highlight-duplicate');
+                                                            dragImage.querySelectorAll('.miner-tooltip, .miners-badges .sellable-badge, .miners-badges .duplicate-badge')
+                                                                .forEach(element => element.remove());
+                                                            dragImage.style.cssText = `position:fixed;left:0;top:0;width:${rect.width}px;height:${rect.height}px;z-index:2147483647;pointer-events:none;`;
+                                                            const originalCanvas = dragElement.querySelector('canvas');
+                                                            const clonedCanvas = dragImage.querySelector('canvas');
+                                                            if (originalCanvas && clonedCanvas) {
+                                                                clonedCanvas.getContext('2d')?.drawImage(originalCanvas, 0, 0);
+                                                            }
+                                                            const sharedPlaceholder = dragImage.querySelector<HTMLElement>('.room-shared-sprite');
+                                                            const spriteImage = getCachedSpriteImage(miner.filename);
+                                                            const frames = miner.frames_data;
+                                                            if (sharedPlaceholder && spriteImage && frames?.frame_width && frames.frame_height) {
+                                                                const previewCanvas = document.createElement('canvas');
+                                                                previewCanvas.width = frames.frame_width;
+                                                                previewCanvas.height = frames.frame_height;
+                                                                previewCanvas.style.cssText = `width:${frames.frame_width / 126 * 100}%;height:${frames.frame_height / 100 * 100}%;image-rendering:pixelated;`;
+                                                                previewCanvas.getContext('2d')?.drawImage(spriteImage, 0, 0, frames.frame_width, frames.frame_height, 0, 0, frames.frame_width, frames.frame_height);
+                                                                sharedPlaceholder.appendChild(previewCanvas);
+                                                            }
+                                                            document.body.appendChild(dragImage);
+                                                            e.dataTransfer.setDragImage(dragImage, rect.width / 2, rect.height / 2);
+                                                            setTimeout(() => dragImage.remove(), 0);
                                                         }}
                                                         onDrag={(e) => {
                                                             if (e.clientY === 0) return;
@@ -1661,14 +1687,23 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                         onDragEnd={() => { nativeDragTargetKey.current = null; setDraggedMiner(null); setDragTarget(null); setIsDragClearanceActive(false); }}
                                                     >
 
-                                                        <SpriteSheetMiner
-                                                            filename={miner.filename}
-                                                            framesData={miner.frames_data}
-                                                            className="miner-item"
-                                                            alt={miner.name}
-                                                            loading="lazy"
-                                                            paused={Boolean(editingRackId) || isMobileMinerSearchOpen}
-                                                        />
+                                                        {usesSharedSprite ? (
+                                                            <div
+                                                                className="miner-item miner-sprite-container room-shared-sprite"
+                                                                data-room-sprite-id={miner._id}
+                                                                role="img"
+                                                                aria-label={miner.name}
+                                                            />
+                                                        ) : (
+                                                            <SpriteSheetMiner
+                                                                filename={miner.filename}
+                                                                framesData={miner.frames_data}
+                                                                className="miner-item"
+                                                                alt={miner.name}
+                                                                loading="lazy"
+                                                                paused={Boolean(editingRackId) || isMobileMinerSearchOpen}
+                                                            />
+                                                        )}
 
                                                         {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                             <div className={`miners-badges`}>
