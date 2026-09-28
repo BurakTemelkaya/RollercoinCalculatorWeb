@@ -598,6 +598,11 @@
   appearance: textfield;
 }
 
+.pe-quick-search-input {
+  width: 110px;
+  height: 36px;
+}
+
 .pe-filter-sep {
   color: var(--text-muted);
   font-size: 14px;
@@ -709,7 +714,29 @@
 
 @media (min-width: 901px) {
   .pe-rewards-table {
-    min-width: 820px;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .pe-rewards-table th:nth-child(1),
+  .pe-rewards-table td:nth-child(1) {
+    width: 9%;
+  }
+
+  .pe-rewards-table th:nth-child(2),
+  .pe-rewards-table td:nth-child(2),
+  .pe-rewards-table th:nth-child(3),
+  .pe-rewards-table td:nth-child(3) {
+    width: 17%;
+  }
+
+  .pe-rewards-table th:nth-child(4),
+  .pe-rewards-table td:nth-child(4) {
+    width: 57%;
+  }
+
+  .pe-rewards-table td {
+    padding: 4px 8px;
   }
 }
 
@@ -784,6 +811,11 @@
 
 .pe-table tr:hover {
   background: rgba(99, 102, 241, 0.04);
+}
+
+.pe-table tr.pe-multiplier-row--highlighted td {
+  background: rgba(99, 102, 241, 0.16);
+  box-shadow: inset 0 1px rgba(129, 140, 248, 0.45), inset 0 -1px rgba(129, 140, 248, 0.45);
 }
 
 .pe-rewards-col {
@@ -1199,6 +1231,27 @@
   text-align: left;
 }
 
+.pe-reward-copy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.pe-reward-name {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.pe-reward-sub {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
 .pe-reward-img-wrapper {
   width: 64px;
   display: flex;
@@ -1212,6 +1265,20 @@
   object-fit: contain;
 }
 
+.pe-sellable-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  pointer-events: auto;
+}
+
+.pe-sellable-badge--unavailable {
+  filter: hue-rotate(250deg) saturate(1.5);
+}
+
 .pe-reward-img-local {
   width: 36px;
   height: 36px;
@@ -1220,21 +1287,92 @@
 
 @media (min-width: 901px) {
   .pe-reward-item-container {
-    width: 330px;
+    width: auto;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 8px;
   }
 
   .pe-reward-img-wrapper {
-    width: 96px;
+    width: 78px;
   }
 
   .pe-reward-img-api {
-    max-width: 96px;
-    max-height: 64px;
+    max-width: 78px;
+    max-height: 52px;
   }
 
   .pe-reward-img-local {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .pe-reward-name {
+    font-size: 13px;
+  }
+
+  .pe-reward-sub {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .pe-rewards-table th:nth-child(1),
+  .pe-rewards-table td:nth-child(1) {
+    width: 9%;
+  }
+
+  .pe-rewards-table th:nth-child(2),
+  .pe-rewards-table td:nth-child(2),
+  .pe-rewards-table th:nth-child(3),
+  .pe-rewards-table td:nth-child(3) {
+    width: 18%;
+  }
+
+  .pe-rewards-table th:nth-child(4),
+  .pe-rewards-table td:nth-child(4) {
+    width: 55%;
+  }
+
+  .pe-rewards-table th {
+    padding: 7px 4px;
+    font-size: 11px;
+  }
+
+  .pe-rewards-table td {
+    padding: 3px 4px;
+    font-size: 12px;
+  }
+
+  .pe-reward-item-container {
+    width: 100%;
+    max-width: none;
+    gap: 6px;
+  }
+
+  .pe-reward-img-wrapper {
+    width: 62px;
+  }
+
+  .pe-reward-img-api {
+    max-width: 62px;
+    max-height: 46px;
+  }
+
+  .pe-reward-img-local {
+    width: 38px;
+    height: 38px;
+  }
+
+  .pe-reward-name {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .pe-reward-sub {
+    font-size: 13px;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -1247,7 +1385,11 @@
 
   .pe-rewards-table th,
   .pe-rewards-table td {
-    padding: 2px 2px;
+    padding: 4px 3px;
+  }
+
+  .pe-rewards-table tbody tr:nth-child(even) td {
+    background: rgba(255, 255, 255, 0.018);
   }
 
   .pe-rewards-table th:nth-child(1),
@@ -1282,29 +1424,37 @@
   .pe-reward-item-container {
     width: 100% !important;
     max-width: none;
-    gap: 4px;
+    gap: 8px;
+    min-height: 56px;
   }
 
   .pe-reward-img-wrapper {
-    width: 48px;
+    width: 72px;
   }
 
   .pe-reward-img-api {
-    max-width: 48px;
-    max-height: 38px;
+    max-width: 72px;
+    max-height: 54px;
   }
 
   .pe-reward-img-local {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
   }
 
   .pe-reward-name {
-    font-size: 9px;
+    font-size: 12px;
+    line-height: 1.25;
   }
 
   .pe-reward-sub {
-    font-size: 10px;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .pe-sellable-badge {
+    width: 16px;
+    height: 16px;
   }
 }
 

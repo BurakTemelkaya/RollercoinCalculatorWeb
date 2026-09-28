@@ -561,6 +561,8 @@
     "filter": "Filtre",
     "chart": "Grafik",
     "chartTitle": "Çarpan - Kutu Sayısı Grafiği",
+    "currentPoints": "Mevcut Puan",
+    "quickSearch": "Hızlı ara",
     "rltPriceLabel": "RLT FİYATI (USD)",
     "backToCalc": "Hesaplayıcıya Dön",
     "headers": {

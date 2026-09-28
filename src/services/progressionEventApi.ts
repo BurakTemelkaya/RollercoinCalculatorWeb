@@ -52,9 +52,9 @@ function convertApiMiner(apiMiner: ApiMiner): MinerItem {
         filename: apiMiner.fileName,
         image_version: apiMiner.imageVersion,
         frames_data: { frame_width: 0, frame_height: 0 },
-        is_can_be_sold_on_mp: false,
+        is_can_be_sold_on_mp: apiMiner.isCanBeSoldOnMp,
         bonus: apiMiner.percent,
-        is_in_set: false,
+        is_in_set: apiMiner.isInSet,
     };
 }
 

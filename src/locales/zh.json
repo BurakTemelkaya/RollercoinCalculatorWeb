@@ -496,6 +496,8 @@
     "filter": "筛选",
     "chart": "图表",
     "chartTitle": "乘数与箱子数量",
+    "currentPoints": "当前积分",
+    "quickSearch": "快速搜索",
     "rltPriceLabel": "RLT 价格 (USD)",
     "backToCalc": "返回计算器",
     "headers": {

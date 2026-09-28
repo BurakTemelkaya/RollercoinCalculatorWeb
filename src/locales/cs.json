@@ -499,6 +499,8 @@
     "filter": "Filtr",
     "chart": "Graf",
     "chartTitle": "Graf násobitele vs krabice",
+    "currentPoints": "Aktuální body",
+    "quickSearch": "Rychlé hledání",
     "rltPriceLabel": "RLT CENA (USD)",
     "backToCalc": "Zpět na kalkulačku",
     "headers": {

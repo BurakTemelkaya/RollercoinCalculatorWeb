@@ -9,12 +9,12 @@ export interface ProgressionEventResponse {
   id: string;
   name: string;
   endDate: string;
-  createdDate?: string;
-  totalPoint?: number;
+  createdDate: string;
+  totalPoint: number;
   rewards: ApiReward[];
   levels: ApiLevel[];
-  multipliers?: ApiMultiplier[];
-  tasks?: ApiTask[];
+  multipliers: ApiMultiplier[];
+  tasks: ApiTask[];
 }
 
 // List item returned by GetList endpoint
@@ -29,6 +29,7 @@ export interface ProgressionEventListItem {
 // API reward item (flat, camelCase)
 export interface ApiReward {
   id: string;
+  progressionEventId: string;
   requiredLevel: number;
   rewardType: RewardType;
   amount: number;
@@ -38,7 +39,7 @@ export interface ApiReward {
   ttlTime: number;
   itemName: string | null;
   itemPreviewUrl: string | null;
-  boxImageUrl?: string | null;
+  boxImageUrl: string | null;
   itemBoxUrl: string | null;
   itemCoverUrl: string | null;
   rackCapacity: number | null;
@@ -55,6 +56,10 @@ export interface ApiMiner {
   percent: number; // bonus percentage (divide by 100 for display)
   power: number;   // Gh/s
   width: number;
+  createdDate: string;
+  isCanBeSoldOnMp: boolean | null;
+  isInSet: boolean | null;
+  isUserReceivedBonus: boolean | null;
 }
 
 // API level item (flat, camelCase)
@@ -71,7 +76,7 @@ export interface ApiMultiplier {
   multiplier: number;
   amount: number;
   title: string;
-  ttlTime?: number;
+  ttlTime: number;
 }
 
 // API task item (flat, camelCase)
@@ -136,9 +141,9 @@ export interface MinerItem {
   filename: string;
   image_version?: number;
   frames_data: { frame_width: number; frame_height: number; frames_count?: number };
-  is_can_be_sold_on_mp: boolean;
+  is_can_be_sold_on_mp: boolean | null;
   bonus: number;
-  is_in_set: boolean;
+  is_in_set: boolean | null;
 }
 
 export interface RackItem {

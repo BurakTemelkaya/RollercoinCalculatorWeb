@@ -560,6 +560,8 @@
     "filter": "Filter",
     "chart": "Chart",
     "chartTitle": "Multiplier vs Boxes Chart",
+    "currentPoints": "Current Points",
+    "quickSearch": "Quick search",
     "rltPriceLabel": "RLT PRICE (USD)",
     "backToCalc": "Back to Calculator",
     "headers": {

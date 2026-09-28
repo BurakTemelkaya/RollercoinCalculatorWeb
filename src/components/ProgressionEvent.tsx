@@ -51,6 +51,7 @@ import fansCaseImg from '../assets/items/fans_case_7bfde88d-fc4c-414f-a539-2ee26
 import rstImg from '../assets/coins/rst.svg';
 import rltImg from '../assets/coins/rlt.svg';
 import diamondChestImg from '../assets/items/diamond_mine_chest_abbb269d-2d0d-4773-8c76-93e300db4614.png';
+import sellableIcon from '../assets/sellable.svg';
 
 type EventTab = 'rewards' | 'multiplier';
 
@@ -222,20 +223,20 @@ function getRewardDisplay(
             }
             return {
                 text: `${amount} ${reward.currency}`,
-                subText: `${amount} ${reward.currency}`,
+                subText: '',
                 localImage: moneyIcon,
             };
         }
         case 'season_pass_xp':
             return {
                 text: `Event Pass ${reward.amount} XP`,
-                subText: `Event Pass ${reward.amount} XP`,
+                subText: '',
                 localImage: xpImg,
             };
         case 'battery':
             return {
-                text: t('event.rewardTypes.battery'),
-                subText: `Battery x${reward.amount}`,
+                text: `${t('event.rewardTypes.battery')} x${reward.amount}`,
+                subText: '',
                 localImage: batteryImg,
             };
         case 'miner': {
@@ -286,8 +287,8 @@ function getRewardDisplay(
             }
 
             return {
-                text: utilityName,
-                subText: `x${reward.amount}`,
+                text: `${utilityName} x${reward.amount}`,
+                subText: '',
                 imageUrl: utilityImage,
                 rcImageUrl: rcUtilityImage,
                 localImage: !utilityImage ? speedupImg : undefined,
@@ -298,7 +299,7 @@ function getRewardDisplay(
             const displayName = getMutationComponentDisplayName(reward.item_id, titleEn);
             return {
                 text: `${displayName} x${reward.amount}`,
-                subText: displayName,
+                subText: '',
                 localImage: getMutationComponentImage(reward.item_id, titleEn) ?? undefined,
             };
         }
@@ -334,7 +335,7 @@ function getRewardDisplay(
 
             return {
                 text: `${boxName} x${reward.amount}`,
-                subText: boxName,
+                subText: '',
                 isMysteryBox: true,
                 singlePieceUrl,
                 singlePieceRcUrl,
@@ -377,13 +378,55 @@ export default function ProgressionEvent() {
     };
 
     // Multiplier settings
-    const [rltPrice, setRltPrice] = useState<number>(1);
     const [boxPrice, setBoxPrice] = useState<number>(BOX_PRICE_OPTIONS[0]);
     const [discount, setDiscount] = useState<number>(35);
     const [filterMin, setFilterMin] = useState<number>(1);
     const [filterMax, setFilterMax] = useState<number>(100);
+    const [currentPoints, setCurrentPoints] = useState<number>(0);
+    const [rltToBuySearch, setRltToBuySearch] = useState('');
+    const [totalRltSearch, setTotalRltSearch] = useState('');
+    const [highlightedMultiplier, setHighlightedMultiplier] = useState<number | null>(null);
     const [showChart, setShowChart] = useState(false);
     const [showMarketplace, setShowMarketplace] = useState(false);
+
+    const isCurrentEvent = useMemo(() => {
+        if (!eventData?.createdDate || !eventData.endDate) return false;
+        const now = Date.now();
+        return new Date(eventData.createdDate).getTime() <= now
+            && now < new Date(eventData.endDate).getTime();
+    }, [eventData?.createdDate, eventData?.endDate]);
+
+    const selectableCurrencyDiscounts = useMemo(() => {
+        if (!isCurrentEvent) return currencyDiscounts;
+
+        const now = Date.now();
+        return currencyDiscounts.filter(currencyDiscount => {
+            const start = new Date(currencyDiscount.createdDate.endsWith('Z')
+                ? currencyDiscount.createdDate
+                : `${currencyDiscount.createdDate}Z`).getTime();
+            const end = new Date(currencyDiscount.endDate.endsWith('Z')
+                ? currencyDiscount.endDate
+                : `${currencyDiscount.endDate}Z`).getTime();
+            return start <= now && now < end;
+        });
+    }, [currencyDiscounts, isCurrentEvent]);
+
+    const discountSelectOptions = useMemo(() => [
+        ...selectableCurrencyDiscounts.map(currencyDiscount => {
+            const coinName = CURRENCY_ID_MAP[currencyDiscount.currencyId] ?? `ID:${currencyDiscount.currencyId}`;
+            return {
+                value: String(currencyDiscount.amount),
+                label: `${currencyDiscount.amount}% (${coinName})`,
+                icon: COIN_ICONS[coinName] || '',
+                group: t('event.tokenDiscountGroup'),
+            };
+        }),
+        ...DISCOUNT_OPTIONS.filter(value => !selectableCurrencyDiscounts.some(currencyDiscount => currencyDiscount.amount === value)).map(value => ({
+            value: String(value),
+            label: `${value}%`,
+            group: 'Standart',
+        })),
+    ], [selectableCurrencyDiscounts, t]);
 
     const isNewMultiplierRule = useMemo(() => {
         if (!eventData?.createdDate) return false;
@@ -458,15 +501,20 @@ export default function ProgressionEvent() {
 
 
                 setCurrencyDiscounts(filteredDiscounts);
-                if (filteredDiscounts.length > 0) {
-                    setDiscount(filteredDiscounts[0].amount);
-                }
             } catch (err) {
                 console.error('Failed to fetch currency discounts:', err);
             }
         };
         loadDiscounts();
     }, [eventData?.createdDate, eventData?.endDate]);
+
+    useEffect(() => {
+        if (selectableCurrencyDiscounts.length > 0) {
+            setDiscount(selectableCurrencyDiscounts[0].amount);
+        } else if (isCurrentEvent) {
+            setDiscount(35);
+        }
+    }, [isCurrentEvent, selectableCurrencyDiscounts]);
 
     // Ad-blocker detection (syncs with global class added by index.html)
     useEffect(() => {
@@ -559,16 +607,20 @@ export default function ProgressionEvent() {
         if (!eventData) return [];
 
         const max_xp = eventData.maxXp;
+        const completedXp = Math.min(Math.max(currentPoints, 0), max_xp);
+        const remainingXp = max_xp - completedXp;
         const rows = [];
 
         for (let m = 1; m <= MAX_MULTIPLIER; m++) {
             const rltToBuy = (m - 1) * dynamicConstants.MULTIPLIER_STEP_RLT;
             const xpPerBox = boxPrice * dynamicConstants.XP_PER_RLT * m;
-            const boxes = Math.ceil(max_xp / xpPerBox);
+            const boxes = remainingXp > 0 ? Math.ceil(remainingXp / xpPerBox) : 0;
             const totalRltCost = rltToBuy + boxes * boxPrice;
-            const marketTrade = Math.ceil(max_xp / (dynamicConstants.MARKETPLACE_RATE * m));
+            const marketTrade = remainingXp > 0
+                ? Math.ceil(remainingXp / (dynamicConstants.MARKETPLACE_RATE * m))
+                : 0;
             const fee = Math.ceil(marketTrade * dynamicConstants.FEE_RATE);
-            const discountPrice = rltToBuy * rltPrice * (1 - discount / 100);
+            const discountPrice = rltToBuy * (1 - discount / 100);
 
             rows.push({
                 multiplier: m,
@@ -582,12 +634,37 @@ export default function ProgressionEvent() {
         }
 
         return rows;
-    }, [eventData, boxPrice, discount, rltPrice, dynamicConstants]);
+    }, [eventData, boxPrice, currentPoints, discount, dynamicConstants, MAX_MULTIPLIER]);
 
     // Filtered data for display
     const filteredData = useMemo(() => {
-        return multiplierData.filter(r => r.multiplier >= filterMin && r.multiplier <= filterMax);
+        return multiplierData.filter(row => row.multiplier >= filterMin && row.multiplier <= filterMax);
     }, [multiplierData, filterMin, filterMax]);
+
+    const searchedMultiplier = useMemo(() => {
+        const findClosestMultiplier = (target: number, getValue: (row: typeof multiplierData[number]) => number) => {
+            if (multiplierData.length === 0) return null;
+            return multiplierData.reduce((closest, row) => (
+                Math.abs(getValue(row) - target) < Math.abs(getValue(closest) - target) ? row : closest
+            )).multiplier;
+        };
+
+        if (rltToBuySearch.trim() !== '') {
+            const target = Number(rltToBuySearch);
+            if (Number.isFinite(target) && target >= 0) {
+                return findClosestMultiplier(target, row => row.rltToBuy);
+            }
+        }
+
+        if (totalRltSearch.trim() !== '') {
+            const target = Number(totalRltSearch);
+            if (Number.isFinite(target) && target >= 0) {
+                return findClosestMultiplier(target, row => row.totalRltCost);
+            }
+        }
+
+        return null;
+    }, [multiplierData, rltToBuySearch, totalRltSearch]);
 
     // Chart max value for scaling
     const chartMaxBoxes = useMemo(() => {
@@ -614,6 +691,23 @@ export default function ProgressionEvent() {
     const [tableWidthMultiplier] = useState(0);
     const [innerTableWidthMultiplier] = useState(0);
     const stickyContainerMultiplierRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (searchedMultiplier === null || activeTab !== 'multiplier') {
+            setHighlightedMultiplier(null);
+            return;
+        }
+
+        const container = tableSectionMultiplierRef.current;
+        const row = container?.querySelector<HTMLTableRowElement>(`tr[data-multiplier="${searchedMultiplier}"]`);
+        if (!container || !row) return;
+
+        setHighlightedMultiplier(searchedMultiplier);
+        container.scrollTo({
+            top: Math.max(0, row.offsetTop - (container.clientHeight - row.clientHeight) / 2),
+            behavior: 'smooth',
+        });
+    }, [activeTab, rltToBuySearch, searchedMultiplier, totalRltSearch]);
 
     // Sticky Sidebar state
     const sidebarRefRewards = useRef<HTMLElement>(null);
@@ -1071,6 +1165,9 @@ export default function ProgressionEvent() {
                                                     );
                                                     const display = reward ? getRewardDisplay(reward, t) : null;
                                                     const typeImage = reward ? getRewardTypeImage(reward.type) : null;
+                                                    const minerSellability = reward?.type === 'miner'
+                                                        ? (reward.item as MinerItem)?.is_can_be_sold_on_mp
+                                                        : null;
 
                                                     return (
                                                         <tr key={level.level} className="pe-multiplier-row">
@@ -1203,6 +1300,14 @@ export default function ProgressionEvent() {
                                                                                         }}
                                                                                     />
                                                                                 )}
+                                                                                {typeof minerSellability === 'boolean' && (
+                                                                                    <img
+                                                                                        className={`pe-sellable-badge ${minerSellability ? 'pe-sellable-badge--available' : 'pe-sellable-badge--unavailable'}`}
+                                                                                        src={sellableIcon}
+                                                                                        alt={minerSellability ? 'Sellable' : 'Not sellable'}
+                                                                                        title={minerSellability ? t('simulator.sellableMiner', 'Satılabilir') : 'Satılamaz'}
+                                                                                    />
+                                                                                )}
                                                                             </div>
                                                                         ) : display?.localImage ? (
                                                                             <img
@@ -1230,9 +1335,9 @@ export default function ProgressionEvent() {
                                                                             <span style={{ fontSize: '32px' }}>🎁</span>
                                                                         )}
                                                                     </div>
-                                                                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                                                        <span style={{ fontWeight: 500, fontSize: '14px', color: 'var(--text-secondary)' }}>{display?.text ?? '-'}</span>
-                                                                        <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{display?.subText ?? ''}</span>
+                                                                    <div className="pe-reward-copy">
+                                                                        <span className="pe-reward-name">{display?.text ?? '-'}</span>
+                                                                        {display?.subText && <span className="pe-reward-sub">{display.subText}</span>}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -1310,6 +1415,48 @@ export default function ProgressionEvent() {
                                         </div>
                                     </div>
                                     <div className="pe-control-group">
+                                        <label className="pe-control-label">{t('event.currentPoints')}</label>
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            className="pe-filter-input pe-quick-search-input"
+                                            value={currentPoints.toLocaleString(lang || 'tr-TR')}
+                                            onChange={(e) => {
+                                                const digits = e.target.value.replace(/\D/g, '');
+                                                setCurrentPoints(digits ? Number(digits) : 0);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="pe-control-group">
+                                        <label className="pe-control-label">{t('event.headers.rltToBuy')}</label>
+                                        <input
+                                            type="number"
+                                            className="pe-filter-input pe-quick-search-input"
+                                            value={rltToBuySearch}
+                                            onChange={(e) => {
+                                                setRltToBuySearch(e.target.value);
+                                                setTotalRltSearch('');
+                                            }}
+                                            min={0}
+                                            placeholder={t('event.quickSearch')}
+                                        />
+                                    </div>
+                                    <div className="pe-control-group">
+                                        <label className="pe-control-label">{t('event.headers.totalCost')}</label>
+                                        <input
+                                            type="number"
+                                            className="pe-filter-input pe-quick-search-input"
+                                            value={totalRltSearch}
+                                            onChange={(e) => {
+                                                setTotalRltSearch(e.target.value);
+                                                setRltToBuySearch('');
+                                            }}
+                                            min={0}
+                                            step="0.01"
+                                            placeholder={t('event.quickSearch')}
+                                        />
+                                    </div>
+                                    <div className="pe-control-group">
                                         <label className="pe-control-label">{t('event.chart')}</label>
                                         <button
                                             className={`pe-chart-toggle ${showChart ? 'active' : ''}`}
@@ -1355,7 +1502,7 @@ export default function ProgressionEvent() {
                                     </div>
                                 )}
 
-                                <div className="pe-rewards-layout pe-rewards-layout--centered">
+                                <div className="pe-rewards-layout pe-rewards-layout--balanced">
                                     {/* Desktop discount sidebar */}
                                     <aside className="pe-discount-sidebar" ref={sidebarRefMultiplier} style={{ visibility: showFixedSidebarMultiplier ? 'hidden' : 'visible' }}>
                                         {renderDiscountCard()}
@@ -1379,20 +1526,7 @@ export default function ProgressionEvent() {
                                                 <thead ref={theadMultiplierRef}>
                                                     <tr>
                                                         <th>{t('event.headers.multiplier')}</th>
-                                                        <th>
-                                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                                                                {t('event.headers.rltToBuy')}
-                                                                <input
-                                                                    type="number"
-                                                                    className="pe-filter-input"
-                                                                    value={rltPrice}
-                                                                    onChange={(e) => setRltPrice(Number(e.target.value))}
-                                                                    step="0.01"
-                                                                    min="0"
-                                                                    style={{ width: '68px', padding: '4px 6px', fontSize: '13px', lineHeight: '1' }}
-                                                                />
-                                                            </div>
-                                                        </th>
+                                                        <th>{t('event.headers.rltToBuy')}</th>
                                                         <th>
                                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                                                                 {t('event.headers.discount')}
@@ -1400,22 +1534,7 @@ export default function ProgressionEvent() {
                                                                     value={String(discount || '')}
                                                                     onValueChange={(val) => setDiscount(Number(val))}
                                                                     placeholder={t('event.headers.discount')}
-                                                                    options={[
-                                                                        ...currencyDiscounts.map(cd => {
-                                                                            const coinName = CURRENCY_ID_MAP[cd.currencyId] ?? `ID:${cd.currencyId}`;
-                                                                            return {
-                                                                                value: String(cd.amount),
-                                                                                label: `${cd.amount}% (${coinName})`,
-                                                                                icon: COIN_ICONS[coinName] || '',
-                                                                                group: t('event.tokenDiscountGroup')
-                                                                            };
-                                                                        }),
-                                                                        ...DISCOUNT_OPTIONS.filter(d => !currencyDiscounts.some(cd => cd.amount === d)).map(d => ({
-                                                                            value: String(d),
-                                                                            label: `${d}%`,
-                                                                            group: 'Standart'
-                                                                        }))
-                                                                    ]}
+                                                                    options={discountSelectOptions}
                                                                     contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                     triggerClassName="pe-select pe-select-lg"
                                                                 />
@@ -1443,7 +1562,11 @@ export default function ProgressionEvent() {
                                                 </thead>
                                                 <tbody>
                                                     {filteredData.map((row) => (
-                                                        <tr key={row.multiplier} className="pe-multiplier-row">
+                                                        <tr
+                                                            key={row.multiplier}
+                                                            data-multiplier={row.multiplier}
+                                                            className={`pe-multiplier-row ${highlightedMultiplier === row.multiplier ? 'pe-multiplier-row--highlighted' : ''}`}
+                                                        >
                                                             <td className="pe-multiplier-cell">
                                                                 <span className="pe-multiplier-badge">x{row.multiplier}</span>
                                                             </td>
@@ -1489,20 +1612,7 @@ export default function ProgressionEvent() {
                                                     <thead>
                                                         <tr>
                                                             <th style={{ width: headerWidthsMultiplier[0], borderTop: 'none' }}>{t('event.headers.multiplier')}</th>
-                                                            <th style={{ width: headerWidthsMultiplier[1], borderTop: 'none' }}>
-                                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                                                                    {t('event.headers.rltToBuy')}
-                                                                    <input
-                                                                        type="number"
-                                                                        className="pe-filter-input"
-                                                                        value={rltPrice}
-                                                                        onChange={(e) => setRltPrice(Number(e.target.value))}
-                                                                        step="0.01"
-                                                                        min="0"
-                                                                        style={{ width: '68px', padding: '4px 6px', fontSize: '13px', lineHeight: '1' }}
-                                                                    />
-                                                                </div>
-                                                            </th>
+                                                            <th style={{ width: headerWidthsMultiplier[1], borderTop: 'none' }}>{t('event.headers.rltToBuy')}</th>
                                                             <th style={{ width: headerWidthsMultiplier[2], borderTop: 'none' }}>
                                                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                                                                     {t('event.headers.discount')}
@@ -1510,22 +1620,7 @@ export default function ProgressionEvent() {
                                                                         value={String(discount || '')}
                                                                         onValueChange={(val) => setDiscount(Number(val))}
                                                                         placeholder={t('event.headers.discount')}
-                                                                        options={[
-                                                                            ...currencyDiscounts.map(cd => {
-                                                                                const coinName = CURRENCY_ID_MAP[cd.currencyId] ?? `ID:${cd.currencyId}`;
-                                                                                return {
-                                                                                    value: String(cd.amount),
-                                                                                    label: `${cd.amount}% (${coinName})`,
-                                                                                    icon: COIN_ICONS[coinName] || '',
-                                                                                    group: t('event.tokenDiscountGroup')
-                                                                                };
-                                                                            }),
-                                                                            ...DISCOUNT_OPTIONS.filter(d => !currencyDiscounts.some(cd => cd.amount === d)).map(d => ({
-                                                                                value: String(d),
-                                                                                label: `${d}%`,
-                                                                                group: 'Standart'
-                                                                            }))
-                                                                        ]}
+                                                                        options={discountSelectOptions}
                                                                         contentClassName="custom-dropdown-list-radix pe-multiplier-select-list"
                                                                         triggerClassName="pe-select pe-select-lg"
                                                                     />

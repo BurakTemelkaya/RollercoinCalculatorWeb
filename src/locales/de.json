@@ -499,6 +499,8 @@
     "filter": "Filter",
     "chart": "Diagramm",
     "chartTitle": "Multiplikator vs Boxen Diagramm",
+    "currentPoints": "Aktuelle Punkte",
+    "quickSearch": "Schnellsuche",
     "rltPriceLabel": "RLT-PREIS (USD)",
     "backToCalc": "Zurück zum Rechner",
     "headers": {
