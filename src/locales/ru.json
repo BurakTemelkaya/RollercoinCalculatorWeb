@@ -560,6 +560,8 @@
     "filter": "Фильтр",
     "chart": "График",
     "chartTitle": "Множитель vs Боксы",
+    "currentPoints": "Текущие очки",
+    "quickSearch": "Быстрый поиск",
     "rltPriceLabel": "ЦЕНА RLT",
     "backToCalc": "Назад",
     "headers": {
