@@ -560,6 +560,8 @@
     "filter": "Filtro",
     "chart": "Gráfico",
     "chartTitle": "Multiplicador vs Caixas",
+    "currentPoints": "Pontos atuais",
+    "quickSearch": "Pesquisa rápida",
     "rltPriceLabel": "PREÇO DO RLT (USD)",
     "backToCalc": "Voltar à Calculadora",
     "headers": {
