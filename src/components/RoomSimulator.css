@@ -197,6 +197,10 @@
     background: none;
 }
 
+.miner-hover-target {
+    display: none;
+}
+
 /* Genişlikler yukarıdaki değişkenlere bağlandı */
 .miner-img-wrapper.size-2 {
     width: var(--size-2-width);
@@ -1908,9 +1912,13 @@
         left: 50%;
     }
 
-    /* Match the hover frame to the artwork-sized sellable/duplicate frames. */
-    .racks-grid .miner-img-wrapper.shared-sprite-target:not(.highlight-sellable):not(.highlight-duplicate):hover .room-shared-sprite::after {
-        content: '';
+    /* Use artwork-sized hit targets so adjacent single miners do not overlap. */
+    .racks-grid .miner-img-wrapper {
+        pointer-events: none;
+    }
+
+    .racks-grid .miner-hover-target {
+        display: block;
         position: absolute;
         top: 50%;
         left: 0;
@@ -1920,16 +1928,22 @@
         transform: translateY(-50%);
         border: 2px solid rgba(3, 225, 228, 0.8);
         border-radius: 4px;
-        pointer-events: none;
-        z-index: 20;
+        box-sizing: border-box;
+        cursor: grab;
+        opacity: 0;
+        pointer-events: auto;
+        z-index: 21;
     }
 
-    .racks-grid .miner-img-wrapper.size-1.shared-sprite-target:not(.highlight-sellable):not(.highlight-duplicate):hover .room-shared-sprite::after {
-        box-sizing: border-box;
+    .racks-grid .miner-img-wrapper.size-1 .miner-hover-target {
         left: 50%;
         right: auto;
         width: 38px;
         transform: translate(-50%, -50%);
+    }
+
+    .racks-grid .miner-img-wrapper:not(.highlight-sellable):not(.highlight-duplicate) .miner-hover-target:hover {
+        opacity: 1;
     }
 
     .room-sim-header-desktop {

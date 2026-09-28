@@ -1705,6 +1705,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             />
                                                         )}
 
+                                                        <span className="miner-hover-target" aria-hidden="true" />
+
                                                         {(miner.level > 0 || !isBonusActive || isSellable) && (
                                                             <div className={`miners-badges`}>
                                                                 {miner.level > 0 && (
