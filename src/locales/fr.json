@@ -560,6 +560,8 @@
     "filter": "Filtre",
     "chart": "Graphique",
     "chartTitle": "Multiplicateur vs Boîtes",
+    "currentPoints": "Points actuels",
+    "quickSearch": "Recherche rapide",
     "rltPriceLabel": "PRIX RLT",
     "backToCalc": "Retour",
     "headers": {
