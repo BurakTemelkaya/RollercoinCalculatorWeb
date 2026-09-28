@@ -560,6 +560,8 @@
     "filter": "Filter",
     "chart": "Grafik",
     "chartTitle": "Grafik",
+    "currentPoints": "Poin Saat Ini",
+    "quickSearch": "Pencarian cepat",
     "rltPriceLabel": "HARGA RLT (USD)",
     "backToCalc": "Kembali",
     "headers": {
