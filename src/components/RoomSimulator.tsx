@@ -961,7 +961,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } else {
             if (y === 0) return { capacity: 4, offset: 2 };
             if (y === 1) return { capacity: 8, offset: 0 };
-            if (y === 2) return { capacity: 6, offset: 1 };
+            if (y === 2) return { capacity: 6, offset: 0 };
             return { capacity: 0, offset: 0 };
         }
     };
