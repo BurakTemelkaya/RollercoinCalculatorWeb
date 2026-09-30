@@ -67,9 +67,9 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
         </div>
       </div>
 
-      {/* Mobile Sticky Bottom */}
+      {/* Keep the mobile banner above page panels (100–900), below the navbar (1000). */}
       {mobileAdVisible && (
-        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 40, bottom: 0, left: 0, right: 0, width: '100%', maxWidth: '100%', pointerEvents: 'none' }}>
+        <div className="aads-mobile-only" style={{ position: 'fixed', zIndex: 950, bottom: 0, left: 0, right: 0, width: '100%', maxWidth: '100%', pointerEvents: 'none' }}>
           <div className="mobile-ad-container" style={{ width: '100%', maxWidth: '100%', background: '#1e2433', borderTop: '1px solid #334155', padding: '10px 0', display: 'flex', justifyContent: 'center', boxShadow: '0 -4px 12px rgba(0,0,0,0.5)', paddingBottom: 'calc(10px + env(safe-area-inset-bottom))', boxSizing: 'border-box', pointerEvents: 'auto' }}>
             <div style={{ position: 'relative', width: '320px', maxWidth: '100%', height: '50px' }}>
               <button 
