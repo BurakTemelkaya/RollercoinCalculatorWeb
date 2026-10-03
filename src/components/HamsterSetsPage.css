@@ -1,0 +1,76 @@
+.hamster-section-nav { display: flex; justify-content: center; gap: 10px; margin: 0 0 24px; }
+.hamster-section-nav a { display: flex; align-items: center; justify-content: center; gap: 9px; flex: 1; max-width: 220px; min-height: 46px; padding: 10px 16px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 10px; background: var(--bg-card, #1e2433); color: var(--text-secondary, #cbd5e1); font-size: 14px; font-weight: 750; text-decoration: none; text-align: center; }
+.hamster-section-nav a.active { border-color: var(--accent-primary, #6366f1); background: var(--accent-primary, #6366f1); color: #fff; }
+.hamster-section-nav a:hover { border-color: var(--accent-primary, #6366f1); }
+.hamster-section-nav a:focus-visible, .hamster-set-card-open:focus-visible, .hamster-set-member button:focus-visible { outline: 2px solid var(--accent-primary, #6366f1); outline-offset: 3px; }
+.hamster-section-icon { display: block; flex: none; width: 21px; height: 21px; background: currentColor; mask-repeat: no-repeat; mask-position: center; mask-size: contain; }
+.hamster-section-icon.icon-hamsters { mask-image: url('../assets/hamster-navigation/hamsters.svg'); }
+.hamster-section-icon.icon-expeditions { mask-image: url('../assets/hamster-navigation/expeditions.svg'); }
+.hamster-section-icon.icon-sets { mask-image: url('../assets/hamster-navigation/sets.svg'); }
+.hamster-sets-page { width: min(100%, 1240px); margin: 0 auto; padding: 20px 0 70px; color: var(--text-primary, #fff); }
+.hamster-sets-heading { margin-bottom: 24px; }
+.hamster-sets-heading > span { color: var(--accent-primary, #a5b4fc); font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+.hamster-sets-heading h1 { margin: 5px 0 8px; font-size: clamp(28px, 4vw, 42px); }
+.hamster-sets-heading p { margin: 0; color: var(--text-secondary, #cbd5e1); }
+.hamster-sets-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.hamster-set-card { min-width: 0; padding: 16px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 16px; background: var(--bg-secondary, #111827); }
+.hamster-set-card-open { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hamster-set-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 38px; margin-bottom: 10px; }
+.hamster-set-card-heading > span { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 8px; background: var(--bg-card, #1e2433); color: #a5b4fc; }
+.hamster-set-card-open:hover .hamster-set-card-heading > span { background: var(--accent-primary, #6366f1); color: #fff; }
+.hamster-set-artwork { position: relative; aspect-ratio: 1.35; overflow: hidden; border: 1px solid var(--border-color-hover, #343b52); border-radius: 12px; background: radial-gradient(circle at 18% 30%, #ffffff85 0 1px, transparent 2px), radial-gradient(circle at 78% 18%, #ffffff65 0 1px, transparent 2px), radial-gradient(circle at 82% 73%, #ffffff65 0 1px, transparent 2px), radial-gradient(ellipse at 50% 110%, #4338ca80, transparent 70%), var(--bg-card, #1e2433); }
+.hamster-set-art-member { position: absolute; display: flex; align-items: center; justify-content: center; width: 43%; height: 50%; min-width: 0; min-height: 0; }
+.hamster-set-art-member .hamster-idle { width: 100% !important; height: 100% !important; object-fit: contain; }
+.hamster-set-art-member.member-0 { left: 3%; top: 0; }
+.hamster-set-art-member.member-1 { right: 3%; top: 0; }
+.hamster-set-art-member.member-2 { left: 28.5%; bottom: 4%; }
+.hamster-set-unknown { display: grid; place-items: center; width: 60%; height: 70%; border: 1px dashed #64748b; border-radius: 50%; color: #94a3b8; font-size: 38px; }
+.hamster-set-levels { display: grid; gap: 8px; margin-top: 12px; font-size: 12px; }
+.hamster-set-progress { display: grid; gap: 6px; color: var(--text-muted, #a0aec0); }
+.hamster-set-progress progress { appearance: none; border: 0; border-radius: 6px; background: var(--bg-card, #1e2433); width: 100%; height: 6px; accent-color: var(--accent-primary, #6366f1); }
+.hamster-set-progress progress::-webkit-progress-bar { border-radius: 6px; background: var(--bg-card, #1e2433); }
+.hamster-set-progress progress::-webkit-progress-value { border-radius: 6px; background: var(--accent-primary, #6366f1); }
+.hamster-set-progress progress::-moz-progress-bar { border-radius: 6px; background: var(--accent-primary, #6366f1); }
+.hamster-set-level { display: grid; grid-template-columns: 60px minmax(0, 1fr) auto; align-items: center; gap: 7px; padding: 9px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 8px; background: var(--bg-primary, #0a0e17); }
+.hamster-set-level > span:first-child { display: grid; gap: 4px; color: var(--text-muted, #a0aec0); }
+.hamster-set-level > span:nth-child(2) { display: flex; align-items: center; gap: 6px; color: var(--text-secondary, #cbd5e1); }
+.hamster-set-level img { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; }
+.hamster-set-level > strong { justify-self: end; color: #86efac; }
+.hamster-set-level.unlocked { border-color: #4ade8066; }
+.hamster-set-level.unlocked b { color: #86efac; }
+.hamster-set-maximum { display: grid; gap: 4px; padding-top: 8px; border-top: 1px solid var(--border-color-hover, #343b52); }
+.hamster-set-maximum > span { color: var(--text-muted, #a0aec0); }
+.hamster-set-maximum > strong { color: #c4b5fd; }
+.hamster-set-current { display: grid; gap: 4px; color: #86efac; }
+.hamster-set-total { text-align: right; color: var(--text-muted, #a0aec0); font-weight: 700; }
+.hamster-set-dialog { position: fixed; inset: 0; margin: auto; box-sizing: border-box; width: min(900px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); padding: 22px; overflow: auto; border: 1px solid var(--border-color-hover, #343b52); border-radius: 18px; background: var(--bg-secondary, #111827); color: var(--text-primary, #fff); box-shadow: 0 24px 80px #0008; }
+.hamster-set-dialog::backdrop { background: #030712bb; backdrop-filter: blur(3px); }
+.hamster-set-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+.hamster-set-dialog-heading h2 { margin: 0; font-size: 23px; }
+.hamster-set-dialog-heading > button { flex: none; width: 36px; height: 36px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 8px; background: var(--bg-card, #1e2433); color: inherit; font-size: 24px; cursor: pointer; }
+.hamster-set-dialog-body { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: 20px; }
+.hamster-set-roster h3 { margin: 0 0 6px; font-size: 15px; }
+.hamster-set-roster p { margin: 0 0 12px; color: var(--text-muted, #a0aec0); font-size: 12px; }
+.hamster-set-member-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.hamster-set-member { min-width: 0; padding: 8px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 10px; background: var(--bg-card, #1e2433); }
+.hamster-set-member.owned { border-color: var(--accent-primary, #6366f1); }
+.hamster-set-member label { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted, #a0aec0); cursor: pointer; }
+.hamster-set-member input { accent-color: var(--accent-primary, #6366f1); }
+.hamster-set-member button { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: 12px; cursor: pointer; }
+.hamster-set-member .hamster-idle { max-width: 100%; }
+.hamster-set-member strong { text-align: center; overflow-wrap: anywhere; }
+.hamster-set-roster .hamster-set-announcement { margin-top: 16px; padding: 10px; border: 1px dashed var(--border-color-hover, #343b52); border-radius: 8px; }
+@media (min-width: 1400px) { .hamster-sets-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .hamster-sets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .hamster-section-nav { gap: 5px; margin-bottom: 18px; }
+  .hamster-section-nav a { min-width: 0; min-height: 50px; padding: 7px 5px; gap: 4px; font-size: 11px; }
+  .hamster-section-icon { width: 17px; height: 17px; }
+  .hamster-sets-page { padding: 8px 12px 70px; box-sizing: border-box; }
+  .hamster-sets-grid { grid-template-columns: 1fr; }
+  .hamster-set-dialog { padding: 14px; }
+  .hamster-set-dialog-body { grid-template-columns: 1fr; gap: 18px; }
+  .hamster-set-dialog-heading h2 { font-size: 20px; }
+  .hamster-set-member-grid { gap: 5px; }
+  .hamster-set-member { padding: 5px; }
+}

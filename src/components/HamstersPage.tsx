@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import rawHamsters from '../data/hamsters.json';
 import rawSets from '../data/hamsterSets.json';
 import { EXPEDITION_MAPS } from '../data/expeditionMaps';
-import { HAMSTER_BESTIARY, bestiaryUrl } from '../data/hamsterBestiary';
-import type { Hamster, HamsterAnimationAction, HamsterBuilderOption, HamsterSet, HamsterTrait } from '../types/hamster';
-import { hamsterAssetUrl } from '../utils/hamsterAssets';
+import { HAMSTER_BESTIARY } from '../data/hamsterBestiary';
+import { officialHamsterArticle } from '../data/hamsterAbilityGuides';
+import type { Hamster, HamsterAnimationAction, HamsterSet } from '../types/hamster';
+import HamsterAbility from './HamsterAbility';
+import HamsterMapPicker from './HamsterMapPicker';
+import HamsterAppearancePicker from './HamsterAppearancePicker';
 import ExpeditionScene from './ExpeditionScene';
 import HamsterSprite from './HamsterSprite';
+import HamsterSectionNav from './HamsterSectionNav';
+import HamsterSetDetails from './HamsterSetDetails';
+import useHamsterCollection from '../hooks/useHamsterCollection';
 import './HamstersPage.css';
 
 const HAMSTERS = rawHamsters as Hamster[];
@@ -21,40 +27,24 @@ const STAT_ICONS = {
 };
 const ANIMATIONS: { action: HamsterAnimationAction; label: string }[] = [
   { action: 'walk', label: 'animationWalk' },
-  { action: 'tap_reaction', label: 'animationTap' },
   { action: 'go_sleep', label: 'animationSleep' },
   { action: 'take_chest', label: 'animationChest' },
   { action: 'win_loop', label: 'animationWin' },
 ];
 
-function BuilderOption({ option, language }: { option: HamsterBuilderOption; language: string }) {
-  return (
-    <span className="hamster-builder-option">
-      {option.icon && <img src={hamsterAssetUrl(option.icon)} alt="" loading="lazy" />}
-      <span>{option.name[language] || option.name.en || option.code}</span>
-    </span>
-  );
-}
-
-function Trait({ trait, language }: { trait: HamsterTrait; language: string }) {
-  return (
-    <span className="hamster-trait">
-      {trait.icon && <img src={hamsterAssetUrl(trait.icon)} alt="" loading="lazy" />}
-      {trait.text[language] || trait.text.en || trait.code}
-    </span>
-  );
-}
-
 export default function HamstersPage() {
   const { t, i18n } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const initialHamster = HAMSTERS_BY_SLUG.get(searchParams.get('hamster') || '') || HAMSTERS[0];
+  const { owned, toggleOwned } = useHamsterCollection();
+  const [openSet, setOpenSet] = useState<HamsterSet | null>(null);
   const [query, setQuery] = useState('');
   const [generation, setGeneration] = useState('all');
   const [sort, setSort] = useState('order');
-  const [selectedSlug, setSelectedSlug] = useState(HAMSTERS[0]?.slug);
-  const [level, setLevel] = useState(1);
-  const [mapId, setMapId] = useState(EXPEDITION_MAPS[3].id);
+  const [selectedSlug, setSelectedSlug] = useState(initialHamster?.slug);
+  const [level, setLevel] = useState(initialHamster?.skins[0]?.level ?? 1);
+  const [mapId, setMapId] = useState('dark_valley');
   const [animation, setAnimation] = useState<HamsterAnimationAction>('walk');
-  const [reactionTrigger, setReactionTrigger] = useState(0);
 
   const filtered = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
@@ -75,12 +65,12 @@ export default function HamstersPage() {
   const language = i18n.language.split('-')[0];
   const selectedSets = selected ? SETS.filter(set => set.members.includes(selected.slug)) : [];
   const bestiary = selected ? HAMSTER_BESTIARY[selected.slug] : undefined;
+  const officialArticle = selected ? officialHamsterArticle(selected.slug) : undefined;
 
   const selectHamster = (hamster: Hamster) => {
     setSelectedSlug(hamster.slug);
     setLevel(hamster.skins[0]?.level ?? 1);
     setAnimation('walk');
-    setReactionTrigger(value => value + 1);
     requestAnimationFrame(() => document.querySelector('.hamster-feature')?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
       block: 'start',
@@ -102,6 +92,7 @@ export default function HamstersPage() {
 
   return (
     <section className="hamsters-page">
+      <HamsterSectionNav />
       <meta name="description" content={t('hamsters.description')} />
       <header className="hamsters-heading">
         <div>
@@ -109,7 +100,7 @@ export default function HamstersPage() {
           <h2>{t('hamsters.title')}</h2>
           <p>{t('hamsters.description')}</p>
         </div>
-        <div className="hamsters-heading-actions"><Link className="hamsters-expedition-link" to={`/${language}/hamsters/expeditions`}>{t('hamsters.calculateExpeditions')} →</Link><span className="hamsters-total">{HAMSTERS.length} {t('hamsters.characters')}</span></div>
+        <div className="hamsters-heading-actions"><span className="hamsters-total">{HAMSTERS.length} {t('hamsters.characters')}</span></div>
       </header>
 
       {selected && skin && (
@@ -122,34 +113,12 @@ export default function HamstersPage() {
                 </div>
                 <div className="hamster-heading-meta">
                   {selectedSets.map(set => (
-                    <details className="hamster-set-disclosure" key={set.slug}>
-                      <summary>{t('hamsters.memberOfSet', { name: set.name[language] || set.name.en })}</summary>
-                      <div className="hamster-set-popover">
-                        <strong>{set.name[language] || set.name.en}</strong>
-                        <span>{t('hamsters.setMembers')} ({set.members.length}/{set.levels.at(-1)?.totalMembers ?? set.members.length})</span>
-                        <div className="hamster-set-members">
-                          {set.members.map(slug => {
-                            const member = HAMSTERS_BY_SLUG.get(slug);
-                            return member && <button type="button" key={slug} aria-label={member.name} onClick={event => { event.currentTarget.closest('details')?.removeAttribute('open'); selectSetMember(slug); }}><HamsterSprite skin={member.skins[0]} name={member.name} size={54} /><span>{member.name}</span></button>;
-                          })}
-                          {set.members.length < (set.levels.at(-1)?.totalMembers ?? 0) && <span className="hamster-set-coming">{t('hamsters.memberComing')}</span>}
-                        </div>
-                        <div className="hamster-set-rewards">
-                          <strong>{t('hamsters.setRewards')}</strong>
-                          <ul>{set.levels.map(stage => <li key={stage.level}>
-                            <span>{t('hamsters.setUnlock', { count: stage.requiredMembers, total: stage.totalMembers })}</span>
-                            <span>{stage.text[language] || stage.text.en}</span>
-                            <strong>+{Number(stage.rewardRlt).toLocaleString(i18n.language)} RLT</strong>
-                          </li>)}</ul>
-                          <span>{t('hamsters.totalReward', { value: Number(set.completion.rewardRlt).toLocaleString(i18n.language) })}</span>
-                        </div>
-                      </div>
-                    </details>
+                    <button type="button" className="hamster-set-trigger" key={set.slug} onClick={() => setOpenSet(set)}>{t('hamsters.memberOfSet', { name: set.name[language] || set.name.en })} ▾</button>
                   ))}
                   <span className="hamster-level-badge">LVL {String(skin.level).padStart(2, '0')}</span>
                 </div>
               </div>
-              <ExpeditionScene map={map} skin={skin} name={selected.name} animation={animation} reactionTrigger={reactionTrigger} reactionLabel={t('hamsters.tapHint')} />
+              <ExpeditionScene map={map} skin={skin} name={selected.name} animation={animation} reactionLabel={t('hamsters.tapHint')} />
               <div className="hamster-animation-controls">
                 <span>{t('hamsters.animations')}</span>
                 <div role="group" aria-label={t('hamsters.animations')}>
@@ -159,29 +128,16 @@ export default function HamstersPage() {
                       key={item.action}
                       className={animation === item.action ? 'active' : ''}
                       aria-pressed={animation === item.action}
-                      onClick={() => { setAnimation(item.action); if (item.action === 'tap_reaction') setReactionTrigger(value => value + 1); }}
+                      onClick={() => setAnimation(item.action)}
                     >{t(`hamsters.${item.label}`)}</button>
                   ))}
                 </div>
-                <small>{t('hamsters.tapHint')}</small>
               </div>
-              <div className="hamster-stage-controls">
-                <label>
-                  <span>{t('hamsters.map')}</span>
-                  <select value={mapId} onChange={event => setMapId(event.target.value)}>
-                    {EXPEDITION_MAPS.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}
-                  </select>
-                </label>
-                <label>
-                  <span>{t('hamsters.appearance')}</span>
-                  <select value={skin.level} onChange={event => setLevel(Number(event.target.value))}>
-                    {selected.skins.map(option => <option value={option.level} key={option.level}>{t('hamsters.level')} {option.level}</option>)}
-                  </select>
-                </label>
-              </div>
+              <HamsterAppearancePicker skins={selected.skins} name={selected.name} value={skin.level} onChange={setLevel} />
+              <HamsterMapPicker value={mapId} onChange={setMapId} />
             </div>
 
-            <div className="hamster-details-panel">
+            <div className="hamster-details-panel" key={selected.slug}>
               <h3>{t('hamsters.stats')}</h3>
               <div className="hamster-stats-grid">
               {([
@@ -198,25 +154,15 @@ export default function HamstersPage() {
                 </div>
               ))}
               </div>
-              {bestiary && <div className="hamster-bestiary-details">
-                {bestiary.restHours !== undefined && <span>{t('hamsters.restTime', { hours: bestiary.restHours })}</span>}
-                <a href={bestiaryUrl(bestiary.path)} target="_blank" rel="noreferrer">{t('hamsters.officialBestiary')} ↗</a>
+              {officialArticle && <div className="hamster-bestiary-details">
+                {bestiary?.restHours !== undefined && <span>{t('hamsters.restTime', { hours: bestiary.restHours })}</span>}
+                <a href={officialArticle} target="_blank" rel="noreferrer">{t(bestiary ? 'hamsters.officialBestiary' : 'hamsterAbilityGuide.officialBlog')} ↗</a>
               </div>}
-              <h3 className="hamster-traits-title">{t('hamsters.abilities')}</h3>
+              <h3 className="hamster-traits-title">{t('hamsterAbilityGuide.passive')}</h3>
               <div className="hamster-traits">
-                {selected.abilities.map(trait => <Trait trait={trait} language={language} key={trait.code} />)}
-                {selected.ultimate && <Trait trait={selected.ultimate} language={language} />}
-                {!selected.abilities.length && !selected.ultimate && <span className="hamster-muted">{t('hamsters.noAbilities')}</span>}
+                {selected.abilities.map(trait => <HamsterAbility hamster={selected} ability={trait} language={language} key={trait.code} />)}
+                {!selected.abilities.length && !selected.builderSlots.length && <span className="hamster-muted">{t('hamsters.noAbilities')}</span>}
               </div>
-              {selected.ultimateTiers?.length ? <div className="hamster-ultimate-tiers">
-                {selected.ultimateTiers.map(tier => <div key={tier.tier}>
-                  <strong>{t('hamsters.tier')} {tier.tier}</strong>
-                  <span>{tier.conversionTarget
-                    ? t('hamsters.convertRewards', { count: tier.rewardCount, target: tier.conversionTarget })
-                    : t('hamsters.rewardCount', { count: tier.rewardCount })}</span>
-                  <small>{t('hamsters.chargePoints', { value: tier.chargeRequired })}</small>
-                </div>)}
-              </div> : selected.ultimateChargePoints !== null && <p className="hamster-charge-points">{t('hamsters.chargePoints', { value: selected.ultimateChargePoints })}</p>}
               {selected.builderSlots.length > 0 && (
                 <div className="hamster-builder">
                   <h3>{t('hamsters.builder')}</h3>
@@ -227,8 +173,8 @@ export default function HamstersPage() {
                         {slot.builds.map((build, buildIndex) => (
                           <div className="hamster-builder-build" key={buildIndex}>
                             <strong>{t('hamsters.build', { value: buildIndex + 1 })}</strong>
-                            <div className="hamster-builder-line"><span className="hamster-buff-label">{t('hamsters.buff')}</span><BuilderOption option={build.buff} language={language} /></div>
-                            {build.debuff && <div className="hamster-builder-line"><span className="hamster-debuff-label">{t('hamsters.debuff')}</span><BuilderOption option={build.debuff} language={language} /></div>}
+                            <div className="hamster-builder-line"><span className="hamster-buff-label">{t('hamsters.buff')}</span><HamsterAbility hamster={selected} ability={build.buff} language={language} builder /></div>
+                            {build.debuff && <div className="hamster-builder-line"><span className="hamster-debuff-label">{t('hamsters.debuff')}</span><HamsterAbility hamster={selected} ability={build.debuff} language={language} builder /></div>}
                             {build.buff.levels && <div className="hamster-builder-levels">{build.buff.levels.map(item => <span key={item.level}>{item.level === 'basic' ? t('hamsters.basic') : `Lv ${item.level}`}: {item.value}</span>)}</div>}
                           </div>
                         ))}
@@ -237,6 +183,20 @@ export default function HamstersPage() {
                   ))}
                 </div>
               )}
+              {selected.ultimate && <section className="hamster-ultimate-panel">
+                <h3>{t(selected.ultimateTiers?.length ? 'hamsterAbilityGuide.overcharged' : 'hamsterAbilityGuide.ultimate')}</h3>
+                <HamsterAbility hamster={selected} ability={selected.ultimate} language={language} ultimate inline />
+                <p className="hamster-ultimate-activation">{t(selected.ultimate.code === 'pirate_luck' ? 'hamsterAbilityGuide.activationAfter' : 'hamsterAbilityGuide.activation')}</p>
+                {selected.ultimateTiers?.length ? <div className="hamster-ultimate-tiers">
+                  {selected.ultimateTiers.map(tier => <div key={tier.tier}>
+                    <strong>{t('hamsters.tier')} {tier.tier}</strong>
+                    <span>{tier.conversionTarget
+                      ? t('hamsters.convertRewards', { count: tier.rewardCount, target: tier.conversionTarget })
+                      : `${t('hamsters.rewardCount', { count: tier.rewardCount })}${tier.rewardMultiplier ? ` ×${tier.rewardMultiplier}` : ''}`}</span>
+                    <small>{t('hamsters.chargePoints', { value: tier.chargeRequired })}</small>
+                  </div>)}
+                </div> : selected.ultimateChargePoints !== null && <p className="hamster-charge-points">{t('hamsters.chargePoints', { value: selected.ultimateChargePoints })}</p>}
+              </section>}
             </div>
           </div>
       )}
@@ -292,6 +252,7 @@ export default function HamstersPage() {
           ))}
         </>
       ) : <div className="hamsters-empty">{t('hamsters.empty')}</div>}
+      {openSet && <HamsterSetDetails set={openSet} owned={owned} onToggleOwned={toggleOwned} onClose={() => setOpenSet(null)} onSelectHamster={selectSetMember} />}
     </section>
   );
 }

@@ -4,6 +4,7 @@ export interface ChanceOptions {
   level: number;
   setBonus?: number;
   builderSurvival?: boolean;
+  builderPenalty?: boolean;
   ultimate?: boolean;
   extraStatPoints?: number;
 }
@@ -34,16 +35,18 @@ export function difficultyInfluence(difficulty: number): number {
   return 5 - (difficulty - 1) * (10 / 9);
 }
 
-export function abilitySurvivalBonus(hamster: Hamster, level: number, builderSurvival = false): number {
+export function builderSurvivalBonus(hamster: Hamster, level: number, penalty = false): number {
+  const option = hamster.builderSlots.flatMap(slot => slot.builds.map(build => penalty ? build.debuff : build.buff)).find(option => option?.code === 'survival');
+  if (!option) return 0;
+  const rank = option.levels?.filter(item => item.level === 'basic' || item.level <= level).at(-1);
+  return Number((rank?.value ?? option.name.en).match(/[+-]?\d+(?:\.\d+)?/)?.[0] ?? 0);
+}
+
+export function abilitySurvivalBonus(hamster: Hamster, level: number, builderSurvival = false, builderPenalty = false): number {
   const passive = hamster.abilities
     .filter(ability => ability.code === 'survival')
     .reduce((sum, ability) => sum + Number(ability.text.en?.match(/[+-]?\d+(?:\.\d+)?/)?.[0] ?? 0), 0);
-  if (!builderSurvival) return passive;
-  const option = hamster.builderSlots.flatMap(slot => slot.builds.map(build => build.buff)).find(buff => buff.code === 'survival');
-  if (!option) return passive;
-  const rank = option.levels?.filter(item => item.level === 'basic' || item.level <= level).at(-1);
-  const value = rank?.value ?? option.name.en;
-  return passive + Number(value.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
+  return passive + (builderSurvival ? builderSurvivalBonus(hamster, level) : builderPenalty ? builderSurvivalBonus(hamster, level, true) : 0);
 }
 
 export function expeditionSurvivalChance(hamster: Hamster, difficulty: number, options: ChanceOptions): number {
@@ -51,6 +54,6 @@ export function expeditionSurvivalChance(hamster: Hamster, difficulty: number, o
   const stats = totalHamsterStats(hamster, options.level, options.ultimate, options.extraStatPoints);
   return Math.min(100, Math.max(0, basicSurvivalChance(stats)
     + difficultyInfluence(difficulty)
-    + abilitySurvivalBonus(hamster, options.level, options.builderSurvival)
+    + abilitySurvivalBonus(hamster, options.level, options.builderSurvival, options.builderPenalty)
     + (options.setBonus ?? 0)));
 }

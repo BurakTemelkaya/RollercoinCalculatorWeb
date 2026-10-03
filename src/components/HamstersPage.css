@@ -58,18 +58,15 @@
   border-radius: var(--radius-lg, 16px);
   background: var(--hamster-surface);
 }
-.hamsters-toolbar label,
-.hamster-stage-controls label { display: grid; gap: 6px; min-width: 160px; }
-.hamsters-toolbar label > span,
-.hamster-stage-controls label > span {
+.hamsters-toolbar label { display: grid; gap: 6px; min-width: 160px; }
+.hamsters-toolbar label > span {
   color: var(--text-muted, #a0aec0);
   font-size: 12px;
   font-weight: 700;
 }
 .hamsters-search { flex: 1; }
 .hamsters-toolbar input,
-.hamsters-toolbar select,
-.hamster-stage-controls select {
+.hamsters-toolbar select {
   width: 100%;
   min-height: 42px;
   padding: 8px 12px;
@@ -81,8 +78,7 @@
   font: inherit;
 }
 .hamsters-toolbar input:focus,
-.hamsters-toolbar select:focus,
-.hamster-stage-controls select:focus {
+.hamsters-toolbar select:focus {
   border-color: var(--hamster-accent);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
 }
@@ -107,61 +103,8 @@
 }
 .hamster-panel-heading h3 { margin: 2px 0 0; font-size: clamp(21px, 2.6vw, 29px); line-height: 1.15; }
 .hamster-heading-meta { display: flex; align-items: center; justify-content: end; flex-wrap: wrap; gap: 7px; }
-.hamster-set-disclosure { position: relative; }
-.hamster-set-disclosure summary {
-  list-style: none;
-  padding: 6px 10px;
-  border: 1px solid var(--hamster-border);
-  border-radius: var(--radius-sm, 6px);
-  background: var(--hamster-card);
-  color: var(--text-secondary, #cbd5e1);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.hamster-set-disclosure summary::-webkit-details-marker { display: none; }
-.hamster-set-disclosure summary::after { content: ' ▾'; color: var(--hamster-accent); }
-.hamster-set-disclosure[open] summary,
-.hamster-set-disclosure summary:hover { border-color: var(--hamster-accent); }
-.hamster-set-disclosure summary:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 2px; }
-.hamster-set-popover {
-  position: absolute;
-  z-index: 5;
-  top: calc(100% + 8px);
-  right: 0;
-  width: min(390px, calc(100vw - 34px));
-  padding: 13px;
-  border: 1px solid var(--hamster-border);
-  border-radius: var(--radius-md, 10px);
-  background: var(--hamster-surface);
-  box-shadow: var(--shadow-md, 0 8px 22px #0008);
-}
-.hamster-set-popover > strong { display: block; font-size: 14px; }
-.hamster-set-popover > span { display: block; margin: 2px 0 10px; color: var(--text-muted, #a0aec0); font-size: 11px; }
-.hamster-set-members { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.hamster-set-popover button {
-  display: grid;
-  justify-items: center;
-  min-width: 0;
-  padding: 5px 3px;
-  border: 1px solid var(--hamster-border);
-  border-radius: var(--radius-sm, 6px);
-  background: var(--hamster-card);
-  color: var(--text-primary, #fff);
-  font: inherit;
-  font-size: 10px;
-  cursor: pointer;
-}
-.hamster-set-popover button:hover { border-color: var(--hamster-accent); }
-.hamster-set-popover button:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 2px; }
-.hamster-set-popover button > span:last-child { overflow-wrap: anywhere; }
-.hamster-set-rewards { display: grid; gap: 8px; margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--hamster-border); font-size: 12px; }
-.hamster-set-rewards > strong { color: var(--text-primary, #fff); }
-.hamster-set-rewards ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.hamster-set-rewards li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; color: var(--text-secondary, #cbd5e1); }
-.hamster-set-rewards li span:first-child { color: #a5b4fc; white-space: nowrap; }
-.hamster-set-rewards li strong { color: #86efac; white-space: nowrap; }
-.hamster-set-rewards > span { text-align: right; color: var(--text-primary, #fff); font-weight: 800; }
+.hamster-set-trigger { padding: 7px 10px; border: 1px solid var(--hamster-border); border-radius: 6px; background: var(--hamster-card); color: var(--text-secondary, #cbd5e1); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.hamster-set-trigger:hover, .hamster-set-trigger:focus-visible { border-color: var(--hamster-accent); }
 .hamster-level-badge {
   flex: none;
   padding: 6px 10px;
@@ -187,9 +130,9 @@
 .expedition-scene canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .expedition-scene-error { position: absolute; inset: 0; display: grid; place-items: center; background: #111827cc; }
 .expedition-scene:focus-visible { outline: 3px solid var(--hamster-accent); outline-offset: 3px; }
-.hamster-animation-controls { margin-top: 13px; }
+.hamster-animation-controls { margin-top: 13px; text-align: center; }
 .hamster-animation-controls > span { display: block; margin-bottom: 8px; color: var(--text-muted, #a0aec0); font-size: 12px; font-weight: 700; }
-.hamster-animation-controls > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.hamster-animation-controls > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; }
 .hamster-animation-controls button {
   padding: 7px 11px;
   border: 1px solid var(--hamster-border);
@@ -204,8 +147,6 @@
 .hamster-animation-controls button.active { border-color: var(--hamster-accent); background: rgba(99, 102, 241, .16); color: var(--text-primary, #fff); }
 .hamster-animation-controls button:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 2px; }
 .hamster-animation-controls small { display: block; margin-top: 8px; color: var(--text-muted, #a0aec0); }
-.hamster-stage-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
-.hamster-stage-controls label { flex: 1; }
 .hamster-details-panel h3 { margin: 0 0 12px; font-size: 18px; }
 .hamster-stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .hamster-stat {
@@ -246,11 +187,13 @@
 .hamster-trait img { width: 24px; height: 24px; object-fit: contain; image-rendering: pixelated; }
 .hamster-muted { color: var(--text-muted, #a0aec0); }
 .hamster-charge-points { margin: 10px 0 0; color: var(--text-muted, #a0aec0); font-size: 12px; }
+.hamster-ultimate-panel { margin-top: 22px; padding: 16px; border: 1px solid var(--hamster-accent); border-radius: 12px; background: linear-gradient(120deg, rgba(99, 102, 241, .12), transparent); }
+.hamster-ultimate-panel h3 { color: var(--text-primary, #fff); }
+.hamster-ultimate-activation { margin: 9px 0 0; color: var(--text-secondary, #cbd5e1); font-size: 12px; }
 .hamster-ultimate-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
 .hamster-ultimate-tiers > div { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 10px; border: 1px solid var(--hamster-border); border-radius: var(--radius-md, 10px); background: var(--hamster-card); font-size: 12px; }
 .hamster-ultimate-tiers strong { color: var(--hamster-accent, #a5b4fc); }
 .hamster-ultimate-tiers small { color: var(--text-muted, #a0aec0); }
-.hamster-set-coming { padding: 9px; border: 1px dashed var(--hamster-border); border-radius: var(--radius-md, 10px); color: var(--text-muted, #a0aec0); font-size: 12px; }
 .hamster-builder { margin-top: 22px; }
 .hamster-builder-slot { padding: 12px 0; border-top: 1px solid var(--hamster-border); }
 .hamster-builder-slot h4 { margin: 0 0 10px; color: var(--text-secondary, #cbd5e1); font-size: 13px; }
@@ -321,9 +264,9 @@
   .hamster-stage-panel,
   .hamster-details-panel { padding: 12px; }
   .hamster-builder-builds { grid-template-columns: 1fr; }
+  .hamster-ultimate-tiers { grid-template-columns: 1fr; }
   .hamster-panel-heading { flex-direction: column; align-items: stretch; gap: 8px; }
   .hamster-heading-meta { justify-content: space-between; }
-  .hamster-set-popover { left: 0; right: auto; width: min(330px, calc(100vw - 48px)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hamster-card { transition: none; }

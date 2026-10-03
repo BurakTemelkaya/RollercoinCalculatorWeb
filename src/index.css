@@ -2085,6 +2085,8 @@ a:hover {
   transition: opacity 0.2s;
 }
 
+.hamster-menu-icon { display: inline-block; flex: none; width: 16px; height: 16px; background: currentColor; mask: url('./assets/hamster-navigation/hamsters.svg') center / contain no-repeat; }
+
 .nav-link:hover .nav-icon,
 .mobile-nav-link:hover .nav-icon {
   opacity: 1;

@@ -1,0 +1,35 @@
+.hamster-ability-trigger { color: inherit; font-family: inherit; text-align: start; cursor: pointer; }
+.hamster-ability-trigger:hover, .hamster-ability-trigger[aria-expanded="true"] { border-color: var(--hamster-accent); }
+.hamster-ability-trigger:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 3px; }
+.hamster-builder-option.hamster-ability-trigger { padding: 2px 0; border: 0; border-radius: 3px; background: transparent; font-size: inherit; }
+.hamster-builder-option.hamster-ability-trigger:hover { text-decoration: underline; text-underline-offset: 3px; }
+.hamster-ability-info { flex: none; color: var(--text-muted, #a0aec0); font-size: 12px; }
+.hamster-ability-inline { min-width: 0; font-size: 13px; line-height: 1.65; overflow-wrap: anywhere; }
+.hamster-ability-description { margin: 10px 0; color: var(--text-secondary, #cbd5e1); }
+.hamster-ability-inline .hamster-ability-example p { margin: 5px 0 0; color: var(--text-secondary, #cbd5e1); }
+.hamster-ability-inline a { color: var(--hamster-accent); font-size: 12px; text-underline-offset: 3px; }
+.hamster-ability-inline a:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 3px; }
+.hamster-ability-popover {
+  position: fixed;
+  z-index: 2000;
+  box-sizing: border-box;
+  width: min(380px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  padding: 15px;
+  border: 1px solid var(--border-color-hover, #4b5563);
+  border-radius: 12px;
+  background: var(--bg-secondary, #111827);
+  box-shadow: 0 12px 35px #0006;
+  color: var(--text-primary, #fff);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.hamster-ability-popover > strong { display: block; font-size: 14px; }
+.hamster-ability-popover p { margin: 7px 0 10px; color: var(--text-secondary, #cbd5e1); }
+.hamster-ability-effect { display: block; color: var(--text-muted, #a0aec0); }
+.hamster-ability-example { padding: 9px 11px; margin-bottom: 10px; border-radius: 8px; background: var(--bg-tertiary, #1a1f2e); }
+.hamster-ability-example p { margin-bottom: 0; }
+.hamster-ability-popover a { color: var(--accent-primary, #a5b4fc); text-underline-offset: 3px; }
+.hamster-ability-popover a:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 3px; }
