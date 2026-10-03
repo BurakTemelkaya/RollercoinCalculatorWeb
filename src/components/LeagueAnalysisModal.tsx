@@ -7,7 +7,7 @@ import { PowerUnit, HashPower, DEFAULT_MIN_WITHDRAW } from '../types';
 import { COIN_ICONS } from '../utils/constants';
 import { formatCryptoAmount, formatUSD, getBlocksPerPeriod, isWithdrawableCoin, isGameToken, formatDuration } from '../utils/calculator';
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
-import { getBlockRewardsForLeague } from '../utils/leagueHelper';
+import { getLeagueAnalysisCeilingGh, getLeagueMiningRate, getNextLeaguePower } from '../utils/leagueAnalysis';
 import { getLeagueImage } from '../data/leagueImages';
 import RadixSelect from './RadixSelect';
 import './LeagueAnalysisModal.css';
@@ -35,9 +35,6 @@ interface LeagueEarningInfo {
 }
 
 type PeriodType = 'daily' | 'weekly' | 'monthly';
-
-// Default block time in seconds
-const DEFAULT_BLOCK_TIME_SECONDS = 596;
 
 /**
  * Format power from Gh/s value (minPower is stored in Gh/s)
@@ -113,7 +110,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
         setEditingLeagueId(null);
     };
 
-    const handleCancelEditCeiling = (e?: React.MouseEvent) => {
+    const handleCancelEditCeiling = (e?: React.MouseEvent | React.KeyboardEvent) => {
         if (e) e.stopPropagation();
         setEditingLeagueId(null);
     };
@@ -187,7 +184,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
             const maxPowerStr = nextLeague ? formatPowerGh(nextLeague.minPower - 1) : '∞';
 
             // Default ceiling power for calculations
-            const defaultMaxGh = nextLeague ? (nextLeague.minPower - 1) : league.minPower;
+            const defaultMaxGh = getLeagueAnalysisCeilingGh(league, nextLeague ?? undefined);
             const defaultPower = autoScalePower(defaultMaxGh * 1e9);
 
             const custom = customCeilings[league.id];
@@ -280,46 +277,11 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
         const displayName = CURRENCY_MAP[currencyName] || currencyName;
         const isGameTokenCoin = isGameToken(displayName);
 
-        // Find the currency in league data
-        const currencyData = league.currencies.find(c => c.name === currencyName);
-        if (!currencyData) return null;
-
-        // Get block reward
-        const rewards = getBlockRewardsForLeague(league);
-        const blockReward = rewards[displayName];
-        if (!blockReward || blockReward <= 0) return null;
-
-        // Get league total power for this coin from API data
-        let leagueTotalPowerBase: number; // in H/s
-        if (apiLeagueData) {
-            const apiCurrency = apiLeagueData.currencies.find(c => c.name === currencyName);
-            if (apiCurrency && apiCurrency.totalPower > 0) {
-                leagueTotalPowerBase = apiCurrency.totalPower * 1e9; // API gives Gh/s
-            } else {
-                // Nobody currently in league (Legend), calculate based on baseline 1 Yh total power
-                leagueTotalPowerBase = 1e24;
-            }
-        } else {
-            // No API data - estimate based on power
-            leagueTotalPowerBase = maxPowerGh >= 1e15 ? 1e24 : (maxPowerGh * 1e9 * 100);
-        }
-
-        // User power at max for this league
-        const userPowerBase = maxPowerGh * 1e9; // Convert Gh to H
-
-        // Power share
-        const share = Math.min(1, userPowerBase / leagueTotalPowerBase);
-
-        // Reward per block
-        const rewardPerBlock = blockReward * share;
-
-        // Get block duration: prioritize league-specific currency duration from API, fallback to currencyData, then blockDurations, then default
-        const apiCurrency = apiLeagueData?.currencies.find(c => c.name === currencyName);
-        const duration = (apiCurrency && apiCurrency.duration > 0)
-            ? apiCurrency.duration
-            : (currencyData.duration && currencyData.duration > 0)
-                ? currencyData.duration
-                : (blockDurations[displayName] || DEFAULT_BLOCK_TIME_SECONDS);
+        const rate = getLeagueMiningRate(league, currencyName, maxPowerGh, blockDurations, apiLeagueData);
+        if (!rate) return null;
+        const share = Math.min(1, maxPowerGh / rate.totalPowerGh);
+        const { duration } = rate;
+        const rewardPerBlock = rate.blockReward * share;
 
         // Blocks per period
         const dailyBlocks = getBlocksPerPeriod('daily', duration);
@@ -422,6 +384,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
         label: string,
         icon: string,
         earning: LeagueEarningInfo | null,
+        nextLeague: LeagueInfo | undefined,
         tooltip?: string,
         warningText?: string
     ) => {
@@ -475,6 +438,27 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                 withdrawDurationText = formatDuration(days, t);
             }
         }
+
+        const nextLeagueIndex = nextLeague ? sortedLeagues.findIndex(l => l.id === nextLeague.id) : -1;
+        const nextPower = nextLeague ? getNextLeaguePower(
+            earning.dailyAmount,
+            earning.displayName,
+            nextLeague,
+            sortedLeagues[nextLeagueIndex - 1],
+            blockDurations,
+            rawApiData?.find(l => String(l.id) === String(nextLeague.id)),
+        ) : null;
+        // Round upward so the displayed power can actually preserve the target earnings.
+        const requiredPower = nextPower?.status === 'available' ? autoScalePower(nextPower.powerGh * 1e9) : null;
+        const requiredPowerDisplay = requiredPower
+            ? `${(Math.ceil(requiredPower.value * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 })} ${requiredPower.unit}/s`
+            : '';
+        const upperLeague = sortedLeagues[nextLeagueIndex - 1];
+        const exceedsLeague = nextPower?.status === 'available' && (nextPower.exceedsLeague || (
+            requiredPower && upperLeague && toBaseUnit({
+                value: Math.ceil(requiredPower.value * 100) / 100, unit: requiredPower.unit,
+            }) / 1e9 >= upperLeague.minPower
+        ));
 
         return (
             <div className="la-earning-item">
@@ -548,6 +532,27 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                         )}
                     </div>
                 </div>
+
+                {nextLeague && nextPower && (
+                    <div className="la-next-league">
+                        <span className="la-next-league-label">
+                            {t('leagueAnalysis.nextLeagueSameEarnings', { league: nextLeague.name })}
+                        </span>
+                        {nextPower.status === 'available' ? (
+                            <>
+                                <strong className="la-next-league-power">⚡ {requiredPowerDisplay}</strong>
+                                {exceedsLeague && (
+                                    <span className="la-next-league-note">{t('leagueAnalysis.nextLeagueExceedsCeiling')}</span>
+                                )}
+                            </>
+                        ) : (
+                            <span className="la-next-league-note">
+                                {t(`leagueAnalysis.${nextPower.status === 'missingCoin' ? 'nextLeagueCoinUnavailable'
+                                    : nextPower.status === 'unreachable' ? 'nextLeagueUnreachable' : 'nextLeagueMissingData'}`)}
+                            </span>
+                        )}
+                    </div>
+                )}
 
                 {warningText && (
                     <div className="la-earning-warning">
@@ -677,6 +682,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                 };
 
                                 const isCurrentLeague = currentLeagueId === league.id;
+                                const nextLeague = sortedLeagues[sortedLeagues.findIndex(l => l.id === league.id) - 1];
 
                                 // Find matching API data for this league
                                 const apiLeagueData = rawApiData?.find(l => String(l.id) === String(league.id));
@@ -787,7 +793,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                                                     onChange={(e) => setTempEditValue(e.target.value)}
                                                                     onKeyDown={(e) => {
                                                                         if (e.key === 'Enter') handleSaveEditCeiling(e, league.id);
-                                                                        else if (e.key === 'Escape') handleCancelEditCeiling(e as any);
+                                                                        else if (e.key === 'Escape') handleCancelEditCeiling(e);
                                                                     }}
                                                                     autoFocus
                                                                     placeholder="0"
@@ -872,18 +878,21 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
                                                 t('leagueAnalysis.bestWithdrawable', 'En Karlı Çekilebilir'),
                                                 '🏆',
                                                 bestWithdrawable,
+                                                nextLeague,
                                                 t('leagueAnalysis.bestWithdrawableTooltip', 'Cüzdana çekilebilir coinler arasında en yüksek kazanç sağlayan')
                                             )}
                                             {renderEarningItem(
                                                 t('leagueAnalysis.bestNonWithdrawable', 'En Karlı Çekilemez'),
                                                 '🔒',
                                                 bestNonWithdrawable,
+                                                nextLeague,
                                                 t('leagueAnalysis.bestNonWithdrawableTooltip', 'Çekilemez coinler arasında en yüksek kazanç sağlayan (USDT, ALGO, RLT, RST vb.)')
                                             )}
                                             {renderEarningItem(
                                                 thirdSlotLabel,
                                                 thirdSlotIcon,
                                                 thirdSlotEarning,
+                                                nextLeague,
                                                 thirdSlotTooltip,
                                                 thirdSlotWarning
                                             )}

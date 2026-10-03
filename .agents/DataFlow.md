@@ -23,6 +23,14 @@ Uygulama iki modda çalışır:
 5. Kullanıcı payı = `userPower / leaguePower`
 6. Kazanç = `pay × blokÖdülü × blokSayısı(periyoda göre)`
 
+## Lig Bazlı Kazanç Analizi
+
+- `LeagueAnalysisModal.tsx` varsayılan hesaplama gücünü `utils/leagueAnalysis.ts` ile belirler. Sonraki lig eşiğinden Eh/Zh için 0,1 birim, Ph için 1 birim çıkarılır (650 Eh → 649,9 Eh; 25 Zh → 24,9 Zh; 150 Ph → 149 Ph). 1 Yh eşiği 999,9 Zh olarak hesaplanır. Son ligde üst sınır olmadığından giriş gücü kullanılır.
+- Düzenlenen özel güçler korunur; kazanç ve ana hesaplayıcıya uygulama aynı güç değerini kullanır.
+- Her coin kartı, aynı coin kazancını sonraki ligde korumak için gereken minimum gücü gösterir: `günlük kazanç / sonraki ligin günlük toplam ödülü × sonraki ligin coin toplam gücü`. Sonuç en az sonraki ligin giriş gücüdür ve ekranda yukarı yuvarlanır.
+- Blok ödülü dönüşümü ve lig bazlı blok süresi kazanç hesabıyla ortaktır. Veri yoksa veya coin sonraki ligde yoksa açıklama gösterilir; gereken güç sonraki lig sınırını aşıyorsa ya da tüm blok ödülü hedef kazanca yetmiyorsa belirtilir. Son ligde sonraki lig karşılaştırması gösterilmez.
+- Hesaplama kontrolü: `npx tsx scripts/check-league-analysis.ts`.
+
 ## LocalStorage Cache
 
 Uygulama tüm verileri localStorage'da cache'ler:
