@@ -1135,6 +1135,8 @@
     "minutes": "{{value}} menit"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "The walking animation and idle preview are available for now. All animations will be added when the hamster joins the game.",
+    "animationsPending": "Only the walking animation is available for now. All animations will be added when the hamster joins the game.",
     "passive": "Kemampuan pasif",
     "ultimate": "Kemampuan ultimate",
     "overcharged": "Ultimate bertingkat",
@@ -1144,6 +1146,7 @@
     "source": "Penjelasan resmi",
     "example": "Contoh dari blog",
     "labels": {
+      "remoteBonusUltimate": "Remote Bonus",
       "boostMode": "Mode peningkatan",
       "chestsMultiplier": "Pengali peti ×3",
       "cryptoChest": "Peti kripto",
@@ -1160,6 +1163,7 @@
       "overchargedConversion": "Konversi jarahan"
     },
     "descriptions": {
+      "remoteBonusUltimate": "While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.",
       "experience": "Meningkatkan XP hamster ini dari Ekspedisi sesuai persentase yang ditampilkan.",
       "survival": "Menambahkan persentase langsung ke peluang bertahan hidup akhir. Nilai negatif menguranginya.",
       "rest": "Mengubah waktu istirahat setelah Ekspedisi; nilai negatif memperpendek waktu tunggu.",
@@ -1176,7 +1180,7 @@
       "keepGoing": "Tanpa istirahat setelah berhasil; jika gagal, istirahat tiga kali durasi normal.",
       "restRelay": "Setiap jam penuh mengurangi istirahat hamster lain sesuai menit yang ditampilkan. Percepatan tidak menambah bonus; kelebihan terbuang.",
       "chargeRelay": "Mengisi ultimate hamster lain dari jam asli penuh. Poin daya berupa bilangan bulat; percepatan tidak menambah manfaat.",
-      "gamesBoost": "Mengubah Games Boost sesuai persentase. GFeast memasangkannya dengan perubahan biaya Buyback.",
+      "gamesBoost": "Changes Games Boost by the displayed percentage. {{name}} pairs this choice with a Buyback cost trade-off.",
       "boostMode": "Mengatur kesehatan, kekuatan dan keberuntungan masing-masing ke 100 untuk satu Ekspedisi. Isi ulang: {{charge}} poin.",
       "chestsMultiplier": "Aktifkan sebelum Ekspedisi; di akhir pilih hingga lima hadiah dan lipat tigakan masing-masing. Isi ulang: {{charge}} poin.",
       "plagueChests": "Melipat tigakan hingga lima hadiah pilihan meski gagal. Tidak meningkatkan peluang bertahan hidup. Isi ulang: 30 poin.",
@@ -1194,6 +1198,7 @@
       "remotePowerUltimate": "Selama GFeast hidup, menambah daya penambang sementara ×5 tanpa pengali ruangan. Durasi asli tidak berubah oleh percepatan atau pengurangan waktu."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",
       "remoteBonus": "Dasar: (40 + 90 + 90) ×2% = 440%. Pada 100/100/100: 600%.",
       "overchargedChests": "Dengan 28 poin, tingkat II penuh: lima hadiah dilipat tigakan. Tingkat III perlu 30."
     }
