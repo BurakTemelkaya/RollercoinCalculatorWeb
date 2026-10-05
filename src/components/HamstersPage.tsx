@@ -118,7 +118,7 @@ export default function HamstersPage() {
                   <span className="hamster-level-badge">LVL {String(skin.level).padStart(2, '0')}</span>
                 </div>
               </div>
-              <ExpeditionScene map={map} skin={skin} name={selected.name} animation={animation} reactionLabel={t('hamsters.tapHint')} />
+              <ExpeditionScene map={map} skin={skin} name={selected.name} animation={animation} reactionLabel={t(skin.animations.tap_reaction ? 'hamsters.tapHint' : 'hamsters.animationWalk')} />
               <div className="hamster-animation-controls">
                 <span>{t('hamsters.animations')}</span>
                 <div role="group" aria-label={t('hamsters.animations')}>
@@ -133,6 +133,7 @@ export default function HamstersPage() {
                   ))}
                 </div>
               </div>
+              {selected.animationsPending && <p className="hamster-animation-notice">{t(skin.idleAnimation ? 'hamsterAbilityGuide.animationsPendingWithIdle' : 'hamsterAbilityGuide.animationsPending')}</p>}
               <HamsterAppearancePicker skins={selected.skins} name={selected.name} value={skin.level} onChange={setLevel} />
               <HamsterMapPicker value={mapId} onChange={setMapId} />
             </div>

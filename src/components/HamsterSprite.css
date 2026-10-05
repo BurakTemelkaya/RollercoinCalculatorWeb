@@ -1,1 +1,6 @@
 .hamster-idle { display: block; flex: none; max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
+.hamster-sprite-preview { position: relative; overflow: hidden; }
+.hamster-sprite-preview > img { position: absolute; display: block; max-width: none; max-height: none; image-rendering: pixelated; }
+.hamster-idle-animation { animation: hamster-idle-frames .6s steps(6) infinite; }
+@keyframes hamster-idle-frames { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) { .hamster-idle-animation { animation: none; } }

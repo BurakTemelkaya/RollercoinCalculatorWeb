@@ -1079,6 +1079,8 @@
     "minutes": "{{value}} min"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "Zatím jsou dostupné animace chůze a náhled v klidu. Všechny animace budou přidány, až se křeček objeví ve hře.",
+    "animationsPending": "Zatím je dostupná pouze animace chůze. Všechny animace budou přidány, až se křeček objeví ve hře.",
     "passive": "Pasivní schopnosti",
     "ultimate": "Ultimátní schopnost",
     "overcharged": "Víceúrovňová ultimátní schopnost",
@@ -1088,6 +1090,7 @@
     "source": "Oficiální vysvětlení",
     "example": "Příklad z blogu",
     "labels": {
+      "remoteBonusUltimate": "Vzdálený bonus",
       "boostMode": "Režim posílení",
       "chestsMultiplier": "Násobitel truhel ×3",
       "cryptoChest": "Truhla s kryptoměnami",
@@ -1104,6 +1107,7 @@
       "overchargedConversion": "Převod kořisti"
     },
     "descriptions": {
+      "remoteBonusUltimate": "Dokud je Cuscuz v expedici naživu, poskytuje dočasný bonus místnosti ve výši součtu atributů ×2 %. Platí původní délka expedice; zrychlení a schopnosti zkracující čas bonus nezkracují. Dobití: {{charge}} bodů.",
       "experience": "Zvyšuje zkušenosti tohoto křečka z expedic o uvedené procento.",
       "survival": "Přičítá uvedené procento přímo ke konečné šanci na přežití. Záporná hodnota ji snižuje.",
       "rest": "Mění odpočinek po expedici; záporná hodnota zkracuje čekání.",
@@ -1120,7 +1124,7 @@
       "keepGoing": "Po úspěchu bez odpočinku; po neúspěchu trojnásobná běžná doba odpočinku.",
       "restRelay": "Každá celá hodina snižuje odpočinek ostatních o uvedené minuty. Zrychlení nepřidává bonus; přebytek propadá.",
       "chargeRelay": "Nabíjí ultimátní schopnosti ostatních za celé původní hodiny. Jen celé body; zrychlení nedává další výhodu.",
-      "gamesBoost": "Mění Games Boost o uvedené procento. U GFeast je tato volba spojena se změnou výkupní ceny.",
+      "gamesBoost": "Mění Games Boost o uvedené procento. U {{name}} je tato volba spojena se změnou výkupní ceny.",
       "boostMode": "Nastaví zdraví, sílu a štěstí na 100 pro jednu expedici. Dobití: {{charge}} bodů.",
       "chestsMultiplier": "Aktivujte před expedicí; na konci vyberte až pět odměn a každou ztrojnásobte. Dobití: {{charge}} bodů.",
       "plagueChests": "Ztrojnásobí až pět vybraných odměn i při neúspěchu. Nezvyšuje přežití. Dobití: 30 bodů.",
@@ -1138,6 +1142,7 @@
       "remotePowerUltimate": "Dokud GFeast žije, přidává dočasný výkon těžařů ×5 bez bonusu místnosti. Trvání dle původní doby, bez vlivu zrychlení a zkrácení."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Základní atributy: (90 + 75 + 90) ×2 % = 510% bonus místnosti.",
       "remoteBonus": "Základ: (40 + 90 + 90) ×2% = 440%. Při 100/100/100: 600%.",
       "overchargedChests": "S 28 body se použije stupeň II: pět odměn ztrojnásobeno. Stupeň III potřebuje 30."
     }

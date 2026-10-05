@@ -21,6 +21,7 @@ const ARTICLE_PATHS: Record<string, string> = {
   gfeast: 'meet-gfeast-hero-hamster',
   solaire: 'new-season-rollerhouse-of-horrors',
   'lady-minerra': 'meet-lady-minerra',
+  cuscuz: 'meet-cuscuz-hero-hamster',
 };
 
 export function officialHamsterArticle(slug: string): string | undefined {
@@ -55,6 +56,7 @@ const ULTIMATES: Record<string, string> = {
   high_risk_high_reward_x2_rewards_and_xp_x1_5_duration_no_rest_failed_runs_keep_b: 'highRisk',
   converts_expedition_rewards_into_rlt: 'lootConversion', loot_conversion: 'overchargedConversion',
   pirate_luck: 'pirateLuck', hamsters_chest: 'hamstersChest', remote_power: 'remotePowerUltimate',
+  remote_bonus: 'remoteBonusUltimate',
 };
 
 export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = false): AbilityGuide | undefined {
@@ -64,7 +66,7 @@ export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = f
   const guide: AbilityGuide = {
     description: key,
     source: officialHamsterArticle(hamster.slug),
-    params: { charge: hamster.ultimateChargePoints ?? 0 },
+    params: { charge: hamster.ultimateChargePoints ?? 0, name: hamster.name },
   };
   if (ultimate) guide.label = key;
   if (code === 'survival') guide.source = 'https://rollercoin.com/blog/dev-diaries-vol18';
@@ -72,6 +74,7 @@ export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = f
   if (code === 'return_to_work') guide.source = 'https://rollercoin.com/blog/the-great-crypto-heist';
   if (hamster.slug === 'kitsumi' && code === 'remote_bonus') guide.example = 'remoteBonus';
   if (hamster.slug === 'solaire' && ultimate) guide.example = 'overchargedChests';
+  if (hamster.slug === 'cuscuz' && ultimate) guide.example = 'cuscuzRemoteBonus';
   if (hamster.slug === 'plague-dancer' && ultimate) {
     guide.description = 'plagueChests';
     guide.source = 'https://rollercoin.com/blog/plague-dancer-pumpkin-origin';

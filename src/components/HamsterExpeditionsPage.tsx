@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import rawHamsters from '../data/hamsters.json';
 import enLocale from '../locales/en.json';
 import { EXPEDITION_MAPS } from '../data/expeditionMaps';
-import { hamsterAssetUrl } from '../utils/hamsterAssets';
+import HamsterSprite from './HamsterSprite';
 import type { Hamster } from '../types/hamster';
 import { abilitySurvivalBonus, basicSurvivalChance, builderSurvivalBonus, difficultyInfluence, expeditionSurvivalChance, hasMaxStatsUltimate, hasSmartStudy, totalHamsterStats } from '../utils/expeditionChance';
 import './HamsterExpeditionsPage.css';
@@ -155,7 +155,7 @@ export default function HamsterExpeditionsPage() {
     </header>
 
     <section className="expedition-calc-feature" aria-label={copy.featured} ref={featureRef}>
-      <div className="expedition-calc-identity"><img className="expedition-calc-feature-idle" src={hamsterAssetUrl(skinAtLevel(selected, selectedOptions.level).idle)} alt={selected.name} /><div><small>{copy.featured}</small><h2>{selected.name}</h2><span>{selected.generation}. {t('hamsters.generation')}</span></div></div>
+      <div className="expedition-calc-identity"><HamsterSprite className="expedition-calc-feature-idle" skin={skinAtLevel(selected, selectedOptions.level)} name={selected.name} size={null} /><div><small>{copy.featured}</small><h2>{selected.name}</h2><span>{selected.generation}. {t('hamsters.generation')}</span></div></div>
       <div className="expedition-calc-controls">
         <div className="expedition-calc-number-label"><span>{copy.level}</span><HamsterNumberInput label={`${selected.name} ${copy.level}`} value={selectedOptions.level} min={selected.skins[0]?.level ?? 1} max={50} onChange={value => changeLevel(selected, value)} /></div>
         {ASCENSION.has(selected.slug) && <label>{copy.set}<select value={selectedOptions.setBonus} onChange={event => setSets(previous => ({ ...previous, [selected.slug]: Number(event.target.value) }))}><option value={0}>{copy.noSet}</option><option value={5}>{copy.twoSet}</option><option value={15}>{copy.fullSet}</option></select></label>}
@@ -203,7 +203,7 @@ export default function HamsterExpeditionsPage() {
         onPointerCancel={event => { dragRef.current = null; delete event.currentTarget.dataset.dragging; }}>
         <table><colgroup><col className="expedition-col-name" /><col className="expedition-col-level" /><col className="expedition-col-total" />{MAPS.map(map => <col className="expedition-col-map" key={map.id} />)}</colgroup><thead><tr><th scope="col">{copy.hamster}</th><th scope="col">{copy.level}</th><th scope="col">{copy.total}</th>{MAPS.map(map => <th scope="col" key={map.id}>{map.name}</th>)}</tr></thead>
           <tbody>{visible.map(hamster => <tr key={hamster.slug} className={hamster.slug === selectedSlug ? 'selected' : ''}>
-            <th scope="row"><button type="button" className="expedition-calc-name" onClick={() => selectHamster(hamster.slug)}><img className="expedition-calc-idle" src={hamsterAssetUrl(skinAtLevel(hamster, levelOf(hamster)).idle)} alt="" loading="lazy" /><span>{hamster.name}</span></button></th>
+            <th scope="row"><button type="button" className="expedition-calc-name" onClick={() => selectHamster(hamster.slug)}><HamsterSprite className="expedition-calc-idle" skin={skinAtLevel(hamster, levelOf(hamster))} name="" size={null} /><span>{hamster.name}</span></button></th>
             <td className="expedition-calc-level-cell"><HamsterNumberInput label={`${hamster.name} ${copy.level}`} value={levelOf(hamster)} min={hamster.skins[0]?.level ?? 1} max={50} onChange={value => changeLevel(hamster, value)} />{hasSmartStudy(hamster) && <HamsterNumberInput stepper label={`${hamster.name}: ${copy.smartStudyTotal}`} value={totalHamsterStats(hamster, levelOf(hamster), false, smartStudyPoints[hamster.slug])} min={totalHamsterStats(hamster, levelOf(hamster))} max={300} onChange={value => changeSmartStudyTotal(hamster, value)} />}</td>
             <td className="expedition-calc-stat-cell"><strong>{totalHamsterStats(hamster, levelOf(hamster), ultimates[hamster.slug], smartStudyPoints[hamster.slug])}</strong><div className="expedition-calc-row-bonuses">
               {abilitySurvivalBonus(hamster, levelOf(hamster)) !== 0 && <span className="expedition-calc-passive" title={copy.abilities}>{signed(abilitySurvivalBonus(hamster, levelOf(hamster)))}</span>}

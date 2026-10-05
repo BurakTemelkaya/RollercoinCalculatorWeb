@@ -16,6 +16,11 @@ export interface HamsterSkin {
   frameWidth: number;
   frameHeight: number;
   idle: string | null;
+  idleAnimation?: HamsterAnimation & {
+    frameDurationMs: number;
+    previewRegion?: { x: number; y: number; width: number; height: number };
+  };
+  previewRegion?: { x: number; y: number; width: number; height: number };
   animations: Partial<Record<HamsterAnimationAction, HamsterAnimation>>;
 }
 
@@ -63,6 +68,7 @@ export interface Hamster {
   ultimateChargePoints: number | null;
   ultimateTiers?: { tier: number; chargeRequired: number; rewardCount: number; rewardMultiplier?: number; conversionTarget?: string }[];
   skins: HamsterSkin[];
+  animationsPending?: boolean;
 }
 
 export interface HamsterSet {

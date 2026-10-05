@@ -1050,6 +1050,8 @@
     "minutes": "{{value}} min"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "Por enquanto, a animação de caminhada e a prévia em repouso estão disponíveis. Todas as animações serão adicionadas quando o hamster entrar no jogo.",
+    "animationsPending": "Por enquanto, apenas a animação de caminhada está disponível. Todas as animações serão adicionadas quando o hamster entrar no jogo.",
     "passive": "Habilidades passivas",
     "ultimate": "Habilidade suprema",
     "overcharged": "Suprema por níveis",
@@ -1059,6 +1061,7 @@
     "source": "Explicação oficial",
     "example": "Exemplo do blog",
     "labels": {
+      "remoteBonusUltimate": "Bônus remoto",
       "boostMode": "Modo de reforço",
       "chestsMultiplier": "Multiplicador de baús ×3",
       "cryptoChest": "Baú de criptomoedas",
@@ -1075,6 +1078,7 @@
       "overchargedConversion": "Conversão de saque"
     },
     "descriptions": {
+      "remoteBonusUltimate": "Enquanto Cuscuz estiver vivo em uma expedição, concede um bônus temporário de sala igual à soma dos atributos ×2%. Usa a duração original; aceleradores e habilidades de redução de tempo não encurtam o bônus. Recarga: {{charge}} pontos.",
       "experience": "Aumenta a XP deste hamster nas expedições pela porcentagem indicada.",
       "survival": "Soma a porcentagem diretamente à chance final de sobrevivência. Um valor negativo a reduz.",
       "rest": "Altera o descanso após a expedição; um valor negativo reduz a espera.",
@@ -1091,7 +1095,7 @@
       "keepGoing": "Sem descanso após sucesso; ao falhar, descansa três vezes mais.",
       "restRelay": "Cada hora completa reduz o descanso dos outros hamsters pelos minutos indicados. Aceleradores não dão bônus; excedente é perdido.",
       "chargeRelay": "Recarrega supremas dos outros hamsters com horas completas originais. Apenas pontos inteiros; aceleradores não dão benefício extra.",
-      "gamesBoost": "Altera Games Boost pela porcentagem indicada. GFeast combina essa opção com alteração do custo de recompra.",
+      "gamesBoost": "Altera Games Boost pela porcentagem indicada. {{name}} combina essa opção com alteração do custo de recompra.",
       "boostMode": "Define vida, força e sorte como 100 por uma expedição. Recarga: {{charge}} pontos.",
       "chestsMultiplier": "Ative antes da expedição; ao final, escolha até cinco recompensas e triplique cada uma. Recarga: {{charge}} pontos.",
       "plagueChests": "Triplica até cinco recompensas escolhidas mesmo ao falhar. Não aumenta a sobrevivência. Recarga: 30 pontos.",
@@ -1109,6 +1113,7 @@
       "remotePowerUltimate": "Enquanto GFeast vive, adiciona potência temporária ×5 sem bônus da sala. Duração original, sem efeito de aceleradores ou reduções."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Atributos base: (90 + 75 + 90) ×2% = 510% de bônus de sala.",
       "remoteBonus": "Base: (40 + 90 + 90) ×2% = 440%. Com 100/100/100: 600%.",
       "overchargedChests": "Com 28 pontos, nível II: cinco recompensas triplicadas. O III precisa de 30."
     }

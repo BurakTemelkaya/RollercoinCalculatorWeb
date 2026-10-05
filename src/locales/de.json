@@ -1089,6 +1089,8 @@
     "minutes": "{{value}} Min."
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "Vorerst sind Laufanimation und Leerlaufvorschau verfügbar. Alle Animationen werden ergänzt, sobald der Hamster ins Spiel kommt.",
+    "animationsPending": "Vorerst ist nur die Laufanimation verfügbar. Alle Animationen werden ergänzt, sobald der Hamster ins Spiel kommt.",
     "passive": "Passive Fähigkeiten",
     "ultimate": "Ultimative Fähigkeit",
     "overcharged": "Mehrstufige ultimative Fähigkeit",
@@ -1098,6 +1100,7 @@
     "source": "Offizielle Erklärung",
     "example": "Beispiel aus dem Blog",
     "labels": {
+      "remoteBonusUltimate": "Fernbonus",
       "boostMode": "Verstärkungsmodus",
       "chestsMultiplier": "Truhenmultiplikator ×3",
       "cryptoChest": "Krypto-Truhe",
@@ -1114,6 +1117,7 @@
       "overchargedConversion": "Beuteumwandlung"
     },
     "descriptions": {
+      "remoteBonusUltimate": "Solange Cuscuz auf einer Expedition lebt, gewährt er einen temporären Raumbonus: Gesamtwerte ×2%. Die ursprüngliche Expeditionsdauer gilt; Beschleuniger und zeitverkürzende Fähigkeiten verkürzen den Bonus nicht. Aufladen: {{charge}} Punkte.",
       "experience": "Erhöht die Expeditions-EP dieses Hamsters um den angegebenen Prozentsatz.",
       "survival": "Addiert den Wert direkt zur Überlebenschance. Ein negativer Wert senkt sie.",
       "rest": "Ändert die Ruhezeit nach einer Expedition. Negative Werte verkürzen die Wartezeit.",
@@ -1130,7 +1134,7 @@
       "keepGoing": "Keine Ruhe nach Erfolg; bei Fehlschlag dreifache normale Ruhezeit.",
       "restRelay": "Jede volle Expeditionsstunde verkürzt die Ruhe anderer Hamster um die angegebenen Minuten. Keine zusätzlichen Boni durch Beschleuniger; Überschuss verfällt.",
       "chargeRelay": "Lädt Ultimates anderer Hamster anhand voller ursprünglicher Stunden. Nur ganze Ladepunkte; kein Zusatznutzen durch Beschleuniger.",
-      "gamesBoost": "Ändert Games Boost um den angegebenen Prozentsatz. Bei GFeast ist dies mit Rückkaufkosten verbunden.",
+      "gamesBoost": "Ändert Games Boost um den angegebenen Prozentsatz. Bei {{name}} ist dies mit Rückkaufkosten verbunden.",
       "boostMode": "Setzt Gesundheit, Stärke und Glück für eine Expedition auf je 100. Erneutes Aufladen: {{charge}} Punkte.",
       "chestsMultiplier": "Vor der Expedition aktivieren; danach bis zu fünf Belohnungen auswählen und verdreifachen. Aufladen: {{charge}} Punkte.",
       "plagueChests": "Verdreifacht bis zu fünf gewählte Belohnungen auch bei Fehlschlag. Kein Überlebensbonus. Aufladen: 30 Punkte.",
@@ -1148,6 +1152,7 @@
       "remotePowerUltimate": "Solange GFeast lebt, temporäre Miner-Leistung ×5 ohne Raum-Multiplikatoren. Dauer nach ursprünglicher Expedition; Beschleuniger und Verkürzungen ändern sie nicht."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Grundwerte: (90 + 75 + 90) ×2% = 510% Raumbonus.",
       "remoteBonus": "Grundwerte: (40 + 90 + 90) ×2% = 440%. Bei 100/100/100: 600%.",
       "overchargedChests": "Mit 28 Punkten gilt Stufe II: fünf Belohnungen verdreifacht. Stufe III braucht 30."
     }

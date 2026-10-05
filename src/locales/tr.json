@@ -1136,6 +1136,8 @@
     "minutes": "{{value}} dk"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "Şimdilik yürüyüş animasyonu ve idle önizlemesi mevcut. Hamster oyuna eklendiğinde tüm animasyonlar eklenecek.",
+    "animationsPending": "Şimdilik yalnızca yürüyüş animasyonu mevcut. Hamster oyuna eklendiğinde tüm animasyonlar eklenecek.",
     "passive": "Pasif yetenekler",
     "ultimate": "Nihai yetenek",
     "overcharged": "Kademeli nihai yetenek",
@@ -1145,6 +1147,7 @@
     "source": "Resmî açıklama",
     "example": "Blogdaki örnek",
     "labels": {
+      "remoteBonusUltimate": "Uzaktan bonus",
       "boostMode": "Güçlendirme modu",
       "chestsMultiplier": "Sandık çarpanı ×3",
       "cryptoChest": "Kripto para sandığı",
@@ -1161,6 +1164,7 @@
       "overchargedConversion": "Ganimet dönüşümü"
     },
     "descriptions": {
+      "remoteBonusUltimate": "Cuscuz seferde hayattayken toplam statı ×%2 kadar geçici oda bonusu verir. Bonus orijinal sefer süresini kullanır; hızlandırmalar ve süre azaltan yetenekler bonus süresini kısaltmaz. Şarj: {{charge}} puan.",
       "experience": "Bu hamsterın seferlerden kazandığı deneyimi belirtilen yüzde kadar artırır.",
       "survival": "İşaretli yüzdeyi doğrudan nihai hayatta kalma olasılığına ekler. Negatif değer olasılığı azaltır.",
       "rest": "Sefer sonrası dinlenme süresini belirtilen yüzde kadar değiştirir; negatif değer beklemeyi kısaltır.",
@@ -1177,7 +1181,7 @@
       "keepGoing": "Başarılı seferden sonra dinlenmez; başarısızlıkta normal sürenin üç katı dinlenir.",
       "restRelay": "Seferdeki her tam saat, diğer hamsterların dinlenmesini belirtilen dakika kadar azaltır. Hızlandırmalar ek bonus vermez; fazla toparlanma kullanılmaz.",
       "chargeRelay": "Seferin tam orijinal saatleriyle diğer hamsterların ultisini şarj eder. Şarj tam puana yuvarlanır; hızlandırmalar ek yarar sağlamaz.",
-      "gamesBoost": "Oyun güçlendirmesini belirtilen yüzde kadar değiştirir. GFeast bu seçeneği geri alma maliyetiyle dengeler.",
+      "gamesBoost": "Oyun güçlendirmesini belirtilen yüzde kadar değiştirir. {{name}} bu seçeneği geri alma maliyetiyle dengeler.",
       "boostMode": "Etkinleştirildiğinde bir sefer boyunca can, güç ve şansın her birini 100 yapar. Yeniden kullanım için {{charge}} şarj puanı gerekir.",
       "chestsMultiplier": "Sefer öncesinde etkinleştir; sefer sonunda en fazla beş ödül seçip her birini üçe katla. Şarj: {{charge}} puan.",
       "plagueChests": "Sefer başarısız olsa da seçilen en fazla beş ödülü üçe katlar. Hayatta kalma olasılığını artırmaz. Şarj: 30 puan.",
@@ -1195,6 +1199,7 @@
       "remotePowerUltimate": "GFeast seferde hayattayken, oda bonusuyla çarpılmayan geçici madenci gücü ×5 ekler. Süre orijinal sefer süresidir; hızlandırma ve süre azaltımı bunu değiştirmez."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Temel statlar: (90 + 75 + 90) ×%2 = %510 oda bonusu.",
       "remoteBonus": "Temel statlar: (40 + 90 + 90) ×%2 = %440. 100/100/100 statta: %600.",
       "overchargedChests": "28 şarj puanında tamamlanan Kademe II kullanılır: beş ödül üçe katlanır. Kademe III için 30 gerekir."
     }

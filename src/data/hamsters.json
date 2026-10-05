@@ -11369,5 +11369,328 @@
         }
       }
     ]
+  },
+  {
+    "slug": "cuscuz",
+    "name": "Cuscuz",
+    "generation": 3,
+    "order": 32,
+    "stats": {
+      "health": 90,
+      "strength": 75,
+      "luck": 90
+    },
+    "abilities": [],
+    "builderSlots": [
+      {
+        "title": {
+          "en": "Loot or Relax Time",
+          "tr": "Ekstra Ganimet veya Dinlenme Süresi",
+          "ru": "Добыча или время отдыха",
+          "de": "Beute oder Ruhezeit",
+          "es": "Botín o tiempo de descanso",
+          "fr": "Butin ou temps de repos",
+          "pt": "Espólio ou tempo de descanso",
+          "id": "Loot atau Waktu Istirahat",
+          "zh": "战利品或休息时间",
+          "cs": "Kořist nebo doba odpočinku"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "extra_loot",
+              "name": {
+                "en": "Extra Loot +60%",
+                "tr": "Ekstra Ganimet +%60",
+                "ru": "Доп. добыча +60%",
+                "de": "Extra-Beute +60%",
+                "es": "Botín extra +60%",
+                "fr": "Butin supplémentaire +60%",
+                "pt": "Espólio extra +60%",
+                "id": "Loot Ekstra +60%",
+                "zh": "额外战利品 +60%",
+                "cs": "Extra kořist +60%"
+              },
+              "icon": "rollercoin/hamsters/icons/loot_percent.webp"
+            },
+            "debuff": {
+              "code": "relax_time",
+              "name": {
+                "en": "Relax Time +20%",
+                "tr": "Dinlenme Süresi +%20",
+                "ru": "Время отдыха +20%",
+                "de": "Ruhezeit +20%",
+                "es": "Tiempo de descanso +20%",
+                "fr": "Temps de repos +20%",
+                "pt": "Tempo de descanso +20%",
+                "id": "Waktu Istirahat +20%",
+                "zh": "休息时间 +20%",
+                "cs": "Doba odpočinku +20%"
+              },
+              "icon": "rollercoin/hamsters/icons/cooldown_percent.webp"
+            }
+          },
+          {
+            "buff": {
+              "code": "relax_time",
+              "name": {
+                "en": "Relax Time -45%",
+                "tr": "Dinlenme Süresi -%45",
+                "ru": "Время отдыха -45%",
+                "de": "Ruhezeit -45%",
+                "es": "Tiempo de descanso -45%",
+                "fr": "Temps de repos -45%",
+                "pt": "Tempo de descanso -45%",
+                "id": "Waktu Istirahat -45%",
+                "zh": "休息时间 -45%",
+                "cs": "Doba odpočinku -45%"
+              },
+              "icon": "rollercoin/hamsters/icons/cooldown_percent.webp"
+            },
+            "debuff": {
+              "code": "extra_loot",
+              "name": {
+                "en": "Extra Loot -30%",
+                "tr": "Ekstra Ganimet -%30",
+                "ru": "Доп. добыча -30%",
+                "de": "Extra-Beute -30%",
+                "es": "Botín extra -30%",
+                "fr": "Butin supplémentaire -30%",
+                "pt": "Espólio extra -30%",
+                "id": "Loot Ekstra -30%",
+                "zh": "额外战利品 -30%",
+                "cs": "Extra kořist -30%"
+              },
+              "icon": "rollercoin/hamsters/icons/loot_percent.webp"
+            }
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Speed or Survival",
+          "tr": "Hız veya Hayatta Kalma",
+          "ru": "Скорость или выживание",
+          "de": "Geschwindigkeit oder Überleben",
+          "es": "Velocidad o supervivencia",
+          "fr": "Vitesse ou survie",
+          "pt": "Velocidade ou sobrevivência",
+          "id": "Kecepatan atau Bertahan Hidup",
+          "zh": "速度或生存率",
+          "cs": "Rychlost nebo přežití"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "expedition_time",
+              "name": {
+                "en": "Expedition Time -30%",
+                "tr": "Sefer Süresi -%30",
+                "ru": "Время экспедиции -30%",
+                "de": "Expeditionszeit -30%",
+                "es": "Tiempo de expedición -30%",
+                "fr": "Temps d'expédition -30%",
+                "pt": "Tempo de expedição -30%",
+                "id": "Waktu Ekspedisi -30%",
+                "zh": "探险时间 -30%",
+                "cs": "Doba expedice -30%"
+              },
+              "icon": "rollercoin/hamsters/icons/speed_percent.webp"
+            },
+            "debuff": {
+              "code": "survival",
+              "name": {
+                "en": "Survive Chance -8%",
+                "tr": "Hayatta Kalma Şansı -%8",
+                "ru": "Шанс выживания -8%",
+                "de": "Überlebenschance -8%",
+                "es": "Probabilidad de supervivencia -8%",
+                "fr": "Chance de survie -8%",
+                "pt": "Chance de sobrevivência -8%",
+                "id": "Peluang Bertahan Hidup -8%",
+                "zh": "生存几率 -8%",
+                "cs": "Šance na přežití -8%"
+              },
+              "icon": "rollercoin/hamsters/icons/survive_percent.webp"
+            }
+          },
+          {
+            "buff": {
+              "code": "survival",
+              "name": {
+                "en": "Survive Chance +8%",
+                "tr": "Hayatta Kalma Şansı +%8",
+                "ru": "Шанс выживания +8%",
+                "de": "Überlebenschance +8%",
+                "es": "Probabilidad de supervivencia +8%",
+                "fr": "Chance de survie +8%",
+                "pt": "Chance de sobrevivência +8%",
+                "id": "Peluang Bertahan Hidup +8%",
+                "zh": "生存几率 +8%",
+                "cs": "Šance na přežití +8%"
+              },
+              "icon": "rollercoin/hamsters/icons/survive_percent.webp"
+            },
+            "debuff": {
+              "code": "expedition_time",
+              "name": {
+                "en": "Expedition Time +30%",
+                "tr": "Sefer Süresi +%30",
+                "ru": "Время экспедиции +30%",
+                "de": "Expeditionszeit +30%",
+                "es": "Tiempo de expedición +30%",
+                "fr": "Temps d'expédition +30%",
+                "pt": "Tempo de expedição +30%",
+                "id": "Waktu Ekspedisi +30%",
+                "zh": "探险时间 +30%",
+                "cs": "Doba expedice +30%"
+              },
+              "icon": "rollercoin/hamsters/icons/speed_percent.webp"
+            }
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Games Boost or Buyback Discount",
+          "tr": "Oyun Bonusu veya Geri Alım İndirimi",
+          "ru": "Буст игр или скидка на выкуп",
+          "de": "Spiele-Boost oder Rückkauf-Rabatt",
+          "es": "Mejora de juegos o descuento de recompra",
+          "fr": "Boost de jeux ou réduction de rachat",
+          "pt": "Bônus de jogos ou desconto de recompra",
+          "id": "Peningkatan Game atau Diskon Beli Kembali",
+          "zh": "小游戏加成或回购折扣",
+          "cs": "Herní bonus nebo sleva na zpětný odkup"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "games_boost",
+              "name": {
+                "en": "Games Boost +220%",
+                "tr": "Oyun Bonusu +%220",
+                "ru": "Буст игр +220%",
+                "de": "Spiele-Boost +220%",
+                "es": "Mejora de juegos +220%",
+                "fr": "Boost de jeux +220%",
+                "pt": "Bônus de jogos +220%",
+                "id": "Peningkatan Game +220%",
+                "zh": "小游戏加成 +220%",
+                "cs": "Herní bonus +220%"
+              },
+              "icon": "rollercoin/hamsters/icons/games_boost_percent.webp"
+            },
+            "debuff": {
+              "code": "buyback_discount",
+              "name": {
+                "en": "Buyback +20% cost",
+                "tr": "Geri Alım Maliyeti +%20",
+                "ru": "Стоимость выкупа +20%",
+                "de": "Rückkaufkosten +20%",
+                "es": "Coste de recompra +20%",
+                "fr": "Coût de rachat +20%",
+                "pt": "Custo de recompra +20%",
+                "id": "Biaya Beli Kembali +20%",
+                "zh": "回购花费 +20%",
+                "cs": "Náklady na zpětný odkup +20%"
+              },
+              "icon": "rollercoin/hamsters/icons/buyback_discount.webp"
+            }
+          },
+          {
+            "buff": {
+              "code": "buyback_discount",
+              "name": {
+                "en": "Buyback Discount -50%",
+                "tr": "Geri Alım İndirimi -%50",
+                "ru": "Скидка на выкуп -50%",
+                "de": "Rückkauf-Rabatt -50%",
+                "es": "Descuento de recompra -50%",
+                "fr": "Réduction de rachat -50%",
+                "pt": "Desconto de recompra -50%",
+                "id": "Diskon Beli Kembali -50%",
+                "zh": "回购折扣 -50%",
+                "cs": "Sleva na zpětný odkup -50%"
+              },
+              "icon": "rollercoin/hamsters/icons/buyback_discount.webp"
+            },
+            "debuff": {
+              "code": "games_boost",
+              "name": {
+                "en": "Games Boost -60%",
+                "tr": "Oyun Bonusu -%60",
+                "ru": "Буст игр -60%",
+                "de": "Spiele-Boost -60%",
+                "es": "Mejora de juegos -60%",
+                "fr": "Boost de jeux -60%",
+                "pt": "Bônus de jogos -60%",
+                "id": "Peningkatan Game -60%",
+                "zh": "小游戏加成 -60%",
+                "cs": "Herní bonus -60%"
+              },
+              "icon": "rollercoin/hamsters/icons/games_boost_percent.webp"
+            }
+          }
+        ]
+      }
+    ],
+    "ultimate": {
+      "code": "remote_bonus",
+      "text": {
+        "en": "Remote Bonus ×2%",
+        "tr": "Uzaktan bonus ×2%",
+        "ru": "Удалённый бонус ×2%",
+        "de": "Fernbonus ×2%",
+        "es": "Bonificación remota ×2%",
+        "fr": "Bonus à distance ×2%",
+        "pt": "Bônus remoto ×2%",
+        "id": "Bonus jarak jauh ×2%",
+        "zh": "远程加成 ×2%",
+        "cs": "Vzdálený bonus ×2%"
+      },
+      "icon": "rollercoin/hamsters/icons/remote_bonus.webp"
+    },
+    "ultimateChargePoints": 24,
+    "skins": [
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_walk.png",
+        "frames": 8,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/cuscuz/lvl50/idle.png",
+        "previewRegion": {
+          "x": 40,
+          "y": 92,
+          "width": 48,
+          "height": 48
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        },
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 48,
+          "frameHeight": 48,
+          "frameDurationMs": 100,
+          "previewRegion": {
+            "x": 2,
+            "y": -1,
+            "width": 40,
+            "height": 40
+          }
+        }
+      }
+    ],
+    "animationsPending": true
   }
 ]

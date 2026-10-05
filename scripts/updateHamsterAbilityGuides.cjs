@@ -4,6 +4,30 @@ const languages = ['en', 'tr', 'ru', 'de', 'es', 'fr', 'pt', 'id', 'zh', 'cs'];
 // Paraphrased mechanics from the verified articles in hamsterAbilityGuides.ts.
 // Column order follows languages above. This script never replaces catalog data.
 const ui = {
+  animationsPendingWithIdle: [
+    'The walking animation and idle preview are available for now. All animations will be added when the hamster joins the game.',
+    'Şimdilik yürüyüş animasyonu ve idle önizlemesi mevcut. Hamster oyuna eklendiğinde tüm animasyonlar eklenecek.',
+    'Пока доступны анимация ходьбы и анимация ожидания. Все анимации будут добавлены, когда хомяк появится в игре.',
+    'Vorerst sind Laufanimation und Leerlaufvorschau verfügbar. Alle Animationen werden ergänzt, sobald der Hamster ins Spiel kommt.',
+    'Por ahora están disponibles la animación de caminar y la vista en reposo. Se añadirán todas las animaciones cuando el hámster llegue al juego.',
+    'L’animation de marche et l’aperçu au repos sont disponibles pour le moment. Toutes les animations seront ajoutées lorsque le hamster arrivera dans le jeu.',
+    'Por enquanto, a animação de caminhada e a prévia em repouso estão disponíveis. Todas as animações serão adicionadas quando o hamster entrar no jogo.',
+    'Saat ini animasi berjalan dan pratinjau diam tersedia. Semua animasi akan ditambahkan ketika hamster hadir di dalam game.',
+    '目前提供行走动画和待机预览。仓鼠加入游戏后将添加全部动画。',
+    'Zatím jsou dostupné animace chůze a náhled v klidu. Všechny animace budou přidány, až se křeček objeví ve hře.'
+  ],
+  animationsPending: [
+    'Only the walking animation is available for now. All animations will be added when the hamster joins the game.',
+    'Şimdilik yalnızca yürüyüş animasyonu mevcut. Hamster oyuna eklendiğinde tüm animasyonlar eklenecek.',
+    'Пока доступна только анимация ходьбы. Все анимации будут добавлены, когда хомяк появится в игре.',
+    'Vorerst ist nur die Laufanimation verfügbar. Alle Animationen werden ergänzt, sobald der Hamster ins Spiel kommt.',
+    'Por ahora solo está disponible la animación de caminar. Se añadirán todas las animaciones cuando el hámster llegue al juego.',
+    'Seule l’animation de marche est disponible pour le moment. Toutes les animations seront ajoutées lorsque le hamster arrivera dans le jeu.',
+    'Por enquanto, apenas a animação de caminhada está disponível. Todas as animações serão adicionadas quando o hamster entrar no jogo.',
+    'Saat ini hanya animasi berjalan yang tersedia. Semua animasi akan ditambahkan ketika hamster hadir di dalam game.',
+    '目前仅提供行走动画。仓鼠加入游戏后将添加全部动画。',
+    'Zatím je dostupná pouze animace chůze. Všechny animace budou přidány, až se křeček objeví ve hře.'
+  ],
   passive: ['Passive abilities', 'Pasif yetenekler', 'Пассивные способности', 'Passive Fähigkeiten', 'Habilidades pasivas', 'Capacités passives', 'Habilidades passivas', 'Kemampuan pasif', '被动技能', 'Pasivní schopnosti'],
   ultimate: ['Ultimate ability', 'Nihai yetenek', 'Ультимативная способность', 'Ultimative Fähigkeit', 'Habilidad definitiva', 'Capacité ultime', 'Habilidade suprema', 'Kemampuan ultimate', '终极技能', 'Ultimátní schopnost'],
   overcharged: ['Overcharged ultimate', 'Kademeli nihai yetenek', 'Многоуровневый ультимейт', 'Mehrstufige ultimative Fähigkeit', 'Definitiva por niveles', 'Capacité ultime à paliers', 'Suprema por níveis', 'Ultimate bertingkat', '分级终极技能', 'Víceúrovňová ultimátní schopnost'],
@@ -14,6 +38,18 @@ const ui = {
   example: ['Blog example', 'Blogdaki örnek', 'Пример из блога', 'Beispiel aus dem Blog', 'Ejemplo del blog', 'Exemple du blog', 'Exemplo do blog', 'Contoh dari blog', '博客示例', 'Příklad z blogu'],
 };
 const descriptions = {
+  remoteBonusUltimate: [
+    'While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.',
+    'Cuscuz seferde hayattayken toplam statı ×%2 kadar geçici oda bonusu verir. Bonus orijinal sefer süresini kullanır; hızlandırmalar ve süre azaltan yetenekler bonus süresini kısaltmaz. Şarj: {{charge}} puan.',
+    'Пока Cuscuz жив в экспедиции, даёт временный бонус комнаты: сумма характеристик ×2%. Длительность равна исходному времени экспедиции; ускорения и сокращающие время способности её не уменьшают. Заряд: {{charge}} очков.',
+    'Solange Cuscuz auf einer Expedition lebt, gewährt er einen temporären Raumbonus: Gesamtwerte ×2%. Die ursprüngliche Expeditionsdauer gilt; Beschleuniger und zeitverkürzende Fähigkeiten verkürzen den Bonus nicht. Aufladen: {{charge}} Punkte.',
+    'Mientras Cuscuz esté vivo en una expedición, concede un bonus temporal de sala igual a sus estadísticas totales ×2%. Usa la duración original; los aceleradores y habilidades que reducen el tiempo no acortan el bonus. Recarga: {{charge}} puntos.',
+    'Tant que Cuscuz est vivant en expédition, accorde un bonus temporaire de salle égal au total de ses stats ×2 %. La durée originale s’applique ; les accélérateurs et capacités réduisant le temps ne raccourcissent pas le bonus. Recharge : {{charge}} points.',
+    'Enquanto Cuscuz estiver vivo em uma expedição, concede um bônus temporário de sala igual à soma dos atributos ×2%. Usa a duração original; aceleradores e habilidades de redução de tempo não encurtam o bônus. Recarga: {{charge}} pontos.',
+    'Selama Cuscuz hidup dalam Ekspedisi, memberikan bonus ruangan sementara sebesar total atribut ×2%. Menggunakan durasi Ekspedisi asli; percepatan dan kemampuan pengurangan waktu tidak memperpendek bonus. Isi ulang: {{charge}} poin.',
+    'Cuscuz在远征中存活时，提供属性总和×2%的临时房间加成。持续时间按原始远征时长计算；加速道具和缩短时间的技能不会缩短加成。充能：{{charge}}点。',
+    'Dokud je Cuscuz v expedici naživu, poskytuje dočasný bonus místnosti ve výši součtu atributů ×2 %. Platí původní délka expedice; zrychlení a schopnosti zkracující čas bonus nezkracují. Dobití: {{charge}} bodů.'
+  ],
   experience: [
     'Increases the XP this hamster earns from Expeditions by the displayed percentage.', 'Bu hamsterın seferlerden kazandığı deneyimi belirtilen yüzde kadar artırır.', 'Увеличивает опыт этого хомяка от экспедиций на указанный процент.', 'Erhöht die Expeditions-EP dieses Hamsters um den angegebenen Prozentsatz.', 'Aumenta la XP que este hámster gana en expediciones en el porcentaje indicado.', 'Augmente les XP gagnés en expédition par ce hamster du pourcentage indiqué.', 'Aumenta a XP deste hamster nas expedições pela porcentagem indicada.', 'Meningkatkan XP hamster ini dari Ekspedisi sesuai persentase yang ditampilkan.', '按所示百分比增加该仓鼠从远征中获得的经验。', 'Zvyšuje zkušenosti tohoto křečka z expedic o uvedené procento.'
   ],
@@ -112,6 +148,18 @@ const descriptions = {
   ],
 };
 const examples = {
+  cuscuzRemoteBonus: [
+    'Base stats: (90 + 75 + 90) ×2% = 510% room bonus.',
+    'Temel statlar: (90 + 75 + 90) ×%2 = %510 oda bonusu.',
+    'Базовые характеристики: (90 + 75 + 90) ×2% = 510% бонуса комнаты.',
+    'Grundwerte: (90 + 75 + 90) ×2% = 510% Raumbonus.',
+    'Estadísticas base: (90 + 75 + 90) ×2% = 510% de bonus de sala.',
+    'Stats de base : (90 + 75 + 90) ×2 % = 510 % de bonus de salle.',
+    'Atributos base: (90 + 75 + 90) ×2% = 510% de bônus de sala.',
+    'Atribut dasar: (90 + 75 + 90) ×2% = 510% bonus ruangan.',
+    '基础属性：(90 + 75 + 90) ×2% = 510%房间加成。',
+    'Základní atributy: (90 + 75 + 90) ×2 % = 510% bonus místnosti.'
+  ],
   remoteBonus: [
     'Base stats: (40 + 90 + 90) ×2% = 440%. At 100/100/100: 600%.', 'Temel statlar: (40 + 90 + 90) ×%2 = %440. 100/100/100 statta: %600.', 'Базовые: (40 + 90 + 90) ×2% = 440%. При 100/100/100: 600%.', 'Grundwerte: (40 + 90 + 90) ×2% = 440%. Bei 100/100/100: 600%.', 'Base: (40 + 90 + 90) ×2% = 440%. Con 100/100/100: 600%.', 'Base : (40 + 90 + 90) ×2% = 440%. Avec 100/100/100 : 600%.', 'Base: (40 + 90 + 90) ×2% = 440%. Com 100/100/100: 600%.', 'Dasar: (40 + 90 + 90) ×2% = 440%. Pada 100/100/100: 600%.', '基础属性：(40 + 90 + 90) ×2% = 440%。100/100/100时：600%。', 'Základ: (40 + 90 + 90) ×2% = 440%. Při 100/100/100: 600%.'
   ],
@@ -120,6 +168,7 @@ const examples = {
   ],
 };
 const labels = {
+  remoteBonusUltimate: ['Remote Bonus', 'Uzaktan bonus', 'Удалённый бонус', 'Fernbonus', 'Bonificación remota', 'Bonus à distance', 'Bônus remoto', 'Bonus jarak jauh', '远程加成', 'Vzdálený bonus'],
   boostMode: ['Boost Mode', 'Güçlendirme modu', 'Режим усиления', 'Verstärkungsmodus', 'Modo de mejora', 'Mode de renforcement', 'Modo de reforço', 'Mode peningkatan', '强化模式', 'Režim posílení'],
   chestsMultiplier: ['Chests Multiplier ×3', 'Sandık çarpanı ×3', 'Множитель сундуков ×3', 'Truhenmultiplikator ×3', 'Multiplicador de cofres ×3', 'Multiplicateur de coffres ×3', 'Multiplicador de baús ×3', 'Pengali peti ×3', '宝箱倍率 ×3', 'Násobitel truhel ×3'],
   cryptoChest: ['Crypto Chest', 'Kripto para sandığı', 'Криптосундук', 'Krypto-Truhe', 'Cofre de criptomonedas', 'Coffre de cryptomonnaies', 'Baú de criptomoedas', 'Peti kripto', '加密货币宝箱', 'Truhla s kryptoměnami'],
@@ -135,6 +184,7 @@ const labels = {
 };
 labels.overchargedChests = labels.chestsMultiplier;
 labels.overchargedConversion = labels.lootConversion;
+descriptions.gamesBoost = descriptions.gamesBoost.map(text => text.replace('GFeast', '{{name}}'));
 for (const [group, entries] of Object.entries({ ui, labels, descriptions, examples })) {
   for (const [key, values] of Object.entries(entries)) {
     if (values.length !== languages.length || values.some(value => !value)) throw new Error(`Incomplete ${group}.${key}`);

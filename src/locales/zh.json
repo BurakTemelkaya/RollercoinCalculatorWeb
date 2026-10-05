@@ -1050,6 +1050,8 @@
     "minutes": "{{value}} 分钟"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "目前提供行走动画和待机预览。仓鼠加入游戏后将添加全部动画。",
+    "animationsPending": "目前仅提供行走动画。仓鼠加入游戏后将添加全部动画。",
     "passive": "被动技能",
     "ultimate": "终极技能",
     "overcharged": "分级终极技能",
@@ -1059,6 +1061,7 @@
     "source": "官方说明",
     "example": "博客示例",
     "labels": {
+      "remoteBonusUltimate": "远程加成",
       "boostMode": "强化模式",
       "chestsMultiplier": "宝箱倍率 ×3",
       "cryptoChest": "加密货币宝箱",
@@ -1075,6 +1078,7 @@
       "overchargedConversion": "战利品转换"
     },
     "descriptions": {
+      "remoteBonusUltimate": "Cuscuz在远征中存活时，提供属性总和×2%的临时房间加成。持续时间按原始远征时长计算；加速道具和缩短时间的技能不会缩短加成。充能：{{charge}}点。",
       "experience": "按所示百分比增加该仓鼠从远征中获得的经验。",
       "survival": "将带符号的百分比直接加到最终生存概率上，负值会降低概率。",
       "rest": "按所示百分比调整远征后的休息时间，负值表示减少等待。",
@@ -1091,7 +1095,7 @@
       "keepGoing": "成功后无需休息；失败后休息时间为正常时长的三倍。",
       "restRelay": "每个完整远征小时按所示分钟数减少其他仓鼠的休息。加速道具不增加效果，多余恢复量作废。",
       "chargeRelay": "按完整的原始远征小时为其他仓鼠的终极技能充能。仅计整数充能点，加速不提供额外效果。",
-      "gamesBoost": "按所示百分比调整游戏增益；GFeast的此选项同时改变赎回费用。",
+      "gamesBoost": "按所示百分比调整游戏增益；{{name}}的此选项同时改变赎回费用。",
       "boostMode": "激活后一次远征中的生命、力量和幸运各为100。再次使用需{{charge}}充能点。",
       "chestsMultiplier": "远征前激活，结束时选择最多五份奖励，每份变为三倍。充能：{{charge}}点。",
       "plagueChests": "即使远征失败，也将最多五份选中奖励变为三倍。不提高生存概率。充能：30点。",
@@ -1109,6 +1113,7 @@
       "remotePowerUltimate": "GFeast远征中存活期间增加临时矿机算力×5，不乘房间加成。持续时间按原始远征时长计算，不受加速或时长缩减影响。"
     },
     "examples": {
+      "cuscuzRemoteBonus": "基础属性：(90 + 75 + 90) ×2% = 510%房间加成。",
       "remoteBonus": "基础属性：(40 + 90 + 90) ×2% = 440%。100/100/100时：600%。",
       "overchargedChests": "28充能点使用已完成的II级：五份奖励变为三倍。III级需要30点。"
     }
