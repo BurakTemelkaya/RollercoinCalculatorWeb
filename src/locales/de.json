@@ -158,16 +158,18 @@
       "referrals": "🔗 Empfohlene Plattformen & Bots",
       "donations": "☕ Krypto-Spenden",
       "coffee": "Unterstützen ☕",
+      "referralsTab": "Empfehlungen",
+      "donationsTab": "Spenden",
       "desc": {
         "chainers": "Ein lustiges und wachsendes Web3-Kryptospiel, in dem Sie täglich kostenlose NFTs oder Token erhalten können. Sammeln Sie kostenlose Karten, um voranzukommen.",
         "chainersHeroes": "Die Telegram-Integration des Chainers-Ökosystems. Verdienen Sie In-Game-Belohnungen durch Tippen und das Abschließen von Quests.",
         "rollerTap": "Mit Rollertap können Sie durch Klicken Belohnungen verdienen und diese auf Ihr Rollercoin-Konto übertragen.",
-        "solsiege": "Sol Siege ist ein Idle-Auto-Battle Wave Defender, der nativ auf Solana aufgebaut ist.",
+        "hoodsiege": "Ein Spiel zur Wellenverteidigung auf Robinhood Chain, in dem dein Held automatisch kämpft. Verbessere Ausrüstung und Fähigkeiten, um weiterzukommen.",
         "mystNodes": "Ein Projekt zum Teilen von Infrastruktur, das es Ihnen ermöglicht, durch das Ausführen eines leichtgewichtigen Knotens auf Ihrem Gerät Krypto (MYST) zu verdienen.",
         "grass": "Teilen Sie Ihr Internet, verdienen Sie $GRASS! Starten Sie jetzt Ihre Reise zum passiven Einkommen.",
-        "immutable": "Eine führende Web3-Gaming-Plattform, auf der Sie in Kryptospielen der nächsten Generation entdecken, spielen und verdienen können.",
         "honeygain": "Verdienen Sie mühelos passives Einkommen, indem Sie Ihre ungenutzte Internetbandbreite sicher teilen.",
         "freecash": "Verdienen Sie Krypto, Geschenkkarten und Bargeld, indem Sie Spiele spielen, an Umfragen teilnehmen und Apps testen.",
+        "zuncia": "Verdienen Sie XRP, indem Sie täglich Werbung ansehen, auf Anzeigen klicken oder einfache Spiele spielen.",
         "rollercoin": "Wenn Sie diese Seite besucht haben und immer noch nicht angefangen haben, RollerCoin zu spielen (was höchst unwahrscheinlich ist), würden wir uns freuen, wenn Sie sich über unseren Empfehlungslink registrieren, um unsere Seite zu unterstützen."
       }
     },
