@@ -158,16 +158,18 @@
       "referrals": "🔗 Platform yang Direkomendasikan",
       "donations": "☕ Donasi Kripto",
       "coffee": "Dukung ☕",
+      "referralsTab": "Referensi",
+      "donationsTab": "Donasi",
       "desc": {
         "chainers": "Game kripto Web3 gratis yang menyenangkan.",
         "chainersHeroes": "Integrasi Telegram Chainers.",
         "rollerTap": "Dapatkan hadiah melalui Telegram dan transfer ke Rollercoin.",
-        "solsiege": "Permainan pertahanan di jaringan Solana.",
+        "hoodsiege": "Game pertahanan gelombang di Robinhood Chain dengan pahlawan yang bertarung secara otomatis. Tingkatkan perlengkapan dan kemampuan untuk maju.",
         "mystNodes": "Dapatkan kripto (MYST) dengan menjalankan node ringan.",
         "grass": "Bagikan internet Anda, dapatkan $GRASS!",
-        "immutable": "Platform game Web3 terkemuka.",
         "honeygain": "Hasilkan pendapatan pasif dari bandwidth Anda.",
         "freecash": "Dapatkan kripto dengan bermain game dan survei.",
+        "zuncia": "Dapatkan XRP dengan menonton iklan setiap hari, mengeklik iklan, atau bermain game sederhana.",
         "rollercoin": "Jika Anda mengunjungi situs ini dan masih belum mulai bermain RollerCoin (yang kemungkinannya kecil), kami akan sangat senang jika Anda mendaftar menggunakan tautan referral kami untuk mendukung situs kami."
       }
     },
