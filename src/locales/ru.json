@@ -1135,6 +1135,8 @@
     "minutes": "{{value}} мин"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "The walking animation and idle preview are available for now. All animations will be added when the hamster joins the game.",
+    "animationsPending": "Only the walking animation is available for now. All animations will be added when the hamster joins the game.",
     "passive": "Пассивные способности",
     "ultimate": "Ультимативная способность",
     "overcharged": "Многоуровневый ультимейт",
@@ -1144,6 +1146,7 @@
     "source": "Официальное описание",
     "example": "Пример из блога",
     "labels": {
+      "remoteBonusUltimate": "Remote Bonus",
       "boostMode": "Режим усиления",
       "chestsMultiplier": "Множитель сундуков ×3",
       "cryptoChest": "Криптосундук",
@@ -1160,6 +1163,7 @@
       "overchargedConversion": "Конвертация добычи"
     },
     "descriptions": {
+      "remoteBonusUltimate": "While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.",
       "experience": "Увеличивает опыт этого хомяка от экспедиций на указанный процент.",
       "survival": "Указанный процент напрямую прибавляется к шансу выживания. Отрицательное значение снижает его.",
       "rest": "Меняет время отдыха после экспедиции на указанный процент; отрицательное значение сокращает ожидание.",
@@ -1176,7 +1180,7 @@
       "keepGoing": "Не отдыхает после успеха; после провала отдых длится втрое дольше.",
       "restRelay": "Каждый полный час сокращает отдых других хомяков на указанные минуты. Ускорения не добавляют бонус; избыток теряется.",
       "chargeRelay": "Заряжает ультимейты других хомяков за полные исходные часы. Заряд считается целыми очками; ускорения не дают прибавки.",
-      "gamesBoost": "Меняет Games Boost на указанный процент. У GFeast этот выбор связан с изменением цены выкупа.",
+      "gamesBoost": "Changes Games Boost by the displayed percentage. {{name}} pairs this choice with a Buyback cost trade-off.",
       "boostMode": "При активации здоровье, сила и удача становятся 100 на одну экспедицию. Для повторного использования нужно {{charge}} очков.",
       "chestsMultiplier": "Активируйте перед экспедицией; в конце выберите до пяти наград и утройте каждую. Заряд: {{charge}} очков.",
       "plagueChests": "Утраивает до пяти выбранных наград даже при провале. Не повышает шанс выживания. Заряд: 30 очков.",
@@ -1194,6 +1198,7 @@
       "remotePowerUltimate": "Пока GFeast жив, добавляет временную мощность майнеров ×5 без бонусов комнаты. Срок — исходное время, ускорения и сокращения не влияют."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",
       "remoteBonus": "Базовые: (40 + 90 + 90) ×2% = 440%. При 100/100/100: 600%.",
       "overchargedChests": "При 28 очках готов уровень II: пять наград утраиваются. Для III нужно 30."
     }
