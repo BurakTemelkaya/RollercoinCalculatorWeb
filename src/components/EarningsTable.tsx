@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import html2canvas from 'html2canvas';
 import { EarningsResult } from '../types';
 import { formatCryptoAmount, formatUSD } from '../utils/calculator';
 import { getBlocksPerPeriod } from '../utils/calculator';
@@ -309,6 +308,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         setIsCapturing(true);
         try {
             const el = tablesRef.current;
+            const { default: html2canvas } = await import('html2canvas');
 
             // Temporarily remove overflow constraints and expand to full table width
             const containers = el.querySelectorAll<HTMLElement>('.table-container');

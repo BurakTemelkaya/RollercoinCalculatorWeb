@@ -38,3 +38,12 @@ Uygulama tüm verileri localStorage'da cache'ler:
 - `rollercoin_web_api_leagues`, `rollercoin_web_raw_api_data`
 - `rollercoin_web_fetched_user`, `rollercoin_web_block_durations`
 - Cache versiyonu `CACHE_VERSION_KEY` ile takip edilir, versiyon değişince cache temizlenir.
+
+## PWA: İhtiyaç Anında Dosya İndirme
+
+- `vite.config.ts` artık Vite build manifestindeki giriş dosyasının yalnızca statik `imports` bağımlılıklarını ve CSS dosyalarını precache listesine alır. `dynamicImports` takip edilmez. Liste `index.html`, `icon.png` ve açılış paketlerinden oluşur; diğer sayfaların JS/CSS dosyaları ve görselleri topluca indirilmez.
+- `src/sw.ts`, aynı origin üzerindeki hash içeren `/assets/*.js` ve `/assets/*.css` isteklerini `CacheFirst` ile `rollercoin-lazy-assets-v1` cache'ine kaydeder. İlk istekte indirilir, sonraki isteklerde cache'ten gelir. Cache sürümler arasında korunur; 256 giriş / 30 gün sınırı ve kota temizliği uygulanır. HTML fallback yanıtları JS/CSS olarak kaydedilmez. API ve üçüncü taraf istekleri bu cache'e girmez.
+- Oda ve manuel güç simülatörleri (RoomPowerSimulator, RoomSimulator ve ManualSimulator) statik import edilir; açılış paketine ve precache kapsamına dahildir. html2canvas yalnızca ekran görüntüsü özelliği kullanıldığında indirilir.
+- Görseller tarayıcının normal HTTP önbelleğini kullanır. Offline kullanılabilirlik, uygulama kabuğu ve daha önce istenerek cache'e alınan sayfa kodlarıyla sınırlıdır; ziyaret edilmeyen sayfanın ilk açılışı bağlantı gerektirir.
+- Güncellemeler Workbox'un mevcut revizyon/hash takibiyle sadece değişen kabuk dosyalarını indirir. ServiceWorkerUpdater içindeki sayfa geçişinde güncellemeyi etkinleştirme davranışı korunur.
+- Kontrol: `npm run build` ardından `node scripts/check-pwa-cache.mjs`. Tarayıcı testi ilk ziyaret, lazy sayfa açılışı, değişmemiş dosyalarla worker güncellemesi, cache'in güncelleme sonrasında korunması, HTML fallback'in cache'e alınmaması ve offline JS erişimini doğrular.

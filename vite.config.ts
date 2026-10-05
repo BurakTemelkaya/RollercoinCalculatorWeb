@@ -1,6 +1,31 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { readFileSync } from 'node:fs'
+import type { Manifest } from 'vite'
+
+// Follow static imports only. Dynamic imports belong to pages/features that
+// must be fetched on demand, even when a new service worker is installing.
+function getAppShellFiles() {
+  const manifest: Manifest = JSON.parse(
+    readFileSync(new URL('./dist/.vite/manifest.json', import.meta.url), 'utf8'),
+  )
+  const files = new Set(['index.html', 'icon.png'])
+  const visited = new Set<string>()
+  function visit(key: string) {
+    if (visited.has(key)) return
+    visited.add(key)
+    const chunk = manifest[key]
+    if (!chunk) throw new Error(`Missing app shell chunk: ${key}`)
+    files.add(chunk.file)
+    for (const css of chunk.css ?? []) files.add(css)
+    for (const dependency of chunk.imports ?? []) visit(dependency)
+  }
+  const entries = Object.keys(manifest).filter(key => manifest[key].isEntry)
+  if (!entries.length) throw new Error('No app entry found for PWA precaching')
+  for (const entry of entries) visit(entry)
+  return files
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,8 +37,14 @@ export default defineConfig({
       srcDir: 'src',                      // SW kaynak dosya konumu
       filename: 'sw.ts',                   // SW dosya adı
       injectManifest: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
-        globIgnores: ['**/assets/rollercoin/hamsters/**'],
+        globPatterns: ['index.html', 'icon.png', 'assets/*.{js,css}'],
+        manifestTransforms: [entries => {
+          const shellFiles = getAppShellFiles()
+          return {
+            manifest: entries.filter(entry => shellFiles.has(entry.url)),
+            warnings: [],
+          }
+        }],
       },
       manifest: false,                     // Mevcut public/manifest.json'u kullan
       devOptions: {
@@ -27,6 +58,7 @@ export default defineConfig({
     devSourcemap: false
   },
   build: {
+    manifest: true, // Used to identify the entry's static dependency graph.
     target: "es2015",
     chunkSizeWarningLimit: 1000,
     // Disable inlining of SVGs as base64 for production builds

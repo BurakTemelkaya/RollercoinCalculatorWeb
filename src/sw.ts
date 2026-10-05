@@ -1,6 +1,9 @@
 /// <reference lib="webworker" />
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
+import { registerRoute } from 'workbox-routing'
+import { CacheFirst } from 'workbox-strategies'
+import { ExpirationPlugin } from 'workbox-expiration'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -17,13 +20,38 @@ clientsClaim()
 cleanupOutdatedCaches()
 
 // Vite-plugin-pwa tarafından inject edilen precache manifest
-// Build sırasında tüm JS, CSS, HTML, asset dosyaları otomatik eklenir
+// Only the app shell and its static imports are included at build time.
 precacheAndRoute(self.__WB_MANIFEST)
+
+// Vite gives JS/CSS content hashes, so a cached URL never needs revalidation.
+// Lazy pages enter this cache only when requested, not during SW installation.
+registerRoute(
+  ({ url, sameOrigin }) => sameOrigin && /^\/assets\/.+-[\w-]{8,}\.(js|css)$/.test(url.pathname),
+  new CacheFirst({
+    cacheName: 'rollercoin-lazy-assets-v1',
+    plugins: [
+      {
+        // Never persist an HTML SPA fallback returned for a missing chunk.
+        cacheWillUpdate: async ({ response }) => {
+          const contentType = response.headers.get('content-type') ?? ''
+          return response.status === 200 && /(?:javascript|text\/css)/i.test(contentType)
+            ? response
+            : null
+        },
+      },
+      new ExpirationPlugin({
+        maxEntries: 256,
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+        purgeOnQuotaError: true,
+      }),
+    ],
+  }),
+)
 
 // --- Push Notification Logic ---
 self.addEventListener('push', (event) => {
   let title = 'Rollercoin Calculator'
-  let options: NotificationOptions & { data?: { url: string } } = {
+  const options: NotificationOptions & { data?: { url: string } } = {
     body: 'You have a new notification.',
     icon: '/icon.png',
     badge: '/icon.png',
