@@ -158,16 +158,18 @@
       "referrals": "🔗 Plataformas Recomendadas",
       "donations": "☕ Doações em Cripto",
       "coffee": "Apoiar ☕",
+      "referralsTab": "Indicações",
+      "donationsTab": "Doações",
       "desc": {
         "chainers": "Um jogo divertido Web3 onde você pode ganhar NFTs.",
         "chainersHeroes": "Integração do Telegram para Chainers.",
         "rollerTap": "Ganhe recompensas no Telegram transferíveis para Rollercoin.",
-        "solsiege": "Sol Siege é um jogo de defesa automático na rede Solana.",
+        "hoodsiege": "Um jogo de defesa por ondas na Robinhood Chain em que seu herói combate automaticamente. Melhore equipamentos e habilidades para avançar.",
         "mystNodes": "Ganhe criptomoedas (MYST) executando um nó.",
         "grass": "Compartilhe internet, ganhe $GRASS!",
-        "immutable": "Uma plataforma líder em jogos Web3.",
         "honeygain": "Ganhe renda passiva com sua internet não utilizada.",
         "freecash": "Ganhe criptomoedas e gift cards.",
+        "zuncia": "Ganhe XRP assistindo a anúncios diariamente, clicando em anúncios ou jogando jogos simples.",
         "rollercoin": "Se você visitou este site e ainda não começou a jogar RollerCoin (o que é pouco provável), ficaríamos felizes se você se registrasse usando nosso link de indicação para apoiar nosso site."
       }
     },
