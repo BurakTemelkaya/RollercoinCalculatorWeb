@@ -1135,6 +1135,8 @@
     "minutes": "{{value}} min"
   },
   "hamsterAbilityGuide": {
+    "animationsPendingWithIdle": "The walking animation and idle preview are available for now. All animations will be added when the hamster joins the game.",
+    "animationsPending": "Only the walking animation is available for now. All animations will be added when the hamster joins the game.",
     "passive": "Capacités passives",
     "ultimate": "Capacité ultime",
     "overcharged": "Capacité ultime à paliers",
@@ -1144,6 +1146,7 @@
     "source": "Explication officielle",
     "example": "Exemple du blog",
     "labels": {
+      "remoteBonusUltimate": "Remote Bonus",
       "boostMode": "Mode de renforcement",
       "chestsMultiplier": "Multiplicateur de coffres ×3",
       "cryptoChest": "Coffre de cryptomonnaies",
@@ -1160,6 +1163,7 @@
       "overchargedConversion": "Conversion du butin"
     },
     "descriptions": {
+      "remoteBonusUltimate": "While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.",
       "experience": "Augmente les XP gagnés en expédition par ce hamster du pourcentage indiqué.",
       "survival": "Ajoute le pourcentage directement à la probabilité finale de survie. Une valeur négative la réduit.",
       "rest": "Modifie le repos après une expédition ; une valeur négative réduit l’attente.",
@@ -1176,7 +1180,7 @@
       "keepGoing": "Aucun repos après réussite ; après échec, repos trois fois plus long.",
       "restRelay": "Chaque heure complète réduit le repos des autres hamsters des minutes indiquées. Pas de bonus des accélérateurs ; surplus perdu.",
       "chargeRelay": "Recharge les ultimes des autres hamsters selon les heures originales complètes. Points entiers uniquement ; aucun bonus des accélérateurs.",
-      "gamesBoost": "Modifie Games Boost du pourcentage indiqué. Chez GFeast, ce choix change aussi le coût de rachat.",
+      "gamesBoost": "Changes Games Boost by the displayed percentage. {{name}} pairs this choice with a Buyback cost trade-off.",
       "boostMode": "Fixe santé, force et chance à 100 pour une expédition. Recharge : {{charge}} points.",
       "chestsMultiplier": "Activez avant l’expédition ; à la fin, choisissez jusqu’à cinq récompenses et triplez-les. Recharge : {{charge}} points.",
       "plagueChests": "Triple jusqu’à cinq récompenses choisies, même en cas d’échec. Aucun bonus de survie. Recharge : 30 points.",
@@ -1194,6 +1198,7 @@
       "remotePowerUltimate": "Tant que GFeast vit, puissance temporaire des mineurs ×5 sans bonus de salle. Durée originale, inchangée par accélérateurs ou réductions."
     },
     "examples": {
+      "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",
       "remoteBonus": "Base : (40 + 90 + 90) ×2% = 440%. Avec 100/100/100 : 600%.",
       "overchargedChests": "Avec 28 points, palier II : cinq récompenses triplées. Palier III : 30 requis."
     }
