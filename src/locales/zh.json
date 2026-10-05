@@ -99,16 +99,18 @@
       "referrals": "🔗 推荐平台",
       "donations": "☕ 加密货币捐赠",
       "coffee": "支持 ☕",
+      "referralsTab": "推荐",
+      "donationsTab": "捐赠",
       "desc": {
         "chainers": "有趣的 Web3 加密游戏，每天可以获得免费的 NFT。",
         "chainersHeroes": "Chainers 生态系统的 Telegram 小游戏。",
         "rollerTap": "在 Telegram 点击赚取奖励，可转移到 Rollercoin。",
-        "solsiege": "Solana 网络上的自动防御游戏。",
+        "hoodsiege": "一款基于 Robinhood Chain 的波次防御游戏，英雄会自动战斗。升级装备和技能，在游戏中不断推进。",
         "mystNodes": "通过运行轻节点赚取加密货币 (MYST)。",
         "grass": "分享互联网，赚取 $GRASS！",
-        "immutable": "领先的 Web3 游戏平台。",
         "honeygain": "通过分享带宽赚取被动收入。",
         "freecash": "玩游戏和填写调查赚取加密货币。",
+        "zuncia": "每天观看广告、点击广告或玩简单游戏，赚取 XRP。",
         "rollercoin": "如果您访问了此网站但仍未开始玩 RollerCoin（虽然这种可能性极小），如果您能使用我们的推荐链接注册以支持我们的网站，我们将不胜感激。"
       }
     },

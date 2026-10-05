@@ -158,16 +158,18 @@
       "referrals": "🔗 Recommended Platforms & Bots",
       "donations": "☕ Crypto Donations",
       "coffee": "Support ☕",
+      "referralsTab": "Referrals",
+      "donationsTab": "Donations",
       "desc": {
         "chainers": "A fun and growing Web3 crypto game where you can get free NFTs or tokens daily. Gather free cards to progress.",
         "chainersHeroes": "The Telegram integration of the Chainers ecosystem. Earn in-game rewards by tapping and completing quests.",
         "rollerTap": "With Rollertap, you can earn rewards by clicking and transfer the rewards you’ve earned to your Rollercoin account.",
-        "solsiege": "Sol Siege is an idle auto-battle wave defender built natively on Solana.",
+        "hoodsiege": "An idle wave defense game on Robinhood Chain. Your hero fights automatically while you upgrade gear and abilities to progress.",
         "mystNodes": "An infrastructure-sharing project that allows you to earn crypto (MYST) by running a lightweight node on your device.",
         "grass": "Share internet, earn $GRASS! Start your passive income journey now.",
-        "immutable": "A leading Web3 gaming platform where you can discover, play, and earn in next-generation crypto games.",
         "honeygain": "Earn passive income effortlessly by securely sharing your unused internet bandwidth.",
         "freecash": "Earn crypto, gift cards, and cash by playing games, completing surveys, and testing apps.",
+        "zuncia": "Earn XRP by watching daily ads, clicking ads, or playing simple games.",
         "rollercoin": "If you visited this site and still haven't started playing RollerCoin (which is highly unlikely), we would appreciate it if you register using our referral link to support our site."
       }
     },

@@ -99,16 +99,18 @@
       "referrals": "🔗 Doporučené platformy a boti",
       "donations": "☕ Kryptodonace",
       "coffee": "Podpora ☕",
+      "referralsTab": "Doporučení",
+      "donationsTab": "Dary",
       "desc": {
         "chainers": "Zábavná a rostoucí Web3 kryptohra, kde můžete denně získat zdarma NFT nebo tokeny. Sbírejte zdarma karty, abyste postupovali.",
         "chainersHeroes": "Integrace Chainers ekosystému s Telegramem. Získejte herní odměny klepáním a plněním úkolů.",
         "rollerTap": "S Rollertap můžete získávat odměny klikáním a převádět odměny, které jste získali, na svůj účet Rollercoin.",
-        "solsiege": "Sol Siege je nečinná automatická bojová obranná hra vln postavená nativně na Solaně.",
+        "hoodsiege": "Obranná hra na Robinhood Chain, ve které váš hrdina automaticky bojuje proti vlnám nepřátel. Vylepšujte vybavení a schopnosti a postupujte dál.",
         "mystNodes": "Projekt sdílení infrastruktury, který vám umožňuje získávat kryptoměnu (MYST) spuštěním lehkého uzlu na vašem zařízení.",
         "grass": "Sdílejte internet, vydělávejte $GRASS! Začněte svou cestu k pasivnímu příjmu nyní.",
-        "immutable": "Přední herní platforma Web3, kde můžete objevovat, hrát a vydělávat v kryptohrach nové generace.",
         "honeygain": "Vydělávejte pasivní příjem jednoduše tím, že bezpečně sdílíte svou nevyužitou internetovou šířku pásma.",
         "freecash": "Vydělávejte kryptoměny, dárkové karty a hotovost hraním her, vyplňováním průzkumů a testováním aplikací.",
+        "zuncia": "Vydělávejte XRP každodenním sledováním reklam, klikáním na reklamy nebo hraním jednoduchých her.",
         "rollercoin": "Pokud jste navštívili tuto stránku a stále jste nezačali hrát RollerCoin (což je vysoce nepravděpodobné), ocenili bychom, kdybyste se zaregistrovali pomocí našeho doporučujícího odkazu na podporu naší stránky."
       }
     },

@@ -39,11 +39,12 @@ const CopyableAddress = ({ label, address, icon }: { label: string, address: str
 export default function SupportPage() {
   const { lang } = useParams<{ lang: string }>();
   const { t } = useTranslation();
+  const [activeSection, setActiveSection] = useState<'referrals' | 'donations'>('referrals');
 
   const referrals = REFERRAL_LINKS;
 
   return (
-    <div className="static-page-container">
+    <div className="static-page-container support-page">
       <>
         <title>{`${t('pages.support.title')} | ${t('app.title')}`}</title>
         <meta name="description" content={t('seo.description')} />
@@ -62,11 +63,20 @@ export default function SupportPage() {
       <article className="static-content support-container">
         <h1>{t('pages.support.title')}</h1>
 
+        <nav className="support-section-nav" aria-label={t('pages.support.title')}>
+          <button type="button" className={activeSection === 'referrals' ? 'active' : ''} aria-pressed={activeSection === 'referrals'} aria-controls="support-referrals" onClick={() => setActiveSection('referrals')}>
+            <span aria-hidden="true">🔗</span>{t('pages.support.referralsTab')}
+          </button>
+          <button type="button" className={activeSection === 'donations' ? 'active' : ''} aria-pressed={activeSection === 'donations'} aria-controls="support-donations" onClick={() => setActiveSection('donations')}>
+            <span aria-hidden="true">☕</span>{t('pages.support.donationsTab')}
+          </button>
+        </nav>
+
         <div className="disclaimer-box warning">
           <strong>{t('event.multiplier')} Disclaimer:</strong> {t('pages.support.disclaimer')}
         </div>
 
-        <section className="support-section">
+        <section id="support-referrals" className="support-section" hidden={activeSection !== 'referrals'}>
           <h2>{t('pages.support.referrals')}</h2>
           <div className="referral-grid">
             {referrals.map((ref) => (
@@ -81,7 +91,7 @@ export default function SupportPage() {
           </div>
         </section>
 
-        <section className="support-section">
+        <section id="support-donations" className="support-section" hidden={activeSection !== 'donations'}>
           <h2>{t('pages.support.donations')}</h2>
           <p>{t('pages.support.p1')}</p>
 

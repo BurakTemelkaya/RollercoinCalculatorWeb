@@ -4452,7 +4452,51 @@ a:hover {
 /* Support Page Styles */
 .support-container {
   max-width: 900px;
+  min-width: 0;
   margin: 0 auto;
+  overflow-wrap: anywhere;
+}
+
+.support-section-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.support-section-nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  flex: 1;
+  max-width: 220px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color-hover);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.support-section-nav button.active {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: #fff;
+}
+
+.support-section-nav button:hover {
+  border-color: var(--accent-primary);
+}
+
+.support-section-nav button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
 }
 
 .support-section {
@@ -4479,11 +4523,12 @@ a:hover {
 
 .referral-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 20px;
 }
 
 .referral-card {
+  min-width: 0;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -4494,6 +4539,10 @@ a:hover {
   flex-direction: column;
 }
 
+.support-container a.referral-card {
+  text-decoration: none;
+}
+
 .referral-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
@@ -4501,6 +4550,7 @@ a:hover {
 }
 
 .referral-card h3 {
+  min-width: 0;
   color: var(--text-primary);
   font-size: 18px;
   margin-bottom: 0;
@@ -4534,12 +4584,13 @@ a:hover {
 
 .donation-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 20px;
   margin-top: 24px;
 }
 
 .crypto-donation-card {
+  min-width: 0;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -4571,6 +4622,7 @@ a:hover {
 }
 
 .crypto-address {
+  min-width: 0;
   background: var(--bg-primary);
   padding: 8px 12px;
   border-radius: var(--radius-sm);
@@ -4584,6 +4636,7 @@ a:hover {
 }
 
 .copy-btn {
+  flex-shrink: 0;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
@@ -4604,6 +4657,34 @@ a:hover {
   background: var(--success);
   color: white;
   border-color: var(--success);
+}
+
+@media (max-width: 480px) {
+  .static-page-container.support-page {
+    padding: 0 12px;
+  }
+
+  .support-page .support-container {
+    padding: 16px;
+  }
+
+  .support-section-nav {
+    gap: 6px;
+  }
+
+  .support-section-nav button {
+    padding: 10px 8px;
+    gap: 6px;
+  }
+
+  .support-container .disclaimer-box {
+    padding: 12px;
+  }
+
+  .referral-card,
+  .crypto-donation-card {
+    padding: 14px;
+  }
 }
 
 /* --- Coin Switch Simulator Styles --- */
