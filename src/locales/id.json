@@ -229,6 +229,11 @@
     "usernameHelpPreviewAction": "Ubah"
   },
   "table": {
+    "priceCurrent": "Harga saat ini: {{price}}",
+    "pricePrevious24h": "24 jam lalu: {{price}}",
+    "priceChange24h": "24 jam terakhir: {{change}}",
+    "priceChangeUnavailable": "Data perubahan 24 jam tidak tersedia.",
+    "priceFixed": "Harga tetap: 1 USD.",
     "cryptoTitle": "Mata Uang Kripto",
     "gameTokenTitle": "Token Game",
     "noDataTitle": "Belum Ada Data",
@@ -433,6 +438,8 @@
     "sellableMiner": "Dapat Dijual"
   },
   "settings": {
+    "showCoinPrices": "Tampilkan harga koin",
+    "showCoinPricesHint": "Tampilkan harga satu koin dalam USD di samping namanya. Nonaktif secara default di perangkat seluler.",
     "title": "Pengaturan",
     "blockDurationDesc": "Sesuaikan durasi blok (detik).",
     "save": "Simpan",

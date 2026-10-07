@@ -6,10 +6,11 @@ interface SettingsModalProps {
     isOpen: boolean;
     onClose: () => void;
     blockDurations: Record<string, number>;
-    onSave: (newDurations: Record<string, number>, mode: 'auto' | 'manual', priceApiMode: 'binance' | 'coingecko') => void;
+    onSave: (newDurations: Record<string, number>, mode: 'auto' | 'manual', priceApiMode: 'binance' | 'coingecko', showCoinPrices: boolean) => void;
     coins: string[];
     blockDurationMode: 'auto' | 'manual';
     priceApiPref: 'binance' | 'coingecko';
+    showCoinPrices: boolean;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -20,17 +21,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     coins,
     blockDurationMode,
     priceApiPref,
+    showCoinPrices,
 }) => {
     const { t } = useTranslation();
     const [durations, setDurations] = useState<Record<string, number>>(blockDurations);
     const [mode, setMode] = useState<'auto' | 'manual'>(blockDurationMode);
     const [priceApiMode, setPriceApiMode] = useState<'binance' | 'coingecko'>(priceApiPref);
+    const [displayCoinPrices, setDisplayCoinPrices] = useState(showCoinPrices);
 
     useEffect(() => {
         setDurations(blockDurations);
         setMode(blockDurationMode);
         setPriceApiMode(priceApiPref);
-    }, [blockDurations, blockDurationMode, priceApiPref, isOpen]);
+        setDisplayCoinPrices(showCoinPrices);
+    }, [blockDurations, blockDurationMode, priceApiPref, showCoinPrices, isOpen]);
 
     const handleChange = (coin: string, value: string) => {
         const numVal = parseInt(value, 10);
@@ -41,7 +45,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
 
     const handleSave = () => {
-        onSave(durations, mode, priceApiMode);
+        onSave(durations, mode, priceApiMode, displayCoinPrices);
         onClose();
     };
 
@@ -57,6 +61,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
 
                 <div className="modal-body custom-scrollbar">
+                    <div className="block-duration-mode-toggle">
+                        <label className="mode-label" htmlFor="show-coin-prices">
+                            <input
+                                id="show-coin-prices"
+                                type="checkbox"
+                                checked={displayCoinPrices}
+                                onChange={event => setDisplayCoinPrices(event.target.checked)}
+                            />{' '}
+                            {t('settings.showCoinPrices')}
+                        </label>
+                        <p className="mode-hint">{t('settings.showCoinPricesHint')}</p>
+                    </div>
                     <div className="settings-info-card">
                         <span className="info-icon">ℹ️</span>
                         <p className="modal-desc">{t('settings.blockDurationDesc')}</p>

@@ -101,11 +101,12 @@ const STORAGE_KEYS = {
   API_LEAGUES: 'rollercoin_web_api_leagues',
   TABLE_COLUMNS: 'rollercoin_web_table_columns',
   VISIBLE_COINS: 'rollercoin_web_visible_coins',
+  SHOW_COIN_PRICES: 'rollercoin_web_show_coin_prices',
   CUSTOM_PERIOD_DAYS: 'rollercoin_web_custom_period_days',
   CUSTOM_PERIOD_HOURS: 'rollercoin_web_custom_period_hours',
 };
 
-import { fetchPrices, PriceApiProvider } from './services/priceApi';
+import { fetchPriceSnapshot, PriceApiProvider, PriceSnapshot } from './services/priceApi';
 
 type Tab = 'calculator' | 'withdraw' | 'simulator' | 'room_simulator';
 
@@ -170,7 +171,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
   const [balances, setBalances] = useState<Record<string, number>>({});
-  const [prices, setPrices] = useState<Record<string, number>>({});
+  const [priceSnapshot, setPriceSnapshot] = useState<PriceSnapshot>({ prices: {}, changes: {} });
+  const prices = priceSnapshot.prices;
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
   const [collapsedTabs, setCollapsedTabs] = useState<Set<Tab>>(new Set(['simulator', 'room_simulator', 'withdraw']));
 
@@ -385,11 +387,15 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     new Set(['daily', 'weekly', 'monthly'])
   );
   const [visibleCoins, setVisibleCoins] = useState<string[] | null>(null);
+  const [showCoinPrices, setShowCoinPrices] = useState<boolean>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.SHOW_COIN_PRICES);
+    return saved === null ? !window.matchMedia('(max-width: 768px)').matches : saved === 'true';
+  });
   const [customPeriodDays, setCustomPeriodDays] = useState<number>(0);
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261005.215348';
+  const CURRENT_CACHE_VERSION = '20261007.063121';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -472,17 +478,17 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   }, []);
 
   // Fetch ALL supported crypto prices once initially, further fetches are manual
-  const pricesInitializedRef = React.useRef(false);
-  const [lastPricePrefFetched, setLastPricePrefFetched] = useState<PriceApiProvider | null>(null);
+  const priceRequestRef = React.useRef(0);
 
   useEffect(() => {
-    if (!pricesInitializedRef.current || lastPricePrefFetched !== priceApiPref) {
-      pricesInitializedRef.current = true;
-      setLastPricePrefFetched(priceApiPref);
-      const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
-      fetchPrices(allCryptos, priceApiPref).then(setPrices).catch(console.error);
-    }
-  }, [priceApiPref, lastPricePrefFetched]);
+    const requestId = ++priceRequestRef.current;
+    const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
+    let cancelled = false;
+    fetchPriceSnapshot(allCryptos, priceApiPref).then(snapshot => {
+      if (!cancelled && requestId === priceRequestRef.current) setPriceSnapshot(snapshot);
+    }).catch(console.error);
+    return () => { cancelled = true; };
+  }, [priceApiPref]);
 
   // Preload UI images (Coins and Leagues) to prevent flashing/delay on appearance
   useEffect(() => {
@@ -503,8 +509,11 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const isInitialLoadRef = React.useRef(true);
 
   const handleForceFetchPrices = () => {
+    const requestId = ++priceRequestRef.current;
     const allCryptos = ['BTC', 'ETH', 'SOL', 'DOGE', 'BNB', 'LTC', 'XRP', 'TRX', 'POL', 'MATIC', 'ALGO'];
-    fetchPrices(allCryptos, priceApiPref).then(setPrices).catch(console.error);
+    fetchPriceSnapshot(allCryptos, priceApiPref).then(snapshot => {
+      if (requestId === priceRequestRef.current) setPriceSnapshot(snapshot);
+    }).catch(console.error);
   };
 
   // Synchronize 'league' state when 'apiLeagues' updates so latest block rewards are always used
@@ -844,7 +853,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   // Sync League Logic Merged into main Auto-Detect Effect above.
   // Previous separate useEffect removed to prevent conflicts and auto-league disabling.
 
-  const handleSaveSettings = (newDurations: Record<string, number>, newMode: 'auto' | 'manual', newPriceApiMode: PriceApiProvider) => {
+  const handleSaveSettings = (newDurations: Record<string, number>, newMode: 'auto' | 'manual', newPriceApiMode: PriceApiProvider, newShowCoinPrices: boolean) => {
+    setShowCoinPrices(newShowCoinPrices);
+    localStorage.setItem(STORAGE_KEYS.SHOW_COIN_PRICES, String(newShowCoinPrices));
     setBlockDurationMode(newMode);
     localStorage.setItem('rollercoin_web_block_duration_mode', newMode);
 
@@ -906,6 +917,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
           coins={coins.length > 0 ? coins.map(c => c.displayName) : ['BTC', 'ETH', 'DOGE', 'BNB', 'MATIC', 'SOL', 'TRX', 'LTC', 'RST']}
           blockDurationMode={blockDurationMode}
           priceApiPref={priceApiPref}
+          showCoinPrices={showCoinPrices}
         />
         <ColumnSettingsModal
           isOpen={columnModalOpen}
@@ -1049,6 +1061,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         earnings={earnings}
                         effectiveUserPower={displayPower}
                         prices={prices}
+                        priceChanges={priceSnapshot.changes}
+                        showCoinPrices={showCoinPrices}
                         onOpenSettings={() => setIsSettingsOpen(true)}
                         onOpenColumnSettings={() => setColumnModalOpen(true)}
                         onShowNotification={showNotification}

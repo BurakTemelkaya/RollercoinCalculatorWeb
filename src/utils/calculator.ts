@@ -164,8 +164,30 @@ export function formatCryptoAmount(amount: number, _currency?: string): string {
 }
 
 /**
- * Format USD amount
+ * Collapse leading fractional zeros for small ETH, BNB and SOL earnings.
  */
+export function getCompactCryptoAmount(amount: number, currency: string): {
+    prefix: string; zeroCount: number; digits: string; fullValue: string;
+} | null {
+    if (!['ETH', 'BNB', 'SOL'].includes(currency.toUpperCase()) ||
+        !Number.isFinite(amount) || amount === 0 || Math.abs(amount) >= 1) return null;
+
+    let formatted = formatCryptoAmount(amount, currency);
+    // Keep very small nonzero earnings visible even below the usual eight decimals.
+    if (Number(formatted) === 0) {
+        formatted = amount.toLocaleString('en-US', { useGrouping: false, maximumSignificantDigits: 4 });
+    }
+    const match = formatted.match(/^(-?)0\.(0{3,})([1-9]\d*)$/);
+    if (!match) return null;
+
+    return {
+        prefix: `${match[1]}0.0`,
+        zeroCount: match[2].length,
+        digits: match[3],
+        fullValue: formatted,
+    };
+}
+
 /**
  * Format USD amount
  */

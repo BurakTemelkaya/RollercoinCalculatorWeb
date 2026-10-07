@@ -229,6 +229,11 @@
     "usernameHelpPreviewAction": "Změnit"
   },
   "table": {
+    "priceCurrent": "Aktuální cena: {{price}}",
+    "pricePrevious24h": "Před 24 hodinami: {{price}}",
+    "priceChange24h": "Za posledních 24 hodin: {{change}}",
+    "priceChangeUnavailable": "Údaje o změně za 24 hodin nejsou dostupné.",
+    "priceFixed": "Pevná cena: 1 USD.",
     "cryptoTitle": "Kryptoměny",
     "gameTokenTitle": "Herní žetony",
     "noDataTitle": "Ještě žádná data",
@@ -436,6 +441,8 @@
     "sellableMiner": "Prodejný"
   },
   "settings": {
+    "showCoinPrices": "Zobrazit ceny mincí",
+    "showCoinPricesHint": "Zobrazí cenu jedné mince v USD vedle jejího názvu. Na mobilu je ve výchozím nastavení vypnuto.",
     "title": "Nastavení",
     "blockDurationDesc": "Přizpůsobte délky bloků (v sekundách). Výchozí ~600 s (10 min).",
     "save": "Uložit",

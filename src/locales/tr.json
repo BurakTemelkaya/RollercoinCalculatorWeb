@@ -289,6 +289,11 @@
     "usernameHelpPreviewAction": "Değiştir"
   },
   "table": {
+    "priceCurrent": "Güncel fiyat: {{price}}",
+    "pricePrevious24h": "24 saat önce: {{price}}",
+    "priceChange24h": "Son 24 saat: {{change}}",
+    "priceChangeUnavailable": "24 saatlik değişim verisi yok.",
+    "priceFixed": "Sabit fiyat: 1 USD.",
     "cryptoTitle": "Kripto Paralar",
     "gameTokenTitle": "Oyun Tokenleri",
     "noDataTitle": "Henüz veri yok",
@@ -498,6 +503,8 @@
     "sellableMiner": "Satılabilir"
   },
   "settings": {
+    "showCoinPrices": "Coin fiyatlarını göster",
+    "showCoinPricesHint": "Coin adlarının yanında 1 coin’in USD fiyatını gösterir. Mobilde varsayılan olarak kapalıdır.",
     "title": "Ayarlar",
     "blockDurationDesc": "Blok sürelerini (saniye) özelleştirin. Varsayılan ~600 saniye (10 dk).",
     "save": "Kaydet",

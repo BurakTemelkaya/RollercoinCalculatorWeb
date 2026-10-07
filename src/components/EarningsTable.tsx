@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { EarningsResult } from '../types';
-import { formatCryptoAmount, formatUSD } from '../utils/calculator';
+import { formatCryptoAmount, formatUSD, getCompactCryptoAmount } from '../utils/calculator';
 import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 import { HashPower } from '../types';
@@ -10,6 +10,8 @@ import { toBaseUnit } from '../utils/powerParser';
 import { LeagueInfo } from '../data/leagues';
 import { ApiLeagueData } from '../types/api';
 import RadixSelect from './RadixSelect';
+import CoinMarketPrice from './CoinMarketPrice';
+import { PriceChange24h } from '../services/priceApi';
 
 const LeagueAnalysisModal = React.lazy(() => import('./LeagueAnalysisModal'));
 
@@ -19,6 +21,8 @@ interface EarningsTableProps {
     effectiveUserPower: HashPower | null;
     earnings: EarningsResult[];
     prices: Record<string, number>;
+    priceChanges: Record<string, PriceChange24h>;
+    showCoinPrices: boolean;
     onOpenSettings: () => void;
     onOpenColumnSettings: () => void;
     onShowNotification?: (message: string, type: 'success' | 'error' | 'info') => void;
@@ -39,6 +43,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     effectiveUserPower,
     earnings,
     prices,
+    priceChanges,
+    showCoinPrices,
     onOpenSettings,
     onOpenColumnSettings,
     onShowNotification,
@@ -71,78 +77,82 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     // Sticky header state
     const theadRef = useRef<HTMLTableSectionElement>(null);
     const tableSectionRef = useRef<HTMLDivElement>(null);
-    const [showFixedHeader, setShowFixedHeader] = useState(false);
-    const [headerWidths, setHeaderWidths] = useState<number[]>([]);
-    const [tableLeft, setTableLeft] = useState(0);
-    const [tableWidth, setTableWidth] = useState(0);
+    const [fixedHeader, setFixedHeader] = useState<{
+        top: number; left: number; width: number; tableWidth: number;
+        scrollLeft: number; headerWidths: number[];
+    } | null>(null);
 
     // Separate game tokens and crypto and apply visibleCoins filter
     const gameTokens = earnings.filter(e => e.isGameToken && (!visibleCoins || visibleCoins.includes(e.displayName)));
     const cryptoCoins = earnings.filter(e => !e.isGameToken && (!visibleCoins || visibleCoins.includes(e.displayName)));
 
-    // Measure header cells and update fixed header
-    const measureHeader = useCallback(() => {
-        if (!theadRef.current || !tableSectionRef.current) return;
-        const ths = theadRef.current.querySelectorAll('th');
-        const widths = Array.from(ths).map(th => th.getBoundingClientRect().width);
-        setHeaderWidths(widths);
-        const tableRect = tableSectionRef.current.querySelector('.table-container')?.getBoundingClientRect();
-        if (tableRect) {
-            setTableLeft(tableRect.left);
-            setTableWidth(tableRect.width);
-        }
-    }, []);
-
     // Scroll-based sticky header (works despite overflow:hidden ancestors)
     useEffect(() => {
-        let rafId: number;
-        let lastShow = false;
+        let rafId = 0;
 
         const handleScroll = () => {
             cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(() => {
                 const thead = theadRef.current;
                 const section = tableSectionRef.current;
-                if (!thead || !section) {
-                    if (lastShow) {
-                        lastShow = false;
-                        setShowFixedHeader(false);
-                    }
+                const container = thead?.closest<HTMLDivElement>('.table-container');
+                const table = thead?.closest('table');
+                if (!isActiveTab || !thead || !section || !container || !table) {
+                    setFixedHeader(null);
                     return;
                 }
                 const theadRect = thead.getBoundingClientRect();
                 const sectionRect = section.getBoundingClientRect();
+                const navbarBottom = Math.max(0, document.querySelector('.sticky-navbar')?.getBoundingClientRect().bottom ?? 0);
                 
                 // If the parent tab is collapsed, the table is invisible, so hide the sticky header
                 const isCollapsed = section.closest('.collapsed') !== null;
                 const isVisibleHorizontally = sectionRect.right > 0 && sectionRect.left < window.innerWidth;
                 
-                const shouldShow = !isCollapsed && isVisibleHorizontally && theadRect.bottom < 0 && sectionRect.bottom > 60;
-                
-                if (shouldShow !== lastShow) {
-                    lastShow = shouldShow;
-                    setShowFixedHeader(shouldShow);
+                const shouldShow = !isCollapsed && isVisibleHorizontally && theadRect.top <= navbarBottom && sectionRect.bottom > navbarBottom;
+                if (!shouldShow) {
+                    setFixedHeader(null);
+                    return;
                 }
-                if (shouldShow) measureHeader();
+                const containerRect = container.getBoundingClientRect();
+                const next = {
+                    top: Math.min(navbarBottom, sectionRect.bottom - theadRect.height),
+                    left: containerRect.left,
+                    width: container.clientWidth,
+                    tableWidth: table.getBoundingClientRect().width,
+                    scrollLeft: container.scrollLeft,
+                    headerWidths: Array.from(thead.querySelectorAll('th')).map(th => th.getBoundingClientRect().width),
+                };
+                setFixedHeader(previous => previous &&
+                    previous.top === next.top && previous.left === next.left && previous.width === next.width &&
+                    previous.tableWidth === next.tableWidth && previous.scrollLeft === next.scrollLeft &&
+                    previous.headerWidths.length === next.headerWidths.length &&
+                    previous.headerWidths.every((width, index) => width === next.headerWidths[index])
+                    ? previous : next);
             });
         };
 
         // Listen on multiple targets to catch scroll regardless of which element scrolls
         window.addEventListener('scroll', handleScroll, { passive: true });
-        document.addEventListener('scroll', handleScroll, { passive: true });
+        document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
         window.addEventListener('resize', handleScroll, { passive: true });
-
-        // Initial check (delayed to ensure refs are populated after render)
-        const timer = setTimeout(handleScroll, 200);
+        const observer = new ResizeObserver(handleScroll);
+        if (theadRef.current) observer.observe(theadRef.current);
+        if (tableSectionRef.current) observer.observe(tableSectionRef.current);
+        const navbar = document.querySelector('.sticky-navbar');
+        if (navbar) observer.observe(navbar);
+        handleScroll();
 
         return () => {
             cancelAnimationFrame(rafId);
             window.removeEventListener('scroll', handleScroll);
-            document.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('scroll', handleScroll, true);
             window.removeEventListener('resize', handleScroll);
-            clearTimeout(timer);
+            observer.disconnect();
         };
-    }, [earnings, measureHeader]);
+    }, [earnings, isActiveTab, visibleColumns, visibleCoins, showCoinPrices, customPeriodDays, customPeriodHours]);
+
+    const headerWidths = fixedHeader?.headerWidths ?? [];
 
     // Sort crypto by daily earnings (descending)
     const sortedCrypto = [...cryptoCoins].sort((a, b) => {
@@ -224,6 +234,14 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                 </span>
             );
         }
+        const compact = getCompactCryptoAmount(amount, coinName);
+        if (compact) {
+            return (
+                <span className="compact-crypto-amount" aria-label={compact.fullValue}>
+                    <span aria-hidden="true">{compact.prefix}<sub>{compact.zeroCount}</sub>{compact.digits}</span>
+                </span>
+            );
+        }
         return formatCryptoAmount(amount, coinName);
     };
 
@@ -239,7 +257,11 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
             else if (absAmount < 0.01) precision = 8;
             else if (absAmount < 1) precision = 6;
             else precision = 4;
-            tooltipValue = `${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: precision })} ${coinName}`;
+            const compact = getCompactCryptoAmount(amount, coinName);
+            const fullAmount = compact
+                ? amount.toLocaleString('en-US', { useGrouping: false, maximumSignificantDigits: 10 })
+                : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: precision });
+            tooltipValue = `${fullAmount} ${coinName}`;
         }
         return (
             <div className="earning-crypto earning-crypto-tooltip" tabIndex={0} data-full={tooltipValue}>
@@ -520,6 +542,9 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                             <span className="coin-symbol" style={{ color: 'inherit' }}>
                                 {earning.displayName}
                             </span>
+                            {showCoinPrices && !earning.isGameToken && Number.isFinite(price) && price > 0 && (
+                                <CoinMarketPrice currency={earning.displayName} price={price} change={priceChanges[earning.displayName]} />
+                            )}
                             {isSimulatedTarget && (
                                 <span className="sim-badge target-badge">{targetPercent}%</span>
                             )}
@@ -825,19 +850,20 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                     </div>
 
                     {/* Fixed sticky header clone - rendered via portal to escape overflow:hidden */}
-                    {isActiveTab && showFixedHeader && headerWidths.length > 0 && createPortal(
+                    {isActiveTab && fixedHeader && headerWidths.length > 0 && createPortal(
                         <div
-                            className="fixed-thead-clone"
+                            className="fixed-thead-clone earnings-fixed-header"
+                            aria-hidden="true"
                             style={{
                                 position: 'fixed',
-                                top: 0,
-                                left: tableLeft,
-                                width: tableWidth,
+                                top: fixedHeader.top,
+                                left: fixedHeader.left,
+                                width: fixedHeader.width,
                                 zIndex: 100,
                                 pointerEvents: 'none',
                             }}
                         >
-                            <table className="earnings-table wide-table" style={{ width: '100%' }}>
+                            <table className="earnings-table wide-table" style={{ width: fixedHeader.tableWidth, minWidth: fixedHeader.tableWidth, tableLayout: 'fixed', marginLeft: -fixedHeader.scrollLeft }}>
                                 <thead>
                                     <tr>
                                         <th style={{ width: headerWidths[0] }}>{t('table.headers.coin')}</th>

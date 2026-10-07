@@ -229,6 +229,11 @@
     "usernameHelpPreviewAction": "更改"
   },
   "table": {
+    "priceCurrent": "当前价格：{{price}}",
+    "pricePrevious24h": "24小时前：{{price}}",
+    "priceChange24h": "过去24小时：{{change}}",
+    "priceChangeUnavailable": "暂无24小时涨跌数据。",
+    "priceFixed": "固定价格：1美元。",
     "cryptoTitle": "加密货币",
     "gameTokenTitle": "游戏代币",
     "noDataTitle": "暂无数据",
@@ -433,6 +438,8 @@
     "sellableMiner": "可出售"
   },
   "settings": {
+    "showCoinPrices": "显示币种价格",
+    "showCoinPricesHint": "在币种名称旁显示单枚币的美元价格。移动端默认关闭。",
     "title": "设置",
     "blockDurationDesc": "自定义区块时间 (秒)。",
     "save": "保存",

@@ -1226,12 +1226,23 @@ a:hover {
   background: var(--bg-secondary);
   border-bottom: 2px solid var(--accent-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.fixed-thead-clone:not(.earnings-fixed-header) {
   top: var(--navbar-height) !important;
+}
+
+.earnings-fixed-header {
+  overflow: hidden;
 }
 
 .fixed-thead-clone .earnings-table {
   border-collapse: separate;
   border-spacing: 0;
+}
+
+.earnings-fixed-header th {
+  box-sizing: border-box;
 }
 
 .fixed-thead-clone th {
@@ -1282,6 +1293,46 @@ a:hover {
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.coin-market-price {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+  cursor: help;
+}
+
+.coin-market-price.price-up {
+  color: var(--success);
+}
+
+.coin-market-price.price-down {
+  color: var(--danger);
+}
+
+.coin-market-price:focus-visible {
+  outline: 1px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.coin-price-tooltip {
+  position: fixed;
+  z-index: 1200;
+  pointer-events: none;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .best-badge {
@@ -2299,6 +2350,14 @@ a:hover {
   vertical-align: bottom;
 }
 
+.compact-crypto-amount sub {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: baseline;
+  position: relative;
+  bottom: -0.2em;
+}
+
 .earning-crypto-tooltip::after {
   content: attr(data-full);
   position: absolute;
@@ -2625,6 +2684,11 @@ a:hover {
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
+  }
+
+  .coin-market-price {
+    font-size: 9px;
+    max-width: 100%;
   }
 
 

@@ -33,6 +33,12 @@ Uygulama iki modda çalışır:
 
 ## LocalStorage Cache
 
+- Kazanç tablosunda coin adlarının yanında 1 coin'in USD fiyatı gösterilebilir. `SettingsModal` içindeki `showCoinPrices` seçeneği `App.tsx` üzerinden yönetilir ve `rollercoin_web_show_coin_prices` anahtarıyla saklanır. Kayıtlı tercih yoksa 768px ve altında kapalı, masaüstünde açıktır; kaydedilen tercih tüm ekran genişliklerinde korunur. Fiyat mevcut `prices` verisinden alınır; fiyatı olmayan coinler ve oyun tokenleri için gösterilmez.
+- `priceApi.ts` içindeki `fetchPriceSnapshot` fiyatlarla 24 saatlik değişimi birlikte döndürür. Binance `/ticker/24hr?type=MINI` yanıtındaki `lastPrice` ve `openPrice` karşılaştırılır; CoinGecko `include_24hr_change=true` verisinde önceki fiyat `usd / (1 + usd_24h_change / 100)` ile hesaplanır. Bu karşılaştırma kayan son 24 saati baz alır. Artan coin fiyatı yeşil, azalan kırmızı; sıfır değişim veya eksik karşılaştırma verisi nötr gösterilir. USDT uygulamada sabit $1 kabul edilir. `CoinMarketPrice` üzerine gelince veya odaklanınca normal ondalık fiyatlar ve değişim yüzdesi portal tooltip'te gösterilir.
+- Fiyat ve değişim aynı snapshot ile `App.tsx`'e uygulanır; yeni fiyat isteği daha eski isteklerin UI sonucunu geçersiz kılar. Veriler açılışta, fiyat sağlayıcısı değişince ve mevcut manuel fiyat yenilemesinde çekilir. Snapshot `rollercoin_web_prices_cache` içinde birlikte saklanır; iki API de başarısızsa 10 dakikadan yeni cache kullanılır. Eski cache'te değişim yoksa fiyat nötrdür. `fetchPrices` yalnızca sayısal fiyat döndüren uyumluluk fonksiyonudur. Servis kontrolü: `npx tsx scripts/check-price-api.ts`.
+- Kazanç tablosunun sabit başlığı, gerçek `.sticky-navbar` alt kenarına ulaştığı anda görünür. Tablo genişliği, yatay kaydırma ve sütun ölçüleri takip edilir; tablo bittiğinde veya hesaplama sekmesi gizlendiğinde başlık kaldırılır.
+- Tarayıcı kontrolü: `npm run build` ardından `node scripts/check-earnings-table.mjs`. Masaüstü/mobil sabitleme eşiğini, sütun hizasını, yatay kaydırmayı, ekran boyutu ve sekme değişimini, fiyat gösterimini ve ayarın kaydetme/iptal davranışını doğrular.
+
 Uygulama tüm verileri localStorage'da cache'ler:
 - `rollercoin_web_coins`, `rollercoin_web_userpower`, `rollercoin_web_league_id`
 - `rollercoin_web_api_leagues`, `rollercoin_web_raw_api_data`

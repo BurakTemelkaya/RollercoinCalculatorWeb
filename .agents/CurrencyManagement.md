@@ -18,6 +18,11 @@ ALGO, USDT — `WithdrawTimer.tsx`'de filtrelenir.
 API'de para birimleri `_SMALL` suffix'li gelir (ör: `USDT_SMALL`, `BNB_SMALL`, `SAT`). `CURRENCY_MAP` (`leagues.ts`) bu isimleri display isimlerine çevirir. `to_small` (`currencies.ts`) değeri, ham payout değerini gerçek birime çevirmek için kullanılır.
 **BTC özel durum:** `to_small` config'de 1e8 ama hesaplamada 1e10 kullanılır (`leagueHelper.ts`).
 
+## Küçük Kazançların Gösterimi
+
+- Kazanç tablosunda ETH, BNB ve SOL değerlerinde ondalık ayırıcıdan sonra en az 3 sıfır varsa `getCompactCryptoAmount` ile sıfır sayısı alt indis olarak gösterilir: `0.000078` → `0.0₄78`. Hesaplanan tutarlar değişmez; tooltip ve erişilebilir metin normal ondalık değeri korur. Çok küçük, sıfır olmayan tutarlar 8 basamak sınırında sıfıra yuvarlanmadan gösterilir. BTC'nin SAT gösterimi korunur.
+- Kontrol: `npx tsx scripts/check-compact-crypto.ts` ve derleme ardından `node scripts/check-earnings-table.mjs`.
+
 ## Blok Süreleri
 Her para biriminin farklı blok süresi olabilir. Varsayılan değerler `App.tsx`'de `blockDurations` state'inde tanımlıdır. Kullanıcı ayarlar modalından değiştirebilir. Değerler saniye cinsindendir.
 

@@ -288,6 +288,11 @@
     "usernameHelpPreviewAction": "Change"
   },
   "table": {
+    "priceCurrent": "Current price: {{price}}",
+    "pricePrevious24h": "24 hours ago: {{price}}",
+    "priceChange24h": "Last 24 hours: {{change}}",
+    "priceChangeUnavailable": "24-hour change data unavailable.",
+    "priceFixed": "Fixed price: 1 USD.",
     "cryptoTitle": "Cryptocurrencies",
     "gameTokenTitle": "Game Tokens",
     "noDataTitle": "No Data Yet",
@@ -497,6 +502,8 @@
     "sellableMiner": "Sellable"
   },
   "settings": {
+    "showCoinPrices": "Show coin prices",
+    "showCoinPricesHint": "Show the USD price of one coin next to its name. Off by default on mobile.",
     "title": "Settings",
     "blockDurationDesc": "Customize block durations (seconds). Default ~600s (10 min).",
     "save": "Save",

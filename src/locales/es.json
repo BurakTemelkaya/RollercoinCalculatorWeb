@@ -229,6 +229,11 @@
     "usernameHelpPreviewAction": "Cambiar"
   },
   "table": {
+    "priceCurrent": "Precio actual: {{price}}",
+    "pricePrevious24h": "Hace 24 horas: {{price}}",
+    "priceChange24h": "Últimas 24 horas: {{change}}",
+    "priceChangeUnavailable": "Datos de cambio de 24 horas no disponibles.",
+    "priceFixed": "Precio fijo: 1 USD.",
     "cryptoTitle": "Criptomonedas",
     "gameTokenTitle": "Tokens del Juego",
     "noDataTitle": "Aún No Hay Datos",
@@ -418,6 +423,8 @@
     "sellableMiner": "Vendible"
   },
   "settings": {
+    "showCoinPrices": "Mostrar precios de las monedas",
+    "showCoinPricesHint": "Muestra el precio en USD de una moneda junto a su nombre. Desactivado por defecto en móviles.",
     "title": "Configuración",
     "blockDurationDesc": "Personaliza duraciones de bloques (segundos). Predet. ~600s.",
     "save": "Guardar",

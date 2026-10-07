@@ -229,6 +229,11 @@
     "usernameHelpPreviewAction": "Изменить"
   },
   "table": {
+    "priceCurrent": "Текущая цена: {{price}}",
+    "pricePrevious24h": "24 часа назад: {{price}}",
+    "priceChange24h": "За последние 24 часа: {{change}}",
+    "priceChangeUnavailable": "Данные об изменении за 24 часа недоступны.",
+    "priceFixed": "Фиксированная цена: 1 USD.",
     "cryptoTitle": "Криптовалюты",
     "gameTokenTitle": "Игровые токены",
     "noDataTitle": "Пока нет данных",
@@ -433,6 +438,8 @@
     "sellableMiner": "Продаваемый"
   },
   "settings": {
+    "showCoinPrices": "Показывать цены монет",
+    "showCoinPricesHint": "Показывает цену одной монеты в USD рядом с её названием. На мобильных устройствах по умолчанию отключено.",
     "title": "Настройки",
     "blockDurationDesc": "Настроить длительность блока (сек).",
     "save": "Сохранить",
