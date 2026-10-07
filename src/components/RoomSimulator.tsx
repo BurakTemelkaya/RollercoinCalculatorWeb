@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
@@ -43,11 +43,13 @@ interface RoomSimulatorProps {
     room: RollercoinRoomResponse;
     onChange: (newRoom: RollercoinRoomResponse) => void;
     userId?: string;
+    isActive?: boolean;
     dynamicSets?: GetRackSetListDto[];
 }
 
-export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets }) => {
+export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, isActive = true }) => {
     const { t } = useTranslation();
+    const rackBonusHelpId = useId();
     const [areRoomDetailsOpen, setAreRoomDetailsOpen] = useState(false);
     const [highlightSellableMiners, setHighlightSellableMiners] = useState(false);
     const [highlightDuplicateMiners, setHighlightDuplicateMiners] = useState(false);
@@ -186,7 +188,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             _id: newRoomId,
             room_info: {
                 room_id: 'mock_room_type',
-                level: rooms.length, // 0'dan büyük olduğu için diğer odaların layout'unu (4, 8, 6) kullanacak
+                level: rooms.length,
                 cols: 8,
                 rows: 3
             }
@@ -242,18 +244,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     // Miner Arama State'leri
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Auto-search effect for query
-    useEffect(() => {
-        if (!isSearchOpen && !isFilterOpen) return;
-        const timer = setTimeout(() => {
-            handleSearchMiners(0);
-        }, 400);
-        return () => clearTimeout(timer);
-    }, [searchQuery]);
     const [minPower, setMinPower] = useState('');
     const [maxPower, setMaxPower] = useState('');
-    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
-    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Gh');
+    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Ph');
+    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Ph');
 
     const getMinPowerGh = () => minPower ? (toBaseUnit({ value: Number(minPower), unit: minPowerUnit }) / 1e9) : undefined;
     const getMaxPowerGh = () => maxPower ? (toBaseUnit({ value: Number(maxPower), unit: maxPowerUnit }) / 1e9) : undefined;
@@ -289,6 +283,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [isSearching, setIsSearching] = useState(false);
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const minerSearchRequestId = useRef(0);
+    const rackSearchRequestId = useRef(0);
     const [draggedMiner, setDraggedMiner] = useState<MinerDto | null>(null);
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
     const [failedRoomSpriteIds, setFailedRoomSpriteIds] = useState<Set<string>>(() => new Set());
@@ -302,12 +298,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     useEffect(() => () => activeInventoryDragCleanup.current?.(), []);
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
 
-    const handleSearchMiners = async (page = 0) => {
-        if (!userId) {
-            alert(t('simulator.linkAccountAlert'));
-            return;
-        }
-
+    const handleSearchMiners = async (page = 0, nextSortBy = sortBy, nextIsDescending = isDescending) => {
+        const requestId = ++minerSearchRequestId.current;
         setIsSearching(true);
         try {
             const params: any = { PageIndex: page };
@@ -319,10 +311,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             if (minBonus) params.MinMinerBonus = Math.round(Number(minBonus) * 100);
             if (maxBonus) params.MaxMinerBonus = Math.round(Number(maxBonus) * 100);
             if (minerWidth) params.Width = Number(minerWidth);
-            if (sortBy) params.SortBy = sortBy;
-            params.IsDescending = isDescending;
+            if (nextSortBy) params.SortBy = nextSortBy;
+            params.IsDescending = nextIsDescending;
 
             const res = await fetchUserMinersFromApi(params);
+            if (requestId !== minerSearchRequestId.current) return;
             setMinerList(res.items || []);
             setSellabilityByMinerId(previous => {
                 const updated = new Map(previous);
@@ -338,16 +331,25 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } catch (err) {
             console.error('Miner aranırken hata:', err);
         } finally {
-            setIsSearching(false);
+            if (requestId === minerSearchRequestId.current) setIsSearching(false);
         }
     };
 
+    // Refresh the pending search with the latest sorting after a selection changes.
+    useEffect(() => {
+        if (!isSearchOpen && !isFilterOpen) return;
+        const timer = setTimeout(() => {
+            handleSearchMiners(0);
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [searchQuery, sortBy, isDescending]);
+
     // Initial load of miners
     useEffect(() => {
-        if (userId) {
+        if (isActive) {
             handleSearchMiners(0);
         }
-    }, [userId]);
+    }, [userId, isActive]);
 
     const firstInstanceMinerIds = useMemo(() => {
         const uniqueSet = new Set<string>();
@@ -496,15 +498,17 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
     // ---- Rack Inventory Functions ----
 
-    const handleSearchRacks = async (page = 0) => {
+    const handleSearchRacks = async (page = 0, nextSortBy = rackSortBy, nextIsDescending = rackIsDescending) => {
+        const requestId = ++rackSearchRequestId.current;
         setIsRackSearching(true);
         try {
             const res = await fetchRackList({
                 PageIndex: page,
                 Name: rackSearchQuery || undefined,
-                SortBy: rackSortBy,
-                IsDescending: rackIsDescending,
+                SortBy: nextSortBy,
+                IsDescending: nextIsDescending,
             });
+            if (requestId !== rackSearchRequestId.current) return;
             setRackList(res.items || []);
             const pages = res.pages ?? (res as any).Pages ?? (res as any).totalPages ?? (res as any).TotalPages ?? (res.count && res.size ? Math.ceil(res.count / res.size) : 1);
             setRackTotalPages(pages);
@@ -512,7 +516,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } catch (err) {
             console.error('Rack search error:', err);
         } finally {
-            setIsRackSearching(false);
+            if (requestId === rackSearchRequestId.current) setIsRackSearching(false);
         }
     };
 
@@ -523,7 +527,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             handleSearchRacks(0);
         }, 400);
         return () => clearTimeout(timer);
-    }, [rackSearchQuery]);
+    }, [rackSearchQuery, rackSortBy, rackIsDescending]);
 
     // Load racks when tab switches to racks
     useEffect(() => {
@@ -1153,6 +1157,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             validDropZones.push({ x, y, gridX: x + config.offset });
         }
     }
+    const emptyDropZones = validDropZones.filter(zone => !currentRoomRacks.some(rack => {
+        const { visualX, visualY } = getVisualPosition(Number(rack.placement?.x || 0), Number(rack.placement?.y || 0), currentRoomLevel);
+        return visualX === zone.x && visualY === zone.y;
+    }));
+    // Keep the mobile room compact while offering the next available rack positions.
+    const visibleDropZones = isMobile ? emptyDropZones.slice(0, 2) : emptyDropZones;
     const getGridPosition = (originalColumn: number, originalRow: number) => ({
         gridColumn: originalColumn,
         gridRow: originalRow,
@@ -1204,8 +1214,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 <span className="rs-label">{t('simulator.roomBasePower')}</span>
                 <span className="rs-value primary">{formatPower(Number(roomBasePower))}</span>
             </div>
-            <div className="room-stat-item">
-                <span className="rs-label">{t('simulator.rackBonuses')}</span>
+            <div className="room-stat-item room-stat-rack-bonus">
+                <span className="rs-label rs-label-with-help">
+                    {t('simulator.rackBonuses')}
+                    <button type="button" className="room-stat-help" aria-label={t('simulator.rackBonuses')}
+                        aria-describedby={rackBonusHelpId}>?</button>
+                </span>
+                <span id={rackBonusHelpId} className="room-rack-bonus-tooltip" role="tooltip">
+                    {t('simulator.rackBonusExplanation')}
+                </span>
                 <span className="rs-value success">+{effectiveRackBonusPercent.toFixed(2)}%</span>
                 <span className="rs-subvalue">+{formatPower(roomRackBonusPower)}</span>
             </div>
@@ -1400,12 +1417,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 </button>
 
                 <button
-                    className="btn-roller"
+                    className="btn-roller room-add-rack-button"
                     onClick={() => {
                         if (currentRoomRacks.length >= validDropZones.length) {
                             addNotification(t('simulator.cannotAddMoreRacks', 'Daha fazla raf ekleyemezsiniz.'), 'error');
                             return;
                         }
+                        setAddRackTarget(null);
                         setInventoryTab('racks');
                         if (isMobile) {
                             setIsMobileMinerSearchOpen(true);
@@ -1414,11 +1432,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                     title={t('simulator.addRack', 'Raf Ekle')}
                     aria-label={t('simulator.addRack', 'Raf Ekle')}
                     style={{
-                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 19, fontWeight: 'bold', border: 'none', borderRadius: '8px',
-                        flex: isMobile ? '1 1 auto' : 'none'
+                        padding: isMobile ? '10px 14px' : '8px 12px', background: '#03e1e4', color: '#1a1b2e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 'bold', border: 'none', borderRadius: '8px',
+                        flex: isMobile ? '1 1 100%' : 'none', gap: 8, order: isMobile ? -1 : 0
                     }}
                 >
-                    ➕
+                    <span aria-hidden="true">＋</span>
+                    {t('simulator.addRack', 'Raf Ekle')}
                 </button>
             </div>
         </div>
@@ -1473,14 +1492,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 onSpriteErrors={handleSharedSpriteErrors}
                             />
                         )}
-                        {!isMobile && validDropZones.map((zone) => (
-                            <div
+                        {visibleDropZones.map((zone) => (
+                            <button
+                                type="button"
                                 key={`dz-${zone.x}-${zone.y}`}
-                                className="rack-drop-wrapper card-rack-item"
+                                className="rack-drop-wrapper card-rack-item rack-add-slot"
                                 data-rack-drop-x={zone.x}
                                 data-rack-drop-y={zone.y}
                                 style={{
-                                    ...getGridPosition(zone.gridX + 1, zone.y + 1),
+                                    ...(isMobile ? { order: 1 } : getGridPosition(zone.gridX + 1, zone.y + 1)),
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
@@ -1516,10 +1536,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 }}
                                 title={t('simulator.addRackHere')}
                             >
-                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0 }} className="rack-drop-hover">
-                                    <span style={{ fontSize: 24, color: '#fff', background: 'rgba(0,0,0,0.5)', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</span>
-                                </div>
-                            </div>
+                                <span className="rack-add-slot-content">
+                                    <span className="rack-add-slot-icon" aria-hidden="true">＋</span>
+                                    <span>{t('simulator.addRack', 'Raf Ekle')}</span>
+                                </span>
+                            </button>
                         ))}
 
                         {(() => {
@@ -2028,7 +2049,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                         const [newSort, dir] = e.target.value.split('-');
                                                         setSortBy(newSort);
                                                         setIsDescending(dir === 'desc');
-                                                        setTimeout(() => handleSearchMiners(0), 50);
+                                                        void handleSearchMiners(0, newSort, dir === 'desc');
                                                     }}
                                                 >
                                                     <option value="newest-desc">{t('merge.sortOptions.newest')} ↓</option>
@@ -2069,7 +2090,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                         const [newSort, dir] = e.target.value.split('-');
                                                         setRackSortBy(newSort as 'Date' | 'RackBonus');
                                                         setRackIsDescending(dir === 'desc');
-                                                        setTimeout(() => handleSearchRacks(0), 50);
+                                                        void handleSearchRacks(0, newSort as 'Date' | 'RackBonus', dir === 'desc');
                                                     }}
                                                 >
                                                     <option value="RackBonus-desc">{t('simulator.rackSortBonus')} ↓</option>
@@ -2118,9 +2139,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                     <div className="inv-filter-section">
                                         <label>{t('merge.filterPower')}:</label>
                                         <div className="rc-dual-slider-container">
-                                            <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh() || 0) / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh() || 100000000000) / 100000000000) * 100) - Math.min(100, ((getMinPowerGh() || 0) / 100000000000) * 100))}%` }} />
-                                            <input type="range" className="rc-native-slider rc-slider-min" min="0" max="100000000000" step="1000000" value={getMinPowerGh() || 0} onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh() || 100000000000) - 1000000))} />
-                                            <input type="range" className="rc-native-slider rc-slider-max" min="0" max="100000000000" step="1000000" value={getMaxPowerGh() || 100000000000} onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh() || 0) + 1000000))} />
+                                            <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh() || 0) / 999000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh() || 999000000000) / 999000000000) * 100) - Math.min(100, ((getMinPowerGh() || 0) / 999000000000) * 100))}%` }} />
+                                            <input type="range" className="rc-native-slider rc-slider-min" min="0" max="999000000000" step="1000000" value={getMinPowerGh() || 0} onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh() || 999000000000) - 1000000))} />
+                                            <input type="range" className="rc-native-slider rc-slider-max" min="0" max="999000000000" step="1000000" value={getMaxPowerGh() || 999000000000} onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh() || 0) + 1000000))} />
                                         </div>
                                         <div className="rc-filter-inputs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '6px' }}>
                                             <div style={{ display: 'flex', gap: '4px' }}>
@@ -2313,7 +2334,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             const [newSort, dir] = e.target.value.split('-');
                                             setSortBy(newSort);
                                             setIsDescending(dir === 'desc');
-                                            setTimeout(() => handleSearchMiners(0), 50);
+                                            void handleSearchMiners(0, newSort, dir === 'desc');
                                         }}
                                     >
                                         <option value="newest-desc">{t('merge.sortOptions.newest')} ↓</option>
@@ -2333,7 +2354,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             const [newSort, dir] = e.target.value.split('-');
                                             setRackSortBy(newSort as 'Date' | 'RackBonus');
                                             setRackIsDescending(dir === 'desc');
-                                            setTimeout(() => handleSearchRacks(0), 50);
+                                            void handleSearchRacks(0, newSort as 'Date' | 'RackBonus', dir === 'desc');
                                         }}
                                     >
                                         <option value="RackBonus-desc">{t('simulator.rackSortBonus')} ↓</option>

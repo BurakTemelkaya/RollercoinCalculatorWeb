@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { RollercoinUserResponse } from '../types/user';
 import { RollercoinRoomResponse } from '../types/room';
 import { calculateExactRoomPower } from '../utils/roomParser';
+import { createManualPowerBaseline, calculateManualPower } from '../utils/simulatorBaseline';
 import CdnImage from './CdnImage';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
@@ -57,6 +58,11 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const { t } = useTranslation();
     const { canFetch, setFetchStarted } = useApiCooldown();
     const [localUserName, setLocalUserName] = useState(globalUserName);
+    const [baselineMode, setBaselineMode] = useState<'account' | 'zero' | 'custom'>('account');
+    const [startingPower, setStartingPower] = useState('');
+    const [startingUnit, setStartingUnit] = useState<PowerUnit>('Eh');
+    const [startingBonus, setStartingBonus] = useState('');
+    const activeBaselineMode = baselineMode === 'account' && !fetchedUser && !fetchedRoom ? 'zero' : baselineMode;
 
     const [dynamicSets, setDynamicSets] = useState<GetRackSetListDto[] | undefined>(undefined);
     const hasFetchedDynamicSets = useRef(false);
@@ -76,7 +82,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
 
     // Manual Entry State
     const [manualPower, setManualPower] = useState('');
-    const [manualUnit, setManualUnit] = useState<PowerUnit>('Th');
+    const [manualUnit, setManualUnit] = useState<PowerUnit>('Eh');
     const [manualBonus, setManualBonus] = useState('');
     const [manualRackBonus, setManualRackBonus] = useState('');
 
@@ -87,12 +93,13 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const [searchRackBonus, setSearchRackBonus] = useState('');
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const minerSearchRequestId = useRef(0);
 
     // Filter states
     const [minPower, setMinPower] = useState<string>('');
     const [maxPower, setMaxPower] = useState<string>('');
-    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Gh');
-    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Gh');
+    const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Ph');
+    const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Ph');
 
     const [minBonus, setMinBonus] = useState<string>('');
     const [maxBonus, setMaxBonus] = useState<string>('');
@@ -142,6 +149,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setGlobalUserName(localUserName.trim());
         if (!localUserName.trim() || !onFetchUser || !canFetch) return;
         await onFetchUser(localUserName.trim());
+        setBaselineMode('account');
         setFetchStarted();
     };
 
@@ -221,13 +229,14 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setMaxPower(converted.toString());
     };
 
-    const handleSearchMiners = async (page = 0) => {
+    const handleSearchMiners = async (page = 0, nextSortBy = sortBy, nextIsDescending = isDescending) => {
+        const requestId = ++minerSearchRequestId.current;
         setIsSearching(true);
         try {
             const params: any = {
                 PageIndex: page,
-                SortBy: sortBy === 'percent' ? 'bonus' : sortBy === 'newest' ? 'date' : sortBy,
-                IsDescending: isDescending
+                SortBy: nextSortBy === 'percent' ? 'bonus' : nextSortBy === 'newest' ? 'date' : nextSortBy,
+                IsDescending: nextIsDescending
             };
             if (searchQuery) params.Name = searchQuery;
 
@@ -241,6 +250,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             if (maxBonus) params.MaxMinerBonus = Math.round(Number(maxBonus) * 100);
 
             const res = await fetchUserMinersFromApi(params);
+            if (requestId !== minerSearchRequestId.current) return;
             if (res && res.items) {
                 setSearchedMiners(res.items);
                 setPageIndex(res.index);
@@ -249,13 +259,19 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         } catch (e) {
             console.error(e);
         } finally {
-            setIsSearching(false);
+            if (requestId === minerSearchRequestId.current) setIsSearching(false);
         }
     };
 
     // Calculate base room power from room data (preferred) or API aggregate (fallback)
     // Base values from API for Total Power calculation
     const baseRoomPower = useMemo(() => {
+        if (activeBaselineMode === 'zero') return createManualPowerBaseline(0);
+        if (activeBaselineMode === 'custom') {
+            const value = Number(startingPower.replace(',', '.'));
+            return createManualPowerBaseline(toBaseUnit({ value, unit: startingUnit }) / 1e9,
+                Number(startingBonus.replace(',', '.')));
+        }
         const dto = fetchedUser?.userPowerResponseDto;
         const globalBaseMinerPowerGh = dto?.miners || 0;
         const globalBonusPercent = dto?.bonus_percent || 0;
@@ -303,62 +319,27 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             flatBonusGh,
             unlistedPowerGh
         };
-    }, [fetchedRoom, fetchedUser]);
+    }, [fetchedRoom, fetchedUser, dynamicSets, activeBaselineMode, startingPower, startingUnit, startingBonus]);
 
     const simulation = useMemo(() => {
-        let totalAddedPower = 0;
-        let totalAddedBonusPercent = 0;
-        let totalAddedRackPower = 0;
-
-        addedMiners.forEach(m => {
-            totalAddedPower += m.power;
-            totalAddedBonusPercent += m.bonus; // m.bonus is in percentage format (e.g. 1.5 for 1.5%)
-            totalAddedRackPower += (m.power * (m.rackBonus / 100));
-        });
-
-        // 1. Calculate NEW TOTAL POWER using global values
-        // We add the new miners' base power to the global base power
-        const newGlobalBaseMinerPowerGh = baseRoomPower.globalBaseMinerPowerGh + totalAddedPower;
-        // We add the new miners' bonus percent to the global bonus percent (m.bonus * 100 converts 1.5% to 150 points)
-        const newGlobalBonusPercent = baseRoomPower.globalBonusPercent + (totalAddedBonusPercent * 100);
-        
-        const newGlobalBonusPowerGh = (newGlobalBaseMinerPowerGh * (newGlobalBonusPercent / 10000)) + baseRoomPower.flatBonusGh;
-        const newTotalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + baseRoomPower.tempPowerGh + baseRoomPower.gamesPowerGh + baseRoomPower.unlistedPowerGh;
-
-        // 2. Calculate NEW LEAGUE POWER (Strictly room-based logic)
-        const currentCollectionMultiplier = baseRoomPower.collectionBonusPercent / 10000;
-        const addedBonusMultiplier = totalAddedBonusPercent / 100;
-
-        const leaguePowerDeltaGh = totalAddedPower
-            + (totalAddedPower * currentCollectionMultiplier)   // existing collection bonus on new miners
-            + (baseRoomPower.baseMinerPowerGh * addedBonusMultiplier) // new bonus on existing base
-            + (totalAddedPower * addedBonusMultiplier)           // new bonus on new miners
-            + totalAddedRackPower;                               // rack bonus on new miners
-
-        const newLeaguePowerGh = baseRoomPower.currentLeaguePowerGh + leaguePowerDeltaGh;
+        const power = calculateManualPower(baseRoomPower, addedMiners);
 
         const currentLeague = getLeagueByPower(autoScalePower(baseRoomPower.currentLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
-        const newLeague = getLeagueByPower(autoScalePower(newLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
+        const newLeague = getLeagueByPower(autoScalePower(power.newLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
         return {
-            newTotalPowerGh,
-            newLeaguePowerGh,
-            powerIncreaseGh: newTotalPowerGh - baseRoomPower.currentTotalPowerGh,
-            leaguePowerDeltaGh,
+            ...power,
             currentLeague,
             newLeague,
-            isLeagueChange: currentLeague.id !== newLeague.id,
-            totalAddedPower,
-            totalAddedBonusPercent,
-            totalAddedRackPower
+            isLeagueChange: currentLeague.id !== newLeague.id
         };
-    }, [baseRoomPower, addedMiners, apiLeagues, fetchedUser]);
+    }, [baseRoomPower, addedMiners, apiLeagues]);
 
     const formatPowerStr = (gh: number) => formatHashPower(autoScalePower(gh * 1e9));
 
     // Calculate current slider values in Gh/s
     const sliderMinGh = getMinPowerGh() || 0;
-    const sliderMaxGh = getMaxPowerGh() || 100000000000;
+    const sliderMaxGh = getMaxPowerGh() || 999000000000;
 
     return (
         <section className="manual-simulator">
@@ -394,6 +375,46 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <div className="ms-card simulator-baseline-card">
+                    <h3>{t('simulator.startingPoint')}</h3>
+                    <div className="simulator-start-controls" role="group" aria-label={t('simulator.startingPoint')}>
+                        {(['account', 'zero', 'custom'] as const).map(mode => (
+                            <button type="button" key={mode}
+                                className={`simulator-start-button ${activeBaselineMode === mode ? 'active' : ''}`}
+                                aria-pressed={activeBaselineMode === mode}
+                                disabled={mode === 'account' && !fetchedUser && !fetchedRoom}
+                                onClick={() => setBaselineMode(mode)}>
+                                {t(`simulator.${mode === 'account' ? 'useAccount' : mode === 'zero' ? 'startFromZero' : 'useEnteredPower'}`)}
+                            </button>
+                        ))}
+                    </div>
+                    {activeBaselineMode === 'custom' && (
+                        <>
+                            <div className="simulator-baseline-inputs">
+                                <label>
+                                    <span>{t('simulator.startingMinerPower')}</span>
+                                    <div className="simulator-power-input">
+                                        <input type="number" min="0" step="any" value={startingPower}
+                                            onChange={event => setStartingPower(event.target.value)} />
+                                        <select aria-label={t('simulator.startingPowerUnit')} value={startingUnit}
+                                            onChange={event => setStartingUnit(event.target.value as PowerUnit)}>
+                                            {(['Gh', 'Th', 'Ph', 'Eh', 'Zh', 'Yh'] as PowerUnit[]).map(unit => (
+                                                <option key={unit} value={unit}>{unit}/s</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </label>
+                                <label>
+                                    <span>{t('simulator.minerBonus')} (%)</span>
+                                    <input type="number" min="0" step="any" value={startingBonus}
+                                        onChange={event => setStartingBonus(event.target.value)} />
+                                </label>
+                            </div>
+                            <p className="simulator-start-hint">{t('simulator.startingPowerHint')}</p>
+                        </>
+                    )}
                 </div>
 
                 <div className="ms-card">
@@ -532,18 +553,18 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 <div className="rc-filter-group">
                                                     <label className="rc-filter-label">{t('merge.filterPower', 'Güç Aralığı')}:</label>
                                                     <div className="rc-dual-slider-container">
-                                                        <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, (sliderMinGh / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, (sliderMaxGh / 100000000000) * 100) - Math.min(100, (sliderMinGh / 100000000000) * 100))}%` }} />
+                                                        <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, (sliderMinGh / 999000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, (sliderMaxGh / 999000000000) * 100) - Math.min(100, (sliderMinGh / 999000000000) * 100))}%` }} />
                                                         <input
                                                             type="range"
                                                             className="rc-native-slider rc-slider-min"
-                                                            min="0" max="100000000000" step="1000000"
+                                                            min="0" max="999000000000" step="1000000"
                                                             value={sliderMinGh}
                                                             onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), sliderMaxGh - 1000000))}
                                                         />
                                                         <input
                                                             type="range"
                                                             className="rc-native-slider rc-slider-max"
-                                                            min="0" max="100000000000" step="1000000"
+                                                            min="0" max="999000000000" step="1000000"
                                                             value={sliderMaxGh}
                                                             onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), sliderMinGh + 1000000))}
                                                         />
@@ -571,7 +592,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                     </div>
                                                     <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                                                         <span>{t('merge.min', 'Min')}: {sliderMinGh ? formatPower(sliderMinGh) : '0'}</span>
-                                                        <span>{t('merge.max', 'Max')}: {sliderMaxGh < 100000000000 ? formatPower(sliderMaxGh) : t('merge.unlimited', 'Sınırsız')}</span>
+                                                        <span>{t('merge.max', 'Max')}: {maxPower ? formatPower(sliderMaxGh) : t('merge.unlimited', 'Sınırsız')}</span>
                                                     </div>
                                                 </div>
 
@@ -605,13 +626,13 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                                 <div className="rc-filter-group" style={{ borderTop: '1px solid #3c3e58', paddingTop: 20 }}>
                                                     <label className="rc-filter-label" style={{ marginBottom: 10 }}>{t('merge.sorting', 'Sıralama')}:</label>
                                                     <div className="rc-filter-inputs" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                                        <select value={sortBy} onChange={e => { setSortBy(e.target.value); setTimeout(() => handleSearchMiners(0), 50); }} className="rc-select" style={{ flex: '1 1 200px' }}>
+                                                        <select value={sortBy} onChange={e => { setSortBy(e.target.value); void handleSearchMiners(0, e.target.value); }} className="rc-select" style={{ flex: '1 1 200px' }}>
                                                             <option value="power">{t('merge.sortOptions.power', 'Güç')}</option>
                                                             <option value="percent">{t('merge.sortOptions.bonus', 'Bonus')}</option>
                                                             <option value="name">{t('merge.sortOptions.name', 'İsim')}</option>
                                                             <option value="newest">{t('merge.sortOptions.newest', 'En Yeni')}</option>
                                                         </select>
-                                                        <button className="rc-filter-ok" onClick={() => { setIsDescending(!isDescending); setTimeout(() => handleSearchMiners(0), 50); }} style={{ padding: '8px 14px', fontSize: 15, flex: '0 0 auto' }}>
+                                                        <button className="rc-filter-ok" onClick={() => { const nextIsDescending = !isDescending; setIsDescending(nextIsDescending); void handleSearchMiners(0, sortBy, nextIsDescending); }} style={{ padding: '8px 14px', fontSize: 15, flex: '0 0 auto' }}>
                                                             {isDescending ? '▼' : '▲'}
                                                         </button>
                                                     </div>

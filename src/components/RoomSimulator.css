@@ -167,6 +167,43 @@
     pointer-events: none;
 }
 
+.rack-add-slot {
+    box-sizing: border-box;
+    padding: 8px;
+    font: inherit;
+    color: #03e1e4;
+    border-color: rgba(3, 225, 228, 0.4);
+}
+
+.rack-add-slot-content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.rack-add-slot-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(3, 225, 228, 0.12);
+    font-size: 26px;
+}
+
+.rack-add-slot:focus-visible,
+.room-add-rack-button:focus-visible {
+    outline: 2px solid #03e1e4;
+    outline-offset: 3px;
+}
+
 .rack-item {
     position: absolute;
     bottom: 0;
@@ -784,6 +821,75 @@
     font-size: 16px;
     color: #fff;
     text-align: center;
+}
+
+.room-stat-rack-bonus {
+    position: relative;
+}
+
+.rs-label-with-help {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.room-stat-help {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: 1px solid #727691;
+    border-radius: 50%;
+    background: transparent;
+    color: #c7cbe1;
+    font: inherit;
+    font-size: 12px;
+    cursor: help;
+}
+
+.room-stat-help:hover,
+.room-stat-help:focus-visible {
+    color: #03e1e4;
+    border-color: #03e1e4;
+    outline: 2px solid rgba(3, 225, 228, 0.25);
+    outline-offset: 2px;
+}
+
+.room-rack-bonus-tooltip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    box-sizing: border-box;
+    width: min(350px, calc(100vw - 80px));
+    padding: 12px 14px;
+    border: 1px solid #484b6a;
+    border-radius: 8px;
+    background: #161925;
+    color: #edf0fa;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.6;
+    text-align: left;
+    white-space: pre-line;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.room-stat-rack-bonus:has(.room-stat-help:hover) .room-rack-bonus-tooltip,
+.room-stat-rack-bonus:focus-within .room-rack-bonus-tooltip {
+    visibility: visible;
+}
+
+@media (max-width: 991px) {
+    .room-sim-header .room-stats-container {
+        box-sizing: border-box;
+        width: 100%;
+    }
 }
 
 .rs-value.primary {

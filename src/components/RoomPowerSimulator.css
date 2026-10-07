@@ -17,6 +17,80 @@
     gap: 20px;
 }
 
+.simulator-start-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.simulator-start-button {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font: inherit;
+    cursor: pointer;
+}
+
+.simulator-start-button:hover,
+.simulator-start-button.active {
+    border-color: #03cbd1;
+    background: rgba(3, 203, 209, 0.12);
+}
+
+.simulator-start-hint {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 12px 0 0;
+}
+
+.simulator-start-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.simulator-start-controls > .simulator-start-hint {
+    margin: 0;
+}
+
+.simulator-baseline-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.simulator-baseline-inputs label {
+    display: flex;
+    flex: 1 1 200px;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.simulator-power-input {
+    display: flex;
+    gap: 8px;
+}
+
+.simulator-baseline-inputs input,
+.simulator-baseline-inputs select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font: inherit;
+    min-width: 0;
+}
+
+.simulator-power-input input {
+    flex: 1;
+    width: 100%;
+}
+
 .user-fetcher-row {
     display: flex;
     align-items: flex-end;

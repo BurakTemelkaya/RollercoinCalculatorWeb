@@ -421,6 +421,7 @@ export default function MergePage() {
 
     // Fetch list
     useEffect(() => {
+        let cancelled = false;
         const loadData = async () => {
             try {
                 setLoading(true);
@@ -452,17 +453,19 @@ export default function MergePage() {
                 if (minerWidth) params.minerWidth = Number(minerWidth);
 
                 const result = await fetchMerges(params);
-                setData(result);
+                if (!cancelled) setData(result);
             } catch (err) {
+                if (cancelled) return;
                 console.error('Failed to fetch merges:', err);
                 setError(err instanceof Error ? err.message : t('merge.fetchError'));
             } finally {
-                setLoading(false);
+                if (!cancelled) setLoading(false);
             }
         };
 
         loadData();
-    }, [currentPage, searchQuery, sortBy, isDescending, t, minPower, maxPower, minBonus, maxBonus, minerWidth]);
+        return () => { cancelled = true; };
+    }, [currentPage, searchQuery, sortBy, isDescending, t, minPower, minPowerUnit, maxPower, maxPowerUnit, minBonus, maxBonus, minerWidth]);
 
     // Sync page to URL
     const handlePageChange = (page: number) => {
@@ -696,7 +699,7 @@ export default function MergePage() {
 
                                     <button
                                         className={`merge-sort-dir-btn ${isDescending ? 'desc' : 'asc'}`}
-                                        onClick={() => setIsDescending(!isDescending)}
+                                        onClick={() => { setIsDescending(!isDescending); setCurrentPage(0); }}
                                         title={getSortLabel()}
                                         style={{ gap: '6px', fontSize: '12px', fontWeight: '600' }}
                                     >
@@ -758,19 +761,19 @@ export default function MergePage() {
                             <div className="rc-filter-group">
                                 <label className="rc-filter-label">{t('merge.filterPower')}:</label>
                                 <div className="rc-dual-slider-container">
-                                    <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 100000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) / 100000000000) * 100) - Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 100000000000) * 100))}%` }} />
+                                    <div className="rc-dual-slider-fill" style={{ left: `${Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 999000000000) * 100)}%`, width: `${Math.max(0, Math.min(100, ((getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 999000000000) / 999000000000) * 100) - Math.min(100, ((getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) / 999000000000) * 100))}%` }} />
                                     <input
                                         type="range"
                                         className="rc-native-slider rc-slider-min"
-                                        min="0" max="100000000000" step="1000000"
+                                        min="0" max="999000000000" step="1000000"
                                         value={getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0}
-                                        onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) - 1000000))}
+                                        onChange={e => handleMinPowerSlider(Math.min(Number(e.target.value), (getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 999000000000) - 1000000))}
                                     />
                                     <input
                                         type="range"
                                         className="rc-native-slider rc-slider-max"
-                                        min="0" max="100000000000" step="1000000"
-                                        value={getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000}
+                                        min="0" max="999000000000" step="1000000"
+                                        value={getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 999000000000}
                                         onChange={e => handleMaxPowerSlider(Math.max(Number(e.target.value), (getMinPowerGh(tempMinPower, tempMinPowerUnit) || 0) + 1000000))}
                                     />
                                 </div>
@@ -797,7 +800,7 @@ export default function MergePage() {
                                 </div>
                                 <div style={{ fontSize: 12, color: '#03e1e4', marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                                     <span>{t('merge.min')}: {getMinPowerGh(tempMinPower, tempMinPowerUnit) ? formatPower(getMinPowerGh(tempMinPower, tempMinPowerUnit)!) : '0'}</span>
-                                    <span>{t('merge.max')}: {(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit) || 100000000000) < 100000000000 ? formatPower(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit)!) : t('merge.unlimited')}</span>
+                                    <span>{t('merge.max')}: {tempMaxPower ? formatPower(getMaxPowerGh(tempMaxPower, tempMaxPowerUnit)!) : t('merge.unlimited')}</span>
                                 </div>
                             </div>
 

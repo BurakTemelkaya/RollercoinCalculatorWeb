@@ -6,7 +6,7 @@ Rollercoin.com oyunundaki kripto para kazançlarını hesaplayan bir web uygulam
 
 1. **Kazanç Hesaplayıcı** — Her kripto para için blok başına, günlük, haftalık, aylık kazançları USD karşılığıyla gösterir
 2. **Çekim Süresi Hesaplayıcı** — Mevcut bakiye ve kazanç hızına göre minimum çekim miktarına ne kadar sürede ulaşılacağını hesaplar
-3. **Güç Simülatörü** — Yeni madenci/raf eklendiğinde mevcut güç değerlerine göre kazancın nasıl değişeceğini simüle eder
+3. **Güç ve Oda Simülatörleri** — Hesap verileriyle, sıfırdan veya girilen madenci gücünden simülasyon yapar. [Başlangıç modları](SimulatorBaselines.md)
 4. **Parça Birleştirme (Forge)** — Başlangıç parçalarından üretilebilecek üst seviye parça sayısını ve net kârı hesaplar.
 
 ## Teknoloji
@@ -17,6 +17,8 @@ Rollercoin.com oyunundaki kripto para kazançlarını hesaplayan bir web uygulam
 - **i18n**: i18next (Türkçe/İngilizce)
 - **UI**: Radix UI (Select dropdown)
 - **Paket Yöneticisi**: npm
+
+Paket güncellemeleri, korunan sürümler ve regresyon testleri için [npm paket güncelleme kaydı](DependencyUpdates.md) dosyasına bakın.
 
 ## Çalıştırma
 

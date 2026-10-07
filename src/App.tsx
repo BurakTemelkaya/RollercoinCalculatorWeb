@@ -395,7 +395,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261007.063121';
+  const CURRENT_CACHE_VERSION = '20261007.071624';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -1010,7 +1010,6 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
 
             {/* Tabs */}
-            {earnings.length > 0 && (
               <div className="main-tabs main-tabs-4">
                 <div
                   className="main-tabs-bg"
@@ -1045,7 +1044,6 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                   {t('tabs.withdraw')}
                 </button>
               </div>
-            )}
 
 
             {/* Content based on Tab - Slider */}
@@ -1054,9 +1052,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                 className="tab-slider-track"
                 style={{ transform: `translateX(-${TAB_ORDER[activeTab] * 100}%)` }}
               >
-                {earnings.length > 0 && (
                   <>
                     <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
+                      {earnings.length > 0 && <>
                       <EarningsTable
                         earnings={earnings}
                         effectiveUserPower={displayPower}
@@ -1086,6 +1084,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                         onSelectLeaguePower={handleSelectLeaguePower}
                       />
                       <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
+                      </>}
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
@@ -1130,7 +1129,6 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                       </React.Suspense>
                     </div>
                   </>
-                )}
               </div>
             </div>
 

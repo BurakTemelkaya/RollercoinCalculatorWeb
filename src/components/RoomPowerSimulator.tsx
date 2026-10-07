@@ -5,6 +5,7 @@ import { getLeagueByPower } from '../utils/leagueHelper';
 import { RollercoinUserResponse } from '../types/user';
 import { RollercoinRoomResponse } from '../types/room';
 import { calculateExactRoomPower } from '../utils/roomParser';
+import { createEmptyRoom } from '../utils/simulatorBaseline';
 import { RoomSimulator } from './RoomSimulator';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
 import { useApiCooldown } from '../hooks/useApiCooldown';
@@ -43,6 +44,11 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
     const [localUserName, setLocalUserName] = useState(globalUserName);
     const [simulatedRoom, setSimulatedRoom] = useState<RollercoinRoomResponse | null>(null);
+    const [sandboxRoom, setSandboxRoom] = useState(createEmptyRoom);
+    const [roomSource, setRoomSource] = useState<'account' | 'empty'>('account');
+    const [sandboxGeneration, setSandboxGeneration] = useState(0);
+    const isEmptyAccount = roomSource === 'empty' || !fetchedUser;
+    const activeRoom = isEmptyAccount ? sandboxRoom : simulatedRoom;
     const [dynamicSets, setDynamicSets] = useState<GetRackSetListDto[] | undefined>(undefined);
     const hasFetchedDynamicSets = useRef(false);
 
@@ -74,6 +80,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         setGlobalUserName(localUserName.trim());
         if (!localUserName.trim() || !onFetchUser || !canFetch) return;
         await onFetchUser(localUserName.trim());
+        setRoomSource('account');
         setFetchStarted();
     };
 
@@ -84,7 +91,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     };
 
     // Get temporary power values from API dto
-    const dto = fetchedUser?.userPowerResponseDto;
+    const dto = isEmptyAccount ? undefined : fetchedUser?.userPowerResponseDto;
     const hamsterBonusPercent = dto?.hamster_expedition_bonus_percent || 0;
     const freonPowerGh = dto?.freon || 0;
     const gamesPowerGh = dto?.games || 0;
@@ -96,8 +103,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
     // ORIGINAL Room State
     const originalExactPower = useMemo(
-        () => fetchedRoom ? calculateExactRoomPower(fetchedRoom, dynamicSets) : null,
-        [fetchedRoom, dynamicSets]
+        () => isEmptyAccount ? calculateExactRoomPower(createEmptyRoom(), dynamicSets)
+            : fetchedRoom ? calculateExactRoomPower(fetchedRoom, dynamicSets) : null,
+        [isEmptyAccount, fetchedRoom, dynamicSets]
     );
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
     const originalRoomBasePowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
@@ -105,8 +113,8 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
     // SIMULATED Room State
     const exactPower = useMemo(
-        () => simulatedRoom ? calculateExactRoomPower(simulatedRoom, dynamicSets) : null,
-        [simulatedRoom, dynamicSets]
+        () => activeRoom ? calculateExactRoomPower(activeRoom, dynamicSets) : null,
+        [activeRoom, dynamicSets]
     );
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const simulatedRoomBasePowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
@@ -146,7 +154,8 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const originalSetBonusPower = originalExactPower ? originalExactPower.setBonusPowerGh : 0;
     const setBonusPowerDeltaGh = simulatedSetBonusPower - originalSetBonusPower;
     
-    const totalPowerGh = newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + tempPowerGh + gamesPowerGh + unlistedPowerGh + setBonusPowerDeltaGh;
+    const totalPowerGh = isEmptyAccount ? leaguePowerGh
+        : newGlobalBaseMinerPowerGh + newGlobalBonusPowerGh + tempPowerGh + gamesPowerGh + unlistedPowerGh + setBonusPowerDeltaGh;
 
     // 2. LEAGUE POWER DELTA (Room Logic)
     const powerDiffGh = leaguePowerGh - originalLeaguePowerGh;
@@ -196,7 +205,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             </button>
                         </div>
                     </div>
-                    {fetchedUser && !simulatedRoom && (
+                    {fetchedUser && !isEmptyAccount && !simulatedRoom && (
                         <div className="user-profile-summary">
                             <div className="user-avatar">
                                 {fetchedUser.userProfileResponseDto.name.charAt(0).toUpperCase()}
@@ -211,8 +220,22 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                     )}
                 </div>
 
+                <div className="simulator-start-controls">
+                    <button type="button" className="simulator-start-button" onClick={() => {
+                        setSandboxRoom(createEmptyRoom());
+                        setSandboxGeneration(generation => generation + 1);
+                        setRoomSource('empty');
+                    }}>{t('simulator.createEmptyRoom')}</button>
+                    {isEmptyAccount && fetchedUser && (
+                        <button type="button" className="simulator-start-button" onClick={() => setRoomSource('account')}>
+                            {t('simulator.useAccount')}
+                        </button>
+                    )}
+                    {isEmptyAccount && <span className="simulator-start-hint">{t('simulator.emptyRoomHint')}</span>}
+                </div>
+
                 {/* Fetch Room Button */}
-                {fetchedUser && !simulatedRoom && (
+                {fetchedUser && !isEmptyAccount && !simulatedRoom && (
                     <div className="beautiful-fetch-room">
                         <div className="fetch-room-card">
                             <div className="fetch-room-icon">🔍</div>
@@ -236,7 +259,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                 )}
 
                 {/* Simulated Room Area */}
-                {simulatedRoom && exactPower && (
+                {activeRoom && exactPower && (
                     <div className="simulated-room-container">
                         <div className="league-power-dashboard">
                             <div className="lpd-header">
@@ -255,7 +278,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     <span className="value">{formatHashPower(autoScalePower(exactPower.baseMinerPowerGh * 1e9))}</span>
                                 </div>
                                 <div className="lpd-stat">
-                                    <span className="label">{t('simulator.collectionBonus', 'Collection Bonus')}</span>
+                                    <span className="label">{t('simulator.minerBonus')}</span>
                                     <span className="value">{(exactPower.collectionBonusPercent / 100).toFixed(2)}%</span>
                                 </div>
                                 <div className="lpd-stat">
@@ -278,7 +301,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             </div>
                         </div>
 
-                        {fetchedUser?.userPowerResponseDto && (
+                        {!isEmptyAccount && fetchedUser?.userPowerResponseDto && (
                             <div className="lpd-stats temporary-power-dashboard" style={{ marginTop: '-10px', marginBottom: '25px', padding: '15px 20px', background: 'rgba(28, 28, 40, 0.4)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
                                 <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
                                     <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.gamesPower', 'Oyun Gücü')}</span>
@@ -302,10 +325,11 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                         )}
 
                         <RoomSimulator
-                            key={fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}
-                            room={simulatedRoom}
-                            onChange={setSimulatedRoom}
-                            userId={fetchedUser?.userProfileResponseDto?.avatar_Id}
+                            key={isEmptyAccount ? `sandbox-${sandboxGeneration}` : fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}
+                            room={activeRoom}
+                            onChange={isEmptyAccount ? setSandboxRoom : setSimulatedRoom}
+                            userId={isEmptyAccount ? undefined : fetchedUser?.userProfileResponseDto?.avatar_Id}
+                            isActive={isActive}
                             dynamicSets={dynamicSets}
                         />
 

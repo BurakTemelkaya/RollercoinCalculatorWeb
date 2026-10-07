@@ -70,13 +70,18 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-router': ['react-router-dom'],
-          'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          'vendor-html2canvas': ['html2canvas'],
-          'vendor-radix': ['@radix-ui/react-select'],
-          'vendor-chartjs': ['chart.js', 'react-chartjs-2'],
+        manualChunks(id) {
+          const modulePath = id.replace(/\\/g, '/')
+          if (!modulePath.includes('/node_modules/')) return
+
+          // Match package directories, including client, JSX and CJS subpaths.
+          // Resolving only the package entry can leave React's real code in index.
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(modulePath)) return 'vendor-react'
+          if (/\/node_modules\/(react-router|react-router-dom)\//.test(modulePath)) return 'vendor-router'
+          if (/\/node_modules\/(i18next|react-i18next|i18next-browser-languagedetector)\//.test(modulePath)) return 'vendor-i18n'
+          if (modulePath.includes('/node_modules/html2canvas/')) return 'vendor-html2canvas'
+          if (modulePath.includes('/node_modules/@radix-ui/')) return 'vendor-radix'
+          if (/\/node_modules\/(chart.js|react-chartjs-2)\//.test(modulePath)) return 'vendor-chartjs'
         }
       }
     }
