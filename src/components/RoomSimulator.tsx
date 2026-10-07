@@ -3,7 +3,9 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
-import { guessSetByMiner, guessSetByRackName, calculateSetBonuses } from '../utils/setCalculator';
+import { calculateSetBonuses } from '../utils/setCalculator';
+import { getRackSetCatalog, getRackSetName, isMinerInRackSet as minerBelongsToRackSet } from '../utils/rackSetCatalog';
+import RackSetMinerPicker from './RackSetMinerPicker';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import { fetchSellableMiners } from '../services/minerApi';
@@ -15,8 +17,17 @@ import { getCachedSpriteImage } from './spriteImageCache';
 import SharedRoomMinerCanvas from './SharedRoomMinerCanvas';
 import CdnImage from './CdnImage';
 import sellableIcon from '../assets/sellable.svg';
+import setRackIcon from '../assets/items/set-rack.png';
 import { getCdnBaseUrl } from '../config/api';
 import './RoomSimulator.css';
+
+function SetRackBadge({ setName, className = '' }: { setName: string | null; className?: string }) {
+    const { t } = useTranslation();
+    if (!setName) return null;
+    return <img src={setRackIcon} alt={t('simulator.setRack')}
+        title={`${t('simulator.setRack')}: ${setName}`} draggable={false}
+        className={`rack-set-badge ${className}`} />;
+}
 
 function formatPower(powerGhs: number): string {
     if (!powerGhs) return '0 H/s';
@@ -34,7 +45,7 @@ const DESKTOP_RACK_COLUMNS = 8;
 const DESKTOP_RACK_WIDTH = 97;
 const DESKTOP_RACK_HEIGHT = 155;
 const DESKTOP_RACK_GAP = 18;
-const DESKTOP_MAX_RACK_SCALE = 1;
+const ROOM_RACK_SCALE = 0.9;
 const DESKTOP_ROOM_ROWS = 3;
 const DESKTOP_ROOM_WIDTH = DESKTOP_RACK_COLUMNS * DESKTOP_RACK_WIDTH + (DESKTOP_RACK_COLUMNS - 1) * DESKTOP_RACK_GAP;
 const DESKTOP_ROOM_HEIGHT = DESKTOP_ROOM_ROWS * DESKTOP_RACK_HEIGHT + (DESKTOP_ROOM_ROWS - 1) * DESKTOP_RACK_GAP;
@@ -433,6 +444,53 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         addNotification(t('simulator.unmountMinersSuccess'), 'success');
     };
 
+    const handleReplaceAllWithSetMiners = (rackId: string, setMiners: MinerDto[]) => {
+        const rack = (room.racks || []).find(item => item._id === rackId);
+        if (!rack || setMiners.length === 0) return;
+        const rackHeight = (rack as ApiRoomRack & { rack_info?: { height?: number } }).rack_info?.height || 4;
+        // Place wide miners first so single-cell miners cannot split free rows.
+        const uniqueMiners = [...new Map(setMiners.map(miner => [miner.id, miner])).values()]
+            .sort((a, b) => (b.width || 1) - (a.width || 1));
+        const occupied = Array.from({ length: rackHeight }, () => [false, false]);
+        const replacements: ApiRoomMiner[] = [];
+        for (const miner of uniqueMiners) {
+            const width = miner.width || 1;
+            let placement: ApiRoomMiner['placement'] = null;
+            if (width === 1 || width === 2) {
+                for (let y = 0; y < rackHeight && !placement; y++) {
+                    for (let x = 0; x <= 2 - width; x++) {
+                        if (occupied[y].slice(x, x + width).some(Boolean)) continue;
+                        occupied[y].fill(true, x, x + width);
+                        placement = { user_rack_id: rackId, x, y };
+                        break;
+                    }
+                }
+            }
+            if (!placement) {
+                addNotification(t('simulator.setMinersDoNotFit'), 'error');
+                return;
+            }
+            replacements.push({
+                _id: `mock_miner_${crypto.randomUUID()}`, miner_id: miner.id, name: miner.name,
+                power: miner.power, bonus_percent: miner.percent || 0, width, level: miner.level || 0,
+                type: 'miner', is_in_set: minerBelongsToRackSet(rack, miner.id, miner.fileName || '', dynamicSets),
+                updated: miner.createdDate || new Date().toISOString(), filename: miner.fileName || '', placement,
+            });
+        }
+        handleRoomChange({
+            ...room,
+            miners: [...(room.miners || []).filter(miner => miner.placement?.user_rack_id !== rackId), ...replacements],
+        });
+        setSellabilityByMinerId(previous => {
+            const updated = new Map(previous);
+            for (const miner of uniqueMiners) {
+                if (typeof miner.isCanBeSoldOnMp === 'boolean') updated.set(miner.id, miner.isCanBeSoldOnMp);
+            }
+            return updated;
+        });
+        addNotification(t('simulator.setMinersReplaced'), 'success');
+    };
+
     const handleUnmountRack = (rackId: string) => {
         handleDeleteRack(rackId);
         setEditingRackId(null);
@@ -469,16 +527,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         const rack: any = (room.racks || []).find(r => r._id === rackId);
         const width = newMiner.width || 1;
         const isMinerInRackSet = () => {
-            const rackName = rack?.name || rack?.rack_info?.name;
-            if (!rackName) return false;
-            const rackSet = guessSetByRackName(rackName);
-            if (!rackSet) return false;
-            const minerObj = {
-                filename: newMiner.fileName || (newMiner as any).filename,
-                name: newMiner.name
-            } as ApiRoomMiner;
-            const minerSet = guessSetByMiner(minerObj);
-            return minerSet !== null && minerSet.title.en === rackSet.title.en;
+            return rack ? minerBelongsToRackSet(rack, newMiner.id, newMiner.fileName || '', dynamicSets) : false;
         };
         const fakeId = 'mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
         const replacementMiner: ApiRoomMiner = {
@@ -730,16 +779,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         }
 
         const isMinerInRackSet = () => {
-            const rackName = rack?.name || rack?.rack_info?.name;
-            if (!rackName) return false;
-            const rackSet = guessSetByRackName(rackName);
-            if (!rackSet) return false;
-            const minerObj = {
-                filename: miner.fileName || (miner as any).filename,
-                name: miner.name
-            } as ApiRoomMiner;
-            const minerSet = guessSetByMiner(minerObj);
-            return minerSet !== null && minerSet.title.en === rackSet.title.en;
+            return rack ? minerBelongsToRackSet(rack, miner.id || movingMiner.miner_id || '', miner.fileName || movingMiner.filename || '', dynamicSets) : false;
         };
 
         const fakeId = isMove ? (miner as any)._id : ('mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
@@ -1105,15 +1145,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         const grid = racksGridRef.current;
         if (!area || !inner || !grid) return;
         if (isMobile) {
-            // Desktop sizing is applied directly for smooth resizing; clear it when
-            // switching to the mobile grid so controls follow the full rack height.
+            // Clear the desktop grid before measuring the natural mobile layout.
             inner.style.removeProperty('width');
             inner.style.removeProperty('height');
             grid.style.removeProperty('transform');
             grid.style.removeProperty('width');
             grid.style.removeProperty('left');
             grid.style.removeProperty('top');
-            return;
         }
 
         let frame = 0;
@@ -1123,12 +1161,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             const styles = window.getComputedStyle(area);
             const availableWidth = area.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
             if (availableWidth <= 0) return;
-            const scale = Math.min(DESKTOP_MAX_RACK_SCALE, availableWidth / DESKTOP_ROOM_WIDTH);
+            if (isMobile) {
+                inner.style.width = `${grid.offsetWidth * ROOM_RACK_SCALE}px`;
+                inner.style.height = `${grid.offsetHeight * ROOM_RACK_SCALE}px`;
+                grid.style.transformOrigin = 'top left';
+                grid.style.transform = `scale(${ROOM_RACK_SCALE})`;
+                return;
+            }
+            const scale = Math.min(1, availableWidth / DESKTOP_ROOM_WIDTH) * ROOM_RACK_SCALE;
             inner.style.width = `${availableWidth}px`;
             inner.style.height = `${DESKTOP_ROOM_HEIGHT * scale}px`;
             grid.style.width = `${DESKTOP_ROOM_WIDTH}px`;
             grid.style.left = `${Math.max(0, (availableWidth - DESKTOP_ROOM_WIDTH * scale) / 2)}px`;
-            grid.style.top = currentRoomLevel === 0 ? `${(DESKTOP_RACK_HEIGHT + DESKTOP_RACK_GAP) * scale / 2}px` : '0px';
+            grid.style.top = currentRoomLevel === 0
+                ? `${(DESKTOP_RACK_HEIGHT + DESKTOP_RACK_GAP) * scale / 2}px`
+                : '0px';
             grid.style.transform = `scale(${scale})`;
         };
 
@@ -1148,7 +1195,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             observer.disconnect();
             if (frame) window.cancelAnimationFrame(frame);
         };
-    }, [isMobile, currentRoomLevel]);
+    }, [isMobile, currentRoomLevel, currentRoomRacks.length]);
 
     const validDropZones: { x: number, y: number, gridX: number }[] = [];
     for (let y = 0; y < maxRows; y++) {
@@ -1558,6 +1605,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
                                 const rackHeight = (rack as any)?.rack_info?.height || 4;
                                 const rackMiners = minersByRack.get(rack._id) || [];
+                                const rackSetName = getRackSetName(rack.rack_id, rack.name, dynamicSets);
 
                                 const config = getRowConfig(currentRoomLevel, visualY);
                                 const gridX = visualX + config.offset;
@@ -1605,6 +1653,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             cursor: 'pointer'
                                         }}
                                     >
+                                        <SetRackBadge setName={rackSetName} className="rack-set-badge--room" />
                                         <CdnImage
                                             className="rack-item"
                                             type="rack"
@@ -1789,6 +1838,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                     const editingRack = (room.racks || []).find(r => r._id === editingRackId);
                     if (!editingRack) return null;
                     const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === editingRackId);
+                    const setCatalog = getRackSetCatalog(editingRack, dynamicSets);
                     const rackHeight = (editingRack as any)?.rack_info?.height || 4;
                     const rackBonus = ((editingRack as any)?.bonus || 0) / 100;
 
@@ -1906,6 +1956,24 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         </div>
 
                                         {/* Miner slots */}
+                                        {setCatalog && (
+                                            <RackSetMinerPicker key={editingRackId} name={setCatalog.name} items={setCatalog.items}
+                                                placedIds={rackMiners.map(miner => miner.miner_id)}
+                                                onRemove={minerId => {
+                                                    const miner = rackMiners.find(item => item.miner_id === minerId);
+                                                    if (miner) {
+                                                        handleDeleteMiner(miner._id);
+                                                        addNotification(t('simulator.minerDeleted'), 'info');
+                                                    }
+                                                }}
+                                                onReplaceAll={miners => handleReplaceAllWithSetMiners(editingRackId, miners)}
+                                                onAdd={miner => {
+                                                    if (typeof miner.isCanBeSoldOnMp === 'boolean') {
+                                                        setSellabilityByMinerId(previous => new Map(previous).set(miner.id, miner.isCanBeSoldOnMp as boolean));
+                                                    }
+                                                    submitAddMinerApi(miner, editingRackId);
+                                                }} />
+                                        )}
                                         <div className="rack-edit-slots">
                                             {slotRows.map((row, rowIdx) => (
                                                 <div key={rowIdx} className="rack-edit-slot-row">
@@ -2270,7 +2338,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             loading="lazy"
                                                         />
                                                     </div>
-                                                    <span className="inv-miner-card-name" style={{ color: '#03e1e4' }}>{rack.name}</span>
+                                                    <span className="inv-miner-card-name" style={{ color: '#03e1e4' }}>
+                                                        <SetRackBadge setName={getRackSetName(rack.id, rack.name, dynamicSets)} /> {rack.name}
+                                                    </span>
                                                     <span className="inv-miner-card-power">{t('simulator.rackCapacity')}: {rack.capacity}</span>
                                                     {rack.powerBonus > 0 && <span className="inv-miner-card-bonus">+{(rack.powerBonus / 100).toFixed(2).replace(/\.00$/, '')}%</span>}
                                                 </div>
@@ -2486,7 +2556,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                         loading="lazy"
                                                     />
                                                 </div>
-                                                <span className="inv-miner-card-name" style={{ color: '#03e1e4' }}>{rack.name}</span>
+                                                <span className="inv-miner-card-name" style={{ color: '#03e1e4' }}>
+                                                    <SetRackBadge setName={getRackSetName(rack.id, rack.name, dynamicSets)} /> {rack.name}
+                                                </span>
                                                 <span className="inv-miner-card-power">{t('simulator.rackCapacity')}: {rack.capacity} | <span className="inv-miner-card-bonus">{rack.powerBonus > 0 ? `+${(rack.powerBonus / 100).toFixed(2).replace(/\.00$/, '')}%` : '0%'}</span></span>
                                             </div>
                                         ))

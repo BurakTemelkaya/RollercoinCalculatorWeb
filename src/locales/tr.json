@@ -366,6 +366,14 @@
     "showDuration": "Kalan süreyi göster"
   },
   "simulator": {
+    "setRack": "Set rafı",
+    "setMiners": "Set madencileri",
+    "replaceAllWithSetMiners": "Bütün minerları set minerlarıyla değiştir",
+    "removeMinerFromRack": "Raftan kaldır",
+    "setMinersDoNotFit": "Set minerları rafa sığmıyor. Mevcut minerlar korunuyor.",
+    "setMinersReplaced": "Raftaki minerlar set minerlarıyla değiştirildi.",
+    "setMinerUnavailable": "Madenci bilgileri alınamadı. Tekrar deneyin.",
+    "noMinersFound": "Eşleşen madenci bulunamadı.",
     "rackBonusExplanation": "Her madencinin ham gücü × bulunduğu rafın bonusu ÷ 100 hesaplanır ve sonuçlar toplanır.\nOda raf bonusu (%) = toplam raf bonus gücü ÷ odanın toplam ham madenci gücü × 100.\nÖrnek: Aynı güçte iki madenci %10 ve %0 bonuslu raflardaysa oda raf bonusu %5 olur. Boş raflar etkilemez; odada madenci yoksa %0 gösterilir.",
     "minRoomReached": "En az 1 oda kalmalıdır.",
     "deleteRoomConfirm": "Bu odayı silmek istediğinize emin misiniz? Odanın içindeki tüm raf ve madenciler de silinecektir.",
@@ -510,6 +518,8 @@
     "roomFetchedSuccess": "Odadan veriler başarıyla çekildi!",
     "selectMinerToAdd": "Eklenecek madenciyi seçin",
     "selectMinerToReplace": "Envanterden yeni madenciyi seçin",
+    "setMiner": "Set madencisi",
+    "notSellableMiner": "Satılamaz",
     "sellableMiner": "Satılabilir"
   },
   "settings": {

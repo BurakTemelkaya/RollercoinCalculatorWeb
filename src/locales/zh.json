@@ -306,6 +306,14 @@
     "showDuration": "显示剩余时间"
   },
   "simulator": {
+    "setRack": "套装机架",
+    "setMiners": "套装矿机",
+    "replaceAllWithSetMiners": "将所有矿机替换为套装矿机",
+    "removeMinerFromRack": "从机架移除",
+    "setMinersDoNotFit": "套装矿机无法放入此机架。现有矿机已保留。",
+    "setMinersReplaced": "机架上的矿机已替换为套装矿机。",
+    "setMinerUnavailable": "无法加载矿机详情，请重试。",
+    "noMinersFound": "没有匹配的矿机。",
     "rackBonusExplanation": "对每台矿机，计算基础算力 × 所在机架的加成百分比 ÷ 100，再将结果相加。\n房间机架加成（%）= 机架提供的总额外算力 ÷ 房间内矿机的总基础算力 × 100。\n例如：两台基础算力相同的矿机分别放在加成为 10% 和 0% 的机架上，房间机架加成为 5%。空机架不影响结果；房间内没有矿机时显示 0%。",
     "minRoomReached": "必须至少保留1个房间。",
     "deleteRoomConfirm": "您确定要删除这个房间吗？里面的所有机架和矿机也将被删除。",
@@ -445,6 +453,8 @@
     "roomFetchedSuccess": "房间数据获取成功！",
     "selectMinerToAdd": "选择要添加的矿机",
     "selectMinerToReplace": "从库存中选择新矿机",
+    "setMiner": "套装矿机",
+    "notSellableMiner": "不可出售",
     "sellableMiner": "可出售"
   },
   "settings": {

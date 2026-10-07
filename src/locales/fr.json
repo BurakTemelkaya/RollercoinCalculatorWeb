@@ -306,6 +306,14 @@
     "showDuration": "Afficher le temps restant"
   },
   "simulator": {
+    "setRack": "Rack de set",
+    "setMiners": "Mineurs du set",
+    "replaceAllWithSetMiners": "Remplacer tous les mineurs par ceux du set",
+    "removeMinerFromRack": "Retirer du rack",
+    "setMinersDoNotFit": "Les mineurs du set ne tiennent pas dans ce rack. Les mineurs actuels ont été conservés.",
+    "setMinersReplaced": "Les mineurs du rack ont été remplacés par ceux du set.",
+    "setMinerUnavailable": "Impossible de charger les détails du mineur. Réessayez.",
+    "noMinersFound": "Aucun mineur correspondant.",
     "rackBonusExplanation": "Pour chaque mineur, on calcule puissance de base × bonus de son rack ÷ 100, puis on additionne les résultats.\nBonus des racks de la salle (%) = puissance totale apportée par les racks ÷ puissance de base totale des mineurs de la salle × 100.\nExemple : Deux mineurs de même puissance sur des racks avec des bonus de 10 % et 0 % donnent un bonus de salle de 5 %. Les racks vides n'ont aucun effet ; une salle sans mineurs affiche 0 %.",
     "minRoomReached": "Il doit rester au moins 1 salle.",
     "deleteRoomConfirm": "Êtes-vous sûr de vouloir supprimer cette salle ? Tous les racks et mineurs à l'intérieur seront également supprimés.",
@@ -431,6 +439,8 @@
     "roomFetchedSuccess": "Données de la salle récupérées avec succès !",
     "selectMinerToAdd": "Sélectionnez le mineur à ajouter",
     "selectMinerToReplace": "Sélectionnez un nouveau mineur dans l'inventaire",
+    "setMiner": "Mineur du set",
+    "notSellableMiner": "Non vendable",
     "sellableMiner": "Vendable"
   },
   "settings": {

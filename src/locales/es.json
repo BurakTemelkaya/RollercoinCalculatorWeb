@@ -306,6 +306,14 @@
     "showDuration": "Mostrar tiempo restante"
   },
   "simulator": {
+    "setRack": "Estante de conjunto",
+    "setMiners": "Mineros del conjunto",
+    "replaceAllWithSetMiners": "Reemplazar todos los mineros por mineros del set",
+    "removeMinerFromRack": "Quitar del rack",
+    "setMinersDoNotFit": "Los mineros del set no caben en este rack. Se conservaron los mineros actuales.",
+    "setMinersReplaced": "Los mineros del rack se reemplazaron por mineros del set.",
+    "setMinerUnavailable": "No se pudieron cargar los detalles. Inténtalo de nuevo.",
+    "noMinersFound": "No hay mineros coincidentes.",
     "rackBonusExplanation": "Para cada minero se calcula potencia base × bonificación de su estante ÷ 100 y se suman los resultados.\nBonificación de estantes de la sala (%) = potencia adicional total de los estantes ÷ potencia base total de los mineros de la sala × 100.\nEjemplo: Dos mineros con la misma potencia en estantes con bonificaciones del 10 % y del 0 % dan un 5 % de bonificación en la sala. Los estantes vacíos no influyen; una sala sin mineros muestra 0 %.",
     "minRoomReached": "Debe quedar al menos 1 sala.",
     "deleteRoomConfirm": "¿Estás seguro de que quieres eliminar esta sala? Todos los estantes y mineros dentro también serán eliminados.",
@@ -430,6 +438,8 @@
     "roomFetchedSuccess": "¡Datos de la habitación obtenidos con éxito!",
     "selectMinerToAdd": "Selecciona el minero para añadir",
     "selectMinerToReplace": "Selecciona un nuevo minero del inventario",
+    "setMiner": "Minero del conjunto",
+    "notSellableMiner": "No vendible",
     "sellableMiner": "Vendible"
   },
   "settings": {

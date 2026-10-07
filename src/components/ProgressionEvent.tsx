@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -197,6 +198,20 @@ interface RewardDisplay {
     isMysteryBox?: boolean;
     singlePieceUrl?: string;
     singlePieceRcUrl?: string;
+}
+
+function RewardLink({ display, lang, className, children }: {
+    display?: RewardDisplay | null;
+    lang?: string;
+    className: string;
+    children: ReactNode;
+}) {
+    if (display?.itemType === 'miner') {
+        return <Link className={`${className} pe-miner-levels-link`}
+            to={`/${lang}/merges/miner/${encodeURIComponent(display.text)}`}
+            target="_blank" rel="noopener noreferrer">{children}</Link>;
+    }
+    return <div className={className}>{children}</div>;
 }
 
 function getRewardDisplay(
@@ -1039,7 +1054,7 @@ export default function ProgressionEvent() {
                         </h2>
 
                         {finalRewardDisplay && finalRewardDisplay.imageUrl && (
-                            <div className="pe-header-final-reward">
+                            <RewardLink display={finalRewardDisplay} lang={lang} className="pe-header-final-reward">
                                 <div className="pe-final-reward-img-wrapper" style={{ marginTop: '4px' }}>
                                     {finalRewardDisplay.itemType && finalRewardDisplay.itemId && finalRewardDisplay.imageUrl ? (
                                         <CdnImage
@@ -1070,7 +1085,7 @@ export default function ProgressionEvent() {
                                         {finalRewardDisplay.subText.split('|')[1] && <span style={{ color: '#06b6d4', marginLeft: '4px' }}>|{finalRewardDisplay.subText.split('|')[1]}</span>}
                                     </div>
                                 )}
-                            </div>
+                            </RewardLink>
                         )}
 
                         {eventData.totalPoint != null && eventData.totalPoint > 0 && (
@@ -1183,7 +1198,7 @@ export default function ProgressionEvent() {
                                                                 <span className="pe-text-mobile pe-tooltip" tabIndex={0} data-full={formatNumber(level.level_xp)}>{formatPoints(level.level_xp)}</span>
                                                             </td>
                                                             <td className="pe-rewards-col">
-                                                                <div className="pe-reward-item-container">
+                                                                <RewardLink display={display} lang={lang} className="pe-reward-item-container">
                                                                     <div className="pe-reward-img-wrapper">
                                                                         {display?.isMysteryBox ? (
                                                                             <div style={{ position: 'relative', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -1339,7 +1354,7 @@ export default function ProgressionEvent() {
                                                                         <span className="pe-reward-name">{display?.text ?? '-'}</span>
                                                                         {display?.subText && <span className="pe-reward-sub">{display.subText}</span>}
                                                                     </div>
-                                                                </div>
+                                                                </RewardLink>
                                                             </td>
                                                         </tr>
                                                     );

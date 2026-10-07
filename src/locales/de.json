@@ -306,6 +306,14 @@
     "showDuration": "Verbleibende Zeit anzeigen"
   },
   "simulator": {
+    "setRack": "Set-Rack",
+    "setMiners": "Set-Miner",
+    "replaceAllWithSetMiners": "Alle Miner durch Set-Miner ersetzen",
+    "removeMinerFromRack": "Aus dem Rack entfernen",
+    "setMinersDoNotFit": "Die Set-Miner passen nicht in dieses Rack. Vorhandene Miner bleiben erhalten.",
+    "setMinersReplaced": "Die Miner im Rack wurden durch Set-Miner ersetzt.",
+    "setMinerUnavailable": "Miner-Details konnten nicht geladen werden. Bitte erneut versuchen.",
+    "noMinersFound": "Keine passenden Miner.",
     "rackBonusExplanation": "Für jeden Miner wird die Basisleistung × Bonus seines Racks ÷ 100 berechnet. Anschließend werden die Ergebnisse addiert.\nRack-Bonus des Raums (%) = gesamte Rack-Bonusleistung ÷ gesamte Miner-Basisleistung im Raum × 100.\nBeispiel: Zwei gleich starke Miner auf Racks mit 10 % und 0 % Bonus ergeben 5 % Rack-Bonus im Raum. Leere Racks haben keinen Einfluss; ohne Miner werden 0 % angezeigt.",
     "minRoomReached": "Es muss mindestens 1 Raum verbleiben.",
     "deleteRoomConfirm": "Sind Sie sicher, dass Sie diesen Raum löschen möchten? Alle darin enthaltenen Racks und Miner werden ebenfalls gelöscht.",
@@ -448,6 +456,8 @@
     "roomFetchedSuccess": "Raumdaten erfolgreich abgerufen!",
     "selectMinerToAdd": "Miner zum Hinzufügen auswählen",
     "selectMinerToReplace": "Neuen Miner aus dem Inventar auswählen",
+    "setMiner": "Set-Miner",
+    "notSellableMiner": "Nicht verkaufbar",
     "sellableMiner": "Verkaufbar"
   },
   "settings": {

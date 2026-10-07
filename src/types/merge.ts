@@ -35,6 +35,9 @@ export interface MergeListItem {
     resultItemFileName: string;
     /** Image cache-buster version (0 = no version suffix) */
     resultItemImageVersion: number;
+    /** null or absent means the status is unknown */
+    resultItemIsCanBeSoldOnMp?: boolean | null;
+    resultItemIsInSet?: boolean | null;
 }
 
 /** A required item for a merge recipe */
@@ -57,6 +60,9 @@ export interface MergeRequiredItem {
     power: number | null;
     /** Miner cell width (0 means use result item width) */
     width: number | null;
+    /** Miner-only metadata; null or absent means unknown */
+    isCanBeSoldOnMp?: boolean | null;
+    isInSet?: boolean | null;
 }
 
 /** Detailed merge recipe (returned by GetById) */

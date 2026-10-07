@@ -306,6 +306,14 @@
     "showDuration": "Mostrar tempo"
   },
   "simulator": {
+    "setRack": "Prateleira do conjunto",
+    "setMiners": "Mineradores do conjunto",
+    "replaceAllWithSetMiners": "Substituir todos os mineradores pelos do conjunto",
+    "removeMinerFromRack": "Remover do rack",
+    "setMinersDoNotFit": "Os mineradores do conjunto não cabem neste rack. Os mineradores atuais foram mantidos.",
+    "setMinersReplaced": "Os mineradores do rack foram substituídos pelos do conjunto.",
+    "setMinerUnavailable": "Não foi possível carregar os detalhes. Tente novamente.",
+    "noMinersFound": "Nenhum minerador encontrado.",
     "rackBonusExplanation": "Para cada minerador, calcula-se potência base × bônus da sua estante ÷ 100 e somam-se os resultados.\nBônus das estantes da sala (%) = potência adicional total das estantes ÷ potência base total dos mineradores da sala × 100.\nExemplo: Dois mineradores com a mesma potência em estantes com bônus de 10% e 0% geram um bônus de sala de 5%. Estantes vazias não influenciam; uma sala sem mineradores mostra 0%.",
     "minRoomReached": "Pelo menos 1 sala deve permanecer.",
     "deleteRoomConfirm": "Tem certeza de que deseja excluir esta sala? Todos os racks e mineradores dentro também serão excluídos.",
@@ -445,6 +453,8 @@
     "roomFetchedSuccess": "Dados da sala obtidos com sucesso!",
     "selectMinerToAdd": "Selecione o minerador para adicionar",
     "selectMinerToReplace": "Selecione o novo minerador do inventário",
+    "setMiner": "Minerador do conjunto",
+    "notSellableMiner": "Não vendível",
     "sellableMiner": "Vendível"
   },
   "settings": {

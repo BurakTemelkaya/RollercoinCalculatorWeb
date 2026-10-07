@@ -7,6 +7,7 @@
 import { buildApiUrl } from '../config/api';
 import { apiGet, apiFetch } from './apiClient';
 import { PaginatedResponse } from '../types/pagination';
+import type { MinerDto } from './userApi';
 
 // ---- DTO types matching the backend response ----
 
@@ -24,6 +25,7 @@ export interface GetRackSetItemListDto {
     minerSetId: string;
     minerFilename: string;
     minerId: string;
+    miner?: MinerDto | null;
 }
 
 export interface GetRackListDto {

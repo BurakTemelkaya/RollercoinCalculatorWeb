@@ -365,6 +365,14 @@
     "showDuration": "Show remaining time"
   },
   "simulator": {
+    "setRack": "Set rack",
+    "setMiners": "Set miners",
+    "replaceAllWithSetMiners": "Replace all miners with set miners",
+    "removeMinerFromRack": "Remove from rack",
+    "setMinersDoNotFit": "The set miners do not fit in this rack. Existing miners were kept.",
+    "setMinersReplaced": "Rack miners replaced with set miners.",
+    "setMinerUnavailable": "Could not load miner details. Please try again.",
+    "noMinersFound": "No matching miners.",
     "rackBonusExplanation": "For each miner, calculate base power × its rack's bonus ÷ 100, then add the results.\nRoom rack bonus (%) = total rack bonus power ÷ total base miner power in the room × 100.\nExample: Two equally powerful miners on racks with 10% and 0% bonuses give a 5% room rack bonus. Empty racks have no effect; a room with no miners shows 0%.",
     "minRoomReached": "At least 1 room must remain.",
     "deleteRoomConfirm": "Are you sure you want to delete this room? All racks and miners inside will also be deleted.",
@@ -509,6 +517,8 @@
     "roomFetchedSuccess": "Room data fetched successfully!",
     "selectMinerToAdd": "Select miner to add",
     "selectMinerToReplace": "Select new miner from inventory",
+    "setMiner": "Set miner",
+    "notSellableMiner": "Not sellable",
     "sellableMiner": "Sellable"
   },
   "settings": {

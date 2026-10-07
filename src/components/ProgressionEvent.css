@@ -1744,3 +1744,13 @@
     background: #1e293b !important;
   }
 }
+.pe-miner-levels-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pe-miner-levels-link:hover,
+.pe-miner-levels-link:focus-visible {
+    color: #03e1e4;
+    text-decoration: underline;
+}

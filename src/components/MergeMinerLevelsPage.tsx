@@ -5,6 +5,7 @@ import { fetchMergesByMinerName } from '../services/mergeApi';
 import type { MergeDetail } from '../types/merge';
 import { autoScalePower } from '../utils/powerParser';
 import CdnImage from './CdnImage';
+import MinerStatusBadges from './MinerStatusBadges';
 
 import './MergePage.css'; // Reusing some base styles
 import './MergeMinerLevelsPage.css';
@@ -351,6 +352,7 @@ export default function MergeMinerLevelsPage() {
                                     <div className="miner-level-card-top">
                                         <div className="miner-level-result">
                                             <div className="miner-level-img-wrap">
+                                                <MinerStatusBadges isCanBeSoldOnMp={detail.resultItemIsCanBeSoldOnMp} isInSet={detail.resultItemIsInSet} />
                                                 <img
                                                     src={getLevelIconUrl(resultLevel)}
                                                     alt={`Level ${resultLevel}`}
@@ -410,6 +412,7 @@ export default function MergeMinerLevelsPage() {
                                                     return (
                                                         <div key={`${item.itemId}-${idx}`} className="req-item-card">
                                                             <div className="req-item-img-wrap">
+                                                                {isMiner && <MinerStatusBadges isCanBeSoldOnMp={item.isCanBeSoldOnMp} isInSet={item.isInSet} />}
                                                                 {isMiner && reqMinerLevel > 1 && (
                                                                     <img
                                                                         src={getLevelIconUrl(reqMinerLevel)}
@@ -500,6 +503,7 @@ export default function MergeMinerLevelsPage() {
                                                         {totalMiners.map((gItem, idx) => (
                                                             <div key={`gt-${gItem.itemId}-${idx}`} className="req-item-card">
                                                                 <div className="req-item-img-wrap">
+                                                                    <MinerStatusBadges isCanBeSoldOnMp={gItem.isCanBeSoldOnMp} isInSet={gItem.isInSet} />
                                                                     {gItem.reqMinerLevel > 1 && (
                                                                         <img
                                                                             src={getLevelIconUrl(gItem.reqMinerLevel)}

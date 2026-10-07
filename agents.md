@@ -30,4 +30,8 @@ Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zek
    - Hamster verisi, sprite animasyonu ve sefer haritaları
    - Yeni hamster ve harita ekleme adımları
 
+7. **[Merge Miner Bilgileri](file:///.agents/Merges.md)**
+   - Satılabilirlik ve set miner ikonları
+   - Ortak backend eşlemeleri ve kontroller
+
 Yapay zeka asistanları bu index dosyasını kullanarak projenin ilgili bölümleri hakkında daha hızlı ve spesifik bilgi edinebilir.

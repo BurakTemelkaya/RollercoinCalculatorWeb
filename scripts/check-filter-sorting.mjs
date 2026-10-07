@@ -62,7 +62,7 @@ try {
         await page.locator(selector).click();
     };
     const waitLabel = async (selector, name) => {
-        await page.waitForFunction((selector, name) => document.querySelector(selector)?.textContent === name, {}, selector, name);
+        await page.waitForFunction((selector, name) => document.querySelector(selector)?.textContent.trim() === name, {}, selector, name);
     };
     const checkRequest = async (endpoint, action, expected, resultSelector) => {
         // Finish debounced searches from the previous interaction before observing
@@ -87,7 +87,7 @@ try {
         // Both replies must finish before checking that the slow older one was ignored.
         await olderResponse;
         await delay(900);
-        assert.equal(await page.$eval(resultSelector, element => element.textContent), label(latestParams), `${endpoint}: an older response overwrote the selected sort`);
+        assert.equal(await page.$eval(resultSelector, element => element.textContent.trim()), label(latestParams), `${endpoint}: an older response overwrote the selected sort`);
         assert.equal(await page.$eval(select, element => element.value), fastValue);
     };
 

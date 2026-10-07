@@ -306,6 +306,14 @@
     "showDuration": "Tampilkan durasi"
   },
   "simulator": {
+    "setRack": "Rak set",
+    "setMiners": "Miner set",
+    "replaceAllWithSetMiners": "Ganti semua miner dengan miner set",
+    "removeMinerFromRack": "Hapus dari rak",
+    "setMinersDoNotFit": "Miner set tidak muat di rak ini. Miner yang ada tetap dipertahankan.",
+    "setMinersReplaced": "Miner di rak diganti dengan miner set.",
+    "setMinerUnavailable": "Detail miner gagal dimuat. Silakan coba lagi.",
+    "noMinersFound": "Tidak ada miner yang cocok.",
     "rackBonusExplanation": "Untuk setiap miner, hitung daya dasar × bonus raknya ÷ 100, lalu jumlahkan hasilnya.\nBonus rak ruangan (%) = total daya tambahan dari rak ÷ total daya dasar miner di ruangan × 100.\nContoh: Dua miner dengan daya yang sama pada rak berbonus 10% dan 0% menghasilkan bonus rak ruangan sebesar 5%. Rak kosong tidak berpengaruh; ruangan tanpa miner menampilkan 0%.",
     "minRoomReached": "Setidaknya 1 ruang harus tersisa.",
     "deleteRoomConfirm": "Apakah Anda yakin ingin menghapus ruang ini? Semua rak dan penambang di dalamnya juga akan dihapus.",
@@ -445,6 +453,8 @@
     "roomFetchedSuccess": "Data ruangan berhasil diambil!",
     "selectMinerToAdd": "Pilih penambang untuk ditambahkan",
     "selectMinerToReplace": "Pilih penambang baru dari inventaris",
+    "setMiner": "Miner set",
+    "notSellableMiner": "Tidak dapat dijual",
     "sellableMiner": "Dapat Dijual"
   },
   "settings": {

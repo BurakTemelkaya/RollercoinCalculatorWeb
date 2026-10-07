@@ -15,3 +15,7 @@ Progression Event ödüllerinin görselleri şu öncelik sırasına göre çöz�
 - Mystery box ve utility item görselleri API'den dinamik gelir.
 - Yeni kutu veya booster eklendiğinde **manuel güncelleme gerekmez**.
 - Eğer kullanıcının Ad-blocker eklentisi `static.rollercoin.com` domain'ini engelliyorsa lokal fallback'ler devreye girer.
+
+## Madenci merge bağlantıları
+
+Progression event ödül tablosundaki madencinin görseli ve adı, ayrıca başlıktaki son madenci ödülü, `RewardLink` aracılığıyla `/:lang/merges/miner/:minerName` sayfasını yeni sekmede açar (`target="_blank"`, `rel="noopener noreferrer"`). İsim `encodeURIComponent` ile kodlanır. Mevcut `MergeMinerLevelsPage` ve `/api/Merges/get-by-miner-name` kullanılır; tüm seviyeler varsayılan olarak gösterilir. Diğer ödül tipleri bağlantıya çevrilmez. Hem güncel hem geçmiş event detayları aynı bileşeni kullanır.

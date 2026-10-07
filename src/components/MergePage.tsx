@@ -4,6 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchMerges, fetchMergeById } from '../services/mergeApi';
 import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge';
 import CdnImage from './CdnImage';
+import MinerStatusBadges from './MinerStatusBadges';
 import type { PaginatedResponse } from '../types/pagination';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -885,6 +886,7 @@ export default function MergePage() {
                                             onClick={() => handleCardClick(item.id)}
                                         >
                                             <div className="merge-card-img-wrap">
+                                                <MinerStatusBadges isCanBeSoldOnMp={item.resultItemIsCanBeSoldOnMp} isInSet={item.resultItemIsInSet} />
                                                 {(item.resultItemLevel + 1) > 1 && (
                                                     levelDisplayMode === 'roman' ? (
                                                         <img
@@ -1049,6 +1051,7 @@ export default function MergePage() {
                             {/* Result Miner */}
                             <div className="merge-result-section">
                                 <div style={{ position: 'relative', display: 'inline-flex', flexShrink: 0 }}>
+                                    <MinerStatusBadges isCanBeSoldOnMp={selectedMerge.resultItemIsCanBeSoldOnMp} isInSet={selectedMerge.resultItemIsInSet} />
                                     {(selectedMerge.resultItemLevel + 1) > 1 && (
                                         levelDisplayMode === 'roman' ? (
                                             <img
@@ -1186,6 +1189,7 @@ export default function MergePage() {
                                     return (
                                         <div key={`${item.itemId}-${idx}`} className="merge-required-item">
                                             <div className="merge-req-img-wrap">
+                                                {isMiner && <MinerStatusBadges isCanBeSoldOnMp={item.isCanBeSoldOnMp} isInSet={item.isInSet} />}
                                                 {isMiner && reqMinerLevel > 1 && (
                                                     levelDisplayMode === 'roman' ? (
                                                         <img

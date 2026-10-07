@@ -306,6 +306,14 @@
     "showDuration": "Zobrazit zbývající čas"
   },
   "simulator": {
+    "setRack": "Stojan sady",
+    "setMiners": "Minery sady",
+    "replaceAllWithSetMiners": "Nahradit všechny těžaře těžaři ze sady",
+    "removeMinerFromRack": "Odebrat ze stojanu",
+    "setMinersDoNotFit": "Těžaři ze sady se do stojanu nevejdou. Stávající těžaři zůstali zachováni.",
+    "setMinersReplaced": "Těžaři ve stojanu byli nahrazeni těžaři ze sady.",
+    "setMinerUnavailable": "Nelze načíst podrobnosti mineru. Zkuste to znovu.",
+    "noMinersFound": "Žádné odpovídající minery.",
     "rackBonusExplanation": "Pro každého těžaře se vypočítá základní výkon × bonus jeho regálu ÷ 100 a výsledky se sečtou.\nBonus regálů v místnosti (%) = celkový bonusový výkon regálů ÷ celkový základní výkon těžařů v místnosti × 100.\nPříklad: Dva stejně výkonní těžaři na regálech s bonusy 10 % a 0 % dávají bonus místnosti 5 %. Prázdné regály nemají vliv; místnost bez těžařů zobrazuje 0 %.",
     "minRoomReached": "Musí zůstat alespoň 1 pokoj.",
     "deleteRoomConfirm": "Opravdu chcete tuto místnost smazat? Všechny stojany a těžební zařízení uvnitř budou také smazány.",
@@ -448,6 +456,8 @@
     "roomFetchedSuccess": "Data místnosti byla úspěšně načtena!",
     "selectMinerToAdd": "Vyberte těžaře k přidání",
     "selectMinerToReplace": "Vyberte nového těžaře z inventáře",
+    "setMiner": "Miner sady",
+    "notSellableMiner": "Neprodejný",
     "sellableMiner": "Prodejný"
   },
   "settings": {
