@@ -103,7 +103,7 @@ interface Props {
 
 export default function ExpeditionScene({ map, skin, name, animation, reactionLabel }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const reactionRequestRef = useRef(0);
+  const reactionRequestRef = useRef({ id: 0, time: 0 });
   const progressRef = useRef({ mapId: map.id, name, distance: 0 });
   const [failedKey, setFailedKey] = useState('');
   const requestKey = `${map.id}:${skin.walk}:${animation}`;
@@ -117,7 +117,7 @@ export default function ExpeditionScene({ map, skin, name, animation, reactionLa
     const tapAnimation = skin.animations.tap_reaction;
     const chestMode = animation === 'take_chest';
     if (!selectedAnimation || !walkAnimation) return;
-    let seenReactionRequest = reactionRequestRef.current;
+    let seenReactionRequest = reactionRequestRef.current.id;
     Promise.all([
       loadScene(map),
       loadImage(hamsterAssetUrl(walkAnimation.path)),
@@ -174,11 +174,11 @@ export default function ExpeditionScene({ map, skin, name, animation, reactionLa
           lastFrame = now;
           const takingChestBeforeUpdate = chestMode && chestStarted !== null;
           const stopped = animation === 'go_sleep' || animation === 'win_loop' || takingChestBeforeUpdate;
-          if (reactionRequestRef.current !== seenReactionRequest) {
-            seenReactionRequest = reactionRequestRef.current;
+          if (reactionRequestRef.current.id !== seenReactionRequest) {
+            seenReactionRequest = reactionRequestRef.current.id;
             // RollerCoin ignores pointer reactions during jumps and stopped states.
             if (!stopped && motion.state === 'walk' && reactionStarted === null) {
-              reactionStarted = tapSprite ? now : null;
+              reactionStarted = tapSprite ? reactionRequestRef.current.time : null;
             }
           }
           // Stop with the hamster and chest centered at the same world position.
@@ -295,7 +295,18 @@ export default function ExpeditionScene({ map, skin, name, animation, reactionLa
   }, [map, skin, name, animation, requestKey]);
 
   return (
-    <button className="expedition-scene" type="button" aria-label={`${name} - ${map.name} - ${reactionLabel}`} onClick={() => { reactionRequestRef.current += 1; }}>
+    <button className="expedition-scene" type="button" aria-label={`${name} - ${map.name} - ${reactionLabel}`}
+      onPointerDown={event => {
+        if (event.button === 0 && event.isPrimary) {
+          reactionRequestRef.current = { id: reactionRequestRef.current.id + 1, time: performance.now() };
+        }
+      }}
+      onClick={event => {
+        // Keyboard/assistive activation has no pointer press; avoid replaying on release.
+        if (event.detail === 0) {
+          reactionRequestRef.current = { id: reactionRequestRef.current.id + 1, time: performance.now() };
+        }
+      }}>
       <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} />
       {failedKey === requestKey && <span className="expedition-scene-error">Sprite unavailable</span>}
     </button>

@@ -22,7 +22,7 @@ for (const hamster of hamsters) {
 for (const set of sets) if (set.icon) paths.add(set.icon);
 
 const downloads = [...paths].map(file => ({
-  url: `https://api.minaryganar.com/assets/${file}`,
+  url: `https://api.minaryganar.com/assets/${file === 'rollercoin/hamsters/pets/cuscuz/lvl50/idle-official.png' ? file.replace('idle-official.png', 'idle.png') : file}`,
   target: path.join(root, 'assets', file),
   label: file,
 }));

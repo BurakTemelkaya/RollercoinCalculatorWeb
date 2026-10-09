@@ -85,14 +85,18 @@ export default function HamsterAbility({ hamster, ability, language, ultimate = 
   if (!guide) return <span className={builder ? 'hamster-builder-option' : 'hamster-trait'}>{content}</span>;
 
   return <>
-    <button ref={trigger} type="button" className={`hamster-ability-trigger ${builder ? 'hamster-builder-option' : 'hamster-trait'}`}
-      aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} aria-describedby={open ? `${id}-description` : undefined}
-      onMouseEnter={show} onMouseLeave={() => hide(true)} onFocus={show} onBlur={() => hide()} onClick={event => {
-        show();
-        if (event.detail === 0) requestAnimationFrame(() => popup.current?.focus());
-      }}>
-      {content}<span className="hamster-ability-info" aria-hidden="true">ⓘ</span>
-    </button>
+    <span className={builder ? 'hamster-builder-option' : 'hamster-trait'}>
+      {content}
+      <button ref={trigger} type="button" className="hamster-ability-trigger hamster-ability-info"
+        aria-label={`${label}: ${t('hamsterAbilityGuide.source')}`}
+        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} aria-describedby={open ? `${id}-description` : undefined}
+        onMouseEnter={show} onMouseLeave={() => hide(true)} onFocus={show} onBlur={() => hide()} onClick={event => {
+          show();
+          if (event.detail === 0) requestAnimationFrame(() => popup.current?.focus());
+        }}>
+        <span aria-hidden="true">ⓘ</span>
+      </button>
+    </span>
     {open && createPortal(<div ref={popup} id={id} tabIndex={-1} role="dialog" aria-modal="false" aria-labelledby={`${id}-title`}
       className="hamster-ability-popover" style={position}
       onMouseEnter={cancelClose} onMouseLeave={() => { cancelClose(); setOpen(false); }} onFocus={cancelClose} onBlur={() => hide()}>

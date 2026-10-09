@@ -1,5 +1,5 @@
 // Official mechanics: https://rollercoin.com/blog/meet-cuscuz-hero-hamster
-// Run updateHamsterAbilityGuides.cjs first. Only the supplied walk sprite is available.
+// Run updateHamsterAbilityGuides.cjs first; updateCuscuzAssets.cjs downloads the full sprites.
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -40,7 +40,20 @@ const hamster = {
 const index = catalog.findIndex(item => item.slug === hamster.slug);
 // Six 100ms idle frames extracted from the user-supplied animated key art.
 const idlePrefix = 'rollercoin/hamsters/pets/cuscuz/lvl50';
-if (fs.existsSync(path.resolve(__dirname, `../public/assets/${idlePrefix}/sprite_idle.png`))) {
+const frameCounts = { walk: 8, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6 };
+const hasFullSprites = Object.keys(frameCounts).every(action =>
+  fs.existsSync(path.resolve(__dirname, `../public/assets/${idlePrefix}/sprite_${action}.png`)))
+  && fs.existsSync(path.resolve(__dirname, `../public/assets/${idlePrefix}/idle-official.png`));
+if (hasFullSprites) {
+  const animations = Object.fromEntries(Object.entries(frameCounts).map(([action, frames]) => [action, {
+    path: `${idlePrefix}/sprite_${action}.png`, frames, frameWidth: 128, frameHeight: 128,
+  }]));
+  hamster.skins = [{
+    level: 50, walk: animations.walk.path, frames: 8, jump: animations.jump.path, jumpFrames: 7,
+    frameWidth: 128, frameHeight: 128, idle: `${idlePrefix}/idle-official.png`, animations,
+  }];
+  hamster.animationsPending = false;
+} else if (fs.existsSync(path.resolve(__dirname, `../public/assets/${idlePrefix}/sprite_idle.png`))) {
   hamster.skins[0].idle = `${idlePrefix}/idle.png`;
   hamster.skins[0].idleAnimation = {
     path: `${idlePrefix}/sprite_idle.png`, frames: 6, frameWidth: 48, frameHeight: 48, frameDurationMs: 100,

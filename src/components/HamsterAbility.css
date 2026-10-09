@@ -1,8 +1,6 @@
-.hamster-ability-trigger { color: inherit; font-family: inherit; text-align: start; cursor: pointer; }
-.hamster-ability-trigger:hover, .hamster-ability-trigger[aria-expanded="true"] { border-color: var(--hamster-accent); }
+.hamster-ability-trigger { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 4px; background: transparent; font-family: inherit; cursor: pointer; }
+.hamster-ability-trigger:hover, .hamster-ability-trigger[aria-expanded="true"] { color: var(--hamster-accent); background: color-mix(in srgb, var(--hamster-accent) 12%, transparent); }
 .hamster-ability-trigger:focus-visible { outline: 2px solid var(--hamster-accent); outline-offset: 3px; }
-.hamster-builder-option.hamster-ability-trigger { padding: 2px 0; border: 0; border-radius: 3px; background: transparent; font-size: inherit; }
-.hamster-builder-option.hamster-ability-trigger:hover { text-decoration: underline; text-underline-offset: 3px; }
 .hamster-ability-info { flex: none; color: var(--text-muted, #a0aec0); font-size: 12px; }
 .hamster-ability-inline { min-width: 0; font-size: 13px; line-height: 1.65; overflow-wrap: anywhere; }
 .hamster-ability-description { margin: 10px 0; color: var(--text-secondary, #cbd5e1); }

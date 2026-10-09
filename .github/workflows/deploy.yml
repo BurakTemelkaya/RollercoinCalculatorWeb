@@ -54,6 +54,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: REPO_OWNER, GH_PAT
           script: |
+            set -eu
             echo "$GH_PAT" | docker login ghcr.io -u "$REPO_OWNER" --password-stdin
             
             # Proje klasörünü oluştur (yoksa) ve içine gir
@@ -68,4 +69,7 @@ jobs:
             # Sadece frontend servisini ayağa kaldır
             docker compose up -d --force-recreate rollercoin_frontend
             
-            docker image prune -f
+            # Cleanup is optional and can collide with the backend deploy.
+            if ! docker image prune -f; then
+              echo "Warning: Docker image cleanup failed; deployment commands completed." >&2
+            fi

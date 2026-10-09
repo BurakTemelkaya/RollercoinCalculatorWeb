@@ -11657,40 +11657,51 @@
         "level": 50,
         "walk": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_walk.png",
         "frames": 8,
-        "jump": null,
-        "jumpFrames": 0,
+        "jump": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
-        "idle": "rollercoin/hamsters/pets/cuscuz/lvl50/idle.png",
-        "previewRegion": {
-          "x": 40,
-          "y": 92,
-          "width": 48,
-          "height": 48
-        },
+        "idle": "rollercoin/hamsters/pets/cuscuz/lvl50/idle-official.png",
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_walk.png",
             "frames": 8,
             "frameWidth": 128,
             "frameHeight": 128
-          }
-        },
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 48,
-          "frameHeight": 48,
-          "frameDurationMs": 100,
-          "previewRegion": {
-            "x": 2,
-            "y": -1,
-            "width": 40,
-            "height": 40
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_tap_reaction.png",
+            "frames": 11,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/cuscuz/lvl50/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
           }
         }
       }
     ],
-    "animationsPending": true
+    "animationsPending": false
   }
 ]
