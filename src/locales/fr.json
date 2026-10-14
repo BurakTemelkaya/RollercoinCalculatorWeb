@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Pour voir vos gains, saisissez votre nom d’utilisateur ci-dessus et cliquez sur Récupérer, ou saisissez votre puissance.",
+    "withdraw": "Pour voir le délai de retrait, saisissez d’abord votre nom d’utilisateur ci-dessus et cliquez sur Récupérer, ou saisissez votre puissance."
+  },
+  "accountPower": {
+    "title": "Puissance de votre compte",
+    "description": "Valeurs du dernier compte récupéré. Les changements de mineurs ou de salles apparaissent dans les résultats de simulation.",
+    "total": "Puissance totale pour les gains",
+    "league": "Puissance de ligue du compte",
+    "miners": "Puissance des mineurs",
+    "racks": "Puissance bonus des racks",
+    "bonus": "Puissance bonus totale",
+    "games": "Puissance des jeux",
+    "temp": "Puissance temporaire",
+    "freon": "Puissance bonus Freon",
+    "hamster": "Puissance d’expédition hamster",
+    "bonusRate": "Taux de bonus : {{percent}}",
+    "unavailable": "Indisponible"
+  },
   "seo": {
     "title": "Calculatrice Rollercoin | Gains & Retraits",
     "description": "Calculatrice de gains Rollercoin gratuite. Calculez vos récompenses de minage de crypto journalières, hebdomadaires et mensuelles. BTC, ETH, DOGE, SOL et plus."
@@ -207,11 +226,12 @@
       "missingUserPower": "La puissance de l'utilisateur est requise !",
       "missingLeagueData": "Les données de ligue sont requises !",
       "tooManyRequests": "Trop de requêtes, veuillez patienter.",
-      "userNotFound": "Utilisateur non trouvé. Veuillez vérifier votre nom d'utilisateur (sensible à la casse).",
+      "invalidUsernameInput": "Saisissez un lien de profil RollerCoin ou un nom d’utilisateur valide. Exemple : https://rollercoin.com/p/YOUR_USERNAME. Le nom doit suivre /p/.",
+      "userNotFound": "Compte « {{name}} » introuvable. Collez votre lien de profil plutôt que votre nom affiché : https://rollercoin.com/p/YOUR_USERNAME. Les suffixes comme /games sont retirés ; respectez les majuscules.",
       "turnstileFailed": "Échec de Turnstile."
     },
-    "usernamePlaceholder": "Entrez votre pseudo",
-    "enterUsername": "Pseudonyme",
+    "usernamePlaceholder": "Nom d’utilisateur ou lien de profil",
+    "enterUsername": "Nom d’utilisateur ou lien de profil",
     "fetchButton": "Actualiser",
     "fetchAction": "Récupérer",
     "fetchMode": "Méthode d'Entrée",
@@ -219,13 +239,15 @@
     "byPower": "Puissance Manuelle",
     "fetchingByPower": "Utiliser la puissance ci-dessus",
     "usernameHelpAria": "Aide pour le pseudo",
+    "closeUsernameHelp": "Fermer l’aide",
+    "usernamePowerAlternative": "Vous pouvez aussi saisir la puissance totale affichée dans le jeu dans l’onglet « Puissance utilisateur » pour calculer vos gains.",
     "usernameHelpTitle": "Comment trouver mon pseudonyme ?",
-    "usernameHelpText": "Copiez la dernière partie de l'URL de votre profil.",
+    "usernameHelpText": "Copiez votre lien avec le bouton Share (Partager) de l’image ou depuis la ligne Profile link. Collez-le ci-dessous ; le nom après /p/ sera extrait automatiquement.",
     "orPasteProfileLink": "ou collez votre lien :",
     "usernameExtracted": "Pseudonyme extrait : {{name}}",
-    "usernameHelpLink": "Ouvrir le profil",
+    "usernameHelpLink": "Ouvrir votre profil RollerCoin",
     "usernameHelpPreviewTitle": "Lien du profil",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Changer"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Ajuster le pourcentage"
   },
   "withdraw": {
+    "allocatedPower": "Avec {{percent}} % de votre puissance",
+    "noAllocatedEarnings": "Aucun gain avec cette répartition",
     "title": "Minuteur de Retrait",
     "desc": "Entrez votre solde actuel pour voir le temps restant.",
     "balanceLabel": "Solde Actuel :",
@@ -357,7 +381,7 @@
     "add": "Ajouter",
     "remove": "Retirer",
     "minerName": "Nom du Mineur",
-    "enterUsername": "Entrer pseudo...",
+    "enterUsername": "Nom d’utilisateur ou lien de profil",
     "fetch": "Récupérer",
     "currentPower": "Puissance Actuelle",
     "byUsername": "Pseudonyme",

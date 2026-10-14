@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "要查看收益，请在上方输入用户名并点击获取，或输入您的算力。",
+    "withdraw": "要查看提现所需时间，请先在上方输入用户名并点击获取，或输入您的算力。"
+  },
+  "accountPower": {
+    "title": "您的账户算力明细",
+    "description": "最近获取的账户数值。矿机或房间更改的影响显示在模拟结果中。",
+    "total": "用于收益的总算力",
+    "league": "账户联赛算力",
+    "miners": "矿机算力",
+    "racks": "机架加成算力",
+    "bonus": "总加成算力",
+    "games": "游戏算力",
+    "temp": "临时算力",
+    "freon": "氟利昂加成算力",
+    "hamster": "仓鼠远征算力",
+    "bonusRate": "加成比例：{{percent}}",
+    "unavailable": "暂无数据"
+  },
   "seo": {
     "title": "Rollercoin 收益计算器 | 挖矿与提现计算器",
     "description": "免费的 Rollercoin 收益计算器。计算您的每日、每周和每月的加密货币挖矿奖励。支持 BTC, ETH, DOGE, SOL 等。"
@@ -207,11 +226,12 @@
       "missingUserPower": "需要用户算力！",
       "missingLeagueData": "需要联赛数据！",
       "tooManyRequests": "请求过多，请稍等。",
-      "userNotFound": "未找到用户。请检查您的用户名（区分大小写）。",
+      "invalidUsernameInput": "请输入有效的 RollerCoin 个人资料链接或用户名。例如：https://rollercoin.com/p/YOUR_USERNAME。/p/ 后必须有用户名。",
+      "userNotFound": "未找到账户“{{name}}”。请粘贴个人资料链接，而不是显示名称：https://rollercoin.com/p/YOUR_USERNAME。/games 等后缀会自动移除；请保留字母大小写。",
       "turnstileFailed": "安全验证失败。"
     },
-    "usernamePlaceholder": "输入用户名",
-    "enterUsername": "用户名",
+    "usernamePlaceholder": "用户名或个人资料链接",
+    "enterUsername": "用户名或个人资料链接",
     "fetchButton": "刷新",
     "fetchAction": "获取",
     "fetchMode": "输入方式",
@@ -219,13 +239,15 @@
     "byPower": "手动算力",
     "fetchingByPower": "使用上方输入的算力",
     "usernameHelpAria": "帮助",
+    "closeUsernameHelp": "关闭帮助",
+    "usernamePowerAlternative": "您也可以在“用户算力”选项卡中输入游戏里显示的总算力，来计算收益。",
     "usernameHelpTitle": "我在哪里可以找到用户名？",
-    "usernameHelpText": "复制您个人资料 URL 的最后一部分。",
+    "usernameHelpText": "使用图片中的 Share（分享）按钮，或从 Profile link 一栏复制个人资料链接。粘贴到下方后，系统会自动提取 /p/ 后的用户名。",
     "orPasteProfileLink": "或粘贴您的个人资料链接：",
     "usernameExtracted": "提取成功：{{name}}",
-    "usernameHelpLink": "打开个人资料",
+    "usernameHelpLink": "打开您的 RollerCoin 个人资料",
     "usernameHelpPreviewTitle": "链接",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "更改"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "调整百分比以模拟收益"
   },
   "withdraw": {
+    "allocatedPower": "使用 {{percent}}% 算力的提现时间",
+    "noAllocatedEarnings": "此算力分配下无收益",
     "title": "提现时间计算器",
     "desc": "输入您每种硬币的当前余额以查看提现剩余时间。",
     "balanceLabel": "当前余额:",
@@ -356,7 +380,7 @@
     "add": "添加",
     "remove": "移除",
     "minerName": "名称 (可选)",
-    "enterUsername": "输入用户名...",
+    "enterUsername": "用户名或个人资料链接",
     "fetch": "获取",
     "currentPower": "当前算力",
     "byUsername": "用户名",

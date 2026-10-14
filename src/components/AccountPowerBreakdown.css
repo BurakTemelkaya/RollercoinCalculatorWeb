@@ -1,0 +1,30 @@
+.account-power-breakdown {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-secondary);
+    text-align: center;
+}
+
+.account-power-breakdown h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.account-power-description { margin: 0 0 16px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+.account-power-totals, .account-power-sources { display: grid; gap: 12px; margin: 0; }
+.account-power-totals { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-bottom: 12px; }
+.account-power-totals:last-child { margin-bottom: 0; }
+.account-power-sources { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.account-power-breakdown dl > div { min-width: 0; padding: 12px; border-radius: var(--radius-sm); background: var(--bg-tertiary); }
+.account-power-breakdown dt { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.4; }
+.account-power-breakdown dd { margin: 6px 0 0; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.account-power-totals dd { color: var(--accent-secondary); font-size: 1.15rem; }
+.account-power-breakdown .account-power-percent { color: var(--text-muted); font-size: 0.75rem; font-weight: 400; }
+
+@media (min-width: 1024px) {
+    .account-power-sources { grid-template-columns: repeat(var(--power-source-count), minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+    .account-power-breakdown { padding: 14px; }
+    .account-power-sources { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .account-power-breakdown dl > div { padding: 10px; }
+}

@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Kazançlarınızı görmek için yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin.",
+    "withdraw": "Çekim süresini görmek için önce yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin."
+  },
+  "accountPower": {
+    "title": "Hesabınızın güç dökümü",
+    "description": "Son getirilen hesabın değerleri. Madenci veya oda değişikliklerinin etkisi simülasyon sonuçlarında gösterilir.",
+    "total": "Kazanç için toplam güç",
+    "league": "Hesabın lig gücü",
+    "miners": "Madenci gücü",
+    "racks": "Raf bonus gücü",
+    "bonus": "Toplam bonus gücü",
+    "games": "Oyun gücü",
+    "temp": "Geçici güç",
+    "freon": "Freon bonus gücü",
+    "hamster": "Hamster sefer gücü",
+    "bonusRate": "Bonus oranı: {{percent}}",
+    "unavailable": "Veri yok"
+  },
   "seo": {
     "title": "Rollercoin Hesaplayıcı | Kazanç ve Çekim Hesaplayıcı",
     "description": "Ücretsiz Rollercoin kazanç hesaplayıcı. Günlük, haftalık ve aylık kripto madencilik kazançlarınızı hesaplayın. BTC, ETH, DOGE, SOL ve daha fazlası."
@@ -267,11 +286,12 @@
       "missingUserPower": "Kullanıcı gücü girilmesi zorunludur!",
       "missingLeagueData": "Lig güçleri verisi girilmesi zorunludur!",
       "tooManyRequests": "API'ye çok fazla istek yaptınız, lütfen biraz bekleyin.",
-      "userNotFound": "Kullanıcı bulunamadı. Kullanıcı adınızı kontrol edin (Büyük/küçük harf duyarlıdır).",
+      "invalidUsernameInput": "Geçerli bir RollerCoin profil bağlantısı veya kullanıcı adı girin. Örnek: https://rollercoin.com/p/YOUR_USERNAME. Bağlantıda /p/ sonrasında kullanıcı adı olmalıdır.",
+      "userNotFound": "“{{name}}” hesabı bulunamadı. Görünen ad yerine profil bağlantınızı yapıştırın: https://rollercoin.com/p/YOUR_USERNAME. /games gibi ekler otomatik ayıklanır; büyük/küçük harfleri koruyun.",
       "turnstileFailed": "Turnstile doğrulaması başarısız oldu. Lütfen tekrar deneyin."
     },
-    "usernamePlaceholder": "Kullanıcı adı girin",
-    "enterUsername": "Kullanıcı Adı",
+    "usernamePlaceholder": "Kullanıcı adı veya profil bağlantısı",
+    "enterUsername": "Kullanıcı adı veya profil bağlantısı",
     "fetchButton": "Yenile",
     "fetchAction": "Getir",
     "fetchMode": "Giriş Yöntemi",
@@ -279,13 +299,15 @@
     "byPower": "Kullanıcı Gücü",
     "fetchingByPower": "Üstteki gücü kullanarak verileri çek",
     "usernameHelpAria": "Kullanıcı adı yardımını göster",
+    "closeUsernameHelp": "Yardımı kapat",
+    "usernamePowerAlternative": "Alternatif olarak “Kullanıcı Gücü” sekmesinden oyunda gördüğünüz toplam gücü girerek de hesaplama yapabilirsiniz.",
     "usernameHelpTitle": "Kullanıcı adını nasıl bulurum?",
-    "usernameHelpText": "Bu sayfaya gidin, profil linkindeki son kısmı (ör. XYZ) kopyalayıp buraya yapıştırın.",
+    "usernameHelpText": "Resimdeki Share (Paylaş) butonuyla veya Profile link satırından profil bağlantını kopyala. Aşağıya yapıştırdığında /p/ sonrasındaki kullanıcı adı otomatik alınır.",
     "orPasteProfileLink": "veya profil linkini yapıştırın:",
     "usernameExtracted": "Kullanıcı adı başarıyla çıkarıldı: {{name}}",
-    "usernameHelpLink": "Profili aç",
+    "usernameHelpLink": "RollerCoin profilini aç",
     "usernameHelpPreviewTitle": "Profil linki",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Değiştir"
   },
   "table": {
@@ -346,6 +368,8 @@
     "adjustPowerSlider": "Yüzdeyi ayarlamak için kaydırın"
   },
   "withdraw": {
+    "allocatedPower": "%{{percent}} güç ile çekim süresi",
+    "noAllocatedEarnings": "Bu güç dağılımında kazanç yok",
     "title": "Çekim Süresi Hesaplayıcı",
     "desc": "Her coin için mevcut bakiyenizi girin, kalan çekim süresini görün.",
     "balanceLabel": "Mevcut Bakiye:",
@@ -433,7 +457,7 @@
     "add": "Ekle",
     "remove": "Kaldır",
     "minerName": "Madenci Adı (Opsiyonel)",
-    "enterUsername": "Kullanıcı adı girin...",
+    "enterUsername": "Kullanıcı adı veya profil bağlantısı",
     "fetch": "Getir",
     "currentPower": "Mevcut Güç",
     "byUsername": "Kullanıcı Adı",

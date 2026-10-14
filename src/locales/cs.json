@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Pro zobrazení výdělků zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon.",
+    "withdraw": "Pro zobrazení času do výběru nejprve zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon."
+  },
+  "accountPower": {
+    "title": "Přehled výkonu vašeho účtu",
+    "description": "Hodnoty z posledního načteného účtu. Změny těžařů či místností se zobrazují ve výsledcích simulace.",
+    "total": "Celkový výkon pro výdělky",
+    "league": "Ligový výkon účtu",
+    "miners": "Výkon těžařů",
+    "racks": "Bonusový výkon regálů",
+    "bonus": "Celkový bonusový výkon",
+    "games": "Herní výkon",
+    "temp": "Dočasný výkon",
+    "freon": "Bonusový výkon Freon",
+    "hamster": "Výkon expedice křečka",
+    "bonusRate": "Bonus: {{percent}}",
+    "unavailable": "Údaje nejsou k dispozici"
+  },
   "seo": {
     "title": "Rollercoin Kalkulačka | Kalkulačka Výdělků a Výběrů",
     "description": "Zdarma Rollercoin kalkulačka výdělků. Spočítejte si své denní, týdenní a měsíční odměny za těžbu kryptoměn. BTC, ETH, DOGE, SOL a další."
@@ -207,11 +226,12 @@
       "missingUserPower": "Je vyžadována uživatelská oprávnění!",
       "missingLeagueData": "Jsou požadována data o síle ligy!",
       "tooManyRequests": "Příliš mnoho požadavků na API, prosím počkejte.",
-      "userNotFound": "Uživatel nenalezen. Zkontrolujte prosím své uživatelské jméno (rozlišují se malá a velká písmena).",
+      "invalidUsernameInput": "Zadejte platný odkaz na profil RollerCoin nebo uživatelské jméno. Příklad: https://rollercoin.com/p/YOUR_USERNAME. Za /p/ musí být jméno.",
+      "userNotFound": "Účet „{{name}}“ nebyl nalezen. Vložte odkaz na profil místo zobrazovaného jména: https://rollercoin.com/p/YOUR_USERNAME. Přípony jako /games se odstraní; zachovejte velikost písmen.",
       "turnstileFailed": "Ověření turniketu selhalo. Zkuste to prosím znovu."
     },
-    "usernamePlaceholder": "Zadejte uživatelské jméno",
-    "enterUsername": "Uživatelské jméno",
+    "usernamePlaceholder": "Uživatelské jméno nebo odkaz na profil",
+    "enterUsername": "Uživatelské jméno nebo odkaz na profil",
     "fetchButton": "Obnovit",
     "fetchAction": "Přinést",
     "fetchMode": "Metoda zadávání",
@@ -219,13 +239,15 @@
     "byPower": "Uživatelská síla",
     "fetchingByPower": "Použijte výše zadanou hodnotu výkonu",
     "usernameHelpAria": "Zobrazit nápovědu k uživatelskému jménu",
+    "closeUsernameHelp": "Zavřít nápovědu",
+    "usernamePowerAlternative": "Případně můžete na kartě „Výkon uživatele“ zadat celkový výkon zobrazený ve hře a vypočítat své výdělky.",
     "usernameHelpTitle": "Jak najdu své uživatelské jméno?",
-    "usernameHelpText": "Otevřete tuto stránku, zkopírujte poslední část URL svého profilu (např. XYZ) a vložte ji sem.",
+    "usernameHelpText": "Zkopírujte odkaz tlačítkem Share (Sdílet) na obrázku nebo z řádku Profile link. Vložte jej níže; jméno za /p/ se získá automaticky.",
     "orPasteProfileLink": "nebo vložte odkaz na svůj profil:",
     "usernameExtracted": "Uživatelské jméno úspěšně extrahováno: {{name}}",
-    "usernameHelpLink": "Otevřít stránku profilu",
+    "usernameHelpLink": "Otevřít váš profil RollerCoin",
     "usernameHelpPreviewTitle": "Odkaz na profil",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Změnit"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Upravte procento pro simulaci výdělku"
   },
   "withdraw": {
+    "allocatedPower": "S {{percent}} % vašeho výkonu",
+    "noAllocatedEarnings": "Při tomto rozdělení nejsou žádné výdělky",
     "title": "Kalkulačka doby výběru",
     "desc": "Zadejte svůj aktuální zůstatek pro každou měnu a zobrazíte zbývající čas k výběru.",
     "balanceLabel": "Aktuální zůstatek:",
@@ -373,7 +397,7 @@
     "add": "Přidat",
     "remove": "Odstranit",
     "minerName": "Miner Jméno (volitelné)",
-    "enterUsername": "Zadejte uživatelské jméno...",
+    "enterUsername": "Uživatelské jméno nebo odkaz na profil",
     "fetch": "Přinést",
     "currentPower": "Aktuální výkon",
     "byUsername": "Uživatelské jméno",

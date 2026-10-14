@@ -848,6 +848,24 @@ a:hover {
   margin-bottom: 8px;
 }
 
+.calculator-empty-state {
+  padding: 24px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.calculator-empty-state .empty-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.calculator-empty-state .helper-text {
+  max-width: 620px;
+  margin-inline: auto;
+  line-height: 1.6;
+}
+
 /* Earnings Tables */
 .earnings-tables {
   display: flex;
@@ -5486,3 +5504,26 @@ body.hide-global-ads .aads-mobile-only {
 
 .hamster-nav-link { position: relative; padding-right: 20px; }
 .hamster-nav-notice { position: absolute; top: 2px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: #c05cff; box-shadow: 0 0 0 2px var(--bg-primary, #0d111b); }
+.withdraw-allocation {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color, #2a2e3f);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #a0aec0);
+}
+
+.withdraw-allocation strong {
+    color: var(--accent-secondary);
+    overflow-wrap: anywhere;
+}
+
+.withdraw-baseline-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}

@@ -12,6 +12,8 @@ import { useApiCooldown } from '../hooks/useApiCooldown';
 import { getLeagueImage } from '../data/leagueImages';
 import { fetchSetRackList, GetRackSetListDto } from '../services/rackApi';
 import './RoomPowerSimulator.css';
+import AccountPowerBreakdown from './AccountPowerBreakdown';
+import { parseUsernameInput } from '../utils/usernameParser';
 
 interface RoomPowerSimulatorProps {
     currentLeague: LeagueInfo;
@@ -25,6 +27,8 @@ interface RoomPowerSimulatorProps {
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
     isActive?: boolean;
+    usernameError?: string | null;
+    onClearUsernameError?: () => void;
 }
 
 const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
@@ -37,7 +41,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     isFetchingRoom = false,
     globalUserName = '',
     setGlobalUserName = () => { },
-    isActive = true
+    isActive = true,
+    usernameError,
+    onClearUsernameError,
 }) => {
     const { t } = useTranslation();
     const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
@@ -77,11 +83,19 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     }, [fetchedRoom]);
 
     const handleFetchClick = async () => {
-        setGlobalUserName(localUserName.trim());
         if (!localUserName.trim() || !onFetchUser || !canFetch) return;
-        await onFetchUser(localUserName.trim());
-        setRoomSource('account');
-        setFetchStarted();
+        const parsed = parseUsernameInput(localUserName);
+        const username = parsed?.username ?? localUserName.trim();
+        setLocalUserName(username);
+        if (parsed) setGlobalUserName(username);
+        try {
+            await onFetchUser(username);
+            setRoomSource('account');
+        } catch {
+            // The parent displays the request error; keep the current simulation.
+        } finally {
+            if (parsed) setFetchStarted();
+        }
     };
 
     const handleFetchRoom = () => {
@@ -92,8 +106,6 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
 
     // Get temporary power values from API dto
     const dto = isEmptyAccount ? undefined : fetchedUser?.userPowerResponseDto;
-    const hamsterBonusPercent = dto?.hamster_expedition_bonus_percent || 0;
-    const freonPowerGh = dto?.freon || 0;
     const gamesPowerGh = dto?.games || 0;
     const tempPowerGh = dto?.temp || 0;
 
@@ -118,7 +130,6 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     );
     const leaguePowerGh = exactPower ? exactPower.totalLeaguePowerGh : 0;
     const simulatedRoomBasePowerGh = exactPower ? exactPower.baseMinerPowerGh : 0;
-    const hamsterBonusPowerGh = exactPower ? exactPower.baseMinerPowerGh * (hamsterBonusPercent / 10000) : 0;
     const currentLeague = getLeagueByPower(autoScalePower(leaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
     // 1. NEW TOTAL POWER CALCULATION (Global Logic)
@@ -182,8 +193,25 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             <input
                                 type="text"
                                 value={localUserName}
-                                onChange={(e) => setLocalUserName(e.target.value)}
-                                onBlur={() => setGlobalUserName(localUserName)}
+                                onChange={(e) => {
+                                    setLocalUserName(e.target.value);
+                                    if (usernameError) onClearUsernameError?.();
+                                }}
+                                onPaste={(e) => {
+                                    const parsed = parseUsernameInput(e.clipboardData.getData('text'));
+                                    if (!parsed?.isProfileLink) return;
+                                    e.preventDefault();
+                                    setLocalUserName(parsed.username);
+                                    setGlobalUserName(parsed.username);
+                                    onClearUsernameError?.();
+                                }}
+                                onBlur={() => {
+                                    const parsed = parseUsernameInput(localUserName);
+                                    if (parsed) {
+                                        setLocalUserName(parsed.username);
+                                        setGlobalUserName(parsed.username);
+                                    }
+                                }}
                                 placeholder={t('simulator.enterUsername')}
                                 className="power-value-input"
                                 onKeyDown={(e) => {
@@ -259,6 +287,10 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                 )}
 
                 {/* Simulated Room Area */}
+                {!isEmptyAccount && fetchedUser && (
+                    <AccountPowerBreakdown power={fetchedUser.userPowerResponseDto} />
+                )}
+
                 {activeRoom && exactPower && (
                     <div className="simulated-room-container">
                         <div className="league-power-dashboard">
@@ -300,29 +332,6 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                 )}
                             </div>
                         </div>
-
-                        {!isEmptyAccount && fetchedUser?.userPowerResponseDto && (
-                            <div className="lpd-stats temporary-power-dashboard" style={{ marginTop: '-10px', marginBottom: '25px', padding: '15px 20px', background: 'rgba(28, 28, 40, 0.4)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                                <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
-                                    <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.gamesPower', 'Oyun Gücü')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower(gamesPowerGh * 1e9))}</span>
-                                </div>
-                                <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
-                                    <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.tempPower', 'Geçici Güç')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#ffc107' }}>{formatHashPower(autoScalePower(tempPowerGh * 1e9))}</span>
-                                </div>
-                                <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
-                                    <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.freonPower', 'Freon Gücü')}</span>
-                                    <span className="value" style={{ fontSize: '1rem', color: '#0dcaf0' }}>{formatHashPower(autoScalePower(freonPowerGh * 1e9))}</span>
-                                </div>
-                                {hamsterBonusPercent > 0 && (
-                                    <div className="lpd-stat" style={{ flex: 1, padding: '8px', background: 'rgba(0,0,0,0.2)' }}>
-                                        <span className="label" style={{ fontSize: '0.75rem' }}>{t('simulator.hamsterBonus', 'Hamster Bonus')}</span>
-                                        <span className="value" style={{ fontSize: '1rem', color: '#ff9800' }}>{(hamsterBonusPercent / 100).toFixed(0)}% (+{formatHashPower(autoScalePower(hamsterBonusPowerGh * 1e9))})</span>
-                                    </div>
-                                )}
-                            </div>
-                        )}
 
                         <RoomSimulator
                             key={isEmptyAccount ? `sandbox-${sandboxGeneration}` : fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}

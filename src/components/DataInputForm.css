@@ -586,11 +586,11 @@
     top: 50%;
     right: auto;
     bottom: auto;
-    width: min(400px, 90vw);
+    width: min(760px, calc(100vw - 32px));
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 14px 16px;
+    padding: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     opacity: 0;
     visibility: hidden;
@@ -598,7 +598,7 @@
     transform: translate(-50%, -50%) scale(0.9);
     transition: all 0.2s ease;
     z-index: 9999;
-    max-height: 85vh;
+    max-height: calc(100dvh - 32px);
     overflow-y: auto;
 }
 
@@ -610,14 +610,14 @@
 }
 
 .username-help-tooltip .help-title {
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .username-help-tooltip .help-text {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
     line-height: 1.45;
     margin-bottom: 8px;
@@ -635,33 +635,24 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+    object-fit: contain;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     margin-bottom: 12px;
     background: var(--bg-primary);
 }
 
-/* Zoomable image container */
-.image-viewer-container {
-    position: relative;
-    display: inline-block !important;
-    width: 100%;
-    transition: all 0.2s ease;
-}
+/* Keep the complete profile screenshot readable inside the help panel. */
+.username-help-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.username-help-close { flex: none; width: 32px; height: 32px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-tertiary); color: var(--text-primary); font-size: 24px; cursor: pointer; }
+.username-help-error { margin: 0 0 12px; font-size: 14px; line-height: 1.5; color: var(--danger); overflow-wrap: anywhere; }
+.username-power-alternative { margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: var(--text-secondary); }
+.username-help-link-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.username-help-link-field label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.username-help-link-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-primary); color: var(--text-primary); font-size: 14px; }
 
-.image-viewer-container:hover {
-    filter: brightness(0.8);
-}
-
-.image-viewer-container:hover .zoom-icon {
-    opacity: 1 !important;
-}
-
-/* Always show zoom icon with 50% opacity on mobile and desktop */
-.zoom-icon {
-    opacity: 0.5 !important;
+@media (max-width: 480px) {
+    .username-help-tooltip { padding: 14px; }
 }
 
 .help-preview-head {
@@ -722,6 +713,29 @@
 .username-help-tooltip .help-link:hover {
     background: rgba(99, 102, 241, 0.1);
     text-decoration: underline;
+}
+
+.username-help-tooltip .username-profile-open {
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+    margin-bottom: 14px;
+    padding: 10px 16px;
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    background: var(--accent-primary);
+    color: #fff;
+    font-size: 14px;
+}
+
+.username-help-tooltip .username-profile-open:hover {
+    background: var(--accent-secondary);
+    text-decoration: none;
+}
+
+.username-help-tooltip .username-profile-open:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 3px;
 }
 
 .fetch-btn,

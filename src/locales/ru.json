@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Чтобы увидеть доход, введите имя пользователя выше и нажмите «Загрузить» или укажите свою мощность.",
+    "withdraw": "Чтобы увидеть срок вывода, сначала введите имя пользователя выше и нажмите «Загрузить» или укажите свою мощность."
+  },
+  "accountPower": {
+    "title": "Мощность вашего аккаунта",
+    "description": "Данные последнего загруженного аккаунта. Изменения майнеров и комнат показаны в результатах симуляции.",
+    "total": "Общая мощность для дохода",
+    "league": "Мощность лиги аккаунта",
+    "miners": "Мощность майнеров",
+    "racks": "Бонусная мощность стоек",
+    "bonus": "Общая бонусная мощность",
+    "games": "Мощность игр",
+    "temp": "Временная мощность",
+    "freon": "Бонусная мощность Freon",
+    "hamster": "Мощность экспедиции хомяка",
+    "bonusRate": "Бонус: {{percent}}",
+    "unavailable": "Нет данных"
+  },
   "seo": {
     "title": "Калькулятор Rollercoin | Калькулятор доходов и вывода",
     "description": "Бесплатный калькулятор доходов Rollercoin. Рассчитайте свои награды за майнинг криптовалюты за день, неделю и месяц. BTC, ETH, DOGE, SOL и другие."
@@ -207,11 +226,12 @@
       "missingUserPower": "Требуется мощность пользователя!",
       "missingLeagueData": "Требуются данные лиги!",
       "tooManyRequests": "Слишком много запросов.",
-      "userNotFound": "Пользователь не найден. Проверьте имя пользователя (чувствительно к регистру).",
+      "invalidUsernameInput": "Введите корректную ссылку на профиль RollerCoin или имя пользователя. Пример: https://rollercoin.com/p/YOUR_USERNAME. Имя должно следовать после /p/.",
+      "userNotFound": "Аккаунт «{{name}}» не найден. Вставьте ссылку на профиль вместо отображаемого имени: https://rollercoin.com/p/YOUR_USERNAME. Окончания вроде /games удаляются; сохраняйте регистр букв.",
       "turnstileFailed": "Проверка безопасности не пройдена."
     },
-    "usernamePlaceholder": "Введите имя пользователя",
-    "enterUsername": "Имя пользователя",
+    "usernamePlaceholder": "Имя пользователя или ссылка на профиль",
+    "enterUsername": "Имя пользователя или ссылка на профиль",
     "fetchButton": "Обновить",
     "fetchAction": "Получить",
     "fetchMode": "Метод ввода",
@@ -219,13 +239,15 @@
     "byPower": "Вручную",
     "fetchingByPower": "Использовать введенную мощность",
     "usernameHelpAria": "Справка",
+    "closeUsernameHelp": "Закрыть справку",
+    "usernamePowerAlternative": "Можно также ввести общую мощность, указанную в игре, на вкладке «Мощность пользователя» и рассчитать доход.",
     "usernameHelpTitle": "Где найти имя пользователя?",
-    "usernameHelpText": "Скопируйте последнюю часть URL-адреса вашего профиля.",
+    "usernameHelpText": "Скопируйте ссылку кнопкой Share (Поделиться) на изображении или из строки Profile link. Вставьте её ниже; имя после /p/ будет извлечено автоматически.",
     "orPasteProfileLink": "или вставьте ссылку на профиль:",
     "usernameExtracted": "Имя извлечено: {{name}}",
-    "usernameHelpLink": "Открыть профиль",
+    "usernameHelpLink": "Открыть ваш профиль RollerCoin",
     "usernameHelpPreviewTitle": "Ссылка",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Изменить"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Отрегулируйте процент"
   },
   "withdraw": {
+    "allocatedPower": "При {{percent}}% вашей мощности",
+    "noAllocatedEarnings": "Нет дохода при таком распределении",
     "title": "Калькулятор вывода",
     "desc": "Введите ваш текущий баланс для каждой монеты.",
     "balanceLabel": "Текущий баланс:",
@@ -356,7 +380,7 @@
     "add": "Добавить",
     "remove": "Удалить",
     "minerName": "Название",
-    "enterUsername": "Введите пользователя...",
+    "enterUsername": "Имя пользователя или ссылка на профиль",
     "fetch": "Получить",
     "currentPower": "Текущая мощность",
     "byUsername": "По пользователю",

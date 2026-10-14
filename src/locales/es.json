@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Para ver tus ganancias, introduce arriba tu nombre de usuario y pulsa Obtener, o introduce tu potencia.",
+    "withdraw": "Para ver el tiempo de retiro, primero introduce arriba tu nombre de usuario y pulsa Obtener, o introduce tu potencia."
+  },
+  "accountPower": {
+    "title": "Desglose de potencia de tu cuenta",
+    "description": "Valores de la última cuenta obtenida. Los cambios de mineros o salas aparecen en los resultados de simulación.",
+    "total": "Potencia total para ganancias",
+    "league": "Potencia de liga de la cuenta",
+    "miners": "Potencia de mineros",
+    "racks": "Potencia de bonus de racks",
+    "bonus": "Potencia total de bonus",
+    "games": "Potencia de juegos",
+    "temp": "Potencia temporal",
+    "freon": "Potencia de bonus Freon",
+    "hamster": "Potencia de expedición hámster",
+    "bonusRate": "Bonus: {{percent}}",
+    "unavailable": "No disponible"
+  },
   "seo": {
     "title": "Calculadora Rollercoin | Calculadora de Ganancias y Retiros",
     "description": "Calculadora de ganancias de Rollercoin gratuita. Calcula tus recompensas de minería de criptomonedas diarias, semanales y mensuales. BTC, ETH, DOGE, SOL y más."
@@ -207,11 +226,12 @@
       "missingUserPower": "¡Se requiere el poder del usuario!",
       "missingLeagueData": "¡Se requieren los datos de poder de la liga!",
       "tooManyRequests": "Demasiadas peticiones a la API, por favor espera.",
-      "userNotFound": "Usuario no encontrado. Verifique su nombre de usuario (distingue mayúsculas de minúsculas).",
+      "invalidUsernameInput": "Introduce un enlace de perfil RollerCoin o usuario válido. Ejemplo: https://rollercoin.com/p/YOUR_USERNAME. El nombre debe aparecer después de /p/.",
+      "userNotFound": "No se encontró la cuenta «{{name}}». Pega tu enlace de perfil en lugar del nombre visible: https://rollercoin.com/p/YOUR_USERNAME. Los sufijos como /games se eliminan; conserva las mayúsculas.",
       "turnstileFailed": "Falló la verificación de Turnstile. Por favor, intenta nuevamente."
     },
-    "usernamePlaceholder": "Ingresar usuario",
-    "enterUsername": "Nombre de usuario",
+    "usernamePlaceholder": "Usuario o enlace de perfil",
+    "enterUsername": "Usuario o enlace de perfil",
     "fetchButton": "Actualizar",
     "fetchAction": "Obtener",
     "fetchMode": "Método de Entrada",
@@ -219,13 +239,15 @@
     "byPower": "Poder Manual",
     "fetchingByPower": "Usar el valor de poder ingresado arriba",
     "usernameHelpAria": "Mostrar ayuda de nombre de usuario",
+    "closeUsernameHelp": "Cerrar ayuda",
+    "usernamePowerAlternative": "También puedes introducir la potencia total que aparece en el juego en la pestaña «Potencia del usuario» para calcular tus ganancias.",
     "usernameHelpTitle": "¿Cómo encuentro mi nombre de usuario?",
-    "usernameHelpText": "Abre esta página, copia la última parte de la URL de tu perfil (ej. XYZ) y pégala aquí.",
+    "usernameHelpText": "Copia el enlace con el botón Share (Compartir) de la imagen o desde la fila Profile link. Pégalo abajo; se extraerá automáticamente el usuario después de /p/.",
     "orPasteProfileLink": "o pega el enlace de tu perfil:",
     "usernameExtracted": "Nombre de usuario extraído con éxito: {{name}}",
-    "usernameHelpLink": "Abrir página de perfil",
+    "usernameHelpLink": "Abre tu perfil de RollerCoin",
     "usernameHelpPreviewTitle": "Enlace de perfil",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Cambiar"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Ajusta el porcentaje para simular ganancias"
   },
   "withdraw": {
+    "allocatedPower": "Con el {{percent}} % de tu potencia",
+    "noAllocatedEarnings": "Sin ganancias con esta distribución",
     "title": "Calculadora de Tiempo de Retiro",
     "desc": "Ingresa tu saldo actual para cada moneda para ver el tiempo restante de retiro.",
     "balanceLabel": "Saldo Actual:",
@@ -348,7 +372,7 @@
     "add": "Añadir",
     "remove": "Quitar",
     "minerName": "Nombre del Minero (Opcional)",
-    "enterUsername": "Ingresar usuario...",
+    "enterUsername": "Usuario o enlace de perfil",
     "fetch": "Obtener",
     "currentPower": "Poder Actual",
     "byUsername": "Por Usuario",

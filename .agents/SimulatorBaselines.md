@@ -23,6 +23,17 @@ Girilen güç bonuslar hariç madenci gücüdür. Birim seçimi ile Gh/s değeri
 
 `src/utils/simulatorBaseline.ts` bağımsız başlangıçları ve manuel eklemelerin hesaplamasını sağlar. Mevcut API bonusları yüzde puanı olarak tutulur (`1000 = %10`), kullanıcı girişleri normal yüzde değeridir (`10 = %10`). Yeni raf bonusu, eklenen madenci gücüne uygulanarak toplam ve lig gücüne dahil edilir.
 
+- Eklenen madenciler mevcut `rollercoin_web_added_miners` anahtarında saklanır. `rollercoin_web_added_miners_owner` hesap kimliğini takip eder; aynı hesabın cache'ten yüklenmesi veya yeniden çekilmesi listeyi silmez. Başka bir hesabın verisi geldiğinde önceki eklemeler temizlenir. Eski kayıtlarda sahiplik kayıtlı kullanıcı verisinden alınır; API cache süresi dolsa da simülasyon korunur.
+- Başlangıç modu, girilen güç, birim ve bonus `rollercoin_web_manual_baseline` içinde saklanır. Kayıtlar ilk state oluşturulurken okunur; bozuk JSON veya geçersiz miner listesi güvenli varsayılana döner. Miner silme ve tümünü temizleme mevcut kayıtları günceller.
+
+## Hesabın güç dökümü
+
+- `AccountPowerBreakdown.tsx/css` iki simülatörde aynı hesap özetini gösterir: madenci, raf bonusu, toplam bonus, oyun, geçici, Freon ve hamster sefer gücü; bonus ve hamster yüzdeleri; kazanç için mevcut toplam güç (`current_Power`) ve hesabın lig gücü (`max_Power`). Değerler son getirilen hesabın API alanlarından alınır. Bu panel, simülasyonla değişen güçleri gösteren mevcut sonuçlardan ayrıdır; satırlar yeniden toplanarak toplam türetilmez.
+- Güç kaynakları 1024 px ve üstünde görünen kart sayısına göre eşit sütunlara bölünür; yedinci kart aynı satıra sığar. Tabletlerde alan genişliğine göre satır oluşur; küçük mobil ekranlarda iki sütun korunur. Panel yalnızca görünen kartların yüksekliğini ve kendi padding alanını kaplar.
+- Hamster gücü `hamster_expedition_bonus_power` değeridir; odadaki madenci gücünden tahmin edilmez. Hamster ve toplam bonus yüzdeleri /100 ile gösterilir, küçük yüzdeler tam sayıya yuvarlanmaz. İstatistik metinleri her iki simülatörde ortalanır. Yalnızca pozitif ve sonlu güç değerleri gösterilir; sıfır, eksik veya null değerli kartlar gizlenir. Sıfır/eksik bonus oranları da gösterilmez. Toplam güç kartları kalan kart sayısına göre alanı paylaşır; gösterilecek değer yoksa panel gizlenir.
+- Hesap başlangıcında oda henüz taranmamış olsa da özet görünür. Sıfır/manuel güç başlangıçlarında ve boş oda modunda hesap dökümü gizlenir. Hesabın toplam gücü ile odadan hesaplanan lig gücü kendi yerlerinde ayrı etiketlenir; simülasyon hesabı değişmez.
+- `scripts/check-account-power-ui.mjs`, ilk açılış ve veri geldikten sonraki boş durumları, iki simülatörde API güç alanlarını, oda olmadan özeti, doğrudan hamster gücünü, kesirli yüzdeleri, sıfır/eksik alanların gizlenmesini, metin hizalamasını, boş hesap modunu ve 390/320 px görünümü doğrular.
+
 ## Kontroller
 
 ```bash

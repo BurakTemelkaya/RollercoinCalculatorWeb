@@ -4,9 +4,12 @@ import i18n from '../i18n';
 import { EarningsResult, DEFAULT_MIN_WITHDRAW } from '../types';
 import { formatDuration, formatCryptoAmount, isWithdrawableCoin } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
+import { PowerAllocations } from '../hooks/usePowerAllocations';
 
 interface WithdrawTimerProps {
     earnings: EarningsResult[];
+    allocatedEarnings: EarningsResult[];
+    targetAllocations: PowerAllocations;
     balances: Record<string, number>;  // code -> actual balance amount
     onBalanceChange: (code: string, balance: number) => void;
     prices: Record<string, number>;
@@ -28,6 +31,8 @@ interface WithdrawData {
 
 const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     earnings,
+    allocatedEarnings,
+    targetAllocations,
     balances,
     onBalanceChange,
     prices
@@ -173,6 +178,18 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     };
 
     const dateLocale = i18n.language || 'en-US';
+
+    const renderAllocatedTime = (data: WithdrawData) => {
+        const daily = allocatedEarnings.find(earning => earning.code === data.code)?.earnings.daily ?? 0;
+        const days = data.canWithdrawNow ? 0 : daily > 0 ? data.remainingToEarn / daily : Infinity;
+        if (data.canWithdrawNow) return t('withdraw.readyNow');
+        if (!Number.isFinite(days)) return t('withdraw.noAllocatedEarnings');
+        if (!showDate) return formatDuration(days, t);
+        const date = new Date(Date.now() + days * 86400000);
+        return Number.isFinite(date.getTime())
+            ? date.toLocaleDateString(dateLocale, { day: 'numeric', month: 'short', year: 'numeric' })
+            : formatDuration(days, t);
+    };
 
     return (
         <section className="withdraw-timer-section">
@@ -325,6 +342,9 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
                         </div>
 
                         <div className="withdraw-time">
+                            {targetAllocations[data.displayName] !== undefined && (
+                                <span className="withdraw-baseline-label">{t('withdraw.allocatedPower', { percent: 100 })}</span>
+                            )}
                             {data.canWithdrawNow ? (
                                 <span className="time-ready">{t('withdraw.readyNow')}</span>
                             ) : !Number.isFinite(data.daysToWithdraw) ? (
@@ -343,6 +363,12 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
                                 </span>
                             )}
                         </div>
+                        {targetAllocations[data.displayName] !== undefined && (
+                            <div className="withdraw-allocation">
+                                <span>{t('withdraw.allocatedPower', { percent: targetAllocations[data.displayName] })}</span>
+                                <strong>{renderAllocatedTime(data)}</strong>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

@@ -8,6 +8,7 @@ import { getApiUrl, buildApiUrl } from '../config/api';
 import { apiFetch, ApiError } from './apiClient';
 import { RollercoinUserResponse } from '../types/user';
 import { RollercoinRoomResponse } from '../types/room';
+import { InvalidUsernameInputError, parseUsernameInput } from '../utils/usernameParser';
 
 /**
  * Fetches user data from the API by username.
@@ -19,8 +20,10 @@ import { RollercoinRoomResponse } from '../types/room';
  * @throws ApiError if the request fails (with detail from error body)
  */
 export async function fetchUserFromApi(userName: string): Promise<RollercoinUserResponse> {
+    const parsed = parseUsernameInput(userName);
+    if (!parsed) throw new InvalidUsernameInputError();
     const baseUrl = getApiUrl('user');
-    const url = `${baseUrl}?userName=${encodeURIComponent(userName)}`;
+    const url = `${baseUrl}?userName=${encodeURIComponent(parsed.username)}`;
 
     // apiFetch already handles 429 and parses error detail from JSON body
     const response = await apiFetch(url);

@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Para ver seus ganhos, insira seu nome de usuário acima e clique em Buscar, ou insira sua potência.",
+    "withdraw": "Para ver o prazo de saque, primeiro insira seu nome de usuário acima e clique em Buscar, ou insira sua potência."
+  },
+  "accountPower": {
+    "title": "Detalhamento da potência da conta",
+    "description": "Valores da última conta consultada. Alterações nos mineradores ou salas aparecem nos resultados da simulação.",
+    "total": "Potência total para ganhos",
+    "league": "Potência de liga da conta",
+    "miners": "Potência dos mineradores",
+    "racks": "Potência de bônus dos racks",
+    "bonus": "Potência total de bônus",
+    "games": "Potência dos jogos",
+    "temp": "Potência temporária",
+    "freon": "Potência de bônus Freon",
+    "hamster": "Potência de expedição hamster",
+    "bonusRate": "Bônus: {{percent}}",
+    "unavailable": "Indisponível"
+  },
   "seo": {
     "title": "Calculadora Rollercoin | Calculadora de Ganhos e Saques",
     "description": "Calculadora de ganhos de Rollercoin gratuita. Calcule suas recompensas de mineração de criptomoedas diárias, semanais e mensais. BTC, ETH, DOGE, SOL e mais."
@@ -207,11 +226,12 @@
       "missingUserPower": "Poder do usuário necessário!",
       "missingLeagueData": "Dados da liga necessários!",
       "tooManyRequests": "Muitas solicitações.",
-      "userNotFound": "Usuário não encontrado. Verifique seu nome de usuário (diferencia maiúsculas de minúsculas).",
+      "invalidUsernameInput": "Insira um link de perfil RollerCoin ou usuário válido. Exemplo: https://rollercoin.com/p/YOUR_USERNAME. O nome deve estar depois de /p/.",
+      "userNotFound": "Conta “{{name}}” não encontrada. Cole o link do perfil em vez do nome exibido: https://rollercoin.com/p/YOUR_USERNAME. Sufixos como /games são removidos; preserve maiúsculas e minúsculas.",
       "turnstileFailed": "Falha de segurança."
     },
-    "usernamePlaceholder": "Insira o nome",
-    "enterUsername": "Nome de Usuário",
+    "usernamePlaceholder": "Usuário ou link do perfil",
+    "enterUsername": "Usuário ou link do perfil",
     "fetchButton": "Atualizar",
     "fetchAction": "Obter",
     "fetchMode": "Método de Entrada",
@@ -219,13 +239,15 @@
     "byPower": "Poder Manual",
     "fetchingByPower": "Usar poder inserido",
     "usernameHelpAria": "Ajuda",
+    "closeUsernameHelp": "Fechar ajuda",
+    "usernamePowerAlternative": "Você também pode inserir a potência total mostrada no jogo na aba «Potência do usuário» para calcular seus ganhos.",
     "usernameHelpTitle": "Como acho meu usuário?",
-    "usernameHelpText": "Copie o final da sua URL de perfil do jogo.",
+    "usernameHelpText": "Copie o link com o botão Share (Compartilhar) da imagem ou na linha Profile link. Cole abaixo; o nome após /p/ será extraído automaticamente.",
     "orPasteProfileLink": "ou cole seu link de perfil:",
     "usernameExtracted": "Usuário extraído: {{name}}",
-    "usernameHelpLink": "Abrir perfil",
+    "usernameHelpLink": "Abra seu perfil RollerCoin",
     "usernameHelpPreviewTitle": "Link",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Mudar"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Ajuste o percentual"
   },
   "withdraw": {
+    "allocatedPower": "Com {{percent}}% da sua potência",
+    "noAllocatedEarnings": "Sem ganhos nesta distribuição",
     "title": "Calculadora de Tempo de Saque",
     "desc": "Insira o seu saldo atual.",
     "balanceLabel": "Saldo Atual:",
@@ -356,7 +380,7 @@
     "add": "Adicionar",
     "remove": "Remover",
     "minerName": "Nome do Minerador",
-    "enterUsername": "Inserir usuário...",
+    "enterUsername": "Usuário ou link do perfil",
     "fetch": "Obter",
     "currentPower": "Poder Atual",
     "byUsername": "Por Usuário",

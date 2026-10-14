@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Gib oben deinen Benutzernamen ein und klicke auf Abrufen oder gib deine Leistung ein, um deine Erträge zu sehen.",
+    "withdraw": "Gib zuerst oben deinen Benutzernamen ein und klicke auf Abrufen oder gib deine Leistung ein, um die Auszahlungszeit zu sehen."
+  },
+  "accountPower": {
+    "title": "Leistungsübersicht deines Kontos",
+    "description": "Werte des zuletzt abgerufenen Kontos. Änderungen an Minern oder Räumen erscheinen in den Simulationsergebnissen.",
+    "total": "Gesamtleistung für Erträge",
+    "league": "Ligaleistung des Kontos",
+    "miners": "Minerleistung",
+    "racks": "Rack-Bonusleistung",
+    "bonus": "Gesamte Bonusleistung",
+    "games": "Spielleistung",
+    "temp": "Temporäre Leistung",
+    "freon": "Freon-Bonusleistung",
+    "hamster": "Hamster-Expeditionsleistung",
+    "bonusRate": "Bonus: {{percent}}",
+    "unavailable": "Nicht verfügbar"
+  },
   "seo": {
     "title": "Rollercoin Rechner | Einnahmen & Auszahlungsrechner",
     "description": "Kostenloser Rollercoin Einnahmenrechner. Berechnen Sie Ihre täglichen, wöchentlichen und monatlichen Krypto-Mining-Belohnungen. BTC, ETH, DOGE, SOL und mehr."
@@ -207,11 +226,12 @@
       "missingUserPower": "Benutzermacht ist erforderlich!",
       "missingLeagueData": "Liga-Machtdaten sind erforderlich!",
       "tooManyRequests": "Zu viele Anfragen an die API, bitte warten.",
-      "userNotFound": "Benutzer nicht gefunden. Überprüfen Sie Ihren Benutzernamen (Groß-/Kleinschreibung beachten).",
+      "invalidUsernameInput": "Gib einen gültigen RollerCoin-Profillink oder Benutzernamen ein. Beispiel: https://rollercoin.com/p/YOUR_USERNAME. Nach /p/ muss ein Benutzername stehen.",
+      "userNotFound": "Konto „{{name}}“ nicht gefunden. Füge deinen Profillink statt des Anzeigenamens ein: https://rollercoin.com/p/YOUR_USERNAME. Zusätze wie /games werden entfernt; Groß- und Kleinschreibung beibehalten.",
       "turnstileFailed": "Turnstile-Überprüfung fehlgeschlagen. Bitte versuchen Sie es erneut."
     },
-    "usernamePlaceholder": "Benutzername eingeben",
-    "enterUsername": "Benutzername",
+    "usernamePlaceholder": "Benutzername oder Profillink",
+    "enterUsername": "Benutzername oder Profillink",
     "fetchButton": "Aktualisieren",
     "fetchAction": "Abrufen",
     "fetchMode": "Eingabemethode",
@@ -219,13 +239,15 @@
     "byPower": "Benutzermacht",
     "fetchingByPower": "Verwenden Sie den oben eingegebenen Machtwert",
     "usernameHelpAria": "Hilfe zum Benutzernamen anzeigen",
+    "closeUsernameHelp": "Hilfe schließen",
+    "usernamePowerAlternative": "Alternativ kannst du im Tab „Benutzerleistung“ die im Spiel angezeigte Gesamtleistung eingeben und deine Erträge berechnen.",
     "usernameHelpTitle": "Wie finde ich meinen Benutzernamen?",
-    "usernameHelpText": "Öffnen Sie diese Seite, kopieren Sie den letzten Teil Ihrer Profil-URL (z.B. XYZ) und fügen Sie ihn hier ein.",
+    "usernameHelpText": "Kopiere deinen Profillink über den abgebildeten Share-Button (Teilen) oder aus der Zeile Profile link. Füge ihn unten ein; der Benutzername nach /p/ wird automatisch erkannt.",
     "orPasteProfileLink": "oder fügen Sie Ihren Profillink ein:",
     "usernameExtracted": "Benutzername erfolgreich extrahiert: {{name}}",
-    "usernameHelpLink": "Profilseite öffnen",
+    "usernameHelpLink": "Dein RollerCoin-Profil öffnen",
     "usernameHelpPreviewTitle": "Profillink",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Ändern"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Passen Sie den Prozentsatz an, um Einnahmen zu simulieren"
   },
   "withdraw": {
+    "allocatedPower": "Mit {{percent}} % deiner Leistung",
+    "noAllocatedEarnings": "Kein Ertrag bei dieser Verteilung",
     "title": "Auszahlungszeit-Rechner",
     "desc": "Geben Sie Ihr aktuelles Guthaben für jede Münze ein, um die verbleibende Auszahlungszeit zu sehen.",
     "balanceLabel": "Aktuelles Guthaben:",
@@ -373,7 +397,7 @@
     "add": "Hinzufügen",
     "remove": "Entfernen",
     "minerName": "Miner-Name (Optional)",
-    "enterUsername": "Benutzername eingeben...",
+    "enterUsername": "Benutzername oder Profillink",
     "fetch": "Abrufen",
     "currentPower": "Aktuelle Macht",
     "byUsername": "Benutzername",

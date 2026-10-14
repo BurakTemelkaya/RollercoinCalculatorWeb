@@ -89,6 +89,9 @@ import RoomPowerSimulator from './components/RoomPowerSimulator';
 import ManualSimulator from './components/ManualSimulator';
 import ServiceWorkerUpdater from './components/ServiceWorkerUpdater';
 import './index.css';
+import { usePowerAllocations } from './hooks/usePowerAllocations';
+import { calculateAllocatedEarnings } from './utils/powerAllocation';
+import { InvalidUsernameInputError, parseUsernameInput } from './utils/usernameParser';
 
 // Local storage keys
 const STORAGE_KEYS = {
@@ -170,22 +173,26 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
 
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
+  const powerAllocations = usePowerAllocations();
   const [balances, setBalances] = useState<Record<string, number>>({});
   const [priceSnapshot, setPriceSnapshot] = useState<PriceSnapshot>({ prices: {}, changes: {} });
   const prices = priceSnapshot.prices;
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
   const [collapsedTabs, setCollapsedTabs] = useState<Set<Tab>>(new Set(['simulator', 'room_simulator', 'withdraw']));
 
+  useEffect(() => {
+    // Cancel the previous transition when the user switches tabs again.
+    const timer = setTimeout(() => {
+      setCollapsedTabs(new Set((Object.keys(TAB_ORDER) as Tab[]).filter(tab => tab !== activeTab)));
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
   const handleTabChange = (newTab: Tab) => {
     if (newTab === activeTab) return;
-    const oldTab = activeTab;
     // Uncollapse incoming panel immediately so it's visible during slide
     setCollapsedTabs(prev => { const next = new Set(prev); next.delete(newTab); return next; });
     setActiveTab(newTab);
-    // Collapse outgoing panel after animation completes
-    setTimeout(() => {
-      setCollapsedTabs(prev => { const next = new Set(prev); next.add(oldTab); return next; });
-    }, 400);
   };
 
   // League State
@@ -205,7 +212,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   }, [globalUserName]);
 
   // User Not Found Error State
-  const [userNotFoundError, setUserNotFoundError] = useState(false);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const clearUsernameError = React.useCallback(() => setUsernameError(null), []);
 
   // Handle 5-minute expiration for user data and league data
   useEffect(() => {
@@ -254,10 +262,18 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   // Helper to fetch and set user data globally
   const handleFetchUser = async (username: string, showSuccessNotif: boolean = true) => {
     if (!username.trim()) return;
+    setUsernameError(null);
+    const parsed = parseUsernameInput(username);
+    if (!parsed) {
+      const message = t('input.errors.invalidUsernameInput');
+      setUsernameError(message);
+      throw new InvalidUsernameInputError();
+    }
+    setGlobalUserName(parsed.username);
     setIsFetchingUser(true);
-    setFetchedRoom(null); // Clear old room data when searching for a new user
     try {
-      const data = await fetchUserFromApi(username.trim());
+      const data = await fetchUserFromApi(parsed.username);
+      setFetchedRoom(null); // Replace the previous room only after the lookup succeeds.
       setFetchedUser(data);
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
@@ -293,17 +309,17 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         msg = t('input.errors.turnstileFailed');
       } else if (msg === 'RATE_LIMIT') { // Fallback, just in case
         msg = t('input.errors.tooManyRequests');
-      } else if (error instanceof ApiError && error.status === 400) {
-        // Treat all 400 responses in user fetch flow as user-not-found.
-        msg = t('input.errors.userNotFound');
-        setUserNotFoundError(true);
+      } else if (error instanceof ApiError && (error.status === 400 || error.status === 404)) {
+        msg = t('input.errors.userNotFound', { name: parsed.username });
       } else if (msg === 'Failed to fetch') {
         // Handle generic network fetch failure
         msg = t('input.fetchUserError', { error: 'Network Data Error / CORS' });
       } else {
         msg = t('input.fetchUserError', { error: msg });
       }
-      showNotification(msg, 'error');
+      const isUsernameInputError = error instanceof ApiError && (error.status === 400 || error.status === 404);
+      setUsernameError(isUsernameInputError ? msg : null);
+      if (!isUsernameInputError) showNotification(msg, 'error');
       throw error;
     } finally {
       setIsFetchingUser(false);
@@ -395,7 +411,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261009.204718';
+  const CURRENT_CACHE_VERSION = '20261014.160928';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -424,7 +440,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       if (savedBalances) setBalances(JSON.parse(savedBalances));
       if (savedTab === 'calculator' || savedTab === 'withdraw' || savedTab === 'simulator' || savedTab === 'room_simulator') {
         setActiveTab(savedTab);
-        setCollapsedTabs(prev => { const next = new Set(prev); next.delete(savedTab); return next; });
+        setCollapsedTabs(new Set((Object.keys(TAB_ORDER) as Tab[]).filter(tab => tab !== savedTab)));
       }
       if (savedApiLeagues) setApiLeagues(JSON.parse(savedApiLeagues));
       const savedRawApiData = localStorage.getItem('rollercoin_web_raw_api_data');
@@ -1002,8 +1018,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
               onForceFetchPrices={handleForceFetchPrices}
               fetchMode={fetchMode}
               setFetchMode={setFetchMode}
-              userNotFoundError={userNotFoundError}
-              setUserNotFoundError={setUserNotFoundError}
+              usernameError={usernameError}
+              onClearUsernameError={clearUsernameError}
               hasRewardChangeData={!!rewardChangeData}
               onShowRewardChange={() => setShowRewardChangeModal(true)}
             />
@@ -1056,6 +1072,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                     <div className={`tab-panel${collapsedTabs.has('calculator') ? ' collapsed' : ''}`}>
                       {earnings.length > 0 && <>
                       <EarningsTable
+                        {...powerAllocations}
                         earnings={earnings}
                         effectiveUserPower={displayPower}
                         prices={prices}
@@ -1085,6 +1102,13 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                       />
                       <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
                       </>}
+                      {earnings.length === 0 && (
+                        <div className="empty-state calculator-empty-state" role="status">
+                          <div className="empty-icon" aria-hidden="true">📊</div>
+                          <p>{t('table.noDataTitle')}</p>
+                          <p className="helper-text">{t('calculatorEmpty.earnings')}</p>
+                        </div>
+                      )}
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
@@ -1098,6 +1122,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
                           isActive={!collapsedTabs.has('simulator')}
+                          usernameError={usernameError}
+                          onClearUsernameError={clearUsernameError}
                         />
                       </React.Suspense>
                     </div>
@@ -1115,13 +1141,24 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           globalUserName={globalUserName}
                           setGlobalUserName={setGlobalUserName}
                           isActive={!collapsedTabs.has('room_simulator')}
+                          usernameError={usernameError}
+                          onClearUsernameError={clearUsernameError}
                         />
                       </React.Suspense>
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('withdraw') ? ' collapsed' : ''}`}>
+                      {earnings.length === 0 && (
+                        <div className="empty-state calculator-empty-state" role="status">
+                          <div className="empty-icon" aria-hidden="true">⏱️</div>
+                          <p>{t('table.noDataTitle')}</p>
+                          <p className="helper-text">{t('calculatorEmpty.withdraw')}</p>
+                        </div>
+                      )}
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
                         <WithdrawTimer
                           earnings={earnings}
+                          allocatedEarnings={earnings.map(earning => calculateAllocatedEarnings(earning, displayPower, powerAllocations.sourceAllocations, powerAllocations.targetAllocations))}
+                          targetAllocations={powerAllocations.targetAllocations}
                           balances={balances}
                           onBalanceChange={handleBalanceChange}
                           prices={prices}

@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "Untuk melihat pendapatan, masukkan nama pengguna di atas dan klik Ambil, atau masukkan daya Anda.",
+    "withdraw": "Untuk melihat waktu penarikan, masukkan nama pengguna di atas terlebih dahulu dan klik Ambil, atau masukkan daya Anda."
+  },
+  "accountPower": {
+    "title": "Rincian daya akun Anda",
+    "description": "Nilai dari akun terakhir yang diambil. Perubahan penambang atau ruangan ditampilkan dalam hasil simulasi.",
+    "total": "Total daya untuk pendapatan",
+    "league": "Daya liga akun",
+    "miners": "Daya penambang",
+    "racks": "Daya bonus rak",
+    "bonus": "Total daya bonus",
+    "games": "Daya permainan",
+    "temp": "Daya sementara",
+    "freon": "Daya bonus Freon",
+    "hamster": "Daya ekspedisi hamster",
+    "bonusRate": "Bonus: {{percent}}",
+    "unavailable": "Tidak tersedia"
+  },
   "seo": {
     "title": "Kalkulator Rollercoin | Kalkulator Penghasilan & Penarikan",
     "description": "Kalkulator penghasilan Rollercoin gratis. Hitung hadiah penambangan kripto harian, mingguan, dan bulanan Anda. BTC, ETH, DOGE, SOL, dan lainnya."
@@ -207,11 +226,12 @@
       "missingUserPower": "Kekuatan pengguna diperlukan!",
       "missingLeagueData": "Data liga diperlukan!",
       "tooManyRequests": "Terlalu banyak permintaan.",
-      "userNotFound": "Pengguna tidak ditemukan. Periksa nama pengguna Anda (peka huruf besar/kecil).",
+      "invalidUsernameInput": "Masukkan tautan profil RollerCoin atau nama pengguna yang valid. Contoh: https://rollercoin.com/p/YOUR_USERNAME. Nama harus ada setelah /p/.",
+      "userNotFound": "Akun “{{name}}” tidak ditemukan. Tempel tautan profil, bukan nama tampilan: https://rollercoin.com/p/YOUR_USERNAME. Akhiran seperti /games dihapus; pertahankan huruf besar dan kecil.",
       "turnstileFailed": "Verifikasi Turnstile gagal."
     },
-    "usernamePlaceholder": "Masukkan username",
-    "enterUsername": "Nama Pengguna",
+    "usernamePlaceholder": "Nama pengguna atau tautan profil",
+    "enterUsername": "Nama pengguna atau tautan profil",
     "fetchButton": "Perbarui",
     "fetchAction": "Ambil",
     "fetchMode": "Metode Masukan",
@@ -219,13 +239,15 @@
     "byPower": "Kekuatan Manual",
     "fetchingByPower": "Gunakan kekuatan manual",
     "usernameHelpAria": "Bantuan pengguna",
+    "closeUsernameHelp": "Tutup bantuan",
+    "usernamePowerAlternative": "Anda juga dapat memasukkan total daya yang ditampilkan dalam game pada tab «Daya Pengguna» untuk menghitung pendapatan.",
     "usernameHelpTitle": "Di mana nama pengguna saya?",
-    "usernameHelpText": "Salin bagian terakhir dari URL profil Anda.",
+    "usernameHelpText": "Salin tautan profil dengan tombol Share (Bagikan) pada gambar atau dari baris Profile link. Tempel di bawah; nama setelah /p/ diambil otomatis.",
     "orPasteProfileLink": "atau tempel tautan profil Anda:",
     "usernameExtracted": "Nama diekstrak: {{name}}",
-    "usernameHelpLink": "Buka profil",
+    "usernameHelpLink": "Buka profil RollerCoin Anda",
     "usernameHelpPreviewTitle": "Tautan Profil",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Ubah"
   },
   "table": {
@@ -286,6 +308,8 @@
     "adjustPowerSlider": "Sesuaikan persentase"
   },
   "withdraw": {
+    "allocatedPower": "Dengan {{percent}}% daya Anda",
+    "noAllocatedEarnings": "Tidak ada pendapatan pada alokasi ini",
     "title": "Kalkulator Waktu Penarikan",
     "desc": "Masukkan saldo Anda saat ini untuk melihat waktu yang tersisa.",
     "balanceLabel": "Saldo Saat Ini:",
@@ -356,7 +380,7 @@
     "add": "Tambah",
     "remove": "Hapus",
     "minerName": "Nama",
-    "enterUsername": "Masukkan pengguna...",
+    "enterUsername": "Nama pengguna atau tautan profil",
     "fetch": "Ambil",
     "currentPower": "Kekuatan Saat Ini",
     "byUsername": "Pengguna",

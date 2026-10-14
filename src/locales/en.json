@@ -1,4 +1,23 @@
 {
+  "calculatorEmpty": {
+    "earnings": "To see your earnings, enter your username above and click Fetch, or enter your power.",
+    "withdraw": "To see your withdrawal time, first enter your username above and click Fetch, or enter your power."
+  },
+  "accountPower": {
+    "title": "Your account power breakdown",
+    "description": "Values from the last fetched account. Changes to miners or rooms are shown in the simulation results.",
+    "total": "Total power for earnings",
+    "league": "Account league power",
+    "miners": "Miner power",
+    "racks": "Rack bonus power",
+    "bonus": "Total bonus power",
+    "games": "Game power",
+    "temp": "Temporary power",
+    "freon": "Freon bonus power",
+    "hamster": "Hamster expedition power",
+    "bonusRate": "Bonus rate: {{percent}}",
+    "unavailable": "Not available"
+  },
   "seo": {
     "title": "Rollercoin Calculator | Earnings & Withdrawal Calculator",
     "description": "Free Rollercoin earnings calculator. Calculate your daily, weekly, and monthly crypto mining rewards. BTC, ETH, DOGE, SOL and more."
@@ -266,11 +285,12 @@
       "missingUserPower": "User power is required!",
       "missingLeagueData": "League power data is required!",
       "tooManyRequests": "Too many requests to the API, please wait.",
-      "userNotFound": "User not found. Please check your username (Case-sensitive).",
+      "invalidUsernameInput": "Enter a valid RollerCoin profile link or username. Example: https://rollercoin.com/p/YOUR_USERNAME. The link must contain a username after /p/.",
+      "userNotFound": "Account “{{name}}” was not found. Paste your profile link instead of your display name: https://rollercoin.com/p/YOUR_USERNAME. Suffixes such as /games are removed automatically; preserve letter case.",
       "turnstileFailed": "Turnstile verification failed. Please try again."
     },
-    "usernamePlaceholder": "Enter username",
-    "enterUsername": "Username",
+    "usernamePlaceholder": "Username or profile link",
+    "enterUsername": "Username or profile link",
     "fetchButton": "Refresh",
     "fetchAction": "Fetch",
     "fetchMode": "Input Method",
@@ -278,13 +298,15 @@
     "byPower": "User Power",
     "fetchingByPower": "Use the power value entered above",
     "usernameHelpAria": "Show username help",
+    "closeUsernameHelp": "Close help",
+    "usernamePowerAlternative": "Alternatively, use the “User Power” tab to enter the total power shown in your game and calculate your earnings.",
     "usernameHelpTitle": "How do I find my username?",
-    "usernameHelpText": "Open this page, copy the last part of your profile URL (e.g. XYZ), and paste it here.",
+    "usernameHelpText": "Copy your profile link using the Share button shown in the image, or from the Profile link row. Paste it below; the username after /p/ is extracted automatically.",
     "orPasteProfileLink": "or paste your profile link:",
     "usernameExtracted": "Username successfully extracted: {{name}}",
-    "usernameHelpLink": "Open profile page",
+    "usernameHelpLink": "Open your RollerCoin profile",
     "usernameHelpPreviewTitle": "Profile link",
-    "usernameHelpPreviewUrl": "https://rollercoin.com/p/XYZ",
+    "usernameHelpPreviewUrl": "https://rollercoin.com/p/YOUR_USERNAME",
     "usernameHelpPreviewAction": "Change"
   },
   "table": {
@@ -345,6 +367,8 @@
     "adjustPowerSlider": "Adjust percentage to simulate earnings"
   },
   "withdraw": {
+    "allocatedPower": "With {{percent}}% of your power",
+    "noAllocatedEarnings": "No earnings at this allocation",
     "title": "Withdrawal Time Calculator",
     "desc": "Enter your current balance for each coin to see remaining withdrawal time.",
     "balanceLabel": "Current Balance:",
@@ -432,7 +456,7 @@
     "add": "Add",
     "remove": "Remove",
     "minerName": "Miner Name (Optional)",
-    "enterUsername": "Enter username...",
+    "enterUsername": "Username or profile link",
     "fetch": "Fetch",
     "currentPower": "Current Power",
     "byUsername": "Username",

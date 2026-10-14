@@ -6,7 +6,8 @@ import { formatCryptoAmount, formatUSD, getCompactCryptoAmount } from '../utils/
 import { getBlocksPerPeriod } from '../utils/calculator';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 import { HashPower } from '../types';
-import { toBaseUnit } from '../utils/powerParser';
+import { calculateAllocatedEarnings } from '../utils/powerAllocation';
+import { PowerAllocations } from '../hooks/usePowerAllocations';
 import { LeagueInfo } from '../data/leagues';
 import { ApiLeagueData } from '../types/api';
 import RadixSelect from './RadixSelect';
@@ -16,8 +17,13 @@ import { PriceChange24h } from '../services/priceApi';
 const LeagueAnalysisModal = React.lazy(() => import('./LeagueAnalysisModal'));
 
 type TableColumnType = 'blockReward' | 'blockDuration' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
+const ALLOCATION_PANEL_STORAGE_KEY = 'rollercoin_web_power_allocations_open';
 
 interface EarningsTableProps {
+    sourceAllocations: PowerAllocations;
+    targetAllocations: PowerAllocations;
+    setSourceAllocations: React.Dispatch<React.SetStateAction<PowerAllocations>>;
+    setTargetAllocations: React.Dispatch<React.SetStateAction<PowerAllocations>>;
     effectiveUserPower: HashPower | null;
     earnings: EarningsResult[];
     prices: Record<string, number>;
@@ -40,6 +46,10 @@ interface EarningsTableProps {
 }
 
 const EarningsTable: React.FC<EarningsTableProps> = ({
+    sourceAllocations,
+    targetAllocations,
+    setSourceAllocations,
+    setTargetAllocations,
     effectiveUserPower,
     earnings,
     prices,
@@ -64,15 +74,23 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     const tablesRef = useRef<HTMLDivElement>(null);
     const [isCapturing, setIsCapturing] = useState(false);
     
-    // Simulator states V3
-    const [sourceAllocations, setSourceAllocations] = useState<Record<string, number>>({});
-    const [targetAllocations, setTargetAllocations] = useState<Record<string, number>>({});
-    
     // UI states for the panel
     const [selectedSourceAdd, setSelectedSourceAdd] = useState<string>('BTC');
     const [selectedTargetAdd, setSelectedTargetAdd] = useState<string>('BTC');
-    const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
+    const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(() => {
+        try {
+            return localStorage.getItem(ALLOCATION_PANEL_STORAGE_KEY) === 'true';
+        } catch {
+            return false;
+        }
+    });
     const [isLeagueAnalysisOpen, setIsLeagueAnalysisOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(ALLOCATION_PANEL_STORAGE_KEY, String(isSimulatorOpen));
+        } catch { /* Keep the panel usable when storage is unavailable. */ }
+    }, [isSimulatorOpen]);
 
     // Sticky header state
     const theadRef = useRef<HTMLTableSectionElement>(null);
@@ -454,62 +472,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         setTargetAllocations(next);
     };
 
-    const calculateRowEarnings = (baseEarning: EarningsResult): EarningsResult => {
-        let earning = { ...baseEarning };
-
-        if (effectiveUserPower) {
-            const userBase = toBaseUnit(effectiveUserPower);
-            const sourcePercent = sourceAllocations[baseEarning.displayName] || 0;
-            const isTargeted = targetAllocations[baseEarning.displayName] !== undefined;
-            const targetPercent = isTargeted ? targetAllocations[baseEarning.displayName] : 100;
-            const isSimulatingAnything = Object.keys(sourceAllocations).length > 0 || Object.keys(targetAllocations).length > 0;
-
-            const leagueBase = toBaseUnit(baseEarning.leaguePower);
-
-            // Remove user's power if they explicitly marked this coin as a source
-            let powerToRemove = 0;
-            if (userBase <= leagueBase) {
-                 powerToRemove = userBase * (sourcePercent / 100);
-            }
-            // pureLeagueBase is the pool size stripping away the user's source extraction
-            let pureLeagueBase = Math.max(0, leagueBase - powerToRemove);
-            
-            const allocatedUserBase = userBase * (targetPercent / 100);
-            
-            let newShare = 0;
-            if (pureLeagueBase === 0 && allocatedUserBase === 0) {
-                newShare = 0;
-            } else if (!isSimulatingAnything) {
-                // Default table behavior
-                newShare = Math.min(1, allocatedUserBase / pureLeagueBase);
-            } else {
-                // Simulator is active
-                if (isTargeted) {
-                    // Real targeted allocation! Explicitly entering a coin expands its pool.
-                    newShare = allocatedUserBase / (pureLeagueBase + allocatedUserBase);
-                } else {
-                    // Hypothetical row: display baseline profitability of the modified pool
-                    newShare = Math.min(1, allocatedUserBase / pureLeagueBase);
-                }
-            }
-
-            const originalShare = baseEarning.powerShare / 100;
-            const blockReward = originalShare > 0 ? baseEarning.earnings.perBlock / originalShare : 0;
-            const newPerBlock = blockReward * newShare;
-
-            const ratio = baseEarning.earnings.perBlock > 0 ? newPerBlock / baseEarning.earnings.perBlock : 0;
-            
-            earning.powerShare = newShare * 100;
-            earning.earnings = {
-                perBlock: newPerBlock,
-                hourly: baseEarning.earnings.hourly * ratio,
-                daily: baseEarning.earnings.daily * ratio,
-                weekly: baseEarning.earnings.weekly * ratio,
-                monthly: baseEarning.earnings.monthly * ratio,
-            };
-        }
-        return earning;
-    };
+    const calculateRowEarnings = (baseEarning: EarningsResult): EarningsResult =>
+        calculateAllocatedEarnings(baseEarning, effectiveUserPower, sourceAllocations, targetAllocations);
 
     const renderRow = (baseEarning: EarningsResult, isBest: boolean = false) => {
         const earning = calculateRowEarnings(baseEarning);
@@ -654,6 +618,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                         </button>
                         <button
                             className={`settings-icon-btn ${isSimulatorOpen ? 'active' : ''}`}
+                            aria-expanded={isSimulatorOpen}
                             onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
                             title={t('simulator.panelTitle')}
                         >

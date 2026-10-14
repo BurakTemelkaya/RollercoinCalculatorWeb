@@ -6,6 +6,8 @@ import { RollercoinRoomResponse } from '../types/room';
 import { calculateExactRoomPower } from '../utils/roomParser';
 import { createManualPowerBaseline, calculateManualPower } from '../utils/simulatorBaseline';
 import CdnImage from './CdnImage';
+import AccountPowerBreakdown from './AccountPowerBreakdown';
+import { parseUsernameInput } from '../utils/usernameParser';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -30,6 +32,8 @@ interface ManualSimulatorProps {
     globalUserName?: string;
     setGlobalUserName?: (val: string) => void;
     isActive?: boolean;
+    usernameError?: string | null;
+    onClearUsernameError?: () => void;
 }
 
 interface AddedMiner {
@@ -45,6 +49,20 @@ const formatPower = (gh: number) => {
     return formatHashPower(autoScalePower(gh * 1e9));
 };
 
+const BASELINE_STORAGE_KEY = 'rollercoin_web_manual_baseline';
+const MINERS_OWNER_KEY = 'rollercoin_web_added_miners_owner';
+
+function readBaseline(): { mode: 'account' | 'zero' | 'custom'; power: string; unit: PowerUnit; bonus: string } {
+    const fallback = { mode: 'account' as const, power: '', unit: 'Eh' as const, bonus: '' };
+    try {
+        const saved = JSON.parse(localStorage.getItem(BASELINE_STORAGE_KEY) || 'null');
+        if (!saved || !['account', 'zero', 'custom'].includes(saved.mode)
+            || !['Gh', 'Th', 'Ph', 'Eh', 'Zh', 'Yh'].includes(saved.unit)
+            || typeof saved.power !== 'string' || typeof saved.bonus !== 'string') return fallback;
+        return saved;
+    } catch { return fallback; }
+}
+
 const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     apiLeagues,
     fetchedUser,
@@ -53,16 +71,25 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     isFetchingUser,
     globalUserName = '',
     setGlobalUserName = () => { },
-    isActive = true
+    isActive = true,
+    usernameError,
+    onClearUsernameError,
 }) => {
     const { t } = useTranslation();
     const { canFetch, setFetchStarted } = useApiCooldown();
     const [localUserName, setLocalUserName] = useState(globalUserName);
-    const [baselineMode, setBaselineMode] = useState<'account' | 'zero' | 'custom'>('account');
-    const [startingPower, setStartingPower] = useState('');
-    const [startingUnit, setStartingUnit] = useState<PowerUnit>('Eh');
-    const [startingBonus, setStartingBonus] = useState('');
+    const [savedBaseline] = useState(readBaseline);
+    const [baselineMode, setBaselineMode] = useState(savedBaseline.mode);
+    const [startingPower, setStartingPower] = useState(savedBaseline.power);
+    const [startingUnit, setStartingUnit] = useState<PowerUnit>(savedBaseline.unit);
+    const [startingBonus, setStartingBonus] = useState(savedBaseline.bonus);
     const activeBaselineMode = baselineMode === 'account' && !fetchedUser && !fetchedRoom ? 'zero' : baselineMode;
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(BASELINE_STORAGE_KEY, JSON.stringify({ mode: baselineMode, power: startingPower, unit: startingUnit, bonus: startingBonus }));
+        } catch { /* Continue in memory if storage is unavailable. */ }
+    }, [baselineMode, startingPower, startingUnit, startingBonus]);
 
     const [dynamicSets, setDynamicSets] = useState<GetRackSetListDto[] | undefined>(undefined);
     const hasFetchedDynamicSets = useRef(false);
@@ -112,14 +139,20 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const [addedMiners, setAddedMiners] = useState<AddedMiner[]>(() => {
         try {
             const saved = localStorage.getItem(ADDED_MINERS_STORAGE_KEY);
-            return saved ? JSON.parse(saved) : [];
+            const parsed: unknown = saved ? JSON.parse(saved) : [];
+            return Array.isArray(parsed) ? parsed.filter((miner): miner is AddedMiner =>
+                miner && typeof miner.id === 'string' && typeof miner.name === 'string'
+                && Number.isFinite(miner.power) && miner.power >= 0
+                && Number.isFinite(miner.bonus) && Number.isFinite(miner.rackBonus)) : [];
         } catch (e) {
             return [];
         }
     });
 
     useEffect(() => {
-        localStorage.setItem(ADDED_MINERS_STORAGE_KEY, JSON.stringify(addedMiners));
+        try {
+            localStorage.setItem(ADDED_MINERS_STORAGE_KEY, JSON.stringify(addedMiners));
+        } catch { /* Continue in memory if storage is unavailable. */ }
     }, [addedMiners]);
 
     // Notifications State
@@ -138,19 +171,40 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         setLocalUserName(globalUserName);
     }, [globalUserName]);
 
-    // Clear added miners when fetching a new user so they don't stack on top of the new user's power
+    // Restoring cached account data must not erase the saved simulation.
+    const minersOwner = useRef<string | null>(null);
+    const [savedOwner] = useState(() => {
+        try {
+            return localStorage.getItem(MINERS_OWNER_KEY)
+                || JSON.parse(localStorage.getItem('rollercoin_web_fetched_user') || 'null')?.userProfileResponseDto?.avatar_Id
+                || null;
+        } catch { return null; }
+    });
     useEffect(() => {
-        if (fetchedUser) {
+        const accountId = fetchedUser?.userProfileResponseDto?.avatar_Id;
+        if (!accountId) return;
+        const previousOwner = minersOwner.current || savedOwner;
+        if (previousOwner && previousOwner !== accountId) {
             setAddedMiners([]);
         }
-    }, [fetchedUser?.userProfileResponseDto?.avatar_Id]);
+        minersOwner.current = accountId;
+        try { localStorage.setItem(MINERS_OWNER_KEY, accountId); } catch { /* Keep owner in memory. */ }
+    }, [fetchedUser?.userProfileResponseDto?.avatar_Id, savedOwner]);
 
     const handleFetchClick = async () => {
-        setGlobalUserName(localUserName.trim());
         if (!localUserName.trim() || !onFetchUser || !canFetch) return;
-        await onFetchUser(localUserName.trim());
-        setBaselineMode('account');
-        setFetchStarted();
+        const parsed = parseUsernameInput(localUserName);
+        const username = parsed?.username ?? localUserName.trim();
+        setLocalUserName(username);
+        if (parsed) setGlobalUserName(username);
+        try {
+            await onFetchUser(username);
+            setBaselineMode('account');
+        } catch {
+            // The parent displays the request error; keep the current simulation.
+        } finally {
+            if (parsed) setFetchStarted();
+        }
     };
 
 
@@ -358,8 +412,25 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                             <input
                                 type="text"
                                 value={localUserName}
-                                onChange={(e) => setLocalUserName(e.target.value)}
-                                onBlur={() => setGlobalUserName(localUserName)}
+                                onChange={(e) => {
+                                    setLocalUserName(e.target.value);
+                                    if (usernameError) onClearUsernameError?.();
+                                }}
+                                onPaste={(e) => {
+                                    const parsed = parseUsernameInput(e.clipboardData.getData('text'));
+                                    if (!parsed?.isProfileLink) return;
+                                    e.preventDefault();
+                                    setLocalUserName(parsed.username);
+                                    setGlobalUserName(parsed.username);
+                                    onClearUsernameError?.();
+                                }}
+                                onBlur={() => {
+                                    const parsed = parseUsernameInput(localUserName);
+                                    if (parsed) {
+                                        setLocalUserName(parsed.username);
+                                        setGlobalUserName(parsed.username);
+                                    }
+                                }}
                                 placeholder={t('simulator.enterUsername')}
                                 className="power-value-input"
                                 onKeyDown={(e) => {
@@ -416,6 +487,10 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                         </>
                     )}
                 </div>
+
+                {activeBaselineMode === 'account' && fetchedUser && (
+                    <AccountPowerBreakdown power={fetchedUser.userPowerResponseDto} />
+                )}
 
                 <div className="ms-card">
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}><span className="section-icon">➕</span> {t('simulator.addMiner', 'Madenci Ekle')}</h3>
