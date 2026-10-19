@@ -1151,6 +1151,8 @@
     "source": "Offizielle Erklärung",
     "example": "Beispiel aus dem Blog",
     "labels": {
+      "skipRestChest": "Ruhezeit-Überspringtruhe",
+      "overchargedLoot": "Zusätzliche Beute",
       "remoteBonusUltimate": "Fernbonus",
       "boostMode": "Verstärkungsmodus",
       "chestsMultiplier": "Truhenmultiplikator ×3",
@@ -1168,6 +1170,8 @@
       "overchargedConversion": "Beuteumwandlung"
     },
     "descriptions": {
+      "skipRestChest": "Nach einer erfolgreichen Expedition fügt er der nächsten Expedition eine Truhe mit Energy-Drink hinzu. Dieser verkürzt die Ruhezeit eines Hamsters.",
+      "overchargedLoot": "Gewährt +25% / +50% / +75% Beute bei 18 / 24 / 30 Ladepunkten. Nur die höchste vollständig geladene Stufe zählt; Boni werden nicht addiert. Jede ursprüngliche Expeditionsstunde gibt einen Punkt. Vor der Abreise aktivieren: Die Stufe wird fixiert, nach der Expedition wird die Ladung gelöscht. Beschleunigungen verringern den Ladegewinn nicht. Beginnt mit voller Stufe III.",
       "remoteBonusUltimate": "Solange Cuscuz auf einer Expedition lebt, gewährt er einen temporären Raumbonus: Gesamtwerte ×2%. Die ursprüngliche Expeditionsdauer gilt; Beschleuniger und zeitverkürzende Fähigkeiten verkürzen den Bonus nicht. Aufladen: {{charge}} Punkte.",
       "experience": "Erhöht die Expeditions-EP dieses Hamsters um den angegebenen Prozentsatz.",
       "survival": "Addiert den Wert direkt zur Überlebenschance. Ein negativer Wert senkt sie.",
@@ -1203,6 +1207,7 @@
       "remotePowerUltimate": "Solange GFeast lebt, temporäre Miner-Leistung ×5 ohne Raum-Multiplikatoren. Dauer nach ursprünglicher Expedition; Beschleuniger und Verkürzungen ändern sie nicht."
     },
     "examples": {
+      "jackOLoot": "24 Punkte ergeben Stufe II: +50% Beute. Bei 30 Punkten gibt Stufe III +75%, nicht +150%.",
       "cuscuzRemoteBonus": "Grundwerte: (90 + 75 + 90) ×2% = 510% Raumbonus.",
       "remoteBonus": "Grundwerte: (40 + 90 + 90) ×2% = 440%. Bei 100/100/100: 600%.",
       "overchargedChests": "Mit 28 Punkten gilt Stufe II: fünf Belohnungen verdreifacht. Stufe III braucht 30."

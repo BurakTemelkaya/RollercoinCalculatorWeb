@@ -22,6 +22,7 @@ const ARTICLE_PATHS: Record<string, string> = {
   solaire: 'new-season-rollerhouse-of-horrors',
   'lady-minerra': 'meet-lady-minerra',
   cuscuz: 'meet-cuscuz-hero-hamster',
+  'jack-o-mine': 'meet-jack-o-mine',
 };
 
 export function officialHamsterArticle(slug: string): string | undefined {
@@ -43,7 +44,7 @@ const PASSIVES: Record<string, string> = {
   return_to_work: 'overtime', influencer: 'influencer', buyback_discount: 'buyback',
   remote_bonus: 'remoteBonus', remote_power: 'remotePower', rlt_chest: 'rltChest',
   season_xp_chest: 'seasonXpChest', keep_it_going: 'keepGoing',
-  rest_relay: 'restRelay', charge_relay: 'chargeRelay', games_boost: 'gamesBoost',
+  rest_relay: 'restRelay', charge_relay: 'chargeRelay', games_boost: 'gamesBoost', skip_rest_chest: 'skipRestChest',
 };
 
 const ULTIMATES: Record<string, string> = {
@@ -56,7 +57,7 @@ const ULTIMATES: Record<string, string> = {
   high_risk_high_reward_x2_rewards_and_xp_x1_5_duration_no_rest_failed_runs_keep_b: 'highRisk',
   converts_expedition_rewards_into_rlt: 'lootConversion', loot_conversion: 'overchargedConversion',
   pirate_luck: 'pirateLuck', hamsters_chest: 'hamstersChest', remote_power: 'remotePowerUltimate',
-  remote_bonus: 'remoteBonusUltimate',
+  remote_bonus: 'remoteBonusUltimate', extra_loot: 'overchargedLoot',
 };
 
 export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = false): AbilityGuide | undefined {
@@ -75,6 +76,11 @@ export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = f
   if (hamster.slug === 'kitsumi' && code === 'remote_bonus') guide.example = 'remoteBonus';
   if (hamster.slug === 'solaire' && ultimate) guide.example = 'overchargedChests';
   if (hamster.slug === 'cuscuz' && ultimate) guide.example = 'cuscuzRemoteBonus';
+  if (hamster.slug === 'jack-o-mine') {
+    guide.source = officialHamsterArticle(hamster.slug);
+    if (code === 'influencer') guide.description = 'influencerShared';
+    if (ultimate) guide.example = 'jackOLoot';
+  }
   if (hamster.slug === 'plague-dancer' && ultimate) {
     guide.description = 'plagueChests';
     guide.source = 'https://rollercoin.com/blog/plague-dancer-pumpkin-origin';

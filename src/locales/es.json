@@ -1089,6 +1089,8 @@
     "source": "Explicación oficial",
     "example": "Ejemplo del blog",
     "labels": {
+      "skipRestChest": "Cofre para saltar el descanso",
+      "overchargedLoot": "Botín extra",
       "remoteBonusUltimate": "Bonificación remota",
       "boostMode": "Modo de mejora",
       "chestsMultiplier": "Multiplicador de cofres ×3",
@@ -1106,6 +1108,8 @@
       "overchargedConversion": "Conversión de botín"
     },
     "descriptions": {
+      "skipRestChest": "Tras una expedición exitosa, añade un cofre con una bebida energética a la siguiente expedición. La bebida reduce el descanso de un hámster.",
+      "overchargedLoot": "Otorga +25% / +50% / +75% de botín con 18 / 24 / 30 puntos. Solo cuenta el nivel completo más alto; los bonos no se suman. Cada hora original de expedición da un punto. Actívala antes de salir: fija el nivel y la carga se reinicia tras la expedición. Los aceleradores no reducen la carga obtenida. Empieza con el nivel III cargado.",
       "remoteBonusUltimate": "Mientras Cuscuz esté vivo en una expedición, concede un bonus temporal de sala igual a sus estadísticas totales ×2%. Usa la duración original; los aceleradores y habilidades que reducen el tiempo no acortan el bonus. Recarga: {{charge}} puntos.",
       "experience": "Aumenta la XP que este hámster gana en expediciones en el porcentaje indicado.",
       "survival": "Suma el porcentaje directamente a la probabilidad final de supervivencia. Un valor negativo la reduce.",
@@ -1141,6 +1145,7 @@
       "remotePowerUltimate": "Mientras GFeast vive, añade potencia temporal ×5 sin bonus de sala. Duración original; aceleradores y reducciones no la cambian."
     },
     "examples": {
+      "jackOLoot": "24 puntos permiten el nivel II: +50% de botín. Con 30 puntos, el nivel III da +75%, no +150%.",
       "cuscuzRemoteBonus": "Estadísticas base: (90 + 75 + 90) ×2% = 510% de bonus de sala.",
       "remoteBonus": "Base: (40 + 90 + 90) ×2% = 440%. Con 100/100/100: 600%.",
       "overchargedChests": "Con 28 puntos se usa el nivel II: cinco recompensas triplicadas. El III necesita 30."

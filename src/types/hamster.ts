@@ -66,7 +66,7 @@ export interface Hamster {
   builderSlots: HamsterBuilderSlot[];
   ultimate: HamsterTrait | null;
   ultimateChargePoints: number | null;
-  ultimateTiers?: { tier: number; chargeRequired: number; rewardCount: number; rewardMultiplier?: number; conversionTarget?: string }[];
+  ultimateTiers?: { tier: number; chargeRequired: number; rewardCount?: number; rewardMultiplier?: number; conversionTarget?: string; text?: LocalizedText }[];
   skins: HamsterSkin[];
   animationsPending?: boolean;
 }

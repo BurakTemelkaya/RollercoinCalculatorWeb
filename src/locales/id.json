@@ -1112,6 +1112,8 @@
     "source": "Penjelasan resmi",
     "example": "Contoh dari blog",
     "labels": {
+      "skipRestChest": "Peti Lewati Istirahat",
+      "overchargedLoot": "Loot Ekstra",
       "remoteBonusUltimate": "Bonus jarak jauh",
       "boostMode": "Mode peningkatan",
       "chestsMultiplier": "Pengali peti ×3",
@@ -1129,6 +1131,8 @@
       "overchargedConversion": "Konversi jarahan"
     },
     "descriptions": {
+      "skipRestChest": "Setelah Ekspedisi berhasil, menambahkan peti Minuman Energi ke Ekspedisi berikutnya. Minuman ini mengurangi waktu istirahat hamster.",
+      "overchargedLoot": "Memberi +25% / +50% / +75% loot pada 18 / 24 / 30 poin. Hanya tingkat penuh tertinggi yang berlaku; bonus tidak dijumlahkan. Setiap jam durasi asli Ekspedisi memberi satu poin. Aktifkan sebelum berangkat: tingkat terkunci dan muatan direset setelah Ekspedisi. Percepatan tidak mengurangi poin. Awalnya tingkat III terisi penuh.",
       "remoteBonusUltimate": "Selama Cuscuz hidup dalam Ekspedisi, memberikan bonus ruangan sementara sebesar total atribut ×2%. Menggunakan durasi Ekspedisi asli; percepatan dan kemampuan pengurangan waktu tidak memperpendek bonus. Isi ulang: {{charge}} poin.",
       "experience": "Meningkatkan XP hamster ini dari Ekspedisi sesuai persentase yang ditampilkan.",
       "survival": "Menambahkan persentase langsung ke peluang bertahan hidup akhir. Nilai negatif menguranginya.",
@@ -1164,6 +1168,7 @@
       "remotePowerUltimate": "Selama GFeast hidup, menambah daya penambang sementara ×5 tanpa pengali ruangan. Durasi asli tidak berubah oleh percepatan atau pengurangan waktu."
     },
     "examples": {
+      "jackOLoot": "24 poin membuka tingkat II: +50% loot. Pada 30 poin, tingkat III memberi +75%, bukan +150%.",
       "cuscuzRemoteBonus": "Atribut dasar: (90 + 75 + 90) ×2% = 510% bonus ruangan.",
       "remoteBonus": "Dasar: (40 + 90 + 90) ×2% = 440%. Pada 100/100/100: 600%.",
       "overchargedChests": "Dengan 28 poin, tingkat II penuh: lima hadiah dilipat tigakan. Tingkat III perlu 30."

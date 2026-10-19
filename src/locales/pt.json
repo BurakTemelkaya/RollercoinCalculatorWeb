@@ -1112,6 +1112,8 @@
     "source": "Explicação oficial",
     "example": "Exemplo do blog",
     "labels": {
+      "skipRestChest": "Baú de pular descanso",
+      "overchargedLoot": "Saque extra",
       "remoteBonusUltimate": "Bônus remoto",
       "boostMode": "Modo de reforço",
       "chestsMultiplier": "Multiplicador de baús ×3",
@@ -1129,6 +1131,8 @@
       "overchargedConversion": "Conversão de saque"
     },
     "descriptions": {
+      "skipRestChest": "Após uma expedição bem-sucedida, adiciona um baú com bebida energética à próxima expedição. A bebida reduz o descanso de um hamster.",
+      "overchargedLoot": "Concede +25% / +50% / +75% de saque com 18 / 24 / 30 pontos. Apenas o maior nível completo conta; os bônus não se somam. Cada hora original da expedição dá um ponto. Ative antes de partir: o nível fica fixo e a carga zera após a expedição. Aceleradores não reduzem a carga ganha. Começa com o nível III carregado.",
       "remoteBonusUltimate": "Enquanto Cuscuz estiver vivo em uma expedição, concede um bônus temporário de sala igual à soma dos atributos ×2%. Usa a duração original; aceleradores e habilidades de redução de tempo não encurtam o bônus. Recarga: {{charge}} pontos.",
       "experience": "Aumenta a XP deste hamster nas expedições pela porcentagem indicada.",
       "survival": "Soma a porcentagem diretamente à chance final de sobrevivência. Um valor negativo a reduz.",
@@ -1164,6 +1168,7 @@
       "remotePowerUltimate": "Enquanto GFeast vive, adiciona potência temporária ×5 sem bônus da sala. Duração original, sem efeito de aceleradores ou reduções."
     },
     "examples": {
+      "jackOLoot": "24 pontos liberam o nível II: +50% de saque. Com 30 pontos, o nível III dá +75%, não +150%.",
       "cuscuzRemoteBonus": "Atributos base: (90 + 75 + 90) ×2% = 510% de bônus de sala.",
       "remoteBonus": "Base: (40 + 90 + 90) ×2% = 440%. Com 100/100/100: 600%.",
       "overchargedChests": "Com 28 pontos, nível II: cinco recompensas triplicadas. O III precisa de 30."

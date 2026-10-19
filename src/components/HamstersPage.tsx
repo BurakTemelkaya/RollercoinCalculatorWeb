@@ -191,7 +191,7 @@ export default function HamstersPage() {
                 {selected.ultimateTiers?.length ? <div className="hamster-ultimate-tiers">
                   {selected.ultimateTiers.map(tier => <div key={tier.tier}>
                     <strong>{t('hamsters.tier')} {tier.tier}</strong>
-                    <span>{tier.conversionTarget
+                    <span>{tier.text ? tier.text[language] || tier.text.en : tier.conversionTarget
                       ? t('hamsters.convertRewards', { count: tier.rewardCount, target: tier.conversionTarget })
                       : `${t('hamsters.rewardCount', { count: tier.rewardCount })}${tier.rewardMultiplier ? ` ×${tier.rewardMultiplier}` : ''}`}</span>
                     <small>{t('hamsters.chargePoints', { value: tier.chargeRequired })}</small>

@@ -1197,6 +1197,8 @@
     "source": "Official explanation",
     "example": "Blog example",
     "labels": {
+      "skipRestChest": "Skip Rest Chest",
+      "overchargedLoot": "Extra Loot",
       "remoteBonusUltimate": "Remote Bonus",
       "boostMode": "Boost Mode",
       "chestsMultiplier": "Chests Multiplier ×3",
@@ -1214,6 +1216,8 @@
       "overchargedConversion": "Loot Conversion"
     },
     "descriptions": {
+      "skipRestChest": "After a successful Expedition, adds an Energy Drink chest to the next Expedition. Energy Drinks shorten a hamster’s rest time.",
+      "overchargedLoot": "Grants +25% / +50% / +75% Extra Loot at 18 / 24 / 30 charge points. Only the highest completed tier applies; bonuses do not add together. Each original Expedition hour earns one point. Activate before departure; activation locks the tier and the Expedition clears the charge. Speed-Ups and shorter trips do not reduce charging. Starts fully charged at Tier III.",
       "remoteBonusUltimate": "While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.",
       "experience": "Increases the XP this hamster earns from Expeditions by the displayed percentage.",
       "survival": "Adds the signed percentage directly to the final survival chance. A negative value reduces it.",
@@ -1249,6 +1253,7 @@
       "remotePowerUltimate": "While GFeast is alive on the Expedition, adds temporary Miner Power ×5 without room bonus multipliers. Duration uses original Expedition time, unaffected by Speed-Ups or time reductions."
     },
     "examples": {
+      "jackOLoot": "24 charge points unlock Tier II: +50% Extra Loot. Wait for 30 points to use Tier III: +75%, rather than +150%.",
       "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",
       "remoteBonus": "Base stats: (40 + 90 + 90) ×2% = 440%. At 100/100/100: 600%.",
       "overchargedChests": "With 28 charge points, Tier II is complete: five rewards are tripled. Tier III needs 30."

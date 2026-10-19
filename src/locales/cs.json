@@ -1141,6 +1141,8 @@
     "source": "Oficiální vysvětlení",
     "example": "Příklad z blogu",
     "labels": {
+      "skipRestChest": "Truhla přeskočení odpočinku",
+      "overchargedLoot": "Extra kořist",
       "remoteBonusUltimate": "Vzdálený bonus",
       "boostMode": "Režim posílení",
       "chestsMultiplier": "Násobitel truhel ×3",
@@ -1158,6 +1160,8 @@
       "overchargedConversion": "Převod kořisti"
     },
     "descriptions": {
+      "skipRestChest": "Po úspěšné expedici přidá do další expedice truhlu s energetickým nápojem. Nápoj zkracuje dobu odpočinku křečka.",
+      "overchargedLoot": "Při 18 / 24 / 30 bodech dává +25% / +50% / +75% kořisti. Platí pouze nejvyšší plně nabitý stupeň; bonusy se nesčítají. Každá hodina původní délky expedice dá bod. Aktivujte před odchodem: stupeň se uzamkne a po expedici se náboj vynuluje. Zrychlení nesnižuje zisk bodů. Začíná plně nabitým stupněm III.",
       "remoteBonusUltimate": "Dokud je Cuscuz v expedici naživu, poskytuje dočasný bonus místnosti ve výši součtu atributů ×2 %. Platí původní délka expedice; zrychlení a schopnosti zkracující čas bonus nezkracují. Dobití: {{charge}} bodů.",
       "experience": "Zvyšuje zkušenosti tohoto křečka z expedic o uvedené procento.",
       "survival": "Přičítá uvedené procento přímo ke konečné šanci na přežití. Záporná hodnota ji snižuje.",
@@ -1193,6 +1197,7 @@
       "remotePowerUltimate": "Dokud GFeast žije, přidává dočasný výkon těžařů ×5 bez bonusu místnosti. Trvání dle původní doby, bez vlivu zrychlení a zkrácení."
     },
     "examples": {
+      "jackOLoot": "24 bodů odemkne stupeň II: +50% kořisti. Při 30 bodech stupeň III dává +75%, nikoli +150%.",
       "cuscuzRemoteBonus": "Základní atributy: (90 + 75 + 90) ×2 % = 510% bonus místnosti.",
       "remoteBonus": "Základ: (40 + 90 + 90) ×2% = 440%. Při 100/100/100: 600%.",
       "overchargedChests": "S 28 body se použije stupeň II: pět odměn ztrojnásobeno. Stupeň III potřebuje 30."

@@ -11703,5 +11703,287 @@
       }
     ],
     "animationsPending": false
+  },
+  {
+    "slug": "jack-o-mine",
+    "name": "Jack O’Mine",
+    "generation": 2,
+    "order": 33,
+    "stats": {
+      "health": 70,
+      "strength": 60,
+      "luck": 90
+    },
+    "abilities": [
+      {
+        "code": "skip_rest_chest",
+        "text": {
+          "en": "Skip Rest Chest",
+          "tr": "Dinlenme atlama sandığı",
+          "ru": "Сундук пропуска отдыха",
+          "de": "Ruhezeit-Überspringtruhe",
+          "es": "Cofre para saltar el descanso",
+          "fr": "Coffre de repos réduit",
+          "pt": "Baú de pular descanso",
+          "id": "Peti Lewati Istirahat",
+          "zh": "跳过休息宝箱",
+          "cs": "Truhla přeskočení odpočinku"
+        },
+        "icon": "rollercoin/hamsters/icons/skip_rest_chest.gif"
+      },
+      {
+        "code": "influencer",
+        "text": {
+          "en": "20% Influencer",
+          "tr": "%20 Influencer",
+          "ru": "20% Инфлюенсер",
+          "de": "20% Influencer",
+          "es": "20% Influencer",
+          "fr": "20% Influenceur",
+          "pt": "20% Influenciador",
+          "id": "20% Influencer",
+          "zh": "20% 影响力",
+          "cs": "20% Influencer"
+        },
+        "icon": "rollercoin/hamsters/icons/base_xp_share_percent.webp"
+      },
+      {
+        "code": "return_to_work",
+        "text": {
+          "en": "25% Return to Work",
+          "tr": "%25 İşe dönüş",
+          "ru": "+25% возврата к работе",
+          "de": "25% Rückkehr zur Arbeit",
+          "es": "25% Retorno al trabajo",
+          "fr": "25% retour au travail",
+          "pt": "25% Retorno ao trabalho",
+          "id": "25% Kembali Bekerja",
+          "zh": "25% 恢复工作",
+          "cs": "25% Návrat do práce"
+        },
+        "icon": "rollercoin/hamsters/icons/overtime_duty_percent.webp"
+      }
+    ],
+    "builderSlots": [],
+    "ultimate": {
+      "code": "extra_loot",
+      "text": {
+        "en": "Extra Loot",
+        "tr": "Ekstra ganimet",
+        "ru": "Дополнительная добыча",
+        "de": "Zusätzliche Beute",
+        "es": "Botín extra",
+        "fr": "Butin supplémentaire",
+        "pt": "Saque extra",
+        "id": "Loot Ekstra",
+        "zh": "额外战利品",
+        "cs": "Extra kořist"
+      },
+      "icon": "rollercoin/hamsters/icons/loot_percent.webp"
+    },
+    "ultimateChargePoints": 18,
+    "ultimateTiers": [
+      {
+        "tier": 1,
+        "chargeRequired": 18,
+        "text": {
+          "en": "Extra Loot +25%",
+          "tr": "%25 Ekstra ganimet",
+          "ru": "+25% доп. добычи",
+          "de": "Extra-Beute +25%",
+          "es": "Botín extra +25%",
+          "fr": "Butin supplémentaire +25%",
+          "pt": "Espólio extra +25%",
+          "id": "Loot Ekstra +25%",
+          "zh": "额外战利品 +25%",
+          "cs": "Extra kořist +25%"
+        }
+      },
+      {
+        "tier": 2,
+        "chargeRequired": 24,
+        "text": {
+          "en": "Extra Loot +50%",
+          "tr": "%50 Ekstra ganimet",
+          "ru": "+50% доп. добычи",
+          "de": "Extra-Beute +50%",
+          "es": "Botín extra +50%",
+          "fr": "Butin supplémentaire +50%",
+          "pt": "Espólio extra +50%",
+          "id": "Loot Ekstra +50%",
+          "zh": "额外战利品 +50%",
+          "cs": "Extra kořist +50%"
+        }
+      },
+      {
+        "tier": 3,
+        "chargeRequired": 30,
+        "text": {
+          "en": "Extra Loot +75%",
+          "tr": "%75 Ekstra ganimet",
+          "ru": "+75% доп. добычи",
+          "de": "Extra-Beute +75%",
+          "es": "Botín extra +75%",
+          "fr": "Butin supplémentaire +75%",
+          "pt": "Espólio extra +75%",
+          "id": "Loot Ekstra +75%",
+          "zh": "额外战利品 +75%",
+          "cs": "Extra kořist +75%"
+        }
+      }
+    ],
+    "skins": [
+      {
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl01/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 10,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl10/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 20,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl20/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 30,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl30/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 40,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl40/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_walk.png",
+        "frames": 12,
+        "jump": null,
+        "jumpFrames": 0,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl50/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 160,
+          "frameHeight": 160,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_walk.png",
+            "frames": 12,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ],
+    "animationsPending": true
   }
 ]

@@ -1112,6 +1112,8 @@
     "source": "官方说明",
     "example": "博客示例",
     "labels": {
+      "skipRestChest": "跳过休息宝箱",
+      "overchargedLoot": "额外战利品",
       "remoteBonusUltimate": "远程加成",
       "boostMode": "强化模式",
       "chestsMultiplier": "宝箱倍率 ×3",
@@ -1129,6 +1131,8 @@
       "overchargedConversion": "战利品转换"
     },
     "descriptions": {
+      "skipRestChest": "探险成功后，为下一次探险添加一个能量饮料宝箱。能量饮料可缩短仓鼠的休息时间。",
+      "overchargedLoot": "18 / 24 / 30点充能分别提供+25% / +50% / +75%额外战利品。只采用已充满的最高等级，奖励不叠加。探险原始时长每小时提供1点。出发前手动激活，激活后锁定等级，探险后充能清零。加速和时长缩减不影响充能。首次获得时第III级已充满。",
       "remoteBonusUltimate": "Cuscuz在远征中存活时，提供属性总和×2%的临时房间加成。持续时间按原始远征时长计算；加速道具和缩短时间的技能不会缩短加成。充能：{{charge}}点。",
       "experience": "按所示百分比增加该仓鼠从远征中获得的经验。",
       "survival": "将带符号的百分比直接加到最终生存概率上，负值会降低概率。",
@@ -1164,6 +1168,7 @@
       "remotePowerUltimate": "GFeast远征中存活期间增加临时矿机算力×5，不乘房间加成。持续时间按原始远征时长计算，不受加速或时长缩减影响。"
     },
     "examples": {
+      "jackOLoot": "24点可激活第II级：+50%战利品。30点可激活第III级：+75%，并非+150%。",
       "cuscuzRemoteBonus": "基础属性：(90 + 75 + 90) ×2% = 510%房间加成。",
       "remoteBonus": "基础属性：(40 + 90 + 90) ×2% = 440%。100/100/100时：600%。",
       "overchargedChests": "28充能点使用已完成的II级：五份奖励变为三倍。III级需要30点。"

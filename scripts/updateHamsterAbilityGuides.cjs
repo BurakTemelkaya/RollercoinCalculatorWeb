@@ -38,6 +38,30 @@ const ui = {
   example: ['Blog example', 'Blogdaki örnek', 'Пример из блога', 'Beispiel aus dem Blog', 'Ejemplo del blog', 'Exemple du blog', 'Exemplo do blog', 'Contoh dari blog', '博客示例', 'Příklad z blogu'],
 };
 const descriptions = {
+  skipRestChest: [
+    'After a successful Expedition, adds an Energy Drink chest to the next Expedition. Energy Drinks shorten a hamster’s rest time.',
+    'Başarılı bir seferden sonra sonraki sefere Enerji İçeceği sandığı ekler. Enerji içecekleri hamsterların dinlenme süresinin bir bölümünü atlamayı sağlar.',
+    'После успешной экспедиции добавляет сундук с энергетиком в следующую экспедицию. Энергетик сокращает время отдыха хомяка.',
+    'Nach einer erfolgreichen Expedition fügt er der nächsten Expedition eine Truhe mit Energy-Drink hinzu. Dieser verkürzt die Ruhezeit eines Hamsters.',
+    'Tras una expedición exitosa, añade un cofre con una bebida energética a la siguiente expedición. La bebida reduce el descanso de un hámster.',
+    'Après une expédition réussie, ajoute un coffre de boisson énergisante à l’expédition suivante. La boisson réduit le repos d’un hamster.',
+    'Após uma expedição bem-sucedida, adiciona um baú com bebida energética à próxima expedição. A bebida reduz o descanso de um hamster.',
+    'Setelah Ekspedisi berhasil, menambahkan peti Minuman Energi ke Ekspedisi berikutnya. Minuman ini mengurangi waktu istirahat hamster.',
+    '探险成功后，为下一次探险添加一个能量饮料宝箱。能量饮料可缩短仓鼠的休息时间。',
+    'Po úspěšné expedici přidá do další expedice truhlu s energetickým nápojem. Nápoj zkracuje dobu odpočinku křečka.',
+  ],
+  overchargedLoot: [
+    'Grants +25% / +50% / +75% Extra Loot at 18 / 24 / 30 charge points. Only the highest completed tier applies; bonuses do not add together. Each original Expedition hour earns one point. Activate before departure; activation locks the tier and the Expedition clears the charge. Speed-Ups and shorter trips do not reduce charging. Starts fully charged at Tier III.',
+    '18 / 24 / 30 şarj puanında +%25 / +%50 / +%75 ekstra ganimet verir. Yalnızca tamamlanan en yüksek kademe uygulanır; bonuslar toplanmaz. Seferin orijinal süresindeki her saat bir puan kazandırır. Seferden önce etkinleştirilir; etkinleştirme kademeyi kilitler ve sefer sonunda şarj sıfırlanır. Hızlandırma ve süre azaltma şarj kazanımını düşürmez. İlk alındığında 3. kademe doludur.',
+    'Даёт +25% / +50% / +75% добычи при 18 / 24 / 30 очках заряда. Действует только высшая заполненная ступень; бонусы не складываются. Час исходной длительности экспедиции даёт одно очко. Активируйте до отправления: ступень фиксируется, после экспедиции заряд сбрасывается. Ускорения не уменьшают заряд. Изначально ступень III заполнена.',
+    'Gewährt +25% / +50% / +75% Beute bei 18 / 24 / 30 Ladepunkten. Nur die höchste vollständig geladene Stufe zählt; Boni werden nicht addiert. Jede ursprüngliche Expeditionsstunde gibt einen Punkt. Vor der Abreise aktivieren: Die Stufe wird fixiert, nach der Expedition wird die Ladung gelöscht. Beschleunigungen verringern den Ladegewinn nicht. Beginnt mit voller Stufe III.',
+    'Otorga +25% / +50% / +75% de botín con 18 / 24 / 30 puntos. Solo cuenta el nivel completo más alto; los bonos no se suman. Cada hora original de expedición da un punto. Actívala antes de salir: fija el nivel y la carga se reinicia tras la expedición. Los aceleradores no reducen la carga obtenida. Empieza con el nivel III cargado.',
+    'Accorde +25% / +50% / +75% de butin à 18 / 24 / 30 points. Seul le palier complet le plus élevé compte, sans cumul. Chaque heure initiale d’expédition donne un point. Activez avant le départ : le palier est verrouillé, puis la charge est réinitialisée après l’expédition. Les accélérateurs ne réduisent pas la charge gagnée. Commence au palier III chargé.',
+    'Concede +25% / +50% / +75% de saque com 18 / 24 / 30 pontos. Apenas o maior nível completo conta; os bônus não se somam. Cada hora original da expedição dá um ponto. Ative antes de partir: o nível fica fixo e a carga zera após a expedição. Aceleradores não reduzem a carga ganha. Começa com o nível III carregado.',
+    'Memberi +25% / +50% / +75% loot pada 18 / 24 / 30 poin. Hanya tingkat penuh tertinggi yang berlaku; bonus tidak dijumlahkan. Setiap jam durasi asli Ekspedisi memberi satu poin. Aktifkan sebelum berangkat: tingkat terkunci dan muatan direset setelah Ekspedisi. Percepatan tidak mengurangi poin. Awalnya tingkat III terisi penuh.',
+    '18 / 24 / 30点充能分别提供+25% / +50% / +75%额外战利品。只采用已充满的最高等级，奖励不叠加。探险原始时长每小时提供1点。出发前手动激活，激活后锁定等级，探险后充能清零。加速和时长缩减不影响充能。首次获得时第III级已充满。',
+    'Při 18 / 24 / 30 bodech dává +25% / +50% / +75% kořisti. Platí pouze nejvyšší plně nabitý stupeň; bonusy se nesčítají. Každá hodina původní délky expedice dá bod. Aktivujte před odchodem: stupeň se uzamkne a po expedici se náboj vynuluje. Zrychlení nesnižuje zisk bodů. Začíná plně nabitým stupněm III.',
+  ],
   remoteBonusUltimate: [
     'While Cuscuz is alive on an Expedition, grants a temporary room bonus equal to his total stats ×2%. Uses the original Expedition duration; Speed-Ups and time-reduction abilities do not shorten the bonus. Recharge: {{charge}} points.',
     'Cuscuz seferde hayattayken toplam statı ×%2 kadar geçici oda bonusu verir. Bonus orijinal sefer süresini kullanır; hızlandırmalar ve süre azaltan yetenekler bonus süresini kısaltmaz. Şarj: {{charge}} puan.',
@@ -148,6 +172,18 @@ const descriptions = {
   ],
 };
 const examples = {
+  jackOLoot: [
+    '24 charge points unlock Tier II: +50% Extra Loot. Wait for 30 points to use Tier III: +75%, rather than +150%.',
+    '24 şarj puanında 2. kademe +%50 ekstra ganimet verir. 30 puanda 3. kademe +%75 verir; kademeler toplanıp +%150 olmaz.',
+    '24 очка дают ступень II: +50% добычи. При 30 очках ступень III даёт +75%, а не +150%.',
+    '24 Punkte ergeben Stufe II: +50% Beute. Bei 30 Punkten gibt Stufe III +75%, nicht +150%.',
+    '24 puntos permiten el nivel II: +50% de botín. Con 30 puntos, el nivel III da +75%, no +150%.',
+    '24 points donnent le palier II : +50% de butin. À 30 points, le palier III donne +75%, et non +150%.',
+    '24 pontos liberam o nível II: +50% de saque. Com 30 pontos, o nível III dá +75%, não +150%.',
+    '24 poin membuka tingkat II: +50% loot. Pada 30 poin, tingkat III memberi +75%, bukan +150%.',
+    '24点可激活第II级：+50%战利品。30点可激活第III级：+75%，并非+150%。',
+    '24 bodů odemkne stupeň II: +50% kořisti. Při 30 bodech stupeň III dává +75%, nikoli +150%.',
+  ],
   cuscuzRemoteBonus: [
     'Base stats: (90 + 75 + 90) ×2% = 510% room bonus.',
     'Temel statlar: (90 + 75 + 90) ×%2 = %510 oda bonusu.',
@@ -168,6 +204,8 @@ const examples = {
   ],
 };
 const labels = {
+  skipRestChest: ['Skip Rest Chest', 'Dinlenme atlama sandığı', 'Сундук пропуска отдыха', 'Ruhezeit-Überspringtruhe', 'Cofre para saltar el descanso', 'Coffre de repos réduit', 'Baú de pular descanso', 'Peti Lewati Istirahat', '跳过休息宝箱', 'Truhla přeskočení odpočinku'],
+  overchargedLoot: ['Extra Loot', 'Ekstra ganimet', 'Дополнительная добыча', 'Zusätzliche Beute', 'Botín extra', 'Butin supplémentaire', 'Saque extra', 'Loot Ekstra', '额外战利品', 'Extra kořist'],
   remoteBonusUltimate: ['Remote Bonus', 'Uzaktan bonus', 'Удалённый бонус', 'Fernbonus', 'Bonificación remota', 'Bonus à distance', 'Bônus remoto', 'Bonus jarak jauh', '远程加成', 'Vzdálený bonus'],
   boostMode: ['Boost Mode', 'Güçlendirme modu', 'Режим усиления', 'Verstärkungsmodus', 'Modo de mejora', 'Mode de renforcement', 'Modo de reforço', 'Mode peningkatan', '强化模式', 'Režim posílení'],
   chestsMultiplier: ['Chests Multiplier ×3', 'Sandık çarpanı ×3', 'Множитель сундуков ×3', 'Truhenmultiplikator ×3', 'Multiplicador de cofres ×3', 'Multiplicateur de coffres ×3', 'Multiplicador de baús ×3', 'Pengali peti ×3', '宝箱倍率 ×3', 'Násobitel truhel ×3'],

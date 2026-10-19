@@ -1090,6 +1090,8 @@
     "source": "Explication officielle",
     "example": "Exemple du blog",
     "labels": {
+      "skipRestChest": "Coffre de repos réduit",
+      "overchargedLoot": "Butin supplémentaire",
       "remoteBonusUltimate": "Bonus à distance",
       "boostMode": "Mode de renforcement",
       "chestsMultiplier": "Multiplicateur de coffres ×3",
@@ -1107,6 +1109,8 @@
       "overchargedConversion": "Conversion du butin"
     },
     "descriptions": {
+      "skipRestChest": "Après une expédition réussie, ajoute un coffre de boisson énergisante à l’expédition suivante. La boisson réduit le repos d’un hamster.",
+      "overchargedLoot": "Accorde +25% / +50% / +75% de butin à 18 / 24 / 30 points. Seul le palier complet le plus élevé compte, sans cumul. Chaque heure initiale d’expédition donne un point. Activez avant le départ : le palier est verrouillé, puis la charge est réinitialisée après l’expédition. Les accélérateurs ne réduisent pas la charge gagnée. Commence au palier III chargé.",
       "remoteBonusUltimate": "Tant que Cuscuz est vivant en expédition, accorde un bonus temporaire de salle égal au total de ses stats ×2 %. La durée originale s’applique ; les accélérateurs et capacités réduisant le temps ne raccourcissent pas le bonus. Recharge : {{charge}} points.",
       "experience": "Augmente les XP gagnés en expédition par ce hamster du pourcentage indiqué.",
       "survival": "Ajoute le pourcentage directement à la probabilité finale de survie. Une valeur négative la réduit.",
@@ -1142,6 +1146,7 @@
       "remotePowerUltimate": "Tant que GFeast vit, puissance temporaire des mineurs ×5 sans bonus de salle. Durée originale, inchangée par accélérateurs ou réductions."
     },
     "examples": {
+      "jackOLoot": "24 points donnent le palier II : +50% de butin. À 30 points, le palier III donne +75%, et non +150%.",
       "cuscuzRemoteBonus": "Stats de base : (90 + 75 + 90) ×2 % = 510 % de bonus de salle.",
       "remoteBonus": "Base : (40 + 90 + 90) ×2% = 440%. Avec 100/100/100 : 600%.",
       "overchargedChests": "Avec 28 points, palier II : cinq récompenses triplées. Palier III : 30 requis."
