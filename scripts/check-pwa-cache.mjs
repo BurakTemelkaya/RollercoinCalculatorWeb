@@ -9,10 +9,15 @@ import puppeteer from 'puppeteer';
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const manifest = JSON.parse(fs.readFileSync(path.join(dist, '.vite/manifest.json'), 'utf8'));
 const worker = fs.readFileSync(path.join(dist, 'sw.js'), 'utf8');
+for (const chunk of Object.values(manifest)) {
+  if (chunk.file.endsWith('.js')) assert(fs.statSync(path.join(dist, chunk.file)).size <= 1_000_000, `${chunk.file} exceeds the 1000 kB chunk budget`);
+}
 const faqFile = manifest['src/components/FaqPage.tsx'].file;
 const unusedFiles = [
   'src/components/admin/BlogEditor.tsx',
   'src/components/HamstersPage.tsx',
+  'src/components/ManualSimulator.tsx',
+  'src/components/RoomPowerSimulator.tsx',
 ].map(key => manifest[key].file);
 unusedFiles.push(Object.values(manifest).find(chunk => chunk.file.includes('vendor-html2canvas-')).file);
 const requests = [];

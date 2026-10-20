@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner } from '../types/room';
+import { RollercoinRoomResponse, ApiRoomRack, ApiRoomMiner, type ApiRoom } from '../types/room';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { calculateSetBonuses } from '../utils/setCalculator';
 import { getRackSetCatalog, getRackSetName, isMinerInRackSet as minerBelongsToRackSet } from '../utils/rackSetCatalog';
@@ -14,7 +14,7 @@ import type { AutoPlacementResult } from '../utils/autoPlacement';
 import type { LeagueInfo } from '../data/leagues';
 import { placeImportedMiners, adjustImportedQuantities, readSavedImportedMiners, saveImportedMiners, type ImportedMinerQuantity } from '../utils/minerImport';
 import { PowerUnit } from '../types';
-import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
+import { fetchUserMinersFromApi, MinerDto, type MinerFilterParams } from '../services/userApi';
 import { fetchSellableMiners } from '../services/minerApi';
 import type { GetRackSetListDto, GetRackListDto } from '../services/rackApi';
 import { fetchRackList } from '../services/rackApi';
@@ -233,7 +233,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         }
 
         const newRoomId = 'mock_room_' + Date.now();
-        const newRoom: any = {
+        const newRoom: ApiRoom = {
             _id: newRoomId,
             room_info: {
                 room_id: 'mock_room_type',
@@ -299,8 +299,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [minPowerUnit, setMinPowerUnit] = useState<PowerUnit>('Ph');
     const [maxPowerUnit, setMaxPowerUnit] = useState<PowerUnit>('Ph');
 
-    const getMinPowerGh = () => minPower ? (toBaseUnit({ value: Number(minPower), unit: minPowerUnit }) / 1e9) : undefined;
-    const getMaxPowerGh = () => maxPower ? (toBaseUnit({ value: Number(maxPower), unit: maxPowerUnit }) / 1e9) : undefined;
+    const getMinPowerGh = useCallback(() => minPower ? (toBaseUnit({ value: Number(minPower), unit: minPowerUnit }) / 1e9) : undefined, [minPower, minPowerUnit]);
+    const getMaxPowerGh = useCallback(() => maxPower ? (toBaseUnit({ value: Number(maxPower), unit: maxPowerUnit }) / 1e9) : undefined, [maxPower, maxPowerUnit]);
 
     const handleMinPowerSlider = (ghVal: number) => {
         const asHs = ghVal * 1e9;
@@ -335,7 +335,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [totalPages, setTotalPages] = useState(1);
     const minerSearchRequestId = useRef(0);
     const rackSearchRequestId = useRef(0);
-    const [draggedMiner, setDraggedMiner] = useState<MinerDto | null>(null);
+    const [draggedMiner, setDraggedMiner] = useState<MinerDto | ApiRoomMiner | null>(null);
     const [dragTarget, setDragTarget] = useState<{ rackId: string, x: number, y: number, width: number } | null>(null);
     const [failedRoomSpriteIds, setFailedRoomSpriteIds] = useState<Set<string>>(() => new Set());
     const nativeDragTargetKey = useRef<string | null>(null);
@@ -348,11 +348,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     useEffect(() => () => activeInventoryDragCleanup.current?.(), []);
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
 
-    const handleSearchMiners = async (page = 0, nextSortBy = sortBy, nextIsDescending = isDescending) => {
+    const handleSearchMiners = useCallback(async (page = 0, nextSortBy = sortBy, nextIsDescending = isDescending) => {
         const requestId = ++minerSearchRequestId.current;
         setIsSearching(true);
         try {
-            const params: any = { PageIndex: page };
+            const params: MinerFilterParams = { PageIndex: page };
             if (searchQuery) params.Name = searchQuery;
             const minGh = getMinPowerGh();
             if (minGh !== undefined) params.MinMinerPower = minGh;
@@ -383,23 +383,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } finally {
             if (requestId === minerSearchRequestId.current) setIsSearching(false);
         }
-    };
+    }, [sortBy, isDescending, searchQuery, getMinPowerGh, getMaxPowerGh, minBonus, maxBonus, minerWidth]);
 
-    // Refresh the pending search with the latest sorting after a selection changes.
+    // Share one debounce for initial loading and filter changes to avoid duplicate requests.
     useEffect(() => {
-        if (!isSearchOpen && !isFilterOpen) return;
+        if (!isActive) return;
         const timer = setTimeout(() => {
             handleSearchMiners(0);
         }, 400);
         return () => clearTimeout(timer);
-    }, [searchQuery, sortBy, isDescending]);
-
-    // Initial load of miners
-    useEffect(() => {
-        if (isActive) {
-            handleSearchMiners(0);
-        }
-    }, [userId, isActive]);
+    }, [userId, isActive, handleSearchMiners]);
 
     const firstInstanceMinerIds = useMemo(() => {
         const uniqueSet = new Set<string>();
@@ -555,7 +548,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         }
     };
 
-    const handleReplaceMiner = (newMiner: MinerDto, oldMinerId: string, rackId: string) => {
+    const handleReplaceMiner = (newMiner: MinerDto & Partial<ApiRoomMiner>, oldMinerId: string, rackId: string) => {
         const oldMiner = (room.miners || []).find(m => m._id === oldMinerId);
         if (!oldMiner || !oldMiner.placement) return;
         const targetX = oldMiner.placement.x;
@@ -563,17 +556,17 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         // Remove old miner first
         const minersWithoutOld = (room.miners || []).filter(m => m._id !== oldMinerId);
         // Add new miner at same position
-        const rack: any = (room.racks || []).find(r => r._id === rackId);
+        const rack = (room.racks || []).find(r => r._id === rackId);
         const width = newMiner.width || 1;
         const isMinerInRackSet = () => {
             return rack ? minerBelongsToRackSet(rack, newMiner.id, newMiner.fileName || '', dynamicSets) : false;
         };
         const fakeId = 'mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
         const replacementMiner: ApiRoomMiner = {
-            _id: fakeId, miner_id: newMiner.id || (newMiner as any).miner_id || ('mock_model_' + Date.now()), name: newMiner.name,
-            power: newMiner.power, bonus_percent: newMiner.percent || (newMiner as any).bonus_percent || 0,
+            _id: fakeId, miner_id: newMiner.id || newMiner.miner_id || ('mock_model_' + Date.now()), name: newMiner.name,
+            power: newMiner.power, bonus_percent: newMiner.percent || newMiner.bonus_percent || 0,
             width, level: newMiner.level || 0, type: 'miner', is_in_set: isMinerInRackSet(),
-            updated: newMiner.createdDate || (newMiner as any).updated || new Date().toISOString(), filename: newMiner.fileName || (newMiner as any).filename || 'abyss_walker',
+            updated: newMiner.createdDate || newMiner.updated || new Date().toISOString(), filename: newMiner.fileName || newMiner.filename || 'abyss_walker',
             placement: { user_rack_id: rackId, x: targetX, y: targetY }
         };
         handleRoomChange({ ...room, miners: [...minersWithoutOld, replacementMiner] });
@@ -586,7 +579,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
     // ---- Rack Inventory Functions ----
 
-    const handleSearchRacks = async (page = 0, nextSortBy = rackSortBy, nextIsDescending = rackIsDescending) => {
+    const handleSearchRacks = useCallback(async (page = 0, nextSortBy = rackSortBy, nextIsDescending = rackIsDescending) => {
         const requestId = ++rackSearchRequestId.current;
         setIsRackSearching(true);
         try {
@@ -598,7 +591,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             });
             if (requestId !== rackSearchRequestId.current) return;
             setRackList(res.items || []);
-            const pages = res.pages ?? (res as any).Pages ?? (res as any).totalPages ?? (res as any).TotalPages ?? (res.count && res.size ? Math.ceil(res.count / res.size) : 1);
+            const legacy = res as typeof res & { Pages?: number; totalPages?: number; TotalPages?: number };
+            const pages = res.pages ?? legacy.Pages ?? legacy.totalPages ?? legacy.TotalPages ?? (res.count && res.size ? Math.ceil(res.count / res.size) : 1);
             setRackTotalPages(pages);
             setRackPageIndex(page);
         } catch (err) {
@@ -606,23 +600,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         } finally {
             if (requestId === rackSearchRequestId.current) setIsRackSearching(false);
         }
-    };
+    }, [rackSortBy, rackIsDescending, rackSearchQuery]);
 
     // Auto-search racks when query changes
     useEffect(() => {
-        if (inventoryTab !== 'racks') return;
+        if (inventoryTab !== 'racks' || !isActive) return;
         const timer = setTimeout(() => {
             handleSearchRacks(0);
         }, 400);
         return () => clearTimeout(timer);
-    }, [rackSearchQuery, rackSortBy, rackIsDescending]);
-
-    // Load racks when tab switches to racks
-    useEffect(() => {
-        if (inventoryTab === 'racks' && rackList.length === 0) {
-            handleSearchRacks(0);
-        }
-    }, [inventoryTab]);
+    }, [inventoryTab, isActive, handleSearchRacks]);
 
     const handleAddRackFromList = (rack: GetRackListDto, targetPos?: { x: number, y: number }) => {
         try {
@@ -673,7 +660,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             const { apiX, apiY } = getApiPosition(targetX, targetY, activeLevel);
 
             const fakeId = 'mock_rack_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-            const newRack: any = {
+            const newRack: ApiRoomRack = {
                 _id: fakeId,
                 rack_id: rack.id,
                 name: rack.name,
@@ -684,12 +671,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 placement: { room_level: activeRoom.room_info?.level || 0, user_room_id: activeRoomId, x: apiX, y: apiY }
             };
 
-            const updatedRoom = { ...room, racks: [...(room.racks || []), newRack as ApiRoomRack] };
+            const updatedRoom = { ...room, racks: [...(room.racks || []), newRack] };
             handleRoomChange(updatedRoom);
             setAddRackTarget(null);
             addNotification(t('simulator.rackAddedSuccess'), 'success');
-        } catch (err: any) {
-            addNotification(t('simulator.rackAddedError', { error: err.message }), 'error');
+        } catch (err) {
+            addNotification(t('simulator.rackAddedError', { error: err instanceof Error ? err.message : String(err) }), 'error');
             console.error(err);
         }
     };
@@ -711,10 +698,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         const minerData = e.dataTransfer.getData('miner');
         if (minerData) {
             try {
-                const miner = JSON.parse(minerData) as MinerDto;
+                const miner = JSON.parse(minerData) as MinerDto | ApiRoomMiner;
 
                 const rect = e.currentTarget.getBoundingClientRect();
-                const rack: any = (room.racks || []).find(r => r._id === rackId);
+                const rack = (room.racks || []).find(r => r._id === rackId);
                 const rackHeight = rack?.rack_info?.height || 4;
                 const offsetY = e.clientY - rect.top;
                 let cellY = Math.floor(offsetY / (rect.height / rackHeight));
@@ -751,7 +738,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
         for (const rack of racks) {
             const rackMiners = miners.filter(m => m.placement?.user_rack_id === rack._id);
-            const rackHeight = (rack as any)?.rack_info?.height || 4;
+            const rackHeight = rack?.rack_info?.height || 4;
             const width = miner.width || 1;
 
             for (let y = 0; y < rackHeight; y++) {
@@ -775,12 +762,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         addNotification(t('simulator.noEmptySpace'), 'error');
     };
 
-    const submitAddMinerApi = (miner: MinerDto, targetRackId: string, forceX?: number, forceY?: number, consumeImported = false) => {
+    const submitAddMinerApi = (miner: MinerDto | ApiRoomMiner, targetRackId: string, forceX?: number, forceY?: number, consumeImported = false) => {
         const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === targetRackId);
-        const movingMiner = miner as MinerDto & Partial<ApiRoomMiner>;
-        const isMove = Boolean(movingMiner.placement?.user_rack_id);
-        const occupiedMiners = isMove ? rackMiners.filter(m => m._id !== movingMiner._id) : rackMiners;
-        const rack: any = (room.racks || []).find(r => r._id === targetRackId);
+        const catalogMiner = 'id' in miner ? miner : undefined;
+        const movingMiner = 'miner_id' in miner ? miner : undefined;
+        const isMove = Boolean(movingMiner?.placement?.user_rack_id);
+        const occupiedMiners = isMove ? rackMiners.filter(m => m._id !== movingMiner?._id) : rackMiners;
+        const rack = (room.racks || []).find(r => r._id === targetRackId);
         const rackHeight = rack?.rack_info?.height || 4;
         const width = miner.width || 1;
 
@@ -811,22 +799,22 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
         if (targetY === -1) { addNotification(t('simulator.rackFull'), 'error'); return; }
 
-        if (isMove && targetRackId === (miner as any).placement.user_rack_id && targetX === (miner as any).placement.x && targetY === (miner as any).placement.y) {
+        if (isMove && targetRackId === movingMiner?.placement?.user_rack_id && targetX === movingMiner.placement.x && targetY === movingMiner.placement.y) {
             setDraggedMiner(null);
             setDragTarget(null);
             return;
         }
 
         const isMinerInRackSet = () => {
-            return rack ? minerBelongsToRackSet(rack, miner.id || movingMiner.miner_id || '', miner.fileName || movingMiner.filename || '', dynamicSets) : false;
+            return rack ? minerBelongsToRackSet(rack, catalogMiner?.id || movingMiner?.miner_id || '', catalogMiner?.fileName || movingMiner?.filename || '', dynamicSets) : false;
         };
 
-        const fakeId = isMove ? (miner as any)._id : ('mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
+        const fakeId = isMove && movingMiner ? movingMiner._id : ('mock_miner_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
         const newMiner: ApiRoomMiner = {
-            _id: fakeId, miner_id: miner.id || (miner as any).miner_id || ('mock_model_' + Date.now()), name: miner.name,
-            power: miner.power, bonus_percent: miner.percent || (miner as any).bonus_percent || 0,
+            _id: fakeId, miner_id: catalogMiner?.id || movingMiner?.miner_id || ('mock_model_' + Date.now()), name: miner.name,
+            power: miner.power, bonus_percent: miner.percent || movingMiner?.bonus_percent || 0,
             width, level: miner.level || 0, type: 'miner', is_in_set: isMinerInRackSet(),
-            updated: miner.createdDate || (miner as any).updated || new Date().toISOString(), filename: miner.fileName || (miner as any).filename || 'abyss_walker',
+            updated: catalogMiner?.createdDate || movingMiner?.updated || new Date().toISOString(), filename: catalogMiner?.fileName || movingMiner?.filename || 'abyss_walker',
             placement: { user_rack_id: targetRackId, x: targetX, y: targetY }
         };
 
@@ -838,7 +826,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
             addNotification(t('simulator.minerMoved', { name: `${newMiner.name}${levelStr}` }), 'success');
         } else {
-            handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] }, consumeImported ? [{ id: miner.id, quantity: 1 }] : undefined);
+            handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] }, consumeImported ? [{ id: newMiner.miner_id, quantity: 1 }] : undefined);
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
             addNotification(t('simulator.minerAddedSuccess', { name: `${newMiner.name}${levelStr}` }), 'success');
         }
@@ -1271,10 +1259,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             if (!rack) continue;
             const power = Number(miner.power) || 0;
             roomBasePower += power;
-            const rackBonus = (rack as any)?.bonus || 0;
+            const rackBonus = rack?.bonus || 0;
             if (rackBonus > 0) roomRackBonusPower += power * (rackBonus / 10000);
-            if (firstInstanceMinerIds.has(miner._id) && ((miner as any).percent > 0 || miner.bonus_percent > 0)) {
-                totalRoomBonus += (miner as any).percent || miner.bonus_percent || 0;
+            if (firstInstanceMinerIds.has(miner._id) && ((miner.percent ?? 0) > 0 || miner.bonus_percent > 0)) {
+                totalRoomBonus += miner.percent || miner.bonus_percent || 0;
             }
         }
 
@@ -1703,7 +1691,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 const rackY = Number(rack.placement?.y || 0);
                                 const { visualX, visualY } = getVisualPosition(rackX, rackY, currentRoomLevel);
 
-                                const rackHeight = (rack as any)?.rack_info?.height || 4;
+                                const rackHeight = rack?.rack_info?.height || 4;
                                 const rackMiners = minersByRack.get(rack._id) || [];
                                 const rackSetName = getRackSetName(rack.rack_id, rack.name, dynamicSets);
 
@@ -1765,8 +1753,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
                                         <div className={`rack-tooltip ${rackTooltipOpensDown ? 'rack-tooltip-down' : ''}`}>
                                             <div style={{ color: '#03e1e4', fontWeight: 'bold' }}>{rack.name}</div>
-                                            <div style={{ color: '#aaa' }}>{t('merge.cell')}: {(rack as any)?.rack_info?.capacity || 8}</div>
-                                            {((rack as any)?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>{t('merge.bonusAmount', { amount: (((rack as any)?.bonus || 0) / 100).toFixed(2) })}</div>}
+                                            <div style={{ color: '#aaa' }}>{t('merge.cell')}: {rack?.rack_info?.capacity || 8}</div>
+                                            {(rack?.bonus || 0) > 0 && <div style={{ color: '#28a745' }}>{t('merge.bonusAmount', { amount: ((rack?.bonus || 0) / 100).toFixed(2) })}</div>}
                                         </div>
 
                                         <div className="miners-block-wrapper" style={{ minHeight: '100%' }}>
@@ -1817,7 +1805,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                             e.stopPropagation();
                                                             e.dataTransfer.setData('miner', JSON.stringify(miner));
                                                             nativeDragTargetKey.current = null;
-                                                            setDraggedMiner(miner as any);
+                                                            setDraggedMiner(miner);
                                                             setIsDragClearanceActive(true);
 
                                                             const dragElement = e.currentTarget as HTMLElement;
@@ -1941,8 +1929,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                     if (!editingRack) return null;
                     const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === editingRackId);
                     const setCatalog = getRackSetCatalog(editingRack, dynamicSets);
-                    const rackHeight = (editingRack as any)?.rack_info?.height || 4;
-                    const rackBonus = ((editingRack as any)?.bonus || 0) / 100;
+                    const rackHeight = editingRack?.rack_info?.height || 4;
+                    const rackBonus = (editingRack?.bonus || 0) / 100;
 
                     // Find slot index
                     const activeRoom = room.rooms ? room.rooms[currentRoomIndex] : null;
@@ -2564,7 +2552,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         placeholder={inventoryTab === 'miners' ? t('merge.searchByName') : t('simulator.searchRack')}
                                         autoFocus
                                     />
-                                    <button className="inv-search-close" onClick={() => { setIsSearchOpen(false); inventoryTab === 'miners' ? setSearchQuery('') : setRackSearchQuery(''); }}>✕</button>
+                                    <button className="inv-search-close" onClick={() => { setIsSearchOpen(false); if (inventoryTab === 'miners') setSearchQuery(''); else setRackSearchQuery(''); }}>✕</button>
                                 </div>
                             )}
 

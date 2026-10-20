@@ -22,11 +22,13 @@ export interface ApiRoomMiner {
     filename: string;
     frames_data?: MinerFramesData;
     bonus_percent: number;
+    percent?: number;
     is_in_set: boolean;
     updated: string;
 }
 
 export interface ApiRoomRackPlacement {
+    room_level?: number;
     user_room_id: string;
     x: number;
     y: number;

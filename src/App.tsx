@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 // ... existing imports ...
@@ -85,8 +85,8 @@ const UnsubscribePage = lazyWithRetry(() => import('./components/UnsubscribePage
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
-import RoomPowerSimulator from './components/RoomPowerSimulator';
-import ManualSimulator from './components/ManualSimulator';
+const RoomPowerSimulator = lazyWithRetry(() => import('./components/RoomPowerSimulator'));
+const ManualSimulator = lazyWithRetry(() => import('./components/ManualSimulator'));
 import ServiceWorkerUpdater from './components/ServiceWorkerUpdater';
 import './index.css';
 import { usePowerAllocations } from './hooks/usePowerAllocations';
@@ -167,9 +167,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   // Notification state
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+  const showNotification = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setNotification({ message, type });
-  };
+  }, []);
 
   const [userPower, setUserPower] = useState<HashPower | null>(null);
   const [earnings, setEarnings] = useState<EarningsResult[]>([]);
@@ -178,9 +178,12 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [priceSnapshot, setPriceSnapshot] = useState<PriceSnapshot>({ prices: {}, changes: {} });
   const prices = priceSnapshot.prices;
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set(['calculator']));
   const [collapsedTabs, setCollapsedTabs] = useState<Set<Tab>>(new Set(['simulator', 'room_simulator', 'withdraw']));
 
   useEffect(() => {
+    // Keep visited simulators mounted so tab switches preserve their state.
+    setVisitedTabs(previous => previous.has(activeTab) ? previous : new Set([...previous, activeTab]));
     // Cancel the previous transition when the user switches tabs again.
     const timer = setTimeout(() => {
       setCollapsedTabs(new Set((Object.keys(TAB_ORDER) as Tab[]).filter(tab => tab !== activeTab)));
@@ -326,7 +329,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     }
   };
 
-  const handleFetchRoom = async (avatarId: string) => {
+  const handleFetchRoom = useCallback(async (avatarId: string) => {
     if (!avatarId) return;
     setIsFetchingRoom(true);
     try {
@@ -339,7 +342,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     } finally {
       setIsFetchingRoom(false);
     }
-  };
+  }, [t, showNotification]);
 
   // Block Duration State
   const [blockDurations, setBlockDurations] = useState<Record<string, number>>({
@@ -411,7 +414,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
   const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261020.010228';
+  const CURRENT_CACHE_VERSION = '20261020.011228';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -457,7 +460,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         try {
           const columnArray = JSON.parse(savedTableColumns);
           setVisibleColumns(new Set(columnArray));
-        } catch (_) {
+        } catch {
           // Use default if JSON parse fails
         }
       }
@@ -468,7 +471,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         try {
           const coinArray = JSON.parse(savedVisibleCoins);
           setVisibleCoins(coinArray);
-        } catch (_) { }
+        } catch {
+          // Keep the default coin selection if stored JSON is invalid.
+        }
       }
 
       // Load custom period configuration
@@ -647,7 +652,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         }
       }
     }
-  }, [league, rawApiData, fetchedUser, apiLeagues]);
+  }, [league, rawApiData, fetchedUser, apiLeagues, blockDurationMode]);
 
   // Update block rewards when league changes
   useEffect(() => {
@@ -740,7 +745,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     if (!fetchedUser) {
       roomFetchTriggeredRef.current = false;
     }
-  }, [activeTab, fetchedUser, fetchedRoom, isFetchingRoom]);
+  }, [activeTab, fetchedUser, fetchedRoom, isFetchingRoom, handleFetchRoom]);
 
   const handleDataParsed = (parsedCoins: CoinData[], parsedUserPower: HashPower) => {
     setCoins(parsedCoins);
@@ -1112,7 +1117,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-                        <ManualSimulator
+                        {(activeTab === 'simulator' || visitedTabs.has('simulator')) && <ManualSimulator
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}
@@ -1124,12 +1129,12 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           isActive={!collapsedTabs.has('simulator')}
                           usernameError={usernameError}
                           onClearUsernameError={clearUsernameError}
-                        />
+                        />}
                       </React.Suspense>
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('room_simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
-                        <RoomPowerSimulator
+                        {(activeTab === 'room_simulator' || visitedTabs.has('room_simulator')) && <RoomPowerSimulator
                           currentLeague={league}
                           apiLeagues={apiLeagues || null}
                           fetchedUser={fetchedUser}
@@ -1143,7 +1148,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                           isActive={!collapsedTabs.has('room_simulator')}
                           usernameError={usernameError}
                           onClearUsernameError={clearUsernameError}
-                        />
+                        />}
                       </React.Suspense>
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('withdraw') ? ' collapsed' : ''}`}>
@@ -1191,7 +1196,7 @@ function AnalyticsTracker() {
 
   useEffect(() => {
     const isDashboard = location.pathname.includes('/admin/') || location.pathname.includes('/my-blogs');
-    (window as any)['ga-disable-G-VNK3N77NB2'] = isDashboard;
+    (window as Window & { 'ga-disable-G-VNK3N77NB2'?: boolean })['ga-disable-G-VNK3N77NB2'] = isDashboard;
   }, [location]);
 
   return null;

@@ -15,7 +15,7 @@ import { PowerUnit } from '../types';
 import { LeagueInfo, LEAGUES } from '../data/leagues';
 import { getLeagueByPower } from '../utils/leagueHelper';
 import { getLeagueImage } from '../data/leagueImages';
-import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
+import { fetchUserMinersFromApi, MinerDto, type MinerFilterParams } from '../services/userApi';
 import { fetchSetRackList, GetRackSetListDto } from '../services/rackApi';
 import { useApiCooldown } from '../hooks/useApiCooldown';
 import Notification from './Notification';
@@ -146,7 +146,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                 miner && typeof miner.id === 'string' && typeof miner.name === 'string'
                 && Number.isFinite(miner.power) && miner.power >= 0
                 && Number.isFinite(miner.bonus) && Number.isFinite(miner.rackBonus)) : [];
-        } catch (e) {
+        } catch {
             return [];
         }
     });
@@ -290,7 +290,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         const requestId = ++minerSearchRequestId.current;
         setIsSearching(true);
         try {
-            const params: any = {
+            const params: MinerFilterParams = {
                 PageIndex: page,
                 SortBy: nextSortBy === 'percent' ? 'bonus' : nextSortBy === 'newest' ? 'date' : nextSortBy,
                 IsDescending: nextIsDescending
