@@ -9,15 +9,15 @@ export function getLeagueAnalysisCeilingGh(league: LeagueInfo, nextLeague?: Leag
     if (!nextLeague) return league.minPower;
 
     const boundary = autoScalePower(nextLeague.minPower * 1e9);
-    // Express the 1 Yh boundary in Zh so it also uses the requested 0.1 Zh margin.
+    // Express the 1 Yh boundary in Zh so it also uses the requested 0.001 Zh margin.
     if (boundary.unit === 'Yh') {
         boundary.value *= 1000;
         boundary.unit = 'Zh';
     }
-    const margin = boundary.unit === 'Eh' || boundary.unit === 'Zh' ? 0.1
+    const margin = boundary.unit === 'Zh' ? 0.001 : boundary.unit === 'Eh' ? 0.1
         : boundary.unit === 'Ph' ? 1 : 0;
     const ceilingGh = margin > 0
-        ? toBaseUnit({ value: Math.round((boundary.value - margin) * 100) / 100, unit: boundary.unit }) / 1e9
+        ? toBaseUnit({ value: Math.round((boundary.value - margin) * 1000) / 1000, unit: boundary.unit }) / 1e9
         : nextLeague.minPower - 1;
     return Math.max(league.minPower, ceilingGh);
 }

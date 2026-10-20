@@ -87,7 +87,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
     const handleStartEditCeiling = (e: React.MouseEvent, leagueId: string, val: number, unit: PowerUnit) => {
         e.stopPropagation();
         setEditingLeagueId(leagueId);
-        const cleanVal = Math.round((val + Number.EPSILON) * 100) / 100;
+        const cleanVal = Math.round((val + Number.EPSILON) * 1000) / 1000;
         setTempEditValue(cleanVal > 0 ? cleanVal.toString() : '');
         setTempEditUnit(unit);
     };
@@ -101,7 +101,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
             setEditingLeagueId(null);
             return;
         }
-        const cleanVal = Math.round((parsedVal + Number.EPSILON) * 100) / 100;
+        const cleanVal = Math.round((parsedVal + Number.EPSILON) * 1000) / 1000;
         setCustomCeilings(prev => {
             const next = { ...prev, [id]: { value: cleanVal, unit: tempEditUnit } };
             localStorage.setItem('rollercoin_web_league_custom_ceilings', JSON.stringify(next));
@@ -191,10 +191,10 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
             const isCustom = !!custom;
             const rawVal = custom ? custom.value : defaultPower.value;
             const powerUnit = custom ? custom.unit : defaultPower.unit;
-            // Round to at most 2 decimal places to avoid e.g. 999.999999999991 or 69.999999999899
-            const powerVal = Math.round((rawVal + Number.EPSILON) * 100) / 100;
+            // Keep three decimals so Zh ceilings stay below the next league's entry power.
+            const powerVal = Math.round((rawVal + Number.EPSILON) * 1000) / 1000;
             const maxPowerGh = custom ? (toBaseUnit(custom) / 1e9) : defaultMaxGh;
-            const formattedValStr = powerVal.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            const formattedValStr = powerVal.toLocaleString('en-US', { maximumFractionDigits: 3 });
             const maxPowerDisplay = `${formattedValStr} ${powerUnit}`;
 
             infoMap[league.id] = {

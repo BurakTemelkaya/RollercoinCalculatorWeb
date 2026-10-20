@@ -14,9 +14,10 @@ for (let i = 0; i < leagues.length - 1; i++) {
 const league: LeagueInfo = { id: 'test', name: 'Test', minPower: 0, currencies: [{ name: 'LTC_SMALL', payout: 100000000, duration: 1200 }] };
 const nextLeague = { ...league, id: 'next', minPower: 100 };
 assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 650e9 }), 649.9e9);
-assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 25e12 }), 24.9e12);
+assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 1.15e12 }), 1.149e12);
+assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 25e12 }), 24.999e12);
 assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 150e6 }), 149e6);
-assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 1e15 }), 999.9e12);
+assert.equal(getLeagueAnalysisCeilingGh(league, { ...nextLeague, minPower: 1e15 }), 999.999e12);
 assert.equal(getLeagueAnalysisCeilingGh(nextLeague), nextLeague.minPower);
 
 const api: ApiLeagueData = {
