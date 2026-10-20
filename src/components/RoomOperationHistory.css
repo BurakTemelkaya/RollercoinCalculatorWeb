@@ -1,0 +1,20 @@
+.room-operation-history { margin: 8px 12px; min-width: 0; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-tertiary); font-size: 12px; }
+.room-operation-history > details > summary { padding: 8px 12px; font-weight: 600; }
+.room-operation-history summary { cursor: pointer; overflow-wrap: anywhere; }
+.room-operation-count { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 8px; background: #03cbd11a; color: #8cebed; }
+.room-operation-history p { margin: 8px 12px; color: var(--text-secondary); }
+.room-operation-history [role="alert"] { color: #ffaaaa; }
+.room-operation-history ol { max-height: 260px; overflow-y: auto; margin: 8px 12px; padding-left: 22px; }
+.room-operation-history ol > li { padding: 6px 0; border-top: 1px solid var(--border-color); }
+.room-operation-history time, .room-operation-power { display: inline-block; margin-left: 12px; color: var(--text-secondary); }
+.room-operation-history ul { margin-top: 8px; padding-left: 16px; }
+.room-operation-history ul li { margin: 4px 0; overflow-wrap: anywhere; }
+.room-operation-history ul li span { display: block; color: var(--text-secondary); }
+.room-operation-history .room-operation-miners { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 4px; }
+.room-operation-miners button { max-width: 100%; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 7px; background: transparent; color: var(--text-primary); font: inherit; overflow-wrap: anywhere; text-align: left; cursor: pointer; }
+.room-operation-miners button:not(:disabled):hover { border-color: #03cbd1; background: #03cbd112; }
+.room-operation-miners button:disabled { color: var(--text-secondary); cursor: default; }
+.room-operation-miners small { font-size: 11px; }
+.room-operation-miners button:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
+.room-operation-history summary:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
+@media (max-width: 600px) { .room-operation-history time, .room-operation-power { display: block; margin: 4px 0 0; } }

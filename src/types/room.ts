@@ -37,9 +37,11 @@ export interface ApiRoomRack {
     rack_id: string;
     placement: ApiRoomRackPlacement | null;
     name: string;
-    bonus_percent: number;
-    cells: number;
-    type: string;
+    bonus_percent?: number;
+    bonus?: number;
+    cells?: number;
+    rack_info?: { width: number; height: number; capacity?: number };
+    type?: string;
 }
 
 export interface ApiRoom {

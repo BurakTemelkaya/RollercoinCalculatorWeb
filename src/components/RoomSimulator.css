@@ -2349,6 +2349,52 @@
 }
 
 /* === MOBILE INVENTORY MODAL === */
+.inventory-import-panel {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px;
+    overscroll-behavior: contain;
+}
+
+.inventory-import-panel .miner-import {
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+
+.inventory-import-panel .miner-import-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0;
+}
+
+.inventory-import-panel .miner-import-source { flex: 1; min-width: 160px; }
+.inventory-import-panel .miner-import-source[open] { flex-basis: 100%; }
+.inventory-import-panel .miner-import-source > summary { padding: 4px 0; font-size: 11px; }
+.inventory-import-panel .miner-import-toolbar { order: 1; flex-basis: 100%; }
+.inventory-import-panel .miner-import-list { order: 2; flex-basis: 100%; max-height: none; }
+.inventory-import-panel .miner-import-actions { gap: 6px; }
+.inventory-import-panel .miner-import-actions button { padding: 4px 8px; font-size: 11px; }
+.inventory-import-panel .miner-import-content > p { order: 2; flex-basis: 100%; }
+
+.importing-miners .inventory-toolbar-left,
+.importing-miners .inventory-toolbar-right { display: none; }
+
+.importing-miners .mobile-inv-toolbar,
+.importing-miners .mobile-inv-pagination { display: none; }
+
+.mobile-inv-tabs-row,
+.mobile-inv-tabs-row .inv-tabs { flex-wrap: wrap; gap: 8px; }
+
+@media (min-width: 992px) {
+    .desktop-inventory-dock.import-expanded { height: 65dvh; }
+    .desktop-inventory-dock.importing-miners .inventory-toolbar { justify-content: flex-end; }
+    .desktop-inventory-dock .inventory-import-panel { padding: 8px 16px; }
+}
+
 .mobile-inventory-modal {
     position: fixed;
     inset: 0;

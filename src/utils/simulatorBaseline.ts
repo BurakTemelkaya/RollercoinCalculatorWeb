@@ -13,6 +13,7 @@ export function createEmptyRoom(): RollercoinRoomResponse {
 }
 
 export interface ManualPowerBaseline {
+    minerIds?: readonly string[];
     baseMinerPowerGh: number;
     collectionBonusPercent: number;
     rackBonusPowerGh: number;
@@ -48,14 +49,16 @@ export function createManualPowerBaseline(powerGh: number, minerBonusPercent = 0
 }
 
 export function calculateManualPower(baseline: ManualPowerBaseline, miners: readonly {
-    power: number; bonus: number; rackBonus: number;
+    power: number; bonus: number; rackBonus: number; minerId?: string;
 }[]) {
     let totalAddedPower = 0;
     let totalAddedBonusPercent = 0;
     let totalAddedRackPower = 0;
+    const bonusMinerIds = new Set(baseline.minerIds);
     for (const miner of miners) {
         totalAddedPower += miner.power;
-        totalAddedBonusPercent += miner.bonus;
+        if (!miner.minerId || !bonusMinerIds.has(miner.minerId)) totalAddedBonusPercent += miner.bonus;
+        if (miner.minerId) bonusMinerIds.add(miner.minerId);
         totalAddedRackPower += miner.power * miner.rackBonus / 100;
     }
     const newBase = baseline.globalBaseMinerPowerGh + totalAddedPower;

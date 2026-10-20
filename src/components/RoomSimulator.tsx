@@ -6,6 +6,13 @@ import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { calculateSetBonuses } from '../utils/setCalculator';
 import { getRackSetCatalog, getRackSetName, isMinerInRackSet as minerBelongsToRackSet } from '../utils/rackSetCatalog';
 import RackSetMinerPicker from './RackSetMinerPicker';
+import MinerImport from './MinerImport';
+import AutoPlacement from './AutoPlacement';
+import RoomOperationHistory from './RoomOperationHistory';
+import { createRoomOperation, appendRoomOperation, readRoomOperations, serializeRoomOperations, roomOperationsKey, type RoomOperation } from '../utils/roomOperations';
+import type { AutoPlacementResult } from '../utils/autoPlacement';
+import type { LeagueInfo } from '../data/leagues';
+import { placeImportedMiners, adjustImportedQuantities, readSavedImportedMiners, saveImportedMiners, type ImportedMinerQuantity } from '../utils/minerImport';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto } from '../services/userApi';
 import { fetchSellableMiners } from '../services/minerApi';
@@ -56,19 +63,27 @@ interface RoomSimulatorProps {
     userId?: string;
     isActive?: boolean;
     dynamicSets?: GetRackSetListDto[];
+    leagues: LeagueInfo[];
+    currentLeagueId: string;
 }
 
-export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, isActive = true }) => {
+export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, leagues, currentLeagueId, isActive = true }) => {
     const { t } = useTranslation();
     const rackBonusHelpId = useId();
     const [areRoomDetailsOpen, setAreRoomDetailsOpen] = useState(false);
     const [highlightSellableMiners, setHighlightSellableMiners] = useState(false);
     const [highlightDuplicateMiners, setHighlightDuplicateMiners] = useState(false);
+    const [autoPlacementMarks, setAutoPlacementMarks] = useState<{ room: RollercoinRoomResponse; ids: Set<string> } | null>(null);
+    const [focusedMiner, setFocusedMiner] = useState<{ room: RollercoinRoomResponse; id: string } | null>(null);
+    const [autoPlacementToolbar, setAutoPlacementToolbar] = useState<HTMLDivElement | null>(null);
     const [addRackTarget, setAddRackTarget] = useState<{ x: number, y: number } | null>(null);
     const [isMobileMinerSearchOpen, setIsMobileMinerSearchOpen] = useState(false);
     const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
     const [initialRoom] = useState<RollercoinRoomResponse>(JSON.parse(JSON.stringify(room)));
-    const [history, setHistory] = useState<RollercoinRoomResponse[]>([]);
+    const [history, setHistory] = useState<{ room: RollercoinRoomResponse; consumed?: ImportedMinerQuantity[] }[]>([]);
+    const [operationEntries, setOperationEntries] = useState(() => readRoomOperations(userId));
+    const operationEntriesRef = useRef(operationEntries);
+    const [operationStorageError, setOperationStorageError] = useState(false);
 
     // Rack Edit Modal State
     const [editingRackId, setEditingRackId] = useState<string | null>(null);
@@ -134,22 +149,45 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         setNotifications(prev => prev.filter(n => n.id !== id));
     };
 
-    const handleRoomChange = (newRoom: RollercoinRoomResponse) => {
-        setHistory(prev => [...prev, JSON.parse(JSON.stringify(room))]);
+    const recordOperation = (newRoom: RollercoinRoomResponse, kind: RoomOperation['kind']) => {
+        try {
+            const entry = createRoomOperation(room, newRoom, dynamicSets, kind);
+            if (!entry) return;
+            const entries = appendRoomOperation(operationEntriesRef.current, entry);
+            operationEntriesRef.current = entries;
+            setOperationEntries(entries);
+            localStorage.setItem(roomOperationsKey(userId), serializeRoomOperations(entries));
+            setOperationStorageError(false);
+        } catch { setOperationStorageError(true); }
+    };
+
+    const handleRoomChange = (newRoom: RollercoinRoomResponse, consumed?: ImportedMinerQuantity[], kind: RoomOperation['kind'] = 'change') => {
+        setHistory(prev => [...prev, { room: JSON.parse(JSON.stringify(room)), consumed }]);
+        recordOperation(newRoom, kind);
         onChange(newRoom);
+    };
+
+    const returnImportedMiners = (consumed: ImportedMinerQuantity[]) => {
+        if (!consumed.length) return true;
+        try { saveImportedMiners(adjustImportedQuantities(readSavedImportedMiners(), consumed, 1)); return true; }
+        catch { addNotification(t('autoPlacement.inventoryChanged'), 'error'); return false; }
     };
 
     const handleUndo = () => {
         if (history.length > 0) {
             const prevRoom = history[history.length - 1];
+            if (!returnImportedMiners(prevRoom.consumed ?? [])) return;
+            recordOperation(prevRoom.room, 'undo');
             setHistory(h => h.slice(0, -1));
-            onChange(prevRoom);
+            onChange(prevRoom.room);
             addNotification(t('simulator.undoSuccess'), 'info');
         }
     };
 
     const handleReset = () => {
         if (window.confirm(t('simulator.resetConfirm', 'Tüm değişiklikleri geri alıp en baştaki haline dönmek istediğinize emin misiniz?'))) {
+            if (!returnImportedMiners(history.flatMap(entry => entry.consumed ?? []))) return;
+            recordOperation(initialRoom, 'reset');
             onChange(initialRoom);
             setHistory([]);
             setCurrentRoomIndex(0);
@@ -160,6 +198,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const handleSaveLayout = () => {
         try {
             localStorage.setItem(`saved_room_layout_${userId || 'default'}`, JSON.stringify(room));
+            recordOperation(room, 'save');
             addNotification(t('simulator.layoutSaved', 'Dizilim başarıyla kaydedildi!'), 'success');
         } catch (error) {
             console.error('Error saving layout:', error);
@@ -173,8 +212,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             if (savedLayout) {
                 if (window.confirm(t('simulator.loadConfirm', 'Kaydedilen dizilimi yüklemek mevcut diziliminizi değiştirecektir. Emin misiniz?'))) {
                     const parsedLayout = JSON.parse(savedLayout);
-                    setHistory(prev => [...prev, room]);
-                    onChange(parsedLayout);
+                    handleRoomChange(parsedLayout, undefined, 'load');
                     setCurrentRoomIndex(0);
                     addNotification(t('simulator.layoutLoaded', 'Kaydedilen dizilim yüklendi!'), 'success');
                 }
@@ -241,7 +279,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     // Inventory Tab State
 
     // Inventory Tab State
-    const [inventoryTab, setInventoryTab] = useState<'miners' | 'racks'>('miners');
+    const [inventoryTab, setInventoryTab] = useState<'miners' | 'racks' | 'import'>('miners');
+    const [isImportExpanded, setIsImportExpanded] = useState(false);
 
     // Rack Inventory State
     const [rackList, setRackList] = useState<GetRackListDto[]>([]);
@@ -736,7 +775,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         addNotification(t('simulator.noEmptySpace'), 'error');
     };
 
-    const submitAddMinerApi = (miner: MinerDto, targetRackId: string, forceX?: number, forceY?: number) => {
+    const submitAddMinerApi = (miner: MinerDto, targetRackId: string, forceX?: number, forceY?: number, consumeImported = false) => {
         const rackMiners = (room.miners || []).filter(m => m.placement?.user_rack_id === targetRackId);
         const movingMiner = miner as MinerDto & Partial<ApiRoomMiner>;
         const isMove = Boolean(movingMiner.placement?.user_rack_id);
@@ -799,17 +838,19 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
             addNotification(t('simulator.minerMoved', { name: `${newMiner.name}${levelStr}` }), 'success');
         } else {
-            handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] });
+            handleRoomChange({ ...room, miners: [...(room.miners || []), newMiner] }, consumeImported ? [{ id: miner.id, quantity: 1 }] : undefined);
             const levelStr = (newMiner.level + 1) > 0 ? ` (Lvl ${newMiner.level + 1})` : '';
             addNotification(t('simulator.minerAddedSuccess', { name: `${newMiner.name}${levelStr}` }), 'success');
         }
         setDraggedMiner(null);
         setDragTarget(null);
+        return true;
     };
 
     const handleInventoryPointerDown = (
         event: React.PointerEvent<HTMLDivElement>,
-        item: { type: 'miner'; value: MinerDto } | { type: 'rack'; value: GetRackListDto }
+        item: { type: 'miner'; value: MinerDto } | { type: 'rack'; value: GetRackListDto },
+        onPlaced?: () => void
     ) => {
         if (isMobile || event.button !== 0) return;
         event.preventDefault();
@@ -979,7 +1020,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 const height = (rack as ApiRoomRack & { rack_info?: { height?: number } }).rack_info?.height || 4;
                 const y = Math.max(0, Math.min(height - 1, Math.floor((upEvent.clientY - rect.top) / (rect.height / height))));
                 const x = item.value.width === 2 ? 0 : Math.max(0, Math.min(1, Math.floor((upEvent.clientX - rect.left) / (rect.width / 2))));
-                submitAddMinerApi(item.value, rack._id, x, y);
+                if (submitAddMinerApi(item.value, rack._id, x, y, Boolean(onPlaced))) onPlaced?.();
             } else if (item.type === 'rack' && zone) {
                 handleAddRackFromList(item.value, { x: Number(zone.dataset.rackDropX), y: Number(zone.dataset.rackDropY) });
             }
@@ -1253,6 +1294,43 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         };
     }, [room, dynamicSets, currentRoomRacks, currentRoomMiners, firstInstanceMinerIds, globalBasePower]);
 
+    const placedMinerIds = useMemo(() => {
+        const roomIds = new Set(room.rooms?.map(item => item._id));
+        const rackIds = new Set(room.racks?.filter(rack => rack.placement && roomIds.has(rack.placement.user_room_id)).map(rack => rack._id));
+        return new Set(room.miners.filter(miner => miner.placement && rackIds.has(miner.placement.user_rack_id)).map(miner => miner._id));
+    }, [room]);
+    const focusMiner = (minerId: string) => {
+        const miner = room.miners.find(item => item._id === minerId);
+        if (!miner?.placement || !placedMinerIds.has(minerId)) return;
+        const rack = room.racks?.find(item => item._id === miner.placement!.user_rack_id);
+        const index = room.rooms?.findIndex(item => item._id === rack?.placement?.user_room_id) ?? -1;
+        if (index < 0) return;
+        setCurrentRoomIndex(index);
+        setIsMobileMinerSearchOpen(false);
+        setFocusedMiner({ room, id: minerId });
+    };
+    useLayoutEffect(() => {
+        if (!focusedMiner || focusedMiner.room !== room || !isActive) return;
+        let animation: Animation | undefined;
+        const frame = requestAnimationFrame(() => {
+            const target = roomGridAreaRef.current?.querySelector<HTMLElement>(`[data-miner-instance-id="${CSS.escape(focusedMiner.id)}"]`);
+            if (!target) return;
+            target.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+            target.focus({ preventScroll: true });
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            animation = target.querySelector('.miner-hover-target')?.animate(
+                reducedMotion ? [{ opacity: 1 }, { opacity: 1 }]
+                    : [{ opacity: 1, easing: 'step-end' }, { opacity: 0, easing: 'step-end' }, { opacity: 1 }],
+                { duration: reducedMotion ? 3200 : 800, iterations: reducedMotion ? 1 : 4 });
+            if (animation) animation.onfinish = () => setFocusedMiner(current => current === focusedMiner ? null : current);
+        });
+        return () => {
+            cancelAnimationFrame(frame);
+            animation?.cancel();
+            setFocusedMiner(current => current === focusedMiner ? null : current);
+        };
+    }, [focusedMiner, room, currentRoomIndex, isActive]);
+
     if (!currentRoom) return null;
 
     const roomStats = (
@@ -1490,6 +1568,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         </div>
     );
 
+    const minerImport = <MinerImport embedded
+        actions={<div ref={setAutoPlacementToolbar} className="inventory-auto-placement" />}
+        onMinerPointerDown={isMobile ? undefined : (event, miner, onPlaced) => handleInventoryPointerDown(event, { type: 'miner', value: miner }, onPlaced)}
+        onAdd={items => {
+            if (suppressInventoryClick.current) return false;
+            const next = placeImportedMiners(room, items);
+            const racks = new Map((next.racks || []).map(rack => [rack._id, rack]));
+            next.miners = next.miners.map(miner => {
+                const rack = racks.get(miner.placement?.user_rack_id || '');
+                return rack && miner._id.startsWith('import_') ? { ...miner,
+                    is_in_set: minerBelongsToRackSet(rack, miner.miner_id, miner.filename, dynamicSets) } : miner;
+            });
+            handleRoomChange(next, items.map(item => ({ id: item.id, quantity: item.quantity })));
+        }} />;
+
     return (
         <div className={`room-simulator-wrapper ${!isMobile && isFilterOpen ? 'inventory-filters-open' : ''}`} onClick={() => setActiveTooltipId(null)}>
             {isMobile ? (
@@ -1519,6 +1612,13 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 </div>
             )}
 
+            <AutoPlacement room={room} sets={dynamicSets} leagues={leagues} currentLeagueId={currentLeagueId} toolbarTarget={autoPlacementToolbar} onApply={(result: AutoPlacementResult) => {
+                saveImportedMiners(result.inventory);
+                handleRoomChange(result.room, result.stockChanges, 'autoPlacement');
+                setAutoPlacementMarks({ room: result.room, ids: new Set(result.changes.filter(change => change.to).map(change => change.minerId)) });
+                setFocusedMiner(null);
+            }} onLocate={focusMiner} />
+            <RoomOperationHistory entries={operationEntries} storageError={operationStorageError} placedMinerIds={placedMinerIds} onLocate={focusMiner} />
             <div className="room-grid-area" ref={roomGridAreaRef}>
                 <div className="room-grid-area-inner" ref={roomGridInnerRef}>
                     <div
@@ -1704,7 +1804,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                 return (
                                                     <div
                                                         key={miner._id}
-                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${usesSharedSprite ? 'shared-sprite-target' : ''} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''}`}
+                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${usesSharedSprite ? 'shared-sprite-target' : ''} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''} ${autoPlacementMarks?.room === room && autoPlacementMarks.ids.has(miner._id) ? 'auto-placed' : ''} ${focusedMiner?.room === room && focusedMiner.id === miner._id ? 'auto-placed auto-placement-selected room-miner-focus' : ''}`}
+                                                        data-miner-instance-id={miner._id}
+                                                        tabIndex={-1}
                                                         style={{ ...minerStyle, cursor: 'grab' }}
                                                         draggable
                                                         onClick={(e) => {
@@ -2078,10 +2180,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 (() => {
                     const desktopContent = (
                         <div
-                            className={`inventory-toolbar-wrapper desktop-inventory-dock expanded ${isDragClearanceActive ? 'dragging-item' : ''}`}
+                            className={`inventory-toolbar-wrapper desktop-inventory-dock expanded ${inventoryTab === 'import' ? `importing-miners ${isImportExpanded ? 'import-expanded' : ''}` : ''} ${isDragClearanceActive ? 'dragging-item' : ''}`}
                             onKeyDown={e => {
                                 if (e.key === 'Escape') {
                                     setIsFilterOpen(false);
+                                    setIsImportExpanded(false);
                                 }
                             }}
                         >
@@ -2184,8 +2287,19 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                     >
                                         {t('simulator.minersTab')}
                                     </button>
+                                    <button type="button" className={`inv-tab ${inventoryTab === 'import' ? 'active' : ''}`}
+                                        onClick={() => { setInventoryTab('import'); setIsFilterOpen(false); setIsSearchOpen(false); }}>
+                                        {t('minerImport.title')}
+                                    </button>
                                 </div>
 
+                                {inventoryTab === 'import' && <button type="button" className="inv-icon-btn inventory-size-toggle"
+                                    title={t(isImportExpanded ? 'minerImport.compactPanel' : 'minerImport.expandPanel')}
+                                    aria-label={t(isImportExpanded ? 'minerImport.compactPanel' : 'minerImport.expandPanel')}
+                                    aria-expanded={isImportExpanded} aria-controls="desktop-inventory-content"
+                                    onClick={() => setIsImportExpanded(expanded => !expanded)}>
+                                    <span aria-hidden="true">{isImportExpanded ? '↙' : '↗'}</span>
+                                </button>}
                                 <div className="inventory-toolbar-right">
                                     <button
                                         className="inv-nav-btn"
@@ -2269,8 +2383,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
 
                             {/* Content grid */}
                             {(
-                                <div id="desktop-inventory-content" className="inventory-miner-grid">
-                                    {inventoryTab === 'miners' ? (
+                                <div id="desktop-inventory-content" className={inventoryTab === 'import' ? 'inventory-import-panel' : 'inventory-miner-grid'}>
+                                    {inventoryTab === 'import' ? minerImport : inventoryTab === 'miners' ? (
                                         minerList.length === 0 ? (
                                             <div className="inv-miner-card-empty">
                                                 {isSearching ? t('merge.searching') : t('merge.noResultsFound')}
@@ -2353,7 +2467,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                     );
 
                     const mobileContent = (
-                        <div className="mobile-inventory-modal">
+                        <div className={`mobile-inventory-modal ${inventoryTab === 'import' ? 'importing-miners' : ''}`}>
                             <div className="mobile-inv-header">
                                 <button className="mobile-inv-back" onClick={() => { setIsMobileMinerSearchOpen(false); setReplaceTargetRackId(null); setReplacingMinerId(null); }}>
                                     ‹ Back to rooms
@@ -2374,6 +2488,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         onClick={() => setInventoryTab('miners')}
                                     >
                                         {t('simulator.minersTab')}
+                                    </button>
+                                    <button type="button" className={`inv-tab ${inventoryTab === 'import' ? 'active' : ''}`}
+                                        onClick={() => { setInventoryTab('import'); setIsFilterOpen(false); setIsSearchOpen(false); }}>
+                                        {t('minerImport.title')}
                                     </button>
                                 </div>
                                 <div className="mobile-inv-pagination">
@@ -2488,8 +2606,8 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 </div>
                             )}
 
-                            <div className="mobile-inv-grid">
-                                {inventoryTab === 'miners' ? (
+                            <div className={inventoryTab === 'import' ? 'inventory-import-panel' : 'mobile-inv-grid'}>
+                                {inventoryTab === 'import' ? minerImport : inventoryTab === 'miners' ? (
                                     minerList.length === 0 ? (
                                         <div className="inv-miner-card-empty">
                                             {isSearching ? t('merge.searching') : t('merge.noResultsFound')}

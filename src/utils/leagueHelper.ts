@@ -40,6 +40,14 @@ export function getLeagueByPower(power: HashPower | null, customLeagues?: League
     return leaguesList[0]; // Default to first league
 }
 
+export function getLeaguePowerCeilingGh(league: LeagueInfo, leagues: readonly LeagueInfo[]): number | undefined {
+    if (!Number.isFinite(league.minPower) || league.minPower < 0) return NaN;
+    const boundary = Math.min(...leagues.filter(l => Number.isFinite(l.minPower) && l.minPower > league.minPower).map(l => l.minPower));
+    if (boundary === Infinity) return undefined;
+    // The next league's entry is excluded from this league's power range.
+    return boundary - Math.max(Number.MIN_VALUE, Math.abs(boundary) * Number.EPSILON);
+}
+
 /**
  * Extract block rewards from league info
  */

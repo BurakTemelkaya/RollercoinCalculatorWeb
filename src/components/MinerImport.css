@@ -1,0 +1,65 @@
+.miner-import {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    margin: 1rem 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+.miner-import summary { padding: 1rem; cursor: pointer; font-weight: 700; }
+.miner-import-content { display: grid; gap: 0.75rem; padding: 0 1rem 1rem; min-width: 0; }
+.miner-import p { margin: 0; color: var(--text-secondary); font-size: 0.875rem; }
+.miner-import a { color: var(--accent-primary); }
+.miner-import textarea {
+    box-sizing: border-box;
+    width: 100%;
+    resize: vertical;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font: inherit;
+}
+.miner-import-source { border-bottom: 1px solid var(--border-color); }
+.miner-import-source > summary { padding: 0.5rem 0; font-size: 0.875rem; color: var(--text-secondary); }
+.miner-import-source-content { display: grid; gap: 0.75rem; padding: 0.75rem 0; }
+.miner-import-guide { display: grid; gap: 0.5rem; min-width: 0; overflow-wrap: anywhere; font-size: 0.875rem; }
+.miner-import-guide-image { display: block; width: 100%; max-width: 520px; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-sizing: border-box; }
+.miner-import-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.miner-import-search { display: flex; flex: 1 1 160px; align-items: center; gap: 6px; min-width: 0; padding: 0 8px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-tertiary); color: var(--text-secondary); }
+.miner-import-search svg { flex-shrink: 0; }
+.miner-import-search input { width: 100%; min-width: 0; height: 28px; border: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 11px; }
+.miner-import-sort { max-width: 100%; min-width: 0; height: 30px; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-tertiary); color: var(--text-primary); font: inherit; font-size: 11px; }
+.miner-import-search:focus-within, .miner-import-sort:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
+.miner-import-search input:focus { outline: none; }
+.miner-import-count { color: var(--text-secondary); font-size: 11px; white-space: nowrap; }
+.miner-import-empty { padding: 12px 4px; }
+.miner-import-list { display: flex; flex-wrap: wrap; gap: 10px; max-height: 24rem; overflow-y: auto; padding: 4px 2px; }
+.miner-import .miner-import-row { box-sizing: border-box; width: 120px; height: 132px; min-width: 0; padding: 7px 8px 6px; border-radius: 7px; background: #292c40; cursor: default; }
+.miner-import-pick { display: flex; flex: 1; flex-direction: column; align-items: center; width: 100%; min-width: 0; min-height: 0; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.miner-import-draggable .miner-import-pick { cursor: grab; }
+.miner-import-row.is-empty .miner-import-pick { opacity: 0.45; cursor: default; }
+.miner-import-pick .inv-miner-card-img-wrapper { flex: 1; min-height: 24px; height: auto; }
+.miner-import-pick .inv-miner-card-name { margin-top: 2px; line-height: 14px; }
+.miner-import-pick .inv-miner-card-power { line-height: 15px; }
+.miner-import-pick .inv-miner-card-bonus { line-height: 13px; }
+.miner-import-controls { display: flex; align-items: flex-end; gap: 4px; width: 100%; margin-top: 5px; padding-top: 5px; border-top: 1px solid #ffffff0d; }
+.miner-import-controls label { display: grid; flex: 1; min-width: 0; gap: 1px; color: #b8bed0; font-size: 10px; }
+.miner-import-controls label span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 10px; font-size: 9px; text-align: center; }
+.miner-import-controls input { box-sizing: border-box; width: 100%; min-width: 36px; height: 22px; padding: 2px; background: #1e2233; color: #edf0f7; border: 1px solid #444b63; border-radius: 4px; font: inherit; text-align: center; appearance: textfield; -moz-appearance: textfield; }
+.miner-import-controls input::-webkit-inner-spin-button, .miner-import-controls input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.miner-import-card-action { display: grid; place-items: center; flex: none; width: 24px; height: 24px; padding: 0; border: 1px solid #03cbd155; border-radius: 5px; background: #03cbd11a; color: #65e6e9; cursor: pointer; }
+.miner-import-card-action:hover { background: #03cbd133; border-color: #03cbd1; }
+.miner-import-remove { position: absolute; top: 3px; right: 3px; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #9da5bd; cursor: pointer; }
+.miner-import-remove:hover, .miner-import-remove:focus-visible { color: #ff9b9b; background: #ef44441a; }
+.miner-import button:disabled { opacity: 0.5; cursor: default; }
+.miner-import-pick:focus-visible, .miner-import-card-action:focus-visible, .miner-import-remove:focus-visible, .miner-import-controls input:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
+.miner-import-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.miner-import .simulator-start-button { white-space: normal; }
+.miner-import .miner-import-add { border-color: #03cbd166; background: #03cbd11a; color: #8cebed; }
+.miner-import .miner-import-clear { background: transparent; color: #b8bed0; }
+.miner-import .miner-import-clear:hover { border-color: #ef6b6b; color: #ffaaaa; }
+.miner-import [role="alert"] { color: var(--accent-danger, #ff8c8c); }

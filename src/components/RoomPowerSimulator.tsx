@@ -340,6 +340,8 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             userId={isEmptyAccount ? undefined : fetchedUser?.userProfileResponseDto?.avatar_Id}
                             isActive={isActive}
                             dynamicSets={dynamicSets}
+                            leagues={apiLeagues || LEAGUES}
+                            currentLeagueId={currentLeague.id}
                         />
 
                         {originalExactPower && Math.abs(powerDiffGh) > 0.001 && (

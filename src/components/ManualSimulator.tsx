@@ -7,6 +7,7 @@ import { calculateExactRoomPower } from '../utils/roomParser';
 import { createManualPowerBaseline, calculateManualPower } from '../utils/simulatorBaseline';
 import CdnImage from './CdnImage';
 import AccountPowerBreakdown from './AccountPowerBreakdown';
+import MinerImport from './MinerImport';
 import { parseUsernameInput } from '../utils/usernameParser';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
@@ -38,6 +39,7 @@ interface ManualSimulatorProps {
 
 interface AddedMiner {
     id: string;
+    minerId?: string;
     name: string;
     power: number;
     bonus: number;
@@ -236,6 +238,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         const rack = parseFloat(searchRackBonus) || 0;
         setAddedMiners([...addedMiners, {
             id: Date.now().toString() + Math.random().toString(),
+            minerId: miner.id,
             name: miner.name,
             power: miner.power, // Already in Gh!
             bonus: miner.percent / 100, // API gives 150 = 1.5%
@@ -344,6 +347,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
             const exactPower = calculateExactRoomPower(fetchedRoom, dynamicSets);
             return {
                 baseMinerPowerGh: exactPower.baseMinerPowerGh,
+                minerIds: fetchedRoom.miners.filter(miner => miner.placement?.user_rack_id).map(miner => miner.miner_id),
                 collectionBonusPercent: exactPower.collectionBonusPercent,
                 rackBonusPowerGh: exactPower.rackBonusPowerGh,
                 currentTotalPowerGh,
@@ -492,6 +496,11 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                     <AccountPowerBreakdown power={fetchedUser.userPowerResponseDto} />
                 )}
 
+                <MinerImport addAllLabel={t('minerImport.addAllPower')} onAdd={items => setAddedMiners(previous => [...previous, ...items.flatMap(item =>
+                    Array.from({ length: item.quantity }, () => ({ id: crypto.randomUUID(), minerId: item.id,
+                        name: item.name, power: item.power, bonus: item.percent / 100,
+                        rackBonus: 0, fileName: item.miner?.fileName }))
+                )])} />
                 <div className="ms-card">
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}><span className="section-icon">➕</span> {t('simulator.addMiner', 'Madenci Ekle')}</h3>
 
