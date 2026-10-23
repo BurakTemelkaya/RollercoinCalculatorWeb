@@ -49,7 +49,7 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
               {showCoinzilla ? (
                 <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
               ) : (
-                <iframe data-aa='2429727' src='//ad.a-ads.com/2429727/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
+                <iframe data-aa='2459663' src='//ad.a-ads.com/2459663/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
               )}
             </div>
           </div>
@@ -87,7 +87,7 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
                 {showCoinzilla ? (
                   <div className="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
                 ) : (
-                  <iframe data-aa='2429728' src='//ad.a-ads.com/2429728/?size=320x50&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '320px', height: '50px', overflow: 'hidden', display: 'block', margin: '0 auto' }}></iframe>
+                  <iframe data-aa='2459664' src='//ad.a-ads.com/2459664/?size=320x50&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '320px', height: '50px', overflow: 'hidden', display: 'block', margin: '0 auto' }}></iframe>
                 )}
               </div>
             </div>
