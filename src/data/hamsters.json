@@ -11836,23 +11836,46 @@
       {
         "level": 1,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl01/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl01/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
@@ -11861,23 +11884,46 @@
       {
         "level": 10,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl10/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl10/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
@@ -11886,23 +11932,46 @@
       {
         "level": 20,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl20/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl20/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
@@ -11911,23 +11980,46 @@
       {
         "level": 30,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl30/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl30/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
@@ -11936,23 +12028,46 @@
       {
         "level": 40,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl40/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl40/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
@@ -11961,29 +12076,52 @@
       {
         "level": 50,
         "walk": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_walk.png",
-        "frames": 12,
-        "jump": null,
-        "jumpFrames": 0,
+        "frames": 6,
+        "jump": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
         "idle": "rollercoin/hamsters/pets/jack-o-mine/lvl50/idle.png",
-        "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_idle.png",
-          "frames": 6,
-          "frameWidth": 160,
-          "frameHeight": 160,
-          "frameDurationMs": 100
-        },
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_walk.png",
-            "frames": 12,
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_tap_reaction.png",
+            "frames": 15,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/jack-o-mine/lvl50/sprite_win_loop.png",
+            "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128
           }
         }
       }
     ],
-    "animationsPending": true
+    "animationsPending": false
   }
 ]

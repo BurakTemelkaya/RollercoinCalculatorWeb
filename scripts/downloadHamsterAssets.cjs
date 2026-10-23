@@ -21,11 +21,14 @@ for (const hamster of hamsters) {
 }
 for (const set of sets) if (set.icon) paths.add(set.icon);
 
-const downloads = [...paths].map(file => ({
-  url: `https://api.minaryganar.com/assets/${file === 'rollercoin/hamsters/pets/cuscuz/lvl50/idle-official.png' ? file.replace('idle-official.png', 'idle.png') : file}`,
-  target: path.join(root, 'assets', file),
-  label: file,
-}));
+const downloads = [...paths].map(file => {
+  const sourceFile = file.startsWith('rollercoin/hamsters/pets/jack-o-mine/')
+    ? file.replace('/jack-o-mine/', '/jack_omine/')
+    : file === 'rollercoin/hamsters/pets/cuscuz/lvl50/idle-official.png'
+      ? file.replace('idle-official.png', 'idle.png')
+      : file;
+  return { url: `https://api.minaryganar.com/assets/${sourceFile}`, target: path.join(root, 'assets', file), label: file };
+});
 downloads.push(
   {
     url: 'https://static.rollercoin.com/static/img/expeditions/66fd2a3249652dbe6a40e0ae/road.png',
@@ -40,7 +43,9 @@ downloads.push(
 );
 
 async function download(item) {
-  try { if ((await fs.stat(item.target)).size > 0) return 'cached'; } catch { /* Not downloaded yet. */ }
+  try {
+    if (!item.label.startsWith('rollercoin/hamsters/pets/jack-o-mine/') && (await fs.stat(item.target)).size > 0) return 'cached';
+  } catch { /* Not downloaded yet. */ }
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await fetch(item.url);

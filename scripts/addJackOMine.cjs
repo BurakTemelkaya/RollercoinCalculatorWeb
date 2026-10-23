@@ -1,5 +1,5 @@
 // Official mechanics: https://rollercoin.com/blog/meet-jack-o-mine
-// Run updateHamsterAbilityGuides.cjs first; local GIF-derived assets must already exist.
+// Run updateHamsterAbilityGuides.cjs and downloadHamsterAssets.cjs first.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -16,17 +16,21 @@ const labels = key => Object.fromEntries(Object.keys(loot.text).map(language => 
   assert(label, `${language}: missing ${key}`);
   return [language, label];
 }));
+// Minaryganar provides idle as a single-frame preview, not an idle strip.
 const skins = [1, 10, 20, 30, 40, 50].map(level => {
   const prefix = `rollercoin/hamsters/pets/jack-o-mine/lvl${String(level).padStart(2, '0')}`;
-  const walk = `${prefix}/sprite_walk.png`;
-  for (const file of ['sprite_walk.png', 'idle.png', 'sprite_idle.png']) {
-    assert(fs.existsSync(path.resolve(__dirname, '../public/assets', prefix, file)), `${prefix}/${file} is missing`);
+  const frameCounts = { walk: 6, jump: 7, tap_reaction: 15, go_sleep: 24, take_chest: 9, win_loop: 6 };
+  const animations = Object.fromEntries(Object.entries(frameCounts).map(([action, frames]) => [action, {
+    path: `${prefix}/sprite_${action}.png`, frames, frameWidth: 128, frameHeight: 128,
+  }]));
+  for (const file of [...Object.values(animations).map(animation => animation.path), `${prefix}/idle.png`]) {
+    assert(fs.existsSync(path.resolve(__dirname, '../public/assets', file)), `${file} is missing`);
   }
   return {
-    level, walk, frames: 12, jump: null, jumpFrames: 0, frameWidth: 128, frameHeight: 128,
+    level, walk: animations.walk.path, frames: animations.walk.frames,
+    jump: animations.jump.path, jumpFrames: animations.jump.frames, frameWidth: 128, frameHeight: 128,
     idle: `${prefix}/idle.png`,
-    idleAnimation: { path: `${prefix}/sprite_idle.png`, frames: 6, frameWidth: 160, frameHeight: 160, frameDurationMs: 100 },
-    animations: { walk: { path: walk, frames: 12, frameWidth: 128, frameHeight: 128 } },
+    animations,
   };
 });
 const hamster = {
@@ -42,7 +46,7 @@ const hamster = {
   ultimate: { code: 'extra_loot', text: labels('overchargedLoot'), icon: loot.icon },
   ultimateChargePoints: 18,
   ultimateTiers: [25, 50, 75].map((percent, index) => ({ tier: index + 1, chargeRequired: 18 + index * 6, text: textForLoot(percent) })),
-  skins, animationsPending: true,
+  skins, animationsPending: false,
 };
 const index = catalog.findIndex(item => item.slug === hamster.slug);
 if (index < 0) catalog.push(hamster);

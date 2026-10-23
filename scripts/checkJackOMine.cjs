@@ -12,12 +12,15 @@ assert.deepEqual(hamster.ultimateTiers.map(tier => tier.chargeRequired), [18, 24
 assert.deepEqual(hamster.ultimateTiers.map(tier => tier.text.en), ['Extra Loot +25%', 'Extra Loot +50%', 'Extra Loot +75%']);
 assert(sets.find(set => set.slug === 'night-shift-set').members.includes(hamster.slug));
 for (const skin of hamster.skins) {
-  assert.deepEqual(Object.keys(skin.animations), ['walk']);
-  assert.equal(skin.animations.walk.frames, 12);
-  assert.equal(skin.idleAnimation.frames * skin.idleAnimation.frameDurationMs, 600);
-  assert.equal(skin.idleAnimation.previewRegion, undefined);
+  assert.deepEqual(Object.keys(skin.animations), ['walk', 'jump', 'tap_reaction', 'go_sleep', 'take_chest', 'win_loop']);
+  assert.deepEqual(Object.fromEntries(Object.entries(skin.animations).map(([action, animation]) => [action, animation.frames])), {
+    walk: 6, jump: 7, tap_reaction: 15, go_sleep: 24, take_chest: 9, win_loop: 6,
+  });
+  assert.equal(skin.idleAnimation, undefined);
   for (const [file, width, height] of [
-    [skin.walk, 1536, 128], [skin.idle, 160, 160], [skin.idleAnimation.path, 960, 160],
+    [skin.walk, 768, 128],
+    ...Object.values(skin.animations).map(animation => [animation.path, animation.frames * 128, 128]),
+    [skin.idle, 160, 160],
   ]) {
     const png = fs.readFileSync(path.resolve(__dirname, '../public/assets', file));
     assert.equal(png.subarray(1, 4).toString(), 'PNG');
@@ -25,6 +28,7 @@ for (const skin of hamster.skins) {
     assert.equal(png.readUInt32BE(20), height, file);
   }
 }
+assert.equal(hamster.animationsPending, false);
 for (const language of Object.keys(hamster.ultimate.text)) {
   const guide = require(`../src/locales/${language}.json`).hamsterAbilityGuide;
   for (const key of ['skipRestChest', 'overchargedLoot']) assert(guide.descriptions[key], `${language}: ${key}`);
