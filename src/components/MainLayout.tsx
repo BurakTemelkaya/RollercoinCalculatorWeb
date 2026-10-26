@@ -270,9 +270,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </div>
               </div>
 
-              {!adsBlocked && country && (
+              {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', flexShrink: 0 }}>
-                  <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  <div className="clever-core-ads"></div>
                 </div>
               )}
 

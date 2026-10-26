@@ -92,5 +92,6 @@ src/
 - **Race condition**: API ve kullanıcı verileri paralel çekilir. `App.tsx`'teki coins generation effect'inde fallback mantığı var (league.id eşleşmezse fetchedUser.league_Id kullanılır).
 - **Güç birimleri**: Tüm API değerleri Gh/s cinsindendir, iç hesaplamalarda H/s base unit'e çevrilir.
 - **i18n**: Tüm UI metinleri `locales/tr.json` ve `locales/en.json`'da tanımlıdır.
+- **Reklamlar**: CleverCore 300×250 yükleyicisi `index.html`'de tanımlıdır ve React içindeki `.clever-core-ads` hedefi oluşana kadar bekler. Üst reklam ülke kontrolünden bağımsızdır; yan ve mobil reklamlar `GlobalAds.tsx` içindeki ülke kurallarını kullanır. Eski RollerCoin görseline yapılan istek reklam engelleyici kontrolü olarak kullanılmaz.
 
 Her işlem yapıldıktan veya kodlar güncellendikten sonra eğer projenin genel yapısında bir değişiklik yapılıyorsa .agent klasöründe yeni dosya oluştur yada güncelle.

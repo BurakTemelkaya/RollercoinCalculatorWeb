@@ -151,21 +151,66 @@
 
 
   <script type="module" src="/src/main.tsx"></script>
+  <script data-cfasync="false" type="text/javascript" id="clever-core">
+    (function (document, window) {
+      var root = document.getElementById("root");
+      var loadCleverCore = function () {
+        if (document.getElementById("CleverCoreLoader108241")) return true;
+        var ad = document.querySelector(".clever-core-ads");
+        if (!ad) return false;
+
+        if (!ad.dataset.gaImpressionTracked && "IntersectionObserver" in window) {
+          ad.dataset.gaImpressionTracked = "true";
+          var impressionObserver = new IntersectionObserver(function (entries) {
+            if (entries[0].isIntersecting) {
+              if (typeof window.gtag === "function") window.gtag("event", "ad_impression", { ad_unit: "top_banner_300x250" });
+              impressionObserver.disconnect();
+            }
+          }, { threshold: 0.5 });
+          impressionObserver.observe(ad);
+        }
+
+        var a, c = document.createElement("script"), f = window.frameElement;
+        c.id = "CleverCoreLoader108241";
+        c.src = "https://scripts.cleverwebserver.com/97756ee41dacac40b1a5acade98daecf.js";
+        c.async = !0;
+        c.type = "text/javascript";
+        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
+        c.setAttribute("data-callback", "put-your-callback-function-here");
+        c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
+        c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
+        try {
+          a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
+        } catch (e) {
+          a = !1;
+        }
+        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
+        a.parentNode.insertBefore(c, a);
+        return true;
+      };
+
+      if (!loadCleverCore()) {
+        var observer = new MutationObserver(function () {
+          if (loadCleverCore()) observer.disconnect();
+        });
+        observer.observe(root, { childList: true, subtree: true });
+      }
+    })(document, window);
+  </script>
   <script>
     // Ad-blocker detection
     // Sets 'ads-blocked' class on body — React components handle the UI.
     (function () {
-      var testUrl = 'https://static.rollercoin.com/static/img/market/miners/antminer_s9.gif?v=1';
+      var bait = document.createElement('div');
+      bait.className = 'adsbox';
+      bait.setAttribute('aria-hidden', 'true');
+      bait.style.cssText = 'position:absolute;top:-10000px;width:1px;height:1px';
+      document.body.appendChild(bait);
       setTimeout(function () {
-        fetch(testUrl, { method: 'HEAD', mode: 'no-cors' })
-          .then(function () {
-            // Resources accessible — no ad-blocker
-          })
-          .catch(function () {
-            // Fetch blocked — ad-blocker detected
-            document.body.classList.add('ads-blocked');
-          });
-      }, 1000);
+        var blocked = bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none';
+        bait.remove();
+        if (blocked) document.body.classList.add('ads-blocked');
+      }, 100);
     })();
   </script>
 
