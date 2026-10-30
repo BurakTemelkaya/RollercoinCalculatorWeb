@@ -159,15 +159,16 @@
         var ad = document.querySelector(".clever-core-ads");
         if (!ad) return false;
 
-        if (!ad.dataset.gaImpressionTracked && "IntersectionObserver" in window) {
-          ad.dataset.gaImpressionTracked = "true";
+        var adSlot = document.getElementById("top-ad-container");
+        if (!ad.dataset.gaSlotViewTracked && adSlot && "IntersectionObserver" in window) {
+          ad.dataset.gaSlotViewTracked = "true";
           var impressionObserver = new IntersectionObserver(function (entries) {
             if (entries[0].isIntersecting) {
-              if (typeof window.gtag === "function") window.gtag("event", "ad_impression", { ad_unit: "top_banner_300x250" });
+              if (typeof window.gtag === "function") window.gtag("event", "ad_slot_view", { ad_unit: "top_banner_300x250" });
               impressionObserver.disconnect();
             }
           }, { threshold: 0.5 });
-          impressionObserver.observe(ad);
+          impressionObserver.observe(adSlot);
         }
 
         var a, c = document.createElement("script"), f = window.frameElement;

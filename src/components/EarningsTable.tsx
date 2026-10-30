@@ -729,7 +729,12 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                                     />
                                                     <span>%</span>
                                                 </div>
-                                                <button className="sim-remove-btn" onClick={() => removeSourceCoin(coin)}>
+                                                <button
+                                                    className="sim-remove-btn"
+                                                    onClick={() => removeSourceCoin(coin)}
+                                                    aria-label={t('simulator.remove')}
+                                                    title={t('simulator.remove')}
+                                                >
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                                                 </button>
                                             </div>
@@ -782,7 +787,12 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
                                                     />
                                                     <span>%</span>
                                                 </div>
-                                                <button className="sim-remove-btn" onClick={() => removeTargetCoin(coin)}>
+                                                <button
+                                                    className="sim-remove-btn"
+                                                    onClick={() => removeTargetCoin(coin)}
+                                                    aria-label={t('simulator.remove')}
+                                                    title={t('simulator.remove')}
+                                                >
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                                                 </button>
                                             </div>

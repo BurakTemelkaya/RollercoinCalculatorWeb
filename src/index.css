@@ -5219,6 +5219,50 @@ a:hover {
     max-width: none;
     min-width: 0;
   }
+
+  .sim-list-item {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .sim-range {
+    min-width: 0;
+  }
+
+  .sim-remove-btn {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .sim-list-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "coin remove" "range value";
+    gap: 8px;
+  }
+
+  .sim-item-info {
+    grid-area: coin;
+    width: auto;
+  }
+
+  .sim-range {
+    grid-area: range;
+    width: 100%;
+  }
+
+  .sim-val-input-group {
+    grid-area: value;
+  }
+
+  .sim-remove-btn {
+    grid-area: remove;
+    justify-self: end;
+  }
 }
 
 /* Static Pages */
