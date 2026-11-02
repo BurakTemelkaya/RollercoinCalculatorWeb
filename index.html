@@ -155,13 +155,9 @@
     (function (document, window) {
       var root = document.getElementById("root");
       var loadCleverCore = function () {
-        if (document.getElementById("CleverCoreLoader108241")) return true;
-        var ad = document.querySelector(".clever-core-ads");
-        if (!ad) return false;
-
         var adSlot = document.getElementById("top-ad-container");
-        if (!ad.dataset.gaSlotViewTracked && adSlot && "IntersectionObserver" in window) {
-          ad.dataset.gaSlotViewTracked = "true";
+        if (adSlot && !adSlot.dataset.gaSlotViewTracked && "IntersectionObserver" in window) {
+          adSlot.dataset.gaSlotViewTracked = "true";
           var impressionObserver = new IntersectionObserver(function (entries) {
             if (entries[0].isIntersecting) {
               if (typeof window.gtag === "function") window.gtag("event", "ad_slot_view", { ad_unit: "top_banner_300x250" });
@@ -170,6 +166,10 @@
           }, { threshold: 0.5 });
           impressionObserver.observe(adSlot);
         }
+
+        if (document.getElementById("CleverCoreLoader108241")) return true;
+        var ad = document.querySelector(".clever-core-ads");
+        if (!ad) return false;
 
         var a, c = document.createElement("script"), f = window.frameElement;
         c.id = "CleverCoreLoader108241";
@@ -192,7 +192,7 @@
 
       if (!loadCleverCore()) {
         var observer = new MutationObserver(function () {
-          if (loadCleverCore()) observer.disconnect();
+          if (document.querySelector("#top-ad-container .coinzilla") || loadCleverCore()) observer.disconnect();
         });
         observer.observe(root, { childList: true, subtree: true });
       }

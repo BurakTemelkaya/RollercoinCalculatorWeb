@@ -95,7 +95,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, []);
 
   useEffect(() => {
-    if (adsBlocked || !country) return;
+    if (adsBlocked || country !== 'BR') return;
 
     const timer = setTimeout(() => {
       (window as any).coinzilla_display = (window as any).coinzilla_display || [];
@@ -272,7 +272,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
               {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', flexShrink: 0 }}>
-                  <div className="clever-core-ads"></div>
+                  {country === 'BR' ? (
+                    <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
+                  ) : country ? (
+                    <div className="clever-core-ads"></div>
+                  ) : null}
                 </div>
               )}
 
