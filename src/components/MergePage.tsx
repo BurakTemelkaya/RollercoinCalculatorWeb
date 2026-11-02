@@ -56,7 +56,7 @@ const FORGE_DISCOUNTS: Record<number, number> = {
 /** Apply forge discount to a raw amount */
 function applyForgeDiscount(rawAmount: number, forgeLevel: number): number {
     const discount = FORGE_DISCOUNTS[forgeLevel] || 0;
-    return Math.round(rawAmount * (1 - discount));
+    return Math.floor(rawAmount * (1 - discount));
 }
 
 /** Builds a CDN URL for a miner GIF by filename, with optional version cache-buster */
@@ -78,7 +78,7 @@ function formatRltAmount(rawAmount: number): string {
     if (rlt >= 1000) {
         return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
-    return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: rlt < 1 ? 4 : 2 });
 }
 
 /** Formats power from Gh/s to human-readable */

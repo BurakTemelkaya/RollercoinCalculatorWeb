@@ -360,6 +360,12 @@
     border-collapse: collapse;
     font-size: 13px;
     min-width: 600px;
+    table-layout: fixed;
+}
+
+.cfc-table th:first-child,
+.cfc-table td:first-child {
+    width: 18%;
 }
 
 .cfc-table thead th {

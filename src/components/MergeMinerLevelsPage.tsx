@@ -40,7 +40,7 @@ const FORGE_DISCOUNTS: Record<number, number> = {
 
 function applyForgeDiscount(rawAmount: number, forgeLevel: number): number {
     const discount = FORGE_DISCOUNTS[forgeLevel] || 0;
-    return Math.round(rawAmount * (1 - discount));
+    return Math.floor(rawAmount * (1 - discount));
 }
 
 function getMinerImageUrl(fileName: string, imageVersion?: number): string {
@@ -59,7 +59,7 @@ function formatRltAmount(rawAmount: number): string {
     if (rlt >= 1000) {
         return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
-    return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    return rlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: rlt < 1 ? 4 : 2 });
 }
 
 function formatPower(powerGhs: number): string {

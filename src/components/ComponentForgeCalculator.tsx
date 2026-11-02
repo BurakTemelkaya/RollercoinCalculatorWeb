@@ -76,7 +76,7 @@ const QUICK_AMOUNTS = [1_000, 10_000, 50_000, 100_000, 500_000];
 
 function applyForgeDiscount(raw: number, forgeLevel: number): number {
     const d = FORGE_DISCOUNTS[forgeLevel] || 0;
-    return Math.round(raw * (1 - d));
+    return Math.floor(raw * (1 - d));
 }
 
 function formatRlt(raw: number): string {
