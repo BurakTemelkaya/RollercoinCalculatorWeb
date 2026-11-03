@@ -73,6 +73,8 @@ const FORGE_DISCOUNTS: Record<number, number> = { 1: 0, 2: 0.05, 3: 0.10, 4: 0.1
 const MARKETPLACE_COMMISSION = 0.05;
 
 
+const QUICK_AMOUNTS = [1_000, 10_000, 50_000, 100_000, 500_000];
+
 // ── Helpers ──
 
 
@@ -159,8 +161,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
     const [showAllForgeLevels, setShowAllForgeLevels] = useState(false);
 
     // New States for Cost Strategy
-    const costStrategy: string = 'market';
-    const customCostInput = '';
+    const [costStrategy, setCostStrategy] = useState<'free' | 'custom' | 'market'>('market');
+    const [customCostInput, setCustomCostInput] = useState<string>('');
 
     // Fetch marketplace prices
     useEffect(() => {
@@ -241,6 +243,12 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
         setTargetCountInput(targetCount.toString());
     };
 
+
+    const addQuickAmount = (amount: number) => {
+        const newCount = partCount + amount;
+        setPartCount(newCount);
+        setPartCountInput(formatCount(newCount));
+    };
 
     const targetInputCount = calcPartsPerUnit(
         componentType.toLowerCase(), startLevel, targetLevel, forgeLevel, targetCount
@@ -482,7 +490,6 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                 </div>
 
                 <div className="cfc-target-requirement" aria-live="polite">
-                    <span className="cfc-purchase-note">🛒 {t('merge.componentCalc.strategyMarket', 'Pazardan Al')}</span>
                     <p>
                         <span>
                             {t('merge.componentCalc.requiredToMake', '{{amount}} {{target}} için gereken:', {
@@ -492,6 +499,64 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                         </span>
                         <strong>{formatCount(targetInputCount)} {RARITY_NAMES[startLevel]} {componentType}</strong>
                     </p>
+                </div>
+
+                {/* Quick Amount Buttons */}
+                <div className="cfc-quick-btns">
+                    {QUICK_AMOUNTS.map(amount => (
+                        <button
+                            key={amount}
+                            className="cfc-quick-btn"
+                            onClick={() => addQuickAmount(amount)}
+                        >
+                            +{amount >= 1000 ? `${amount / 1000}k` : amount}
+                        </button>
+                    ))}
+                    <button
+                        className="cfc-quick-btn cfc-quick-clear"
+                        onClick={() => { setPartCount(0); setPartCountInput('0'); }}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                {/* Strategy Selector */}
+                <div className="cfc-strategy-section">
+                    <label className="cfc-label">{t('merge.componentCalc.strategyTitle', 'Başlangıç Parçalarının Maliyeti')}</label>
+                    <div className="cfc-strategy-tabs">
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'free' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('free')}
+                        >
+                            <span>🎁</span> {t('merge.componentCalc.strategyFree', 'Bedava (Elimde Var)')}
+                        </button>
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'market' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('market')}
+                        >
+                            <span>🛒</span> {t('merge.componentCalc.strategyMarket', 'Pazardan Al')}
+                        </button>
+                        <button
+                            className={`cfc-strategy-btn ${costStrategy === 'custom' ? 'active' : ''}`}
+                            onClick={() => setCostStrategy('custom')}
+                        >
+                            <span>✏️</span> {t('merge.componentCalc.strategyCustom', 'Özel Maliyet')}
+                        </button>
+                    </div>
+                    {costStrategy === 'custom' && (
+                        <div className="cfc-custom-cost-input-wrapper">
+                            <input
+                                type="number"
+                                className="cfc-count-input"
+                                placeholder={t('merge.componentCalc.customCostPlaceholder', 'Toplam ödediğiniz RLT')}
+                                value={customCostInput}
+                                onChange={e => setCustomCostInput(e.target.value)}
+                                min="0"
+                                step="0.01"
+                            />
+                            <span className="cfc-currency-label">RLT</span>
+                        </div>
+                    )}
                 </div>
 
 
