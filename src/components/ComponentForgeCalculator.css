@@ -1033,3 +1033,60 @@
 .cfc-table thead th:last-child .cfc-tooltip:hover::after {
     transform: translateY(-4px);
 }
+/* Compact layout: primary selections above, secondary actions side by side. */
+.cfc-container { margin-top: 20px; padding: 18px; }
+.cfc-title { font-size: 18px; }
+.cfc-desc { margin-bottom: 14px; }
+.cfc-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px 20px;
+    margin-bottom: 14px;
+}
+.cfc-type-tabs, .cfc-controls-row, .cfc-target-requirement { grid-column: 1 / -1; }
+.cfc-type-tab { flex: 0 1 auto; padding: 7px 14px; }
+.cfc-type-tab-img { width: 24px; height: 24px; }
+.cfc-controls-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr) minmax(150px, 1fr) minmax(140px, 1fr);
+    gap: 12px;
+    align-items: end;
+}
+.cfc-controls-row > .cfc-control-group { min-width: 0; }
+.cfc-target-group { display: contents; }
+.cfc-rarity-select-group { gap: 6px; }
+.cfc-rarity-select-btn { padding: 6px; }
+.cfc-rarity-select-btn img { width: 26px; height: 26px; }
+.cfc-controls > .cfc-quick-btns { align-content: end; align-items: end; }
+.cfc-quick-btn { padding: 6px 10px; }
+.cfc-strategy-section { margin-top: 0; min-width: 0; gap: 6px; }
+.cfc-strategy-tabs { gap: 6px; }
+.cfc-strategy-btn { min-width: 0; padding: 7px 10px; font-size: 12px; }
+.cfc-info-badge { padding: 8px 12px; margin-bottom: 10px; font-size: 13px; }
+.cfc-table thead th { padding: 10px 12px; }
+.cfc-table tbody td { padding: 10px; }
+
+@media (max-width: 1000px) {
+    .cfc-controls { grid-template-columns: minmax(0, 1fr); }
+    .cfc-controls-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    .cfc-container { padding: 14px; }
+    .cfc-title { font-size: 17px; }
+    .cfc-controls-row { grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: stretch; }
+    .cfc-target-group { display: grid; grid-template-columns: minmax(0, 1fr) 120px; }
+    .cfc-type-tab { flex: 1; min-width: 0; padding: 7px 8px; }
+    .cfc-rarity-select-btn img { width: 24px; height: 24px; }
+    .cfc-target-group .cfc-rarity-select-btn img { width: 20px; height: 20px; }
+    .cfc-strategy-btn { flex: 1 1 120px; }
+}
+
+/* Goal first, then source inputs; history stays available without crowding results. */
+.cfc-controls { grid-template-columns: minmax(0, 1fr); padding: 14px; border: 1px solid rgba(148,163,184,.12); border-radius: 12px; background: rgba(255,255,255,.015); }
+.cfc-type-tabs { gap: 8px; }
+.cfc-type-tab { min-height: 40px; }
+.cfc-target-requirement { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.cfc-purchase-note { font-size: 11px; color: var(--text-secondary, #94a3b8); }
+.cfc-count-btn { flex-shrink: 0; }
+.cfc-count-input { box-sizing: border-box; width: 100%; }
+@media(max-width: 640px) { .cfc-controls { padding: 10px; } .cfc-target-group { padding-bottom: 12px; border-bottom: 1px solid rgba(148,163,184,.12); } }

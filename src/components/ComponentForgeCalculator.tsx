@@ -22,6 +22,7 @@ import rltImg from '../assets/coins/rlt.svg';
 import craftingImg from '../assets/items/crafting.svg';
 
 import './ComponentForgeCalculator.css';
+import { forgePlan, forgeForward } from '../utils/forgeAnalysis';
 
 // ── Constants ──
 
@@ -71,14 +72,9 @@ const FORGE_RECIPES: Record<string, Record<number, { count: number; fee: number 
 const FORGE_DISCOUNTS: Record<number, number> = { 1: 0, 2: 0.05, 3: 0.10, 4: 0.15, 5: 0.25 };
 const MARKETPLACE_COMMISSION = 0.05;
 
-const QUICK_AMOUNTS = [1_000, 10_000, 50_000, 100_000, 500_000];
 
 // ── Helpers ──
 
-function applyForgeDiscount(raw: number, forgeLevel: number): number {
-    const d = FORGE_DISCOUNTS[forgeLevel] || 0;
-    return Math.floor(raw * (1 - d));
-}
 
 function formatRlt(raw: number): string {
     const rlt = raw / 1e6;
@@ -127,78 +123,15 @@ function calculateForgeForward(
     inputCount: number,
     forgeLevel: number,
 ): { producedCount: number; totalFees: number; steps: ForgeStepResult[] } {
-    const recipes = FORGE_RECIPES[typeKey];
-    if (!recipes) return { producedCount: 0, totalFees: 0, steps: [] };
-
-    let current = inputCount;
-    let totalFees = 0;
-    const steps: ForgeStepResult[] = [];
-
-    for (let lvl = startLevel; lvl < targetLevel; lvl++) {
-        const recipe = recipes[lvl];
-        if (!recipe) break;
-        const dc = applyForgeDiscount(recipe.count, forgeLevel);
-        const df = applyForgeDiscount(recipe.fee, forgeLevel);
-        const merges = Math.floor(current / dc);
-        const fee = merges * df;
-
-        steps.push({
-            fromLevel: lvl,
-            toLevel: lvl + 1,
-            partsNeeded: dc,
-            mergeCount: merges,
-            feePerMerge: df,
-            totalFee: fee,
-        });
-        totalFees += fee;
-        current = merges;
-    }
-
-    return { producedCount: current, totalFees, steps };
+    return forgeForward(FORGE_RECIPES[typeKey], startLevel, targetLevel, inputCount, forgeLevel);
 }
 
-/**
- * Backward calculation: how many source-level parts needed for exactly 1 target-level part.
- */
-function calcPartsPerUnit(
-    typeKey: string,
-    startLevel: number,
-    targetLevel: number,
-    forgeLevel: number,
-): number {
-    const recipes = FORGE_RECIPES[typeKey];
-    if (!recipes) return 0;
-    let ppu = 1;
-    for (let lvl = targetLevel - 1; lvl >= startLevel; lvl--) {
-        const recipe = recipes[lvl];
-        if (!recipe) break;
-        ppu *= applyForgeDiscount(recipe.count, forgeLevel);
-    }
-    return ppu;
+function calcPartsPerUnit(typeKey: string, startLevel: number, targetLevel: number, forgeLevel: number, quantity = 1): number {
+    return forgePlan(FORGE_RECIPES[typeKey], startLevel, targetLevel, quantity, forgeLevel).required;
 }
 
-/**
- * Backward calculation: total forge fee for exactly 1 target-level part.
- */
-function calcFeePerUnit(
-    typeKey: string,
-    startLevel: number,
-    targetLevel: number,
-    forgeLevel: number,
-): number {
-    const recipes = FORGE_RECIPES[typeKey];
-    if (!recipes) return 0;
-    let fee = 0;
-    let mergesNeeded = 1;
-    for (let lvl = targetLevel - 1; lvl >= startLevel; lvl--) {
-        const recipe = recipes[lvl];
-        if (!recipe) break;
-        const dc = applyForgeDiscount(recipe.count, forgeLevel);
-        const df = applyForgeDiscount(recipe.fee, forgeLevel);
-        fee += mergesNeeded * df;
-        mergesNeeded *= dc;
-    }
-    return fee;
+function calcFeePerUnit(typeKey: string, startLevel: number, targetLevel: number, forgeLevel: number, quantity = 1): number {
+    return forgePlan(FORGE_RECIPES[typeKey], startLevel, targetLevel, quantity, forgeLevel).totalFees;
 }
 
 // ── Component ──
@@ -226,8 +159,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
     const [showAllForgeLevels, setShowAllForgeLevels] = useState(false);
 
     // New States for Cost Strategy
-    const [costStrategy, setCostStrategy] = useState<'free' | 'custom' | 'market'>('market');
-    const [customCostInput, setCustomCostInput] = useState<string>('');
+    const costStrategy: string = 'market';
+    const customCostInput = '';
 
     // Fetch marketplace prices
     useEffect(() => {
@@ -285,8 +218,8 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
         nextComponentType = componentType,
     ) => {
         const required = calcPartsPerUnit(
-            nextComponentType.toLowerCase(), nextStartLevel, nextTargetLevel, forgeLevel
-        ) * nextTargetCount;
+            nextComponentType.toLowerCase(), nextStartLevel, nextTargetLevel, forgeLevel, nextTargetCount
+        );
         setPartCount(required);
         setPartCountInput(formatCount(required));
     };
@@ -308,16 +241,10 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
         setTargetCountInput(targetCount.toString());
     };
 
-    const addQuickAmount = (amount: number) => {
-        const newCount = partCount + amount;
-        setPartCount(newCount);
-        setPartCountInput(formatCount(newCount));
-    };
 
-    const targetPartsRequired = calcPartsPerUnit(
-        componentType.toLowerCase(), startLevel, targetLevel, forgeLevel
+    const targetInputCount = calcPartsPerUnit(
+        componentType.toLowerCase(), startLevel, targetLevel, forgeLevel, targetCount
     );
-    const targetInputCount = targetPartsRequired * targetCount;
 
     // Calculate results for selected forge level
     const results: ForgeTargetResult[] = useMemo(() => {
@@ -340,9 +267,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                 typeKey, startLevel, target, partCount, forgeLevel
             );
             const ppu = calcPartsPerUnit(typeKey, startLevel, target, forgeLevel);
-            const fpu = calcFeePerUnit(typeKey, startLevel, target, forgeLevel);
+            const fpu = producedCount > 0 ? totalFees / producedCount : calcFeePerUnit(typeKey, startLevel, target, forgeLevel);
             const marketPrice = getSalePrice(componentType, target);
-            const nextBatchParts = ppu > 0 ? Math.max(1, Math.ceil(partCount / ppu)) * ppu : 0;
+            const nextBatchParts = calcPartsPerUnit(typeKey, startLevel, target, forgeLevel, producedCount + 1);
             const nextBatch = nextBatchParts > 0
                 ? calculateForgeForward(typeKey, startLevel, target, nextBatchParts, forgeLevel)
                 : null;
@@ -393,7 +320,7 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                 typeKey, startLevel, maxTarget, partCount, fl
             );
             const ppu = calcPartsPerUnit(typeKey, startLevel, maxTarget, fl);
-            const fpu = calcFeePerUnit(typeKey, startLevel, maxTarget, fl);
+            const fpu = producedCount > 0 ? totalFees / producedCount : calcFeePerUnit(typeKey, startLevel, maxTarget, fl);
             const marketPrice = getSalePrice(componentType, maxTarget);
 
             const totalMarketValue = producedCount * marketPrice;
@@ -438,72 +365,13 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                 syncPartCountToTarget(targetLevel, targetCount, startLevel, type);
                             }}
                         >
+                            <img className="cfc-type-tab-img" src={COMPONENT_IMAGES[type]?.[startLevel]} alt="" />
                             <span>{type}</span>
                         </button>
                     ))}
                 </div>
 
                 <div className="cfc-controls-row">
-                    {/* Starting Rarity */}
-                    <div className="cfc-control-group">
-                        <label className="cfc-label">{t('merge.componentCalc.partLevel', 'Parça Seviyesi')}</label>
-                        <div className="cfc-rarity-select-group">
-                            {[0, 1, 2, 3].map(level => (
-                                <button
-                                    key={level}
-                                    type="button"
-                                    className={`cfc-rarity-select-btn ${startLevel === level ? 'active' : ''}`}
-                                    onClick={() => {
-                                        const nextTargetLevel = Math.max(targetLevel, level + 1);
-                                        setStartLevel(level);
-                                        setTargetLevel(nextTargetLevel);
-                                        syncPartCountToTarget(nextTargetLevel, targetCount, level);
-                                        setExpandedRow(null);
-                                    }}
-                                    title={RARITY_NAMES[level]}
-                                    aria-label={RARITY_NAMES[level]}
-                                    aria-pressed={startLevel === level}
-                                >
-                                    <img
-                                        src={COMPONENT_IMAGES[componentType]?.[level]}
-                                        alt=""
-                                    />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Part Count Input */}
-                    <div className="cfc-control-group cfc-count-group">
-                        <label className="cfc-label">{t('merge.componentCalc.partCount', 'Parça Sayısı')}</label>
-                        <div className="cfc-count-wrapper">
-                            <button
-                                className="cfc-count-btn"
-                                onClick={() => {
-                                    const v = Math.max(0, partCount - 1000);
-                                    setPartCount(v);
-                                    setPartCountInput(formatCount(v));
-                                }}
-                            >−</button>
-                            <input
-                                type="text"
-                                className="cfc-count-input"
-                                value={partCountInput}
-                                onChange={e => handleCountChange(e.target.value)}
-                                onBlur={handleCountBlur}
-                                onFocus={handleCountFocus}
-                            />
-                            <button
-                                className="cfc-count-btn"
-                                onClick={() => {
-                                    const v = partCount + 1000;
-                                    setPartCount(v);
-                                    setPartCountInput(formatCount(v));
-                                }}
-                            >+</button>
-                        </div>
-                    </div>
-
                     <div className="cfc-control-group cfc-target-group">
                         <div className="cfc-control-group">
                             <span id="cfc-target-level-label" className="cfc-label">
@@ -550,9 +418,71 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                             </div>
                         </div>
                     </div>
+                    {/* Starting Rarity */}
+                    <div className="cfc-control-group">
+                        <label className="cfc-label">{t('merge.componentCalc.partLevel', 'Parça Seviyesi')}</label>
+                        <div className="cfc-rarity-select-group">
+                            {[0, 1, 2, 3].map(level => (
+                                <button
+                                    key={level}
+                                    type="button"
+                                    className={`cfc-rarity-select-btn ${startLevel === level ? 'active' : ''}`}
+                                    onClick={() => {
+                                        const nextTargetLevel = Math.max(targetLevel, level + 1);
+                                        setStartLevel(level);
+                                        setTargetLevel(nextTargetLevel);
+                                        syncPartCountToTarget(nextTargetLevel, targetCount, level);
+                                        setExpandedRow(null);
+                                    }}
+                                    title={RARITY_NAMES[level]}
+                                    aria-label={RARITY_NAMES[level]}
+                                    aria-pressed={startLevel === level}
+                                >
+                                    <img
+                                        src={COMPONENT_IMAGES[componentType]?.[level]}
+                                        alt=""
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Part Count Input */}
+                    <div className="cfc-control-group cfc-count-group">
+                        <label className="cfc-label" htmlFor="cfc-source-count">{t('merge.componentCalc.partCount', 'Parça Sayısı')}</label>
+                        <div className="cfc-count-wrapper">
+                            <button
+                                className="cfc-count-btn"
+                                onClick={() => {
+                                    const v = Math.max(0, partCount - 1);
+                                    setPartCount(v);
+                                    setPartCountInput(formatCount(v));
+                                }}
+                            >−</button>
+                            <input
+                                id="cfc-source-count"
+                                inputMode="numeric"
+                                type="text"
+                                className="cfc-count-input"
+                                value={partCountInput}
+                                onChange={e => handleCountChange(e.target.value)}
+                                onBlur={handleCountBlur}
+                                onFocus={handleCountFocus}
+                            />
+                            <button
+                                className="cfc-count-btn"
+                                onClick={() => {
+                                    const v = partCount + 1;
+                                    setPartCount(v);
+                                    setPartCountInput(formatCount(v));
+                                }}
+                            >+</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="cfc-target-requirement" aria-live="polite">
+                    <span className="cfc-purchase-note">🛒 {t('merge.componentCalc.strategyMarket', 'Pazardan Al')}</span>
                     <p>
                         <span>
                             {t('merge.componentCalc.requiredToMake', '{{amount}} {{target}} için gereken:', {
@@ -564,64 +494,9 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                     </p>
                 </div>
 
-                {/* Quick Amount Buttons */}
-                <div className="cfc-quick-btns">
-                    {QUICK_AMOUNTS.map(amount => (
-                        <button
-                            key={amount}
-                            className="cfc-quick-btn"
-                            onClick={() => addQuickAmount(amount)}
-                        >
-                            +{amount >= 1000 ? `${amount / 1000}k` : amount}
-                        </button>
-                    ))}
-                    <button
-                        className="cfc-quick-btn cfc-quick-clear"
-                        onClick={() => { setPartCount(0); setPartCountInput('0'); }}
-                    >
-                        ✕
-                    </button>
-                </div>
 
-                {/* Strategy Selector */}
-                <div className="cfc-strategy-section">
-                    <label className="cfc-label">{t('merge.componentCalc.strategyTitle', 'Başlangıç Parçalarının Maliyeti')}</label>
-                    <div className="cfc-strategy-tabs">
-                        <button
-                            className={`cfc-strategy-btn ${costStrategy === 'free' ? 'active' : ''}`}
-                            onClick={() => setCostStrategy('free')}
-                        >
-                            <span>🎁</span> {t('merge.componentCalc.strategyFree', 'Bedava (Elimde Var)')}
-                        </button>
-                        <button
-                            className={`cfc-strategy-btn ${costStrategy === 'market' ? 'active' : ''}`}
-                            onClick={() => setCostStrategy('market')}
-                        >
-                            <span>🛒</span> {t('merge.componentCalc.strategyMarket', 'Pazardan Al')}
-                        </button>
-                        <button
-                            className={`cfc-strategy-btn ${costStrategy === 'custom' ? 'active' : ''}`}
-                            onClick={() => setCostStrategy('custom')}
-                        >
-                            <span>✏️</span> {t('merge.componentCalc.strategyCustom', 'Özel Maliyet')}
-                        </button>
-                    </div>
-                    {costStrategy === 'custom' && (
-                        <div className="cfc-custom-cost-input-wrapper">
-                            <input
-                                type="number"
-                                className="cfc-count-input"
-                                placeholder={t('merge.componentCalc.customCostPlaceholder', 'Toplam ödediğiniz RLT')}
-                                value={customCostInput}
-                                onChange={e => setCustomCostInput(e.target.value)}
-                                min="0"
-                                step="0.01"
-                            />
-                            <span className="cfc-currency-label">RLT</span>
-                        </div>
-                    )}
-                </div>
             </div>
+
 
             {/* Results */}
             {loading ? (
@@ -784,7 +659,7 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                                             </div>
                                             <div className="cfc-step-stats">
                                                 <span className="cfc-step-stat">
-                                                    {step.partsNeeded}:1
+                                                    {formatCount(step.partsNeeded)} → {formatCount(step.mergeCount)}
                                                 </span>
                                                 <span className="cfc-step-stat">
                                                     ×{formatCount(step.mergeCount)}
