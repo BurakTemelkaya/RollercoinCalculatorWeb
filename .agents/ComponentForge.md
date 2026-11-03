@@ -36,3 +36,8 @@ Kâr eşiği, mevcut parça sayısından başlayarak hedef üretim miktarının 
 Hedeflenen Parça seçicisi, seçilen çıktı nadirliğine ulaşmak için gereken kaynak parça sayısını Forge seviyesi ve başlangıç nadirliğine göre gösterir.
 
 Hedeflenen parça adedi girildiğinde başlangıç parça sayısı, seçili hedefe gereken kaynak parça adedine otomatik ayarlanır. Bu kaynak adedi ve toplam üretim maliyeti hedeflenen miktarla ölçeklenir.
+
+## Toplu üretim düzeltmesi
+Parça ihtiyacında indirim her aşamanın toplam adedine uygulanır ve Math.round ile yuvarlanır. Ücretler parti adedi üzerinden hesaplanır. Forge 5 ekran örneği: 3 Legendary = 11 Epic = 83 Rare = 1245 Uncommon; Hashboard toplam ücreti 12.9 RLT. Aynı yöntem Forge 1–5 için kullanılır. scripts/check-forge-analysis.ts her seviyenin bağımsız örneklerini, ücretlerini ve üretim sınırlarını doğrular.
+
+Parts arayüzünde hedef/adet önce gelir; hızlı miktar ve ücretsiz/özel maliyet seçenekleri kaldırılmıştır. Kaynak adet düğmeleri birer ilerler; maliyet pazardan alış esasına göre hesaplanır.
