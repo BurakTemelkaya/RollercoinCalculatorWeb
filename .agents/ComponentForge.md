@@ -3,9 +3,7 @@
 Bu belge `ComponentForgeCalculator.tsx` içindeki parça birleştirme simülasyonunun nasıl çalıştığını açıklar.
 
 ## Temel Mantık
-Sistem, kullanıcının elindeki başlangıç parçalarını (raw materials) **bedava/zaten elde edilmiş** olarak kabul eder. Bu yüzden kâr hesaplaması şu formülle yapılır:
-**Net Kâr = Üretilen Yeni Parçaların Pazar Değeri - Toplam Forge (İşçilik) Ücreti**
-*(Başlangıç parçalarının maliyeti hesaplamaya dahil edilmez).*
+Başlangıç parçalarının maliyeti seçilen yönteme göre hesaplanır: pazardan alırken liste fiyatı, eldeki parçalar ücretsiz sayılır, özel maliyette girilen toplam tutar kullanılır. Net kâr satış gelirinden %5 pazar komisyonu, forge ücretleri ve başlangıç maliyeti çıkarılarak bulunur.
 
 ## Hesaplama Adımları
 
@@ -31,4 +29,10 @@ Girdiğimiz başlangıç parça sayısı hedefe kadar zincirleme olarak çevrili
 4. Çıkan yeni parçalar bir sonraki seviyenin başlangıç parçası olarak kabul edilir ve işlem hedefe ulaşana kadar tekrar eder.
 
 ### 4. Pazar Karşılaştırması
-Sistem son aşamada elde edilen parçaların pazar fiyatını (`totalMarketValue`) hesaplar ve bundan yukarıda ödenen toplam RLT ücretini (`totalForgeFees`) çıkararak Net Kâr/Zarar sonucunu bulur.
+Satış geliri, parçanın pazar liste fiyatından %5 marketplace komisyonu düşülerek hesaplanır (`totalMarketValue`). Bu tutardan toplam RLT forge ücreti (`totalForgeFees`) ve seçiliyse başlangıç maliyeti çıkarılarak Net Kâr/Zarar bulunur. Başlangıç parçalarını pazardan alma maliyeti brüt liste fiyatıdır.
+
+Kâr eşiği, mevcut parça sayısından başlayarak hedef üretim miktarının tam kaynak parça katlarında aranır. Komisyon sonrası birim satış geliri forge ücreti ve kaynak parça maliyetini karşılıyorsa en yakın kârlı kat gösterilir; kâr mümkün değilse ek mesaj gösterilmez. Özel maliyet, mevcut kaynak parçaların birim ortalama maliyeti olarak değerlendirilir.
+
+Hedeflenen Parça seçicisi, seçilen çıktı nadirliğine ulaşmak için gereken kaynak parça sayısını Forge seviyesi ve başlangıç nadirliğine göre gösterir.
+
+Hedeflenen parça adedi girildiğinde başlangıç parça sayısı, seçili hedefe gereken kaynak parça adedine otomatik ayarlanır. Bu kaynak adedi ve toplam üretim maliyeti hedeflenen miktarla ölçeklenir.
