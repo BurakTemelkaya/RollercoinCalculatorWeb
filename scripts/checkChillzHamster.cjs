@@ -16,6 +16,7 @@ assert.deepEqual(Object.fromEntries(Object.entries(skin.animations).map(([action
   walk: 16, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6,
 });
 assert.equal(skin.idleAnimation.frames, 6);
+assert.deepEqual(skin.idleAnimation.previewRegion, { x: -7, y: -12, width: 62, height: 62 });
 for (const [file, width, height] of [
   [skin.idle, 48, 48],
   [skin.idleAnimation.path, 288, 48],

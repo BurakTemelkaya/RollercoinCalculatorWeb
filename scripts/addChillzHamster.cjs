@@ -45,7 +45,15 @@ const hamster = {
     jump: `${prefix}/sprite_jump.png`, jumpFrames: 7,
     frameWidth: 128, frameHeight: 128,
     idle: `${prefix}/idle.png`,
-    idleAnimation: { path: `${prefix}/sprite_idle.png`, frames: 6, frameWidth: 48, frameHeight: 48, frameDurationMs: 100 },
+    idleAnimation: {
+      path: `${prefix}/sprite_idle.png`,
+      frames: 6,
+      frameWidth: 48,
+      frameHeight: 48,
+      frameDurationMs: 100,
+      previewRegion: { x: -7, y: -12, width: 62, height: 62 },
+    },
+    previewRegion: { x: -7, y: -12, width: 62, height: 62 },
     animations: {
       walk: animation('walk', 16),
       jump: animation('jump', 7),
