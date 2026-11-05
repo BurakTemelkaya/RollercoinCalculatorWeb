@@ -72,9 +72,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
   const [country, setCountry] = useState<string | null>(null);
-  const [cleverNoFill, setCleverNoFill] = useState(() => window.__cleverCoreNoFill === true);
   const cleverNoFillTrackedRef = useRef(false);
-  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill);
+  const topAdNetwork = resolveTopAdNetwork(country);
 
   const trackCleverNoFill = useCallback((reason: string) => {
     if (cleverNoFillTrackedRef.current) return;
@@ -91,7 +90,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const markCleverNoFill = useCallback((reason: string) => {
     window.__cleverCoreNoFill = true;
     window.__cleverCoreNoFillReason = reason;
-    setCleverNoFill(true);
     trackCleverNoFill(reason);
   }, [trackCleverNoFill]);
 

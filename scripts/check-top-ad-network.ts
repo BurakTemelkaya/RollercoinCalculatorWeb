@@ -1,10 +1,9 @@
 import assert from 'node:assert/strict';
 import { resolveTopAdNetwork } from '../src/utils/topAdNetwork';
 
-assert.equal(resolveTopAdNetwork(null, false), null);
-assert.equal(resolveTopAdNetwork('BR', false), 'coinzilla');
-assert.equal(resolveTopAdNetwork('TR', false), 'clever');
-assert.equal(resolveTopAdNetwork('UNKNOWN', false), 'clever');
-assert.equal(resolveTopAdNetwork(null, true), 'coinzilla');
+assert.equal(resolveTopAdNetwork(null), null);
+assert.equal(resolveTopAdNetwork('BR'), 'coinzilla');
+assert.equal(resolveTopAdNetwork('TR'), 'clever');
+assert.equal(resolveTopAdNetwork('UNKNOWN'), 'clever');
 
-console.log('Passed: pending country, Brazil, other countries, UNKNOWN and Clever no-fill routing.');
+console.log('Passed: pending country, Brazil, other countries and UNKNOWN routing.');
