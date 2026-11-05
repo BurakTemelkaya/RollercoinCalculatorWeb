@@ -448,5 +448,80 @@
         "rewardRlt": "25.00"
       }
     ]
+  },
+  {
+    "slug": "community-set",
+    "order": 6,
+    "name": {
+      "en": "Community Set",
+      "tr": "Topluluk Seti",
+      "ru": "Набор «Сообщество»",
+      "de": "Community-Set",
+      "es": "Conjunto Comunidad",
+      "fr": "Ensemble Communauté",
+      "pt": "Conjunto Comunidade",
+      "id": "Set Komunitas",
+      "zh": "社区套装",
+      "cs": "Sada Komunita"
+    },
+    "members": [
+      "cuscuz",
+      "chillz",
+      "bb-hamster"
+    ],
+    "icon": "rollercoin/hamsters/icons/cooldown_percent.webp",
+    "completion": {
+      "text": {
+        "en": "Relax Time -25%",
+        "tr": "Dinlenme Süresi -%25",
+        "ru": "Время отдыха -25%",
+        "de": "Ruhezeit -25%",
+        "es": "Tiempo de descanso -25%",
+        "fr": "Temps de repos -25 %",
+        "pt": "Tempo de descanso -25%",
+        "id": "Waktu Istirahat -25%",
+        "zh": "休息时间 -25%",
+        "cs": "Doba odpočinku -25 %"
+      },
+      "rewardRlt": "75.00"
+    },
+    "levels": [
+      {
+        "level": 1,
+        "requiredMembers": 2,
+        "totalMembers": 3,
+        "text": {
+          "en": "Relax Time -10%",
+          "tr": "Dinlenme Süresi -%10",
+          "ru": "Время отдыха -10%",
+          "de": "Ruhezeit -10%",
+          "es": "Tiempo de descanso -10%",
+          "fr": "Temps de repos -10 %",
+          "pt": "Tempo de descanso -10%",
+          "id": "Waktu Istirahat -10%",
+          "zh": "休息时间 -10%",
+          "cs": "Doba odpočinku -10 %"
+        },
+        "rewardRlt": "25.00"
+      },
+      {
+        "level": 2,
+        "requiredMembers": 3,
+        "totalMembers": 3,
+        "text": {
+          "en": "Relax Time -15%",
+          "tr": "Dinlenme Süresi -%15",
+          "ru": "Время отдыха -15%",
+          "de": "Ruhezeit -15%",
+          "es": "Tiempo de descanso -15%",
+          "fr": "Temps de repos -15 %",
+          "pt": "Tempo de descanso -15%",
+          "id": "Waktu Istirahat -15%",
+          "zh": "休息时间 -15%",
+          "cs": "Doba odpočinku -15 %"
+        },
+        "rewardRlt": "50.00"
+      }
+    ]
   }
 ]

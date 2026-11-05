@@ -23,6 +23,7 @@ const ARTICLE_PATHS: Record<string, string> = {
   'lady-minerra': 'meet-lady-minerra',
   cuscuz: 'meet-cuscuz-hero-hamster',
   'jack-o-mine': 'meet-jack-o-mine',
+  chillz: 'new-season-roller-vice',
 };
 
 export function officialHamsterArticle(slug: string): string | undefined {

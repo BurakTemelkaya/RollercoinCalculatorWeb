@@ -12123,5 +12123,142 @@
       }
     ],
     "animationsPending": false
+  },
+  {
+    "slug": "chillz",
+    "name": "Chillz",
+    "generation": 2,
+    "order": 34,
+    "stats": {
+      "health": 75,
+      "strength": 35,
+      "luck": 65
+    },
+    "abilities": [
+      {
+        "code": "season_xp_chest",
+        "text": {
+          "en": "Season XP Chest",
+          "tr": "Sezon XP Sandığı",
+          "ru": "Сундук сезонного опыта",
+          "de": "Saison-XP-Truhe",
+          "es": "Cofre de XP de temporada",
+          "fr": "Coffre d’XP de saison",
+          "pt": "Baú de XP da temporada",
+          "id": "Peti XP Musim",
+          "zh": "赛季经验宝箱",
+          "cs": "Truhla sezónních XP"
+        },
+        "icon": "rollercoin/hamsters/icons/season_xp_chest.webp"
+      },
+      {
+        "code": "relax_time",
+        "text": {
+          "en": "Relax Time -40%",
+          "tr": "Dinlenme Süresi -%40",
+          "ru": "Время отдыха -40%",
+          "de": "Ruhezeit -40%",
+          "es": "Tiempo de descanso -40%",
+          "fr": "Temps de repos -40 %",
+          "pt": "Tempo de descanso -40%",
+          "id": "Waktu Istirahat -40%",
+          "zh": "休息时间 -40%",
+          "cs": "Doba odpočinku -40 %"
+        },
+        "icon": "rollercoin/hamsters/icons/cooldown_percent.webp"
+      },
+      {
+        "code": "experience",
+        "text": {
+          "en": "Extra XP +40%",
+          "tr": "Ekstra XP +%40",
+          "ru": "Доп. опыт +40%",
+          "de": "Extra-EP +40%",
+          "es": "XP extra +40%",
+          "fr": "XP supplémentaire +40 %",
+          "pt": "XP extra +40%",
+          "id": "XP Ekstra +40%",
+          "zh": "额外经验 +40%",
+          "cs": "Extra XP +40 %"
+        },
+        "icon": "rollercoin/hamsters/icons/xp_percent.webp"
+      }
+    ],
+    "builderSlots": [],
+    "ultimate": {
+      "code": "boost_mode_all_stats_become_100",
+      "text": {
+        "en": "Boost Mode",
+        "tr": "Güç Artışı",
+        "ru": "Режим усиления",
+        "de": "Boost-Modus",
+        "es": "Modo Boost",
+        "fr": "Mode Boost",
+        "pt": "Modo Boost",
+        "id": "Mode Boost",
+        "zh": "强化模式",
+        "cs": "Režim posílení"
+      },
+      "icon": "rollercoin/hamsters/icons/boost_mode.webp"
+    },
+    "ultimateChargePoints": 24,
+    "skins": [
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/chillz/lvl50/sprite_walk.png",
+        "frames": 16,
+        "jump": "rollercoin/hamsters/pets/chillz/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/chillz/lvl50/idle.png",
+        "idleAnimation": {
+          "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_idle.png",
+          "frames": 6,
+          "frameWidth": 48,
+          "frameHeight": 48,
+          "frameDurationMs": 100
+        },
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_walk.png",
+            "frames": 16,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_tap_reaction.png",
+            "frames": 11,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ],
+    "animationsPending": false
   }
 ]

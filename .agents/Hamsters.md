@@ -114,3 +114,13 @@ Lucky Red referanslı son düzeltmede eski previewRegion kırpımı kaldırıld�
 
 
 Ön bacak kaybının nedeni ilk kareden üretilen arka plan maskesinin sonraki hareketli bacak pozlarını kapsamamasıydı. scripts/extractJackOMineIdle.py kaynak GIF renklerini ve yürüyüş sprite paletini kullanır; bineğin bölgesindeki hareketli gri bacakları sabit maskeden bağımsız korur. Bacakların altındaki toprak renkleri ve komşu karakter parçaları dışarıda bırakılır. scripts/jack-o-mine-idle-mask.png yalnızca çevre ayırma maskesidir. Yeniden üretmek için Pillow ve NumPy bulunan Python ile python scripts/extractJackOMineIdle.py path/to/JackOMine.gif, ardından node scripts/addJackOMine.cjs ve node scripts/checkJackOMine.cjs çalıştırılır. Çıkarma betiği altı seviyede gerçekten geri alınan binek piksellerini, 36 pozun hücreye sığmasını, 100 ms kare süresini ve Lucky Red alanına göre ölçek sınırlarını assert ile doğrular. İlk seviye görünür yükseklikleri Lucky Red için 148, Jack için 144 pikseldir; diğer seviye kalibrasyonları kendi Lucky Red referansını kullanır.
+
+## Chillz: tek seviye görünümü (5 Kasım 2026)
+
+Chillz, [New Season: Roller Vice](https://rollercoin.com/blog/new-season-roller-vice) yazısındaki 75 can, 35 güç ve 65 şansla eklenmiştir. Pasifleri Season XP Chest, Relax Time -40% ve Extra XP +40%; nihai yeteneği 24 şarj puanıyla Boost Mode'dur. Açıklamalar resmî sezon yazısından gelir; yetenek rehberi hamsterın blog bağlantısını kullanır.
+
+Kullanıcının verdiği GIF'ler `public/assets/rollercoin/hamsters/pets/chillz/lvl50/` içine dönüştürülmüştür. 128×128 kareli hareketler: walk kaynakta 8 kare/100 ms olduğundan sahnenin 20 FPS hızında aynı döngü süresini korumak için her kare iki kez yazılır (16); jump 7, tap_reaction 11, go_sleep 24, take_chest 9 ve win_loop 6 karedir. `Chillz_idle_preview.gif` içindeki 6 kare, ortak idle önizleme biçimine uydurulup 48×48 hücrelere kesilmiştir. Tüm altı sahne hareketi bulunduğundan `animationsPending=false` olur.
+
+Tek görünüm seviye 50'dir. Kataloğu yeniden yazmak için `node scripts/addChillzHamster.cjs`, varlıkları ve alanları kontrol etmek için `node scripts/checkChillzHamster.cjs` çalıştırılır. Kaynak GIF'ler kullanıcı tarafından sağlanan masaüstü dosyalarıdır; PNG çıktıları depodadır.
+
+Community Set (CusCuz, Chillz, BB Hamster) `hamsterSets.json` içine eklenmiştir. Set bonusu Relax Time -25% (Level 1: -10%, Level 2: -15%); toplam ödül 75 RLT'dir. BB Hamster henüz kataloğa eklenmediğinden set üçüncü üyesiz iki kademeyle gösterilir; BB Hamster eklenince tam set tamamlanır. Set ikonu mevcut `cooldown_percent.webp` dosyasını kullanır.
