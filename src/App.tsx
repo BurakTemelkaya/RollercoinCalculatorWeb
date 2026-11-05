@@ -1216,6 +1216,8 @@ function App() {
       <Routes>
         <Route path="/:lang/v2/club" element={<React.Suspense fallback={null}><HomeV2 club /></React.Suspense>} />
         <Route path="/:lang/v2/sponsor-yonetimi" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin><HomeV2 sponsorAdmin /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/v2/yayincilar" element={<React.Suspense fallback={null}><HomeV2 publishers /></React.Suspense>} />
+        <Route path="/:lang/v2/sponsorluk" element={<React.Suspense fallback={null}><HomeV2 sponsorship /></React.Suspense>} />
         <Route path="/:lang/v2/sponsor-merkezi" element={<React.Suspense fallback={null}><HomeV2 sponsorCenter /></React.Suspense>} />
         <Route path="/:lang/v2" element={<React.Suspense fallback={<div className="tab-loading-placeholder">V2 VOL…</div>}><HomeV2 /></React.Suspense>} />
         <Route element={<MainLayoutWrapper />}>

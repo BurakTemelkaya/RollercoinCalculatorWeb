@@ -12,7 +12,7 @@ export function sponsorErrors(s: Sponsor): string[] {
     if (!Number.isInteger(s.weight) || s.weight < 1 || s.weight > 100) errors.push('Gösterim ağırlığı 1–100 arasında olmalı.');
     if (!Number.isInteger(s.order) || s.order < 0 || s.order > 10000) errors.push('Sıralama 0–10000 arasında olmalı.');
     if (!/^#[0-9a-fA-F]{6}$/.test(s.accent)) errors.push('Marka rengi #RRGGBB biçiminde olmalı.');
-    if ([s.logoUrl,s.url,...Object.values(s.socials)].some(url => typeof url !== 'string' || url.length > 2048 || !safeSponsorUrl(url))) errors.push('Bağlantılar geçerli HTTP veya HTTPS adresi olmalı.');
+    if ([...(s.logoUrl === "/publishers/angarali.png" ? [] : [s.logoUrl]),s.url,...Object.values(s.socials)].some(url => typeof url !== 'string' || url.length > 2048 || !safeSponsorUrl(url))) errors.push('Bağlantılar geçerli HTTP veya HTTPS adresi olmalı.');
     if (!s.url && !Object.values(s.socials).some(Boolean)) errors.push('En az bir kanal veya site bağlantısı gir.');
     const start = s.startsAt ? Date.parse(s.startsAt) : null, end = s.endsAt ? Date.parse(s.endsAt) : null;
     if ((start !== null && !Number.isFinite(start)) || (end !== null && !Number.isFinite(end))) errors.push('Yayın tarihleri geçersiz.');

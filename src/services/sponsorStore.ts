@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import type { Sponsor, SponsorMetric } from '../types/sponsor';
 import { sponsorErrors } from '../utils/sponsorRotation';
 const KEY = 'angarali.sponsor-drafts.v1', METRICS = 'angarali.sponsor-local-metrics.v1';
-export const DEFAULT_SPONSORS: Sponsor[] = [{ id:'angarali-kral', name:'ANGARALI KRAL', description:'Topluluğumuzun resmî sponsorunu YouTube’da keşfet.', logoUrl:'', url:'https://www.youtube.com/@angarali006', socials:{youtube:'https://www.youtube.com/@angarali006'}, tier:'gold', active:true, startsAt:null, endsAt:null, accent:'#e5bd70', weight:3, order:0 }];
+export const DEFAULT_SPONSORS: Sponsor[] = [{ id:'angarali-kral', name:'ANGARALI KRAL', description:'Topluluğumuzun resmî sponsorunu YouTube’da keşfet.', logoUrl:'/publishers/angarali.png', url:'https://www.youtube.com/@angarali006', socials:{youtube:'https://www.youtube.com/@angarali006',x:'https://x.com/xAngarali006',tiktok:'https://www.tiktok.com/@xangarali006'}, tier:'gold', active:true, startsAt:null, endsAt:null, accent:'#e5bd70', weight:3, order:0 }];
 const listeners = new Set<()=>void>(), metricListeners = new Set<()=>void>();
 let cachedRaw: string | null | undefined, snapshot: Sponsor[] = DEFAULT_SPONSORS;
 let metricsRaw: string | null | undefined, metricsSnapshot: Record<string,SponsorMetric> = {};

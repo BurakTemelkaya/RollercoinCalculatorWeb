@@ -6,7 +6,7 @@ import { SPONSOR_TIERS, type Sponsor, type SponsorSocial, type SponsorTier } fro
 import './SponsorCarousel.css';
 const INTERVAL = 8000;
 const socialLabels: Record<SponsorSocial,string> = { youtube:'YouTube', instagram:'Instagram', x:'X', tiktok:'TikTok' };
-function SocialIcon({type}: {type: SponsorSocial}) {
+export function SocialIcon({type}: {type: SponsorSocial}) {
     if(type === 'youtube') return <svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="2" width="22" height="16" rx="5" fill="currentColor"/><path d="m10 6 6 4-6 4Z" fill="#111622"/></svg>;
     if(type === 'instagram') return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>;
     return <span aria-hidden="true">{type==='x'?'𝕏':'♪'}</span>;
@@ -52,7 +52,7 @@ export default function SponsorCarousel({ compact = false, tier }: { compact?: b
         onPointerDown={event=>{swiped.current=false;if(event.pointerType==='touch'||event.pointerType==='pen')touch.current={x:event.clientX,y:event.clientY};}}
         onPointerCancel={()=>{touch.current=null;}} onPointerUp={event=>{const start=touch.current;touch.current=null;if(!start||sponsors.length<2)return;const dx=event.clientX-start.x,dy=event.clientY-start.y;if(Math.abs(dx)>=45&&Math.abs(dx)>Math.abs(dy)){swiped.current=true;change(dx<0?'next':'previous');}}}
         onClickCapture={event=>{if(swiped.current){event.preventDefault();event.stopPropagation();swiped.current=false;}}}>
-        <header className="sc-heading"><div><span className="sc-ad-label">{tr?'SPONSORLU İÇERİK':'SPONSORED CONTENT'}</span><h2>{tr?'Sponsorlu Reklam Alanı':'Sponsor showcase'}</h2></div><Link to={'/'+lang+'/v2/sponsor-merkezi#tum-sponsorlar'}>{tr?'Tüm Sponsorlar':'All sponsors'} ↗</Link></header>
+        <header className="sc-heading"><div><span className="sc-ad-label">{tr?'SPONSORLU İÇERİK':'SPONSORED CONTENT'}</span><h2>{tr?'Sponsorlu Reklam Alanı':'Sponsor showcase'}</h2></div><Link to={'/'+lang+'/v2/yayincilar'}>{tr?'Tüm Sponsorlar':'All sponsors'} ↗</Link></header>
         {sponsor ? <article className="sc-slide" key={cycle} role="group" aria-roledescription={tr?'slayt':'slide'} aria-label={sponsor.name+' · '+(sponsors.indexOf(sponsor)+1)+' / '+sponsors.length}>
             <SponsorLogo key={sponsor.id+sponsor.logoUrl} sponsor={sponsor}/><div className="sc-identity"><span className="sc-tier-label">{sponsor.tier==='gold'?'♛ ':''}{SPONSOR_TIERS[sponsor.tier].label}</span><h3>{sponsor.name}</h3><p>{sponsor.description}</p></div>
             <div className="sc-links"><div className="sc-socials">{(Object.entries(sponsor.socials) as [SponsorSocial,string][]).filter(([type,url])=>socialLabels[type]&&url).map(([type,url])=><a key={type} href={url} aria-label={sponsor.name+' · '+socialLabels[type]} target="_blank" rel="noopener noreferrer" onClick={click}><SocialIcon type={type}/></a>)}</div>{sponsor.url&&<a className="sc-visit" href={sponsor.url} target="_blank" rel="noopener noreferrer" onClick={click}>{tr?'Kanalı Ziyaret Et':'Visit sponsor'} <span aria-hidden="true">↗</span></a>}</div>
