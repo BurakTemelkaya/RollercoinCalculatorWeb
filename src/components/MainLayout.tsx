@@ -254,6 +254,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <Link to={`/${i18n.language}`}>
               <img src={appLogo} alt="Logo" className="app-main-logo" />
             </Link>
+            <Link to={`/${lang}/v2`} className="home-v2-nav" aria-current={location.pathname.split('/')[2] === 'v2' ? 'page' : undefined}>V2 VOL</Link>
           </div>
 
           <div className="sticky-nav-links desktop-only">

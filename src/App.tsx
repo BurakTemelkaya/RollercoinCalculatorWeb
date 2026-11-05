@@ -20,6 +20,7 @@ import { LEAGUE_IMAGES } from './data/leagueImages';
 import { RollercoinUserResponse } from './types/user';
 import { RollercoinRoomResponse } from './types/room';
 import DataInputForm from './components/DataInputForm';
+const HomeV2 = React.lazy(() => import('./HomeV2'));
 import EarningsTable from './components/EarningsTable';
 import { ApiError } from './services/apiClient';
 
@@ -145,7 +146,7 @@ function AutoRedirect() {
   return null;
 }
 
-function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
+export function CalculatorArea({ isEventPage = false, inputOnly = false, afterResults }: { isEventPage?: boolean; inputOnly?: boolean; afterResults?: React.ReactNode }) {
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -926,6 +927,32 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
     }
     return userPower;
   }, [fetchMode, fetchedUser, userPower]);
+  const inputPanel = (
+            <DataInputForm
+              onDataParsed={handleDataParsed}
+              currentCoins={coins}
+              currentUserPower={userPower}
+              displayPower={displayPower}
+              currentLeague={league}
+              isAutoLeague={isAutoLeague}
+              onLeagueChange={handleLeagueChange}
+              onToggleAutoLeague={toggleAutoLeague}
+              onShowNotification={showNotification}
+              onApiLeaguesLoaded={handleApiLeaguesLoaded}
+              apiLeagues={apiLeagues}
+              onFetchUser={handleFetchUser}
+              isFetchingUser={isFetchingUser}
+              globalUserName={globalUserName}
+              setGlobalUserName={setGlobalUserName}
+              onForceFetchPrices={handleForceFetchPrices}
+              fetchMode={fetchMode}
+              setFetchMode={setFetchMode}
+              usernameError={usernameError}
+              onClearUsernameError={clearUsernameError}
+              hasRewardChangeData={!!rewardChangeData}
+              onShowRewardChange={() => setShowRewardChangeModal(true)}
+            />
+  );
 
   return (
     <div className="app">
@@ -1004,32 +1031,10 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
         <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>
           <>
             {/* Data Input Form */}
-            <DataInputForm
-              onDataParsed={handleDataParsed}
-              currentCoins={coins}
-              currentUserPower={userPower}
-              displayPower={displayPower}
-              currentLeague={league}
-              isAutoLeague={isAutoLeague}
-              onLeagueChange={handleLeagueChange}
-              onToggleAutoLeague={toggleAutoLeague}
-              onShowNotification={showNotification}
-              onApiLeaguesLoaded={handleApiLeaguesLoaded}
-              apiLeagues={apiLeagues}
-              onFetchUser={handleFetchUser}
-              isFetchingUser={isFetchingUser}
-              globalUserName={globalUserName}
-              setGlobalUserName={setGlobalUserName}
-              onForceFetchPrices={handleForceFetchPrices}
-              fetchMode={fetchMode}
-              setFetchMode={setFetchMode}
-              usernameError={usernameError}
-              onClearUsernameError={clearUsernameError}
-              hasRewardChangeData={!!rewardChangeData}
-              onShowRewardChange={() => setShowRewardChangeModal(true)}
-            />
+            {inputPanel}
 
 
+            {!inputOnly && <>
             {/* Tabs */}
               <div className="main-tabs main-tabs-4">
                 <div
@@ -1175,7 +1180,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
             </div>
 
 
-            <SeoArticle />
+            {afterResults ?? <SeoArticle />}
+            </>}
           </>
         </React.Suspense>
       )}
@@ -1208,10 +1214,15 @@ function App() {
       <AnalyticsTracker />
       <ServiceWorkerUpdater />
       <Routes>
+        <Route path="/:lang/v2/club" element={<React.Suspense fallback={null}><HomeV2 club /></React.Suspense>} />
+        <Route path="/:lang/v2/sponsor-yonetimi" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin><HomeV2 sponsorAdmin /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/v2/sponsor-merkezi" element={<React.Suspense fallback={null}><HomeV2 sponsorCenter /></React.Suspense>} />
+        <Route path="/:lang/v2" element={<React.Suspense fallback={<div className="tab-loading-placeholder">V2 VOL…</div>}><HomeV2 /></React.Suspense>} />
         <Route element={<MainLayoutWrapper />}>
           <Route path="/" element={<AutoRedirect />} />
           <Route path="/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
           <Route path="/:lang" element={<CalculatorArea />} />
+
           <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
           <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
           <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
