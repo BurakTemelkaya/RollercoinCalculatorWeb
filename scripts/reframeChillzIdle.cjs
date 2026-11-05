@@ -83,10 +83,10 @@ if (srcSprite.w === 372 && srcSprite.h === 62) {
   process.exit(0);
 }
 
-const TARGET_FRAME_W = 62;
-const TARGET_FRAME_H = 62;
-const OFFSET_X = 7;
-const OFFSET_Y = 12;
+const TARGET_FRAME_W = 80;
+const TARGET_FRAME_H = 80;
+const OFFSET_X = 16;
+const OFFSET_Y = 28;
 const FRAMES = 6;
 
 const dstW = TARGET_FRAME_W * FRAMES;
@@ -121,3 +121,4 @@ const encodedIdle = encodePng(TARGET_FRAME_W, TARGET_FRAME_H, dstIdle);
 fs.writeFileSync(path.join(dir, 'idle.png'), encodedIdle);
 
 console.log('Successfully reframed Chillz idle.png (62x62) and sprite_idle.png (372x62).');
+
