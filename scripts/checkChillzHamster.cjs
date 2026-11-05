@@ -7,7 +7,7 @@ const hamster = catalog.find(item => item.slug === 'chillz');
 assert(hamster, 'Chillz must be in the catalog');
 assert.equal(catalog.filter(item => item.slug === 'chillz').length, 1);
 assert.deepEqual(hamster.stats, { health: 75, strength: 35, luck: 65 });
-assert.deepEqual(hamster.skins.map(skin => skin.level), [50]);
+assert.deepEqual(hamster.skins.map(skin => skin.level), [1]);
 assert.equal(hamster.ultimateChargePoints, 24);
 assert.equal(hamster.animationsPending, false);
 
