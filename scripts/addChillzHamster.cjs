@@ -48,12 +48,10 @@ const hamster = {
     idleAnimation: {
       path: `${prefix}/sprite_idle.png`,
       frames: 6,
-      frameWidth: 48,
-      frameHeight: 48,
+      frameWidth: 62,
+      frameHeight: 62,
       frameDurationMs: 100,
-      previewRegion: { x: -7, y: -12, width: 62, height: 62 },
     },
-    previewRegion: { x: -7, y: -12, width: 62, height: 62 },
     animations: {
       walk: animation('walk', 16),
       jump: animation('jump', 7),
