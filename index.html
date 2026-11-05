@@ -153,49 +153,93 @@
   <script type="module" src="/src/main.tsx"></script>
   <script data-cfasync="false" type="text/javascript" id="clever-core">
     (function (document, window) {
-      var root = document.getElementById("root");
-      var loadCleverCore = function () {
-        var adSlot = document.getElementById("top-ad-container");
-        if (adSlot && !adSlot.dataset.gaSlotViewTracked && "IntersectionObserver" in window) {
-          adSlot.dataset.gaSlotViewTracked = "true";
-          var impressionObserver = new IntersectionObserver(function (entries) {
-            if (entries[0].isIntersecting) {
-              if (typeof window.gtag === "function") window.gtag("event", "ad_slot_view", { ad_unit: "top_banner_300x250" });
-              impressionObserver.disconnect();
-            }
-          }, { threshold: 0.5 });
-          impressionObserver.observe(adSlot);
+      var CLEVER_LOADER_ID = "CleverCoreLoader108241";
+      var CLEVER_SRC = "https://scripts.cleverwebserver.com/97756ee41dacac40b1a5acade98daecf.js";
+      var appObserver;
+
+      // Clever calls the function named in data-callback-no-load (without
+      // arguments) when it cannot find an ad for this visitor. Tell React so it
+      // can swap the slot to Coinzilla and report the miss to GA4.
+      var notifyNoFill = function (reason) {
+        if (window.__cleverCoreNoFill) return;
+        window.__cleverCoreNoFill = true;
+        window.__cleverCoreNoFillReason = reason;
+        if (appObserver) appObserver.disconnect();
+
+        var detail = { reason: reason };
+        var event;
+        try {
+          event = new CustomEvent("clever-core-no-load", { detail: detail });
+        } catch (e) {
+          event = document.createEvent("CustomEvent");
+          event.initCustomEvent("clever-core-no-load", false, false, detail);
         }
+        window.dispatchEvent(event);
+      };
 
-        if (document.getElementById("CleverCoreLoader108241")) return true;
-        var ad = document.querySelector(".clever-core-ads");
-        if (!ad) return false;
+      window.onCleverCoreNoLoad = function () {
+        notifyNoFill("callback-no-load");
+      };
 
-        var a, c = document.createElement("script"), f = window.frameElement;
-        c.id = "CleverCoreLoader108241";
-        c.src = "https://scripts.cleverwebserver.com/97756ee41dacac40b1a5acade98daecf.js";
+      var injectCleverCore = function () {
+        if (document.getElementById(CLEVER_LOADER_ID)) return;
+
+        var c = document.createElement("script");
+        c.id = CLEVER_LOADER_ID;
+        c.src = CLEVER_SRC;
         c.async = !0;
         c.type = "text/javascript";
-        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
+        // data-target is only needed inside an iframe. On a top-level page an
+        // unexpected window.name makes Clever look for a missing element and
+        // silently skip the ad.
+        var frame = window.frameElement;
+        if (frame && frame.id) c.setAttribute("data-target", frame.id);
         c.setAttribute("data-callback", "put-your-callback-function-here");
         c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
         c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
-        try {
-          a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
-        } catch (e) {
-          a = !1;
-        }
-        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
-        a.parentNode.insertBefore(c, a);
-        return true;
+        c.setAttribute("data-callback-no-load", "onCleverCoreNoLoad");
+
+        var anchor = document.getElementsByTagName("script")[0] ||
+          document.getElementsByTagName("head")[0] ||
+          document.getElementsByTagName("body")[0];
+        anchor.parentNode.insertBefore(c, anchor);
       };
 
-      if (!loadCleverCore()) {
-        var observer = new MutationObserver(function () {
-          if (document.querySelector("#top-ad-container .coinzilla") || loadCleverCore()) observer.disconnect();
-        });
-        observer.observe(root, { childList: true, subtree: true });
-      }
+      var boot = function () {
+        // Once Clever reported no fill, React switches the slot to Coinzilla.
+        if (window.__cleverCoreNoFill) {
+          if (appObserver) appObserver.disconnect();
+          return;
+        }
+
+        var slot = document.querySelector(".clever-core-ads");
+        if (!slot) {
+          if (document.querySelector("#top-ad-container .coinzilla") && appObserver) appObserver.disconnect();
+          return;
+        }
+        if (slot.getAttribute("data-clever-bound") === "true") return;
+        slot.setAttribute("data-clever-bound", "true");
+
+        // React unmounts and remounts the slot during SPA navigation. The
+        // CleverCore script is a singleton (re-injecting it is a no-op), so
+        // ask the existing instance to look for the new slot instead.
+        if (window.CleverCore && typeof window.CleverCore.exec === "function") {
+          if (slot.childElementCount === 0) {
+            try { window.CleverCore.exec(); } catch (e) { /* ignore */ }
+          }
+          return;
+        }
+
+        injectCleverCore();
+      };
+
+      // Keep observing: the ad slot is created, removed and re-created by React.
+      // MutationObserver already batches records per microtask, so calling boot
+      // directly is cheap. Do not use requestAnimationFrame here: it is paused
+      // in background tabs and would delay the ad indefinitely.
+      appObserver = new MutationObserver(boot);
+      appObserver.observe(document.getElementById("root") || document.body, { childList: true, subtree: true });
+      boot();
     })(document, window);
   </script>
   <script>

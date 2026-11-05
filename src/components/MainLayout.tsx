@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import appLogo from '../assets/logo.png';
@@ -6,6 +6,7 @@ import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { GlobalAds } from './GlobalAds';
+import { resolveTopAdNetwork } from '../utils/topAdNetwork';
 
 export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
@@ -71,12 +72,43 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
   const [country, setCountry] = useState<string | null>(null);
+  const [cleverNoFill, setCleverNoFill] = useState(() => window.__cleverCoreNoFill === true);
+  const cleverNoFillTrackedRef = useRef(false);
+  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill);
+
+  const trackCleverNoFill = useCallback((reason: string) => {
+    if (cleverNoFillTrackedRef.current) return;
+    cleverNoFillTrackedRef.current = true;
+
+    window.gtag?.('event', 'ad_no_fill', {
+      ad_unit: 'top_banner_300x250',
+      ad_network: 'clevercore',
+      fallback_network: 'coinzilla',
+      reason,
+    });
+  }, []);
+
+  const markCleverNoFill = useCallback((reason: string) => {
+    window.__cleverCoreNoFill = true;
+    window.__cleverCoreNoFillReason = reason;
+    setCleverNoFill(true);
+    trackCleverNoFill(reason);
+  }, [trackCleverNoFill]);
 
   useEffect(() => {
-    fetch('https://get.geojs.io/v1/ip/country.json')
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 4000);
+
+    fetch('https://get.geojs.io/v1/ip/country.json', { signal: controller.signal })
       .then(res => res.json())
-      .then(data => setCountry(data.country))
-      .catch(() => setCountry('UNKNOWN')); // If adblocker blocks geojs, default to UNKNOWN
+      .then(data => setCountry(data.country || 'UNKNOWN'))
+      .catch(() => setCountry('UNKNOWN')) // Blocked, timed out or failed: keep ads enabled.
+      .finally(() => window.clearTimeout(timer));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -94,20 +126,106 @@ export default function MainLayout({ children }: MainLayoutProps) {
     };
   }, []);
 
+  // Clever's callback-no-load handler (defined in index.html) fires this event
+  // when no tracker/creative is available for the visitor's country.
   useEffect(() => {
-    if (adsBlocked || country !== 'BR') return;
+    const handleNoFill = (event: Event) => {
+      const detail = (event as CustomEvent<{ reason?: string }>).detail;
+      markCleverNoFill(detail?.reason || 'callback-no-load');
+    };
+
+    window.addEventListener('clever-core-no-load', handleNoFill);
+
+    // The event may have fired before React mounted.
+    if (window.__cleverCoreNoFill) {
+      trackCleverNoFill(window.__cleverCoreNoFillReason || 'callback-no-load');
+    }
+
+    return () => window.removeEventListener('clever-core-no-load', handleNoFill);
+  }, [markCleverNoFill, trackCleverNoFill]);
+
+  // Safety net: if Clever never reports back (script blocked, network error) and
+  // never fills the slot, do not leave a 300x250 hole on the page.
+  useEffect(() => {
+    if (adsBlocked || topAdNetwork !== 'clever') return;
+
+    const slot = document.querySelector<HTMLElement>('#top-ad-container .clever-core-ads');
+    if (!slot) return;
+
+    const hasFill = () => slot.childElementCount > 0;
+    if (hasFill()) return;
+
+    const fallbackTimer = window.setTimeout(() => {
+      if (!hasFill()) markCleverNoFill('timeout');
+    }, 10000);
+
+    const fillObserver = new MutationObserver(() => {
+      if (hasFill()) {
+        window.clearTimeout(fallbackTimer);
+        fillObserver.disconnect();
+      }
+    });
+    fillObserver.observe(slot, { childList: true });
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      fillObserver.disconnect();
+    };
+  }, [adsBlocked, topAdNetwork, markCleverNoFill]);
+
+  useEffect(() => {
+    if (adsBlocked || topAdNetwork !== 'coinzilla') return;
 
     const timer = setTimeout(() => {
-      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
-      const c_display_preferences: any = {};
-      c_display_preferences.zone = "83069e710174ee88650";
-      c_display_preferences.width = "300";
-      c_display_preferences.height = "250";
-      (window as any).coinzilla_display.push(c_display_preferences);
+      window.coinzilla_display ??= [];
+      window.coinzilla_display.push({ zone: '83069e710174ee88650', width: '300', height: '250' });
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [adsBlocked, country]);
+  }, [adsBlocked, topAdNetwork]);
+
+  // Count a filled slot only after at least half of it is visible.
+  useEffect(() => {
+    if (adsBlocked || !topAdNetwork || !('IntersectionObserver' in window)) return;
+
+    const container = document.getElementById('top-ad-container');
+    if (!container) return;
+
+    let viewObserver: IntersectionObserver | null = null;
+    const hasCreative = () => {
+      const cleverSlot = container.querySelector<HTMLElement>('.clever-core-ads');
+      const coinzillaSlot = container.querySelector<HTMLElement>('.coinzilla');
+      return Boolean((cleverSlot && cleverSlot.childElementCount > 0) ||
+        (coinzillaSlot && coinzillaSlot.querySelector('iframe')));
+    };
+
+    const observeVisibleCreative = () => {
+      if (container.dataset.gaAdSlotViewTracked === 'true' || viewObserver || !hasCreative()) return;
+
+      viewObserver = new IntersectionObserver(([entry]) => {
+        if (!entry?.isIntersecting || entry.intersectionRatio < 0.5 || !hasCreative()) return;
+
+        container.dataset.gaAdSlotViewTracked = 'true';
+        window.gtag?.('event', 'ad_slot_view', {
+          ad_unit: 'top_banner_300x250',
+          ad_network: topAdNetwork,
+          ad_format: '300x250',
+        });
+        viewObserver?.disconnect();
+      }, { threshold: 0.5 });
+
+      viewObserver.observe(container);
+    };
+
+    observeVisibleCreative();
+    const creativeObserver = new MutationObserver(observeVisibleCreative);
+    creativeObserver.observe(container, { childList: true, subtree: true });
+
+    return () => {
+      creativeObserver.disconnect();
+      viewObserver?.disconnect();
+    };
+  }, [adsBlocked, topAdNetwork]);
 
   let normalizedPath = location.pathname;
   if (normalizedPath.endsWith('/') && normalizedPath.length > 1) {
@@ -121,6 +239,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
     pathParts[1] = newLang;
     navigate(pathParts.join('/'));
   };
+
+  let topAdSlot: React.ReactNode = null;
+  if (topAdNetwork === 'clever') {
+    topAdSlot = <div className="clever-core-ads"></div>;
+  } else if (topAdNetwork === 'coinzilla') {
+    topAdSlot = <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
+  }
 
   return (
     <div className="app-layout">
@@ -272,11 +397,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
               {!adsBlocked && (
                 <div id="top-ad-container" className="top-ad-wrapper" style={{ width: '300px', height: '250px', maxWidth: '100%', flexShrink: 0 }}>
-                  {country === 'BR' ? (
-                    <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>
-                  ) : country ? (
-                    <div className="clever-core-ads"></div>
-                  ) : null}
+                  {topAdSlot}
                 </div>
               )}
 

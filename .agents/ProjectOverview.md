@@ -92,6 +92,8 @@ src/
 - **Race condition**: API ve kullanıcı verileri paralel çekilir. `App.tsx`'teki coins generation effect'inde fallback mantığı var (league.id eşleşmezse fetchedUser.league_Id kullanılır).
 - **Güç birimleri**: Tüm API değerleri Gh/s cinsindendir, iç hesaplamalarda H/s base unit'e çevrilir.
 - **i18n**: Tüm UI metinleri `locales/tr.json` ve `locales/en.json`'da tanımlıdır.
-- **Reklamlar**: CleverCore 300×250 yükleyicisi `index.html`'de tanımlıdır ve React içindeki `.clever-core-ads` hedefi oluşana kadar bekler. Üst reklam ülke kontrolünden bağımsızdır; yan ve mobil reklamlar `GlobalAds.tsx` içindeki ülke kurallarını kullanır. Eski RollerCoin görseline yapılan istek reklam engelleyici kontrolü olarak kullanılmaz.
+- **Reklamlar**: Üst 300×250 reklam ülke bilgisi gelmeden yüklenmez. Brezilya Coinzilla kullanır; diğer ülkeler CleverCore ile başlar ve no-fill callback'i veya 10 saniyelik timeout sonrası Coinzilla'ya geçer. CleverCore yükleyicisi `index.html`'de bulunur ve SPA'da yeniden oluşturulan slota bağlanır. GA4'e Clever no-fill için `ad_no_fill`, reklam slotunun en az yarısı görünürken kreatif yüklüyse `ad_slot_view` gönderilir. Sayfa görüntülemeleri GA4 Web stream ayarları tarafından yönetilir; uygulama manuel SPA `page_view` göndermez. Yan ve mobil reklamlar `GlobalAds.tsx` içindeki ülke kurallarını kullanır. Eski RollerCoin görseline yapılan istek reklam engelleyici kontrolü olarak kullanılmaz.
+
+  Reklam yönlendirme kontrolü: `npx tsx scripts/check-top-ad-network.ts`.
 
 Her işlem yapıldıktan veya kodlar güncellendikten sonra eğer projenin genel yapısında bir değişiklik yapılıyorsa .agent klasöründe yeni dosya oluştur yada güncelle.
