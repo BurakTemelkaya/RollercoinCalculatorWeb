@@ -50,60 +50,30 @@
 .publisher-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.publisher-profile-card{border:1px solid #394052;border-radius:14px;overflow:hidden;background:#141a28;scroll-margin-top:25px}.publisher-profile-cover{height:72px;background:linear-gradient(110deg,#29213a,#172333);border-bottom:1px solid #454052;padding:16px 20px;box-sizing:border-box;text-align:right}.publisher-profile-cover>span{color:#dbc28c;font-size:9px;letter-spacing:1.2px}.publisher-profile-content{padding:0 24px 24px}.publisher-profile-content>.sc-logo{width:88px;height:88px;margin-top:-36px;border:4px solid #141a28;border-radius:15px;background:#141a28}.publisher-profile-content .sc-logo img{object-fit:cover;padding:0;box-sizing:border-box;border-radius:11px}.publisher-profile-content .sc-crown{display:none}.publisher-profile-content h2{font-size:21px;letter-spacing:-.3px;margin:18px 0 10px}.publisher-profile-content>p{color:var(--publisher-muted);font-size:13px;line-height:1.8;min-height:46px}.publisher-profile-socials{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.publisher-profile-socials a{display:flex;align-items:center;gap:7px;color:#cad2df;text-decoration:none;font-size:11px;border:1px solid #353d50;border-radius:7px;padding:8px 10px}.publisher-profile-socials svg{width:15px;height:15px}.publisher-profile-visit{display:flex;justify-content:space-between;border-top:1px solid #333c4e;padding-top:16px;color:#d9c193;font-size:12px;text-decoration:none}.publisher-directory-empty{padding:40px;text-align:center;color:var(--publisher-muted)}.publisher-directory :focus-visible{outline:2px solid #b59ae2;outline-offset:4px}
 @media(max-width:900px){.publisher-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.publisher-directory-toolbar{align-items:stretch;flex-direction:column}}
 @media(max-width:560px){.publisher-directory-grid{grid-template-columns:1fr}.publisher-directory-heading{align-items:flex-start;flex-direction:column;gap:10px}.publisher-directory-heading h1{font-size:26px}.publisher-directory-toolbar{padding:14px}.publisher-directory-toolbar button{padding:9px 10px}}
-/* Gold package treatment: quiet metallic detail, no decorative motion. */
-.publisher-profile-tier-gold{position:relative;border:1px solid #85704b;background:#141a28;box-shadow:0 10px 26px #00000020}
-.publisher-profile-tier-gold .publisher-profile-cover{position:relative;background:linear-gradient(115deg,#272735,#1c2330);border-bottom-color:#b89a5e36}
-.publisher-profile-tier-gold .publisher-profile-cover>span{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border:1px solid #b89a5e45;border-radius:5px;background:#26251f;color:#d8bd85;font-size:9px;font-weight:600;letter-spacing:1px}
-.publisher-profile-tier-gold .publisher-profile-cover>span::before{content:'';width:5px;height:5px;background:#c5aa75;transform:rotate(45deg)}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo{box-shadow:0 0 0 1px #a38a5a66,0 4px 12px #0003}
-.publisher-profile-tier-gold .publisher-profile-content h2{color:#eef0f4}
-.publisher-profile-tier-gold .publisher-profile-visit{border-top-color:#8e79513d;color:#d3ba89}
-.publisher-profile-tier-gold .publisher-profile-socials a{background:#171e2a;border-color:#343e50}
-/* Gold motion detail: a quiet metallic sweep, isolated from text and controls. */
-.publisher-profile-tier-gold{border-color:#9a8153;box-shadow:0 8px 28px #0003,0 0 0 1px #d8b97708}
-.publisher-profile-tier-gold::after{content:'';position:absolute;inset:0;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;background:linear-gradient(115deg,transparent 25%,#e8d29d22 40%,#fff1c7aa 49%,#d8b26955 52%,transparent 65%);background-size:300% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:gold-frame-reflection 8s ease-in-out infinite}
-.publisher-profile-tier-gold .publisher-profile-cover{overflow:hidden;background:radial-gradient(ellipse at 15% 100%,#aa86411b,transparent 65%),linear-gradient(115deg,#292635,#1c2330)}
-.publisher-profile-tier-gold .publisher-profile-cover::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#dabe8520 49%,transparent 61%);transform:translateX(-120%);animation:gold-header-reflection 8s ease-in-out infinite}
-.publisher-profile-tier-gold .publisher-profile-cover>span{z-index:1;overflow:hidden;border-color:#c5a36366;background:linear-gradient(135deg,#383024,#24251f);box-shadow:inset 0 1px #f2d9a01a;color:#e4c88d}
-.publisher-profile-tier-gold .publisher-profile-cover>span::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 20%,#fff0ca44 49%,transparent 78%);transform:translateX(-150%);animation:gold-badge-reflection 8s ease-in-out infinite}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo{isolation:isolate;border-color:#141a28;box-shadow:0 0 0 1px #9a8153,0 4px 14px #0004;overflow:visible}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo::after{content:'';position:absolute;inset:-6px;border-radius:18px;border:1px solid transparent;pointer-events:none;background:linear-gradient(#141a28,#141a28) padding-box,conic-gradient(from var(--gold-avatar-angle),#8f754355 0deg,#8f754355 50deg,#f2db9a 80deg,#8f754355 110deg,#8f754355 230deg,#e9c780 260deg,#8f754355 290deg) border-box;z-index:-1;animation:gold-avatar-orbit 12s linear infinite}
-@property --gold-avatar-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
-@keyframes gold-avatar-orbit{to{--gold-avatar-angle:360deg}}
-@keyframes gold-frame-reflection{0%,15%{background-position:120% 0}75%,100%{background-position:-120% 0}}
-@keyframes gold-header-reflection{0%,20%{transform:translateX(-120%)}65%,100%{transform:translateX(120%)}}
-@keyframes gold-badge-reflection{0%,40%{transform:translateX(-150%)}65%,100%{transform:translateX(150%)}}
-@media(prefers-reduced-motion:reduce){.publisher-profile-tier-gold::after,.publisher-profile-tier-gold .publisher-profile-cover::after,.publisher-profile-tier-gold .publisher-profile-cover>span::after,.publisher-profile-tier-gold .publisher-profile-content>.sc-logo::after{animation:none}.publisher-profile-tier-gold .publisher-profile-cover::after,.publisher-profile-tier-gold .publisher-profile-cover>span::after{display:none}}
-/* Gold headline card: large artwork, editorial typography and a clear sponsor seal. */
-.publisher-profile-tier-gold{border-color:#927444;background:#111723;border-radius:16px;box-shadow:0 16px 38px #00000038}
+/* Gold sponsor palette and metalwork, built entirely in CSS and SVG. */
+.publisher-profile-tier-gold{--gold:#efbd42;--gold-light:#fff0af;position:relative;isolation:isolate;overflow:hidden;border:2px solid transparent;border-radius:18px;background:linear-gradient(135deg,#1e232b,#0b1322 62%,#101620) padding-box,linear-gradient(135deg,#fff2b2 0%,#f3c34e 12%,#9a641b 32%,#ffe992 50%,#cf941f 70%,#fff0a0 89%,#e5af35 100%) border-box;box-shadow:inset 0 0 0 1px #ffe39b30,0 14px 34px #0005}
+.publisher-profile-tier-gold::before,.publisher-profile-tier-gold::after{content:'';position:absolute;z-index:2;pointer-events:none;width:72px;height:72px;background:linear-gradient(135deg,#ffd969,#b77c19 50%,#f8cc53);opacity:.9}
+.publisher-profile-tier-gold::before{top:0;left:0;clip-path:polygon(0 0,100% 0,0 100%)}
+.publisher-profile-tier-gold::after{bottom:0;right:0;clip-path:polygon(100% 0,100% 100%,0 100%);filter:drop-shadow(0 0 8px #eab63e66)}
+.publisher-gold-watermark{position:absolute;right:-14px;top:238px;width:170px;height:140px;z-index:0;fill:#d4a43d0a;stroke:#d6ad5430;stroke-width:1.4;pointer-events:none}
 .publisher-profile-tier-gold .publisher-profile-cover{height:0;padding:0;border:0;overflow:visible;position:relative;z-index:4;background:none}
-.publisher-profile-tier-gold .publisher-profile-cover>span{position:absolute;top:15px;right:15px;padding:9px 12px;background:#171b24ed;border:1px solid #c6a36a99;border-radius:6px;backdrop-filter:blur(8px);font-size:9px;letter-spacing:1.3px;color:#f0d39e;box-shadow:0 3px 12px #0004}
-.publisher-profile-tier-gold .publisher-profile-cover::after{display:none}
-.publisher-profile-tier-gold .publisher-profile-content{padding:0 24px 23px;position:relative}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo{display:block;width:calc(100% + 48px);height:220px;margin:0 -24px;border:0;border-radius:0;background:#17202e;box-shadow:none;overflow:hidden;position:relative;isolation:auto}
+.publisher-profile-tier-gold .publisher-profile-cover>span{position:absolute;display:inline-flex;align-items:center;gap:7px;top:14px;right:14px;border:1px solid #fff1af;border-radius:7px;padding:9px 12px;background:linear-gradient(165deg,#fbe8a3 0%,#e6b944 42%,#b47d1c 55%,#e6b749 100%);color:#181a1c;font-size:9px;font-weight:850;letter-spacing:.8px;box-shadow:inset 0 1px 1px #fff7cf,0 2px 9px #0007,0 0 13px #edbd4220;overflow:hidden}
+.publisher-profile-tier-gold .publisher-profile-cover>span::before{content:'♛';font-size:20px;line-height:1}
+.publisher-profile-tier-gold .publisher-profile-cover>span::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,#fff8d855 50%,transparent 70%);transform:translateX(-150%);animation:gold-label-sheen 9s ease-in-out infinite;pointer-events:none}
+.publisher-profile-tier-gold .publisher-profile-content{padding:0 24px 24px;position:relative;z-index:1}
+.publisher-profile-tier-gold .publisher-profile-content>.sc-logo{display:block;width:calc(100% + 48px);height:220px;margin:0 -24px;border:0;border-radius:0;overflow:hidden;background:#101722;box-shadow:none;position:relative;z-index:0}
 .publisher-profile-tier-gold .publisher-profile-content>.sc-logo img{display:block;width:100%;height:100%;border-radius:0;object-fit:cover;object-position:center 32%;padding:0;transition:transform .7s ease}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo::after{content:'';inset:0;z-index:1;border:0;border-radius:0;background:linear-gradient(180deg,#080c1710 35%,#11172366 75%,#111723 100%);animation:none;pointer-events:none}
-.publisher-profile-tier-gold:hover .publisher-profile-content>.sc-logo img{transform:scale(1.035)}
-.publisher-profile-tier-gold .publisher-profile-content h2{position:relative;margin:-12px 0 12px;font-size:23px;line-height:1.25;letter-spacing:.2px;color:#faf4e8;text-shadow:0 2px 8px #0007}
-.publisher-profile-tier-gold .publisher-profile-content h2::after{content:'RESMÎ YAYINCI · GOLD PARTNER';display:block;color:#c6a471;font-size:8px;font-weight:500;letter-spacing:1.45px;margin-top:12px;text-shadow:none}
-.publisher-profile-tier-gold .publisher-profile-content>p{font-size:12px;line-height:1.8;color:#aeb9cc;margin:14px 0 0;min-height:43px}
-.publisher-profile-tier-gold .publisher-profile-socials{gap:6px;margin:19px 0 21px}
-.publisher-profile-tier-gold .publisher-profile-socials a{background:#1b2230;border-color:#394253;padding:9px 10px;font-size:10px;color:#d1d8e3;border-radius:6px}
-.publisher-profile-tier-gold .publisher-profile-visit{border:1px solid #92744488;border-radius:7px;padding:12px 14px;background:linear-gradient(120deg,#3a3021,#28251e);color:#efd49e;font-size:11px;font-weight:600;box-shadow:inset 0 1px #f1d69c12}
-@media(prefers-reduced-motion:reduce){.publisher-profile-tier-gold .publisher-profile-content>.sc-logo img{transition:none}.publisher-profile-tier-gold:hover .publisher-profile-content>.sc-logo img{transform:none}}
-/* Keep identity text clear of the artwork overlay. */
-.publisher-profile-tier-gold .publisher-profile-content h2{z-index:2;margin:17px 0 12px;text-shadow:none;overflow-wrap:anywhere}
-.publisher-profile-tier-gold .publisher-profile-content>p,.publisher-profile-tier-gold .publisher-profile-socials,.publisher-profile-tier-gold .publisher-profile-visit{position:relative;z-index:2}
-.publisher-profile-tier-gold .publisher-profile-content>.sc-logo{z-index:0}
-/* Gold reference details, retaining the large 220px artwork. */
-.publisher-profile-tier-gold{border:2px solid #d0a950;border-radius:17px;background:radial-gradient(ellipse at 100% 100%,#96712c20,transparent 45%),linear-gradient(135deg,#1b202a,#101724 70%);box-shadow:inset 0 0 0 1px #f2d49133,0 12px 34px #0005}
-.publisher-profile-tier-gold .publisher-profile-cover>span{display:inline-flex;align-items:center;gap:7px;top:14px;right:14px;border:1px solid #ffe4a1;border-radius:7px;padding:8px 11px;background:linear-gradient(155deg,#f2d68b,#b7872b 75%,#d8ad54);color:#211b12;font-size:9px;font-weight:800;letter-spacing:.8px;box-shadow:0 3px 12px #0004,inset 0 1px #fff1b9}
-.publisher-profile-tier-gold .publisher-profile-cover>span::before{content:'♛';background:none;transform:none;width:auto;height:auto;font-size:18px;line-height:1;color:#211b12}
-.publisher-profile-tier-gold .publisher-profile-content h2{font-size:23px;letter-spacing:.4px;font-weight:750;color:#f0eee7;margin:18px 0 15px;padding-bottom:13px;border-bottom:1px solid #c5a15477}
+.publisher-profile-tier-gold .publisher-profile-content>.sc-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#00000005 40%,#0c142366 75%,#101724 100%);pointer-events:none}
+.publisher-profile-tier-gold:hover .publisher-profile-content>.sc-logo img{transform:scale(1.025)}
+.publisher-profile-tier-gold .publisher-profile-content h2{position:relative;z-index:2;margin:17px 0 15px;padding-bottom:15px;border-bottom:1px solid transparent;border-image:linear-gradient(90deg,#ab741c,#ffe99a 43%,#e6b33d 65%,transparent) 1;font-size:23px;line-height:1.25;letter-spacing:.3px;font-weight:800;color:#f3f3ef;text-shadow:0 1px 1px #000,0 2px 0 #635f51;overflow-wrap:anywhere;background:linear-gradient(#fff 20%,#d9dbdc 55%,#a4a6a7 70%,#f4f0e5 95%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .publisher-profile-tier-gold .publisher-profile-content h2::after{display:none}
-.publisher-profile-tier-gold .publisher-profile-content>p{color:#bfc6d3;margin-top:0}
-.publisher-profile-tier-gold .publisher-profile-socials{flex-wrap:wrap;gap:7px}
-.publisher-profile-tier-gold .publisher-profile-socials a{border:1px solid #96897588;background:linear-gradient(145deg,#242934,#141b27);border-radius:8px;padding:10px 11px;font-size:11px;box-shadow:inset 0 1px #ffffff0b}
-.publisher-profile-tier-gold .publisher-profile-socials a[aria-label$='youtube'] svg{color:#ff3945}.publisher-profile-tier-gold .publisher-profile-socials a[aria-label$='x']{color:#eee}.publisher-profile-tier-gold .publisher-profile-socials a[aria-label$='tiktok']>span:first-child{color:#77e0db}
-.publisher-profile-tier-gold .publisher-profile-visit{border:0;border-top:1px solid #d0a95077;border-radius:0;background:none;padding:16px 0 0;color:#e8bf62;font-size:13px;box-shadow:none}
-.publisher-profile-tier-gold .publisher-profile-visit>span{font-size:19px;line-height:1}
+.publisher-profile-tier-gold .publisher-profile-content>p{position:relative;color:#c2c7d2;margin:0;font-size:12px;line-height:1.85;min-height:44px}
+.publisher-profile-tier-gold .publisher-profile-socials{position:relative;display:flex;gap:7px;flex-wrap:wrap;margin:22px 0 23px}
+.publisher-profile-tier-gold .publisher-profile-socials a{display:flex;align-items:center;gap:7px;border:1px solid #9d9b9180;border-radius:8px;background:linear-gradient(145deg,#252a32,#0c1422);box-shadow:inset 0 1px #ffffff20,0 2px 4px #0003;color:#e4e6ec;padding:10px 11px;font-size:11px;text-decoration:none}
+.publisher-profile-tier-gold .publisher-profile-socials a:hover{border-color:#f1c75d;background:#272b32}
+.publisher-profile-tier-gold .publisher-profile-socials a[aria-label$='youtube'] svg{color:#ff202b}.publisher-profile-tier-gold .publisher-profile-socials a[aria-label$='tiktok']>span:first-child{color:#62e7e0;text-shadow:1px 1px #ff507c}
+.publisher-profile-tier-gold .publisher-profile-visit{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;border:0;border-top:1px solid #efbd4280;border-radius:0;background:none;box-shadow:none;padding:19px 0 0;color:#f2c44f;font-size:14px;font-weight:600;text-shadow:0 1px #553a0e}
+.publisher-profile-tier-gold .publisher-profile-visit>span{font-size:22px;line-height:1;color:#ffe99a}
+@keyframes gold-label-sheen{0%,35%{transform:translateX(-150%)}65%,100%{transform:translateX(150%)}}
+@media(prefers-reduced-motion:reduce){.publisher-profile-tier-gold .publisher-profile-cover>span::after{animation:none;display:none}.publisher-profile-tier-gold .publisher-profile-content>.sc-logo img{transition:none}.publisher-profile-tier-gold:hover .publisher-profile-content>.sc-logo img{transform:none}}
+.publisher-profile-tier-gold .publisher-profile-content h2{background:none;-webkit-text-fill-color:#f2f2ee;color:#f2f2ee;text-shadow:0 1px 0 #777569,0 2px 3px #0006}
