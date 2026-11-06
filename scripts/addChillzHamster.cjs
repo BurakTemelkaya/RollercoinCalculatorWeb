@@ -3,7 +3,7 @@ const path = require('node:path');
 
 const catalogPath = path.resolve(__dirname, '../src/data/hamsters.json');
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-const prefix = 'rollercoin/hamsters/pets/chillz/lvl50';
+const prefix = 'rollercoin/hamsters/pets/chillz/lvl01';
 const languages = ['en', 'tr', 'ru', 'de', 'es', 'fr', 'pt', 'id', 'zh', 'cs'];
 const localized = values => Object.fromEntries(languages.map((language, i) => [language, values[i]]));
 const icon = name => `rollercoin/hamsters/icons/${name}.webp`;
@@ -40,12 +40,18 @@ const hamster = {
   },
   ultimateChargePoints: 24,
   skins: [{
-    level: 50,
+    level: 1,
     walk: `${prefix}/sprite_walk.png`, frames: 16,
     jump: `${prefix}/sprite_jump.png`, jumpFrames: 7,
     frameWidth: 128, frameHeight: 128,
     idle: `${prefix}/idle.png`,
-    idleAnimation: { path: `${prefix}/sprite_idle.png`, frames: 6, frameWidth: 48, frameHeight: 48, frameDurationMs: 100 },
+    idleAnimation: {
+      path: `${prefix}/sprite_idle.png`,
+      frames: 6,
+      frameWidth: 62,
+      frameHeight: 62,
+      frameDurationMs: 100,
+    },
     animations: {
       walk: animation('walk', 16),
       jump: animation('jump', 7),

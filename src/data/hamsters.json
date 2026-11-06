@@ -12204,54 +12204,54 @@
     "ultimateChargePoints": 24,
     "skins": [
       {
-        "level": 50,
-        "walk": "rollercoin/hamsters/pets/chillz/lvl50/sprite_walk.png",
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/chillz/lvl01/sprite_walk.png",
         "frames": 16,
-        "jump": "rollercoin/hamsters/pets/chillz/lvl50/sprite_jump.png",
+        "jump": "rollercoin/hamsters/pets/chillz/lvl01/sprite_jump.png",
         "jumpFrames": 7,
         "frameWidth": 128,
         "frameHeight": 128,
-        "idle": "rollercoin/hamsters/pets/chillz/lvl50/idle.png",
+        "idle": "rollercoin/hamsters/pets/chillz/lvl01/idle.png",
         "idleAnimation": {
-          "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_idle.png",
+          "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_idle.png",
           "frames": 6,
-          "frameWidth": 48,
-          "frameHeight": 48,
+          "frameWidth": 62,
+          "frameHeight": 62,
           "frameDurationMs": 100
         },
         "animations": {
           "walk": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_walk.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_walk.png",
             "frames": 16,
             "frameWidth": 128,
             "frameHeight": 128
           },
           "jump": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_jump.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_jump.png",
             "frames": 7,
             "frameWidth": 128,
             "frameHeight": 128
           },
           "tap_reaction": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_tap_reaction.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_tap_reaction.png",
             "frames": 11,
             "frameWidth": 128,
             "frameHeight": 128
           },
           "go_sleep": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_go_sleep.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_go_sleep.png",
             "frames": 24,
             "frameWidth": 128,
             "frameHeight": 128
           },
           "take_chest": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_take_chest.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_take_chest.png",
             "frames": 9,
             "frameWidth": 128,
             "frameHeight": 128
           },
           "win_loop": {
-            "path": "rollercoin/hamsters/pets/chillz/lvl50/sprite_win_loop.png",
+            "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_win_loop.png",
             "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128

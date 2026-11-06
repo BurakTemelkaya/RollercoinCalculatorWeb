@@ -7,7 +7,7 @@ const hamster = catalog.find(item => item.slug === 'chillz');
 assert(hamster, 'Chillz must be in the catalog');
 assert.equal(catalog.filter(item => item.slug === 'chillz').length, 1);
 assert.deepEqual(hamster.stats, { health: 75, strength: 35, luck: 65 });
-assert.deepEqual(hamster.skins.map(skin => skin.level), [50]);
+assert.deepEqual(hamster.skins.map(skin => skin.level), [1]);
 assert.equal(hamster.ultimateChargePoints, 24);
 assert.equal(hamster.animationsPending, false);
 
@@ -16,9 +16,12 @@ assert.deepEqual(Object.fromEntries(Object.entries(skin.animations).map(([action
   walk: 16, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6,
 });
 assert.equal(skin.idleAnimation.frames, 6);
+assert.equal(skin.idleAnimation.frameWidth, 62);
+assert.equal(skin.idleAnimation.frameHeight, 62);
+assert.equal(skin.idleAnimation.previewRegion, undefined);
 for (const [file, width, height] of [
-  [skin.idle, 48, 48],
-  [skin.idleAnimation.path, 288, 48],
+  [skin.idle, 62, 62],
+  [skin.idleAnimation.path, 372, 62],
   ...Object.values(skin.animations).map(item => [item.path, item.frames * item.frameWidth, item.frameHeight]),
   ...hamster.abilities.map(item => [item.icon, null, null]),
   [hamster.ultimate.icon, null, null],
