@@ -17,6 +17,8 @@ export type AutoPlacementMode = 'optimal' | 'power' | 'bonus';
 export interface AutoPlacementOptions {
     keepPlaced?: boolean;
     noMovePlaced?: boolean;
+    /** Placed miners may move but never return to stock. */
+    noRemovePlaced?: boolean;
     mode?: AutoPlacementMode;
 }
 export interface AutoPlacementResult {
@@ -52,6 +54,10 @@ const EPSILON = 64 * Number.EPSILON;
 const improves = (next: number, previous: number) => next - previous > EPSILON * Math.max(1, Math.abs(previous));
 const better = (value: number, power: number, bestValue: number, bestPower: number) =>
     improves(value, bestValue) || (!improves(bestValue, value) && improves(power, bestPower));
+// Equal scores keep the layout that needs fewer operations.
+const preferred = (candidate: AutoPlacementResult, best: AutoPlacementResult) => !best.limitSatisfied
+    || better(candidate.afterObjective, candidate.afterPower, best.afterObjective, best.afterPower)
+    || (!better(best.afterObjective, best.afterPower, candidate.afterObjective, candidate.afterPower) && candidate.changes.length < best.changes.length);
 
 // Counts, rather than individual copies, keep a large stock inexpensive to search.
 class Allocation {
@@ -123,8 +129,9 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
     options: AutoPlacementOptions = {}): AutoPlacementResult {
     const keepPlaced = options.keepPlaced ?? false;
     const noMovePlaced = options.noMovePlaced ?? false;
+    const noRemovePlaced = options.noRemovePlaced ?? false;
     const mode = options.mode ?? 'optimal';
-    if (typeof keepPlaced !== 'boolean' || typeof noMovePlaced !== 'boolean' || !['optimal', 'power', 'bonus'].includes(mode)) throw new Error('Invalid placement options');
+    if (typeof keepPlaced !== 'boolean' || typeof noMovePlaced !== 'boolean' || typeof noRemovePlaced !== 'boolean' || !['optimal', 'power', 'bonus'].includes(mode)) throw new Error('Invalid placement options');
     const objective = (stats: ExactPowerStats) => mode === 'power' ? stats.baseMinerPowerGh
         : mode === 'bonus' ? stats.collectionBonusPercent : stats.totalLeaguePowerGh;
     if (maxPowerGh !== undefined && (!Number.isFinite(maxPowerGh) || maxPowerGh < 0)) throw new Error('Invalid power limit');
@@ -222,6 +229,8 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
             afterPower, mode, beforeObjective, afterObjective: objective(afterStats), exact, limitSatisfied: withinLimit(afterPower), maxPowerGh };
     };
     if (!physicalRacks.length || !models.length) return unchanged(true);
+    // Fixed and never removed: only empty cells can change.
+    if (noMovePlaced && noRemovePlaced && !keepPlaced) return optimizeRoomPlacement(room, inventory, sets, maxPowerGh, { mode, keepPlaced: true });
     const totalCells = physicalRacks.reduce((sum, r) => sum + r.data.cells, 0);
     if (noMovePlaced && !keepPlaced) {
         const placed = room.miners.filter(miner => miner.placement);
@@ -250,7 +259,7 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
                 return { ...miner, _id: id };
             });
             const candidate = buildResult(miners, exact);
-            if (candidate?.limitSatisfied && (!best.limitSatisfied || better(candidate.afterObjective, candidate.afterPower, best.afterObjective, best.afterPower))) {
+            if (candidate?.limitSatisfied && preferred(candidate, best)) {
                 best = candidate; bestRemoved = removed;
             }
             return true;
@@ -286,6 +295,8 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
         if (maxPowerGh !== undefined) [...models].sort((a, b) => a.miner.power - b.miner.power).slice(0, 70).forEach(m => keep.add(m));
         models = models.filter(m => keep.has(m));
     }
+    // Copies of each model that must stay in the room when removal is not allowed.
+    const required = models.map(model => noRemovePlaced && !keepPlaced ? model.originals.filter(miner => miner.placement).length : 0);
     const racks: Rack[] = physicalRacks.map(r => {
         const dynamic = sets?.length ? sets.find(s => s.requiredRackId === r.data.rack_id) : undefined;
         const local = !sets?.length ? SETS_DATA.find(s => s.rack?.id === r.data.rack_id) : undefined;
@@ -316,42 +327,65 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
     let best = unchanged(exact);
     let bestState: Allocation | null = null;
     const materialize = (state: Allocation): AutoPlacementResult | null => {
-        const remaining = models.map(m => m.originals.filter(miner => !keepPlaced || !miner.placement));
+        // Originals that stay on their rack keep their cell; the rest are reused before new copies come from stock.
+        const kept = racks.map(() => models.map(() => [] as ApiRoomMiner[]));
+        const free = models.map(() => [] as ApiRoomMiner[]);
+        models.forEach((model, m) => model.originals.forEach(miner => {
+            if (keepPlaced && miner.placement) return;
+            const r = racks.findIndex(rack => rack.data._id === miner.placement?.user_rack_id);
+            if (r >= 0 && kept[r][m].length < state.counts[r][m] - racks[r].locked[m]) kept[r][m].push(miner); else free[m].push(miner);
+        }));
         const reserved = new Set(originalIds);
         const miners: ApiRoomMiner[] = [];
         for (let r = 0; r < racks.length; r++) {
-            const onRack = keepPlaced ? room.miners.filter(miner => miner.placement?.user_rack_id === racks[r].data._id) : [];
-            const usedCells = new Set<number>();
-            for (const miner of onRack) for (let dx = 0; dx < miner.width; dx++) usedCells.add(miner.placement!.y * 2 + miner.placement!.x + dx);
-            const order = models.map((_, m) => m).sort((a, b) => models[b].miner.width - models[a].miner.width || a - b);
-            for (const m of order) for (let copy = 0; copy < state.counts[r][m] - racks[r].locked[m]; copy++) {
-                const model = models[m];
-                const sameRack = remaining[m].findIndex(miner => miner.placement?.user_rack_id === racks[r].data._id);
-                let miner = remaining[m].splice(sameRack < 0 ? 0 : sameRack, 1)[0];
-                if (!miner) {
-                    let n = 0;
-                    while (reserved.has(`auto_${model.miner.miner_id}_${n}`)) n++;
-                    const instanceId = `auto_${model.miner.miner_id}_${n}`; reserved.add(instanceId);
-                    miner = { ...model.miner, _id: instanceId };
+            const rack = racks[r].data;
+            const extra: ApiRoomMiner[] = [];
+            models.forEach((model, m) => {
+                for (let copy = kept[r][m].length; copy < state.counts[r][m] - racks[r].locked[m]; copy++) {
+                    let miner = free[m].shift();
+                    if (!miner) {
+                        let n = 0;
+                        while (reserved.has(`auto_${model.miner.miner_id}_${n}`)) n++;
+                        const instanceId = `auto_${model.miner.miner_id}_${n}`; reserved.add(instanceId);
+                        miner = { ...model.miner, _id: instanceId };
+                    }
+                    extra.push(miner);
                 }
-                let cell = 0;
-                while (cell < racks[r].data.cells && (cell % 2 + miner.width > 2
-                    || Array.from({ length: miner.width }, (_, x) => cell + x).some(c => usedCells.has(c)))) cell++;
-                if (cell + miner.width > racks[r].data.cells) throw new Error('Packing failed');
-                for (let dx = 0; dx < miner.width; dx++) usedCells.add(cell + dx);
-                onRack.push({ ...miner, placement: { user_rack_id: racks[r].data._id, x: cell % 2, y: Math.floor(cell / 2) },
-                    is_in_set: isMinerInRackSet(racks[r].data, miner.miner_id, miner.filename, sets) });
-            }
+            });
+            const pack = (preserve: boolean) => {
+                const onRack = keepPlaced ? room.miners.filter(miner => miner.placement?.user_rack_id === rack._id) : [];
+                const usedCells = new Set<number>();
+                const occupy = (cell: number, width: number) => { for (let dx = 0; dx < width; dx++) usedCells.add(cell + dx); };
+                for (const miner of onRack) occupy(miner.placement!.y * 2 + miner.placement!.x, miner.width);
+                const pending = [...extra];
+                for (const miner of kept[r].flat()) {
+                    if (!preserve) { pending.push(miner); continue; }
+                    occupy(miner.placement!.y * 2 + miner.placement!.x, miner.width);
+                    onRack.push({ ...miner, is_in_set: isMinerInRackSet(rack, miner.miner_id, miner.filename, sets) });
+                }
+                for (const miner of pending.sort((a, b) => b.width - a.width)) {
+                    let cell = 0;
+                    while (cell < rack.cells && (cell % 2 + miner.width > 2
+                        || Array.from({ length: miner.width }, (_, x) => cell + x).some(c => usedCells.has(c)))) cell++;
+                    if (cell + miner.width > rack.cells) return null;
+                    occupy(cell, miner.width);
+                    onRack.push({ ...miner, placement: { user_rack_id: rack._id, x: cell % 2, y: Math.floor(cell / 2) },
+                        is_in_set: isMinerInRackSet(rack, miner.miner_id, miner.filename, sets) });
+                }
+                return onRack;
+            };
+            const onRack = pack(true) ?? pack(false);
+            if (!onRack) throw new Error('Packing failed');
             // Local fallback determines the set from the first flagged miner.
-            onRack.sort((a, b) => Number(guessSetByMiner(b)?.rack?.id === racks[r].data.rack_id) - Number(guessSetByMiner(a)?.rack?.id === racks[r].data.rack_id));
+            onRack.sort((a, b) => Number(guessSetByMiner(b)?.rack?.id === rack.rack_id) - Number(guessSetByMiner(a)?.rack?.id === rack.rack_id));
             miners.push(...onRack);
         }
         return buildResult(miners, exact);
     };
     const consider = (state: Allocation) => {
+        if (state.used.some((count, m) => count < required[m])) return;
         const candidate = materialize(state);
-        if (candidate && candidate.limitSatisfied && Number.isFinite(candidate.afterPower)
-            && (!best.limitSatisfied || better(candidate.afterObjective, candidate.afterPower, best.afterObjective, best.afterPower))) {
+        if (candidate && candidate.limitSatisfied && Number.isFinite(candidate.afterPower) && preferred(candidate, best)) {
             best = candidate; bestState = state.copy();
         }
     };
@@ -438,6 +472,7 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
             if (keepPlaced && changes.some(([r, m, delta]) => (delta < 0 && state.counts[r][m] + delta < racks[r].locked[m])
                 || state.wide[r] + changes.filter(([target, model]) => target === r && models[model].miner.width === 2)
                     .reduce((sum, [, , count]) => sum + count, 0) > racks[r].maxWide)) return;
+            if (changes.some(([, m]) => state.used[m] + changes.reduce((sum, [, other, count]) => sum + (other === m ? count : 0), 0) < required[m])) return;
             const score = state.trial(changes);
             if (withinLimit(score.power) && better(score.objective, score.power, highest, highestPower)) {
                 highest = score.objective; highestPower = score.power; move = changes;
@@ -463,6 +498,26 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
         for (const change of move as [number, number, number][]) state.change(...change);
         consider(state);
         state = bestState ?? state;
+    }
+    // Move copies back to the rack they came from when the score does not drop.
+    if (bestState) {
+        const final: Allocation = bestState;
+        for (let pass = 0; pass < 4; pass++) {
+            let moved = false;
+            for (let r = 0; r < racks.length; r++) for (let m = 0; m < models.length; m++) {
+                for (let t = 0; t < racks.length && final.counts[r][m] < baseline.counts[r][m]; t++) {
+                    if (t === r || final.counts[t][m] <= Math.max(baseline.counts[t][m], racks[t].locked[m])) continue;
+                    const width = models[m].miner.width;
+                    if (final.cells[r] + width > racks[r].data.cells || (width === 2 && final.wide[r] >= racks[r].maxWide)) continue;
+                    const trial = final.copy();
+                    trial.change(t, m, -1); trial.change(r, m, 1);
+                    const previous = best;
+                    consider(trial);
+                    if (best !== previous) { final.change(t, m, -1); final.change(r, m, 1); moved = true; }
+                }
+            }
+            if (!moved) break;
+        }
     }
     return best;
 }

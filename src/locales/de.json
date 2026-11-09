@@ -41,14 +41,15 @@
     "limitHelp": "Sucht die höchste Ligaleistung unter der Obergrenze. Die Leistung kann sinken; entfernte Miner gehen in den Bestand zurück.",
     "leagueLimit": "Liga-Obergrenze wählen",
     "selectLeague": "Liga auswählen",
-    "noLeagueCeiling": "Keine Obergrenze"
+    "noLeagueCeiling": "Keine Obergrenze",
+    "allowRemovingPlaced": "Entfernen von Minern erlauben",
+    "allowRemovingPlacedHelp": "Wenn aktiv, können platzierte Miner ins Inventar zurückgehen, um Platz für bessere zu schaffen. Sonst bleibt jeder platzierte Miner im Raum."
   },
   "minerImport": {
     "apiMethod": "API-Antwort (JSON)",
     "apiHelp": "Für die API-Methode füge die vollständige JSON-Antwort dieser Adresse ein:",
     "apiSteps": "Öffne mit F12 die Entwicklertools und wähle Network (Netzwerk). Betritt deinen RollerCoin-Raum und gehe im Miner-Tab unten zur nächsten Seite. Wähle die inventory-Anfrage und kopiere die Daten unter Response (Antwort). Wiederhole dies bei Bedarf für weitere Seiten.",
     "collectionHelp": "Markiere und kopiere auf der Sammlungsseite den Text der Miner-Karten wie im Bild und füge ihn unten ein.",
-    "collectionExampleAlt": "Sammlungskarten mit markiertem Bonus, Miner-Namen und Leistung zum Kopieren",
     "addAllPower": "Alle Miner zum Leistungssimulator hinzufügen",
     "decreaseQuantity": "Anzahl verringern",
     "increaseQuantity": "Anzahl erhöhen",
@@ -71,7 +72,29 @@
     "invalid": "Daten konnten nicht gelesen oder Miner nicht im Katalog gefunden werden. Füge die vollständige JSON-Antwort oder Karten mit ID und Leistung ein. Prüfe die Verbindung.",
     "quantityError": "Mengen müssen nichtnegative ganze Zahlen sein, insgesamt höchstens {{max}}.",
     "addError": "Miner konnten nicht hinzugefügt werden. Prüfe Mengen und freie Rackkapazität. Die aktuelle Simulation bleibt erhalten.",
-    "storageError": "Speichern im Browser fehlgeschlagen. Die Liste bleibt für diese Sitzung verfügbar; prüfe die Speichereinstellungen."
+    "storageError": "Speichern im Browser fehlgeschlagen. Die Liste bleibt für diese Sitzung verfügbar; prüfe die Speichereinstellungen.",
+    "anim": {
+      "title": "So kopierst du die Inventar-Antwort",
+      "play": "Abspielen",
+      "pause": "Pausieren",
+      "step": "Schritt {{n}}",
+      "s1": "Drücke F12 (oder Strg+Umschalt+I) und öffne den Tab Network.",
+      "s2": "Gib inventory in das Filter-Feld ein, um nur Inventar-Anfragen zu sehen.",
+      "s3": "Klicke im Spiel auf eine Raumnummer, um den Raum zu öffnen. Eine inventory-Anfrage erscheint.",
+      "s4": "Klicke unten im Miners-Bereich auf den Pfeil nach rechts. Die nächste Seite sendet eine neue inventory-Anfrage.",
+      "s5": "Klicke auf eine Anfrage und öffne dann den Tab Response.",
+      "s6": "Klicke in die Antwort und drücke Strg+A, dann Strg+C, um alles zu kopieren.",
+      "s7": "Füge es unten ein und klicke auf {{read}}. Wiederhole das für jede Seite."
+    },
+    "copyAnim": {
+      "title": "So kopierst du Miner von der RollerCoin-Seite",
+      "s1": "Öffne die oben verlinkte RollerCoin-Minerseite.",
+      "s2": "Klicke direkt vor \"Bonus power\" auf der ersten Karte und halte die Maustaste gedrückt.",
+      "s3": "Ziehe bis zum Ende der letzten Karte, sodass alle Karten markiert sind.",
+      "s4": "Drücke Strg+C, um die Auswahl zu kopieren.",
+      "s5": "Füge sie unten ein und klicke auf {{read}}. Wiederhole das für weitere Seiten."
+    },
+    "shrinkHint": "Hier kannst du das Panel verkleinern"
   },
   "calculatorEmpty": {
     "earnings": "Gib oben deinen Benutzernamen ein und klicke auf Abrufen oder gib deine Leistung ein, um deine Erträge zu sehen.",

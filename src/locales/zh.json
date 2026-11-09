@@ -41,14 +41,15 @@
     "limitHelp": "寻找不超过上限的最高联赛算力。算力可能降低；移出的矿机退回库存。",
     "leagueLimit": "选择联赛上限",
     "selectLeague": "选择联赛",
-    "noLeagueCeiling": "无上限"
+    "noLeagueCeiling": "无上限",
+    "allowRemovingPlaced": "允许移除矿机",
+    "allowRemovingPlacedHelp": "开启后，已放置的矿机可退回库存，为更好的矿机腾出位置。关闭时，所有已放置的矿机都留在房间内。"
   },
   "minerImport": {
     "apiMethod": "API 响应（JSON）",
     "apiHelp": "使用 API 方式时，请粘贴以下地址返回的完整 JSON 响应：",
     "apiSteps": "按 F12 打开开发者工具并选择 Network（网络）。进入 RollerCoin 房间，在底部矿机选项卡中翻到下一页。选择出现的 inventory 请求，复制 Response（响应）中的数据。其他页面可重复此操作。",
     "collectionHelp": "在收藏页面，按下图所示选中并复制矿机卡片文字，然后粘贴到下方。",
-    "collectionExampleAlt": "收藏卡片中的加成、矿机名称和算力文字被选中以便复制",
     "addAllPower": "将所有矿机添加到算力模拟器",
     "decreaseQuantity": "减少数量",
     "increaseQuantity": "增加数量",
@@ -71,7 +72,29 @@
     "invalid": "无法读取数据或在目录中找到矿机。请粘贴完整 JSON 响应或包含 ID 和算力的收藏卡片，并检查网络连接。",
     "quantityError": "数量必须为非负整数，总数最多为 {{max}}。",
     "addError": "无法添加矿机。请检查数量和房间中机架的可用容量。当前模拟保持不变。",
-    "storageError": "无法保存到浏览器。列表在本次会话中可用，请检查浏览器存储设置。"
+    "storageError": "无法保存到浏览器。列表在本次会话中可用，请检查浏览器存储设置。",
+    "anim": {
+      "title": "如何复制库存响应",
+      "play": "播放",
+      "pause": "暂停",
+      "step": "第 {{n}} 步",
+      "s1": "按 F12（或 Ctrl+Shift+I），打开 Network 标签页。",
+      "s2": "在 Filter 框中输入 inventory，只显示库存请求。",
+      "s3": "在游戏中点击房间编号打开房间，会出现一个 inventory 请求。",
+      "s4": "在底部 Miners 面板中点击右箭头，下一页会发送新的 inventory 请求。",
+      "s5": "点击一个请求，然后打开 Response 标签页。",
+      "s6": "点击响应内容，按 Ctrl+A，再按 Ctrl+C 复制全部内容。",
+      "s7": "粘贴到下方输入框并点击“{{read}}”。每一页都重复此操作。"
+    },
+    "copyAnim": {
+      "title": "如何从 RollerCoin 页面复制矿机",
+      "s1": "打开上方链接中的 RollerCoin 矿机页面。",
+      "s2": "在第一张卡片的“Bonus power”前点击并按住鼠标左键。",
+      "s3": "拖动到最后一张卡片末尾，选中所有卡片。",
+      "s4": "按 Ctrl+C 复制所选内容。",
+      "s5": "粘贴到下方输入框并点击“{{read}}”。其他页面重复此操作。"
+    },
+    "shrinkHint": "可在此缩小面板"
   },
   "calculatorEmpty": {
     "earnings": "要查看收益，请在上方输入用户名并点击获取，或输入您的算力。",

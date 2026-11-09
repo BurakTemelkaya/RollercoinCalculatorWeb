@@ -281,6 +281,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     // Inventory Tab State
     const [inventoryTab, setInventoryTab] = useState<'miners' | 'racks' | 'import'>('miners');
     const [isImportExpanded, setIsImportExpanded] = useState(false);
+    const [showShrinkHint, setShowShrinkHint] = useState(false);
+    useEffect(() => {
+        if (!showShrinkHint) return;
+        const timer = window.setTimeout(() => setShowShrinkHint(false), 8000);
+        return () => window.clearTimeout(timer);
+    }, [showShrinkHint]);
 
     // Rack Inventory State
     const [rackList, setRackList] = useState<GetRackListDto[]>([]);
@@ -2276,17 +2282,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                         {t('simulator.minersTab')}
                                     </button>
                                     <button type="button" className={`inv-tab ${inventoryTab === 'import' ? 'active' : ''}`}
-                                        onClick={() => { setInventoryTab('import'); setIsFilterOpen(false); setIsSearchOpen(false); }}>
+                                        onClick={() => {
+                                            if (inventoryTab !== 'import') { setIsImportExpanded(true); setShowShrinkHint(true); }
+                                            setInventoryTab('import'); setIsFilterOpen(false); setIsSearchOpen(false);
+                                        }}>
                                         {t('minerImport.title')}
                                     </button>
                                 </div>
 
-                                {inventoryTab === 'import' && <button type="button" className="inv-icon-btn inventory-size-toggle"
+                                {inventoryTab === 'import' && <button type="button" className={`inv-icon-btn inventory-size-toggle ${showShrinkHint && isImportExpanded ? 'hint' : ''}`}
                                     title={t(isImportExpanded ? 'minerImport.compactPanel' : 'minerImport.expandPanel')}
                                     aria-label={t(isImportExpanded ? 'minerImport.compactPanel' : 'minerImport.expandPanel')}
                                     aria-expanded={isImportExpanded} aria-controls="desktop-inventory-content"
-                                    onClick={() => setIsImportExpanded(expanded => !expanded)}>
+                                    onClick={() => { setShowShrinkHint(false); setIsImportExpanded(expanded => !expanded); }}>
                                     <span aria-hidden="true">{isImportExpanded ? '↙' : '↗'}</span>
+                                    {showShrinkHint && isImportExpanded && <span className="inventory-size-hint" role="status">{t('minerImport.shrinkHint')}</span>}
                                 </button>}
                                 <div className="inventory-toolbar-right">
                                     <button

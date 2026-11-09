@@ -41,14 +41,15 @@
     "limitHelp": "Find the highest league power without exceeding the ceiling. Power may decrease; removed miners return to stock.",
     "leagueLimit": "Choose a league ceiling",
     "selectLeague": "Select a league",
-    "noLeagueCeiling": "No upper limit"
+    "noLeagueCeiling": "No upper limit",
+    "allowRemovingPlaced": "Allow removing miners",
+    "allowRemovingPlacedHelp": "When enabled, placed miners may return to inventory to make room for better ones. Otherwise every placed miner stays in the room."
   },
   "minerImport": {
     "apiMethod": "API response (JSON)",
     "apiHelp": "For the API method, paste the full JSON response returned by:",
     "apiSteps": "Open developer tools with F12 and select Network. Enter your RollerCoin room and go to the next page in the Miners tab at the bottom. Select the inventory request and copy its Response data. Repeat for other pages as needed.",
     "collectionHelp": "On the collection page, select and copy the miner card text as shown below, then paste it here.",
-    "collectionExampleAlt": "Collection cards with bonus, miner name and power text selected for copying",
     "addAllPower": "Add all miners to power simulator",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
@@ -71,7 +72,29 @@
     "invalid": "Could not read data or find a miner in the catalog. Paste the full JSON response or collection cards including IDs and power. Also check your connection.",
     "quantityError": "Quantities must be non-negative whole numbers, with a total up to {{max}}.",
     "addError": "Could not add miners. Check quantities and free rack capacity in the room. The current simulation is kept.",
-    "storageError": "Could not save in this browser. The list is available for this session; check browser storage settings."
+    "storageError": "Could not save in this browser. The list is available for this session; check browser storage settings.",
+    "anim": {
+      "title": "How to copy the inventory response",
+      "play": "Play",
+      "pause": "Pause",
+      "step": "Step {{n}}",
+      "s1": "Press F12 (or Ctrl+Shift+I) and open the Network tab.",
+      "s2": "Type inventory in the Filter box to show only inventory requests.",
+      "s3": "In the game, click a room number to open the room. An inventory request appears.",
+      "s4": "In the Miners panel at the bottom, click the right arrow. The next page sends a new inventory request.",
+      "s5": "Click a request, then open the Response tab.",
+      "s6": "Click inside the response and press Ctrl+A, then Ctrl+C to copy all of it.",
+      "s7": "Paste it in the box below and click {{read}}. Repeat for every page."
+    },
+    "copyAnim": {
+      "title": "How to copy miners from the RollerCoin page",
+      "s1": "Open the RollerCoin miners page linked above.",
+      "s2": "Click just before \"Bonus power\" on the first card and hold the mouse button.",
+      "s3": "Drag to the end of the last card so every card is selected.",
+      "s4": "Press Ctrl+C to copy the selection.",
+      "s5": "Paste it in the box below and click {{read}}. Repeat for other pages."
+    },
+    "shrinkHint": "You can shrink the panel here"
   },
   "calculatorEmpty": {
     "earnings": "To see your earnings, enter your username above and click Fetch, or enter your power.",

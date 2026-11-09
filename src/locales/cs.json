@@ -41,14 +41,15 @@
     "limitHelp": "Hledá nejvyšší ligový výkon bez překročení stropu. Výkon může klesnout; odebrané minery se vrátí do zásob.",
     "leagueLimit": "Vybrat strop ligy",
     "selectLeague": "Vyberte ligu",
-    "noLeagueCeiling": "Bez horního limitu"
+    "noLeagueCeiling": "Bez horního limitu",
+    "allowRemovingPlaced": "Povolit odebírání minerů",
+    "allowRemovingPlacedHelp": "Je-li zapnuto, umístění mineři se mohou vrátit do inventáře a uvolnit místo lepším. Jinak každý umístěný miner zůstane v místnosti."
   },
   "minerImport": {
     "apiMethod": "Odpověď API (JSON)",
     "apiHelp": "Pro import přes API vložte celou odpověď JSON z této adresy:",
     "apiSteps": "Klávesou F12 otevřete nástroje pro vývojáře a vyberte Network (Síť). Vstupte do místnosti RollerCoin a přejděte na další stránku na spodní kartě těžařů. Vyberte požadavek inventory a zkopírujte data z Response (Odpověď). Podle potřeby opakujte pro další stránky.",
     "collectionHelp": "Na stránce kolekce označte a zkopírujte text karet podle obrázku a vložte jej níže.",
-    "collectionExampleAlt": "Karty kolekce s bonusem, názvem a výkonem označenými ke kopírování",
     "addAllPower": "Přidat všechny minery do simulátoru výkonu",
     "decreaseQuantity": "Snížit počet",
     "increaseQuantity": "Zvýšit počet",
@@ -71,7 +72,29 @@
     "invalid": "Data nelze přečíst nebo miner nebyl nalezen v katalogu. Vložte celý JSON nebo karty s ID a výkonem. Zkontrolujte připojení.",
     "quantityError": "Počty musí být nezáporná celá čísla, celkem nejvýše {{max}}.",
     "addError": "Minery nelze přidat. Zkontrolujte počty a volnou kapacitu racků. Aktuální simulace zůstává.",
-    "storageError": "Do prohlížeče nelze uložit. Seznam je dostupný pro tuto relaci; zkontrolujte nastavení úložiště."
+    "storageError": "Do prohlížeče nelze uložit. Seznam je dostupný pro tuto relaci; zkontrolujte nastavení úložiště.",
+    "anim": {
+      "title": "Jak zkopírovat odpověď inventáře",
+      "play": "Přehrát",
+      "pause": "Pozastavit",
+      "step": "Krok {{n}}",
+      "s1": "Stiskněte F12 (nebo Ctrl+Shift+I) a otevřete kartu Network.",
+      "s2": "Do pole Filter napište inventory, aby se zobrazily jen požadavky inventáře.",
+      "s3": "Ve hře klikněte na číslo místnosti a otevřete ji. Objeví se požadavek inventory.",
+      "s4": "V panelu Miners dole klikněte na šipku vpravo. Další stránka odešle nový požadavek inventory.",
+      "s5": "Klikněte na požadavek a otevřete kartu Response.",
+      "s6": "Klikněte do odpovědi a stiskněte Ctrl+A, poté Ctrl+C pro zkopírování celé odpovědi.",
+      "s7": "Vložte ji do pole níže a klikněte na {{read}}. Opakujte pro každou stránku."
+    },
+    "copyAnim": {
+      "title": "Jak zkopírovat minery ze stránky RollerCoin",
+      "s1": "Otevřete stránku minerů RollerCoin z odkazu výše.",
+      "s2": "Klikněte těsně před \"Bonus power\" na první kartě a podržte tlačítko myši.",
+      "s3": "Táhněte až na konec poslední karty, aby byly vybrány všechny karty.",
+      "s4": "Stiskněte Ctrl+C a zkopírujte výběr.",
+      "s5": "Vložte jej do pole níže a klikněte na {{read}}. Opakujte pro další stránky."
+    },
+    "shrinkHint": "Zde můžete panel zmenšit"
   },
   "calculatorEmpty": {
     "earnings": "Pro zobrazení výdělků zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon.",
