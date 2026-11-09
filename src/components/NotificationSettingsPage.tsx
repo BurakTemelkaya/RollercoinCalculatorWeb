@@ -429,7 +429,7 @@ export default function NotificationSettingsPage() {
                                 className="auth-submit-btn"
                                 style={{ marginTop: '12px' }}
                             >
-                                {isSaving ? <span className="spinner"></span> : t('common.save', 'Save Changes')}
+                                {isSaving ? <span className="spinner"></span> : t('settings.save', 'Save')}
                             </button>
                         </div>
                     )}

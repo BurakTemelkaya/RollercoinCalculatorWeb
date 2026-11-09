@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,6 +6,7 @@ import { useLanguageSwitcher } from '../hooks/useLanguageSwitcher';
 import RadixSelect from './RadixSelect';
 import AdminNavigation from './admin/AdminNavigation';
 import './BlogPage.css';
+import './DashboardLayout.css';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -21,6 +22,7 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
   const { t } = useTranslation();
   const { currentLang, changeLanguage, SUPPORTED_LANGUAGES } = useLanguageSwitcher();
   const { logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('hide-global-ads');
@@ -43,23 +45,31 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
   const isMyBlogs = !isAdmin && location.pathname.includes('/my-blogs');
 
   return (
-    <div className="dashboard-layout" style={{ display: 'flex', minHeight: '100vh', background: '#0f0f1e', color: '#fff' }} data-color-mode="dark">
+    <div className={`dashboard-layout${menuOpen ? ' menu-open' : ''}`} data-color-mode="dark">
       <>
         <title>{`${title} | Rollercoin Calculator`}</title>
       </>
 
+      {/* Mobile top bar */}
+      <header className="dashboard-topbar">
+        <button
+          type="button"
+          className="dashboard-menu-btn"
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2">
+            {menuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M3 6h18M3 12h18M3 18h18" />}
+          </svg>
+        </button>
+        <span className="dashboard-topbar-title">{isAdmin ? 'Admin Panel' : 'Kullanıcı Paneli'}</span>
+      </header>
+      <div className="dashboard-backdrop" onClick={() => setMenuOpen(false)} />
+
       {/* Sidebar */}
-      <aside style={{
-        width: '260px',
-        background: 'rgba(15, 15, 30, 0.8)',
-        borderRight: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 16px',
-        boxSizing: 'border-box',
-        flexShrink: 0
-      }}>
-        <div style={{ marginBottom: '32px', paddingLeft: '8px' }}>
+      <aside className="dashboard-sidebar" onClick={e => { if ((e.target as HTMLElement).closest('a')) setMenuOpen(false); }}>
+        <div className="dashboard-sidebar-title" style={{ marginBottom: '32px', paddingLeft: '8px' }}>
           <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#f8fafc' }}>
             {isAdmin ? 'Admin Panel' : 'Kullanıcı Paneli'}
           </h2>
@@ -139,7 +149,7 @@ export default function DashboardLayout({ children, title, isAdmin, adminBackTo,
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: '32px', boxSizing: 'border-box', overflowY: 'auto' }}>
+      <main className="dashboard-main">
         {children}
       </main>
     </div>

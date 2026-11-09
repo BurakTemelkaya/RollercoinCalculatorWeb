@@ -475,7 +475,7 @@ export default function BlogEditor() {
 
   if (isLoading) {
     return (
-      <DashboardLayout title={t('blog.loading')} isAdmin={true}>
+      <DashboardLayout title={t('blog.loading')} isAdmin={isAdminPath}>
         <div className="blog-loading">
           <span className="spinner" />
           <p>{t('blog.loading')}</p>
@@ -487,11 +487,13 @@ export default function BlogEditor() {
   return (
     <DashboardLayout 
       title={isEditMode ? t('admin.editBlog') : t('admin.createBlog')} 
-      isAdmin={true}
+      isAdmin={isAdminPath}
     >
       <div className="blog-editor-page" data-color-mode="dark" style={{ padding: 0 }}>
         <div className="static-back-link" style={{ marginBottom: 16 }}>
-          <Link to={`/${lang}/admin/blogs`}>← {t('admin.manageBlogs')}</Link>
+          {isAdminPath
+            ? <Link to={`/${lang}/admin/blogs`}>← {t('admin.manageBlogs')}</Link>
+            : <Link to={`/${lang}/my-blogs`}>← {t('nav.myBlogs')}</Link>}
         </div>
         <h1 style={{ marginTop: 0 }}>{isEditMode ? t('admin.editBlog') : t('admin.createBlog')}</h1>
 
