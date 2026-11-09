@@ -413,19 +413,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodDays, setCustomPeriodDays] = useState<number>(0);
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
-  const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261105.204311';
-
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const savedVersion = localStorage.getItem(CACHE_VERSION_KEY);
-      if (savedVersion !== CURRENT_CACHE_VERSION) {
-        // App version updated, just update the stored version without clearing user data
-        console.log(`Cache version mismatch (${savedVersion} vs ${CURRENT_CACHE_VERSION}). Updating cache version...`);
-        localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION);
-      }
-
       const savedCoins = localStorage.getItem(STORAGE_KEYS.COINS);
       const savedBalances = localStorage.getItem(STORAGE_KEYS.BALANCES);
       const savedTab = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
