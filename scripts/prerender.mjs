@@ -130,6 +130,8 @@ function isInternalPage(href) {
   
   // Exclude dynamic routes and admin/user panels from crawling
   if (href.includes('/blog/') || href.includes('/author/') || href.includes('/admin') || href.includes('/my-blogs')) return false;
+  // "/{lang}/event" only redirects to the latest event's slug (needs the API, blocked here)
+  if (/^\/[^/]+\/event\/?$/.test(href.split(/[?#]/)[0])) return false;
 
   const clean = href.split('?')[0].split('#')[0];
   const ext = clean.split('.').pop();
@@ -180,9 +182,9 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // HTML'i hızlıca yükle (domcontentloaded)
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-    // React'ın hydrate etmesi ve API'den veri çekmesi için sabit bir süre bekle
-    // Bu, networkidle beklemekten çok daha güvenli ve hızlıdır.
-    await new Promise(r => setTimeout(r, 500));
+    // Lazy page chunks can take longer than a fixed delay; every page renders its own
+    // canonical once mounted, so wait for it (capped) instead of capturing an empty shell.
+    await page.waitForSelector('link[rel="canonical"]', { timeout: 5000 }).catch(() => {});
 
     // Discover internal links on this page
     const links = await page.evaluate(() =>
@@ -201,14 +203,14 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // Capture rendered HTML
     const html = await page.content();
 
-    // Determine output path
-    const outputPath =
-      route === '/'
-        ? path.join(DIST_DIR, 'index.html')
-        : path.join(DIST_DIR, route, 'index.html');
-
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, html);
+    // "/" only redirects to a language. Never overwrite dist/index.html: nginx serves it as
+    // the fallback for every non-prerendered route (event, miner, blog pages), so it must
+    // stay the clean shell instead of carrying the /en page's canonical and title.
+    if (route !== '/') {
+      const outputPath = path.join(DIST_DIR, route, 'index.html');
+      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+      fs.writeFileSync(outputPath, html);
+    }
 
     return true;
   } catch (error) {
