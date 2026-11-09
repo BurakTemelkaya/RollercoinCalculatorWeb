@@ -88,10 +88,12 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
-/* Event artwork banner (648x192 source) with the title over a bottom fade */
+/* Event artwork banner (648x192 source) with the title over a bottom fade.
+   Whole-pixel height like the blog cards: a fractional aspect-ratio height made the
+   clipped bottom edge flicker while the image scaled. */
 .peh-card-banner {
     position: relative;
-    aspect-ratio: 648 / 192;
+    height: 130px;
     background: rgba(255, 255, 255, 0.04);
     overflow: hidden;
 }
@@ -102,6 +104,10 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
+    /* Fade the image's own bottom edge out: while scaling, its GPU layer can peek ~1px below
+       the pixel-snapped title gradient, showing as a bright line on light-bottomed artwork. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
 }
 
 .peh-card:hover .peh-card-banner img {
