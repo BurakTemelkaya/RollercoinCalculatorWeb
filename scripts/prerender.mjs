@@ -164,7 +164,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // Reklam ve Analytics domainlerini engelle (networkidle'ı sonsuza sokarlar)
     const blockedDomains = [
       'api.rollercoincalculator.app', // Kendi API'ni ekledik
-      'ad.a-ads.com', 'a-ads.com', 'adsterra',
+      'ad.a-ads.com', 'a-ads.com', 'adsterra', 'cleverwebserver.com',
       'googletagmanager.com', 'google-analytics.com',
       'challenges.cloudflare.com'
     ];
@@ -205,6 +205,12 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
         queue.push(norm);
       }
     }
+
+    // index.html's boot injects the Clever loader at runtime; a baked-in copy would make
+    // Clever run twice on the live page (once from this tag, once from boot's exec()).
+    await page.evaluate(() => {
+      document.querySelectorAll('script[src*="cleverwebserver.com"]').forEach((s) => s.remove());
+    });
 
     // Capture rendered HTML
     const html = await page.content();
