@@ -98,8 +98,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, []);
 
   const markCleverNoFill = useCallback((reason: string) => {
-    // Never swap away a slot Clever already filled: both ads would show.
-    if (document.querySelector('#top-ad-container .clever-core-ads')?.childElementCount) return;
     window.__cleverCoreNoFill = true;
     window.__cleverCoreNoFillReason = reason;
     setCleverNoFill(true);
@@ -255,7 +253,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   let topAdSlot: React.ReactNode = null;
   if (topAdNetwork === 'clever') {
-    topAdSlot = <div key="clever" className="clever-core-ads"></div>;
+    // Clever deletes div.clever-core-ads itself when it rejects a creative, so React owns only the wrapper.
+    topAdSlot = <div key="clever"><div className="clever-core-ads"></div></div>;
   } else if (topAdNetwork === 'coinzilla') {
     // Separate key: a fresh node, so a late Clever creative lands in the detached old one.
     topAdSlot = <div key="coinzilla" className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
