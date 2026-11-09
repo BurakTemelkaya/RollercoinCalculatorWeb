@@ -32,7 +32,7 @@ const SEED_ROUTES = [
   '/',
   '/en',
   '/tr',
-  '/en/event', '/tr/event',
+  '/en/events', '/tr/events',
   '/en/about', '/tr/about',
   '/en/privacy', '/tr/privacy',
   '/en/faq', '/tr/faq',
@@ -69,6 +69,11 @@ const MIME = {
   '.webm': 'video/webm',
 };
 
+// The SPA shell, read before any page overwrites dist/index.html with rendered
+// "/" output. Serving that rendered HTML as the fallback leaked the home page's
+// <title>/canonical/description into every other pre-rendered page.
+let SPA_TEMPLATE = null;
+
 function resolveFilePath(url) {
   const pathname = url.split('?')[0].split('#')[0];
   let filePath = path.join(DIST_DIR, pathname);
@@ -92,7 +97,8 @@ function startServer() {
       const contentType = MIME[ext] || 'application/octet-stream';
 
       try {
-        const content = fs.readFileSync(filePath);
+        // Every page route renders from the pristine shell, never from earlier output
+        const content = ext === '.html' ? SPA_TEMPLATE : fs.readFileSync(filePath);
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(content);
       } catch {
@@ -220,6 +226,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
 }
 
 async function prerender() {
+  SPA_TEMPLATE = fs.readFileSync(path.join(DIST_DIR, 'index.html'));
   const server = await startServer();
 
   const browser = await puppeteer.launch({

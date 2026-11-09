@@ -5,6 +5,7 @@ import appLogo from '../assets/logo.png';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
+import { useLatestEventPath } from '../hooks/useLatestEventPath';
 import { GlobalAds } from './GlobalAds';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
 
@@ -31,6 +32,10 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
+// Routes whose page renders its own <title>/canonical. React 19 does not dedupe hoisted
+// <meta>/<link>, so rendering the layout defaults there too yields conflicting canonicals.
+const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides)(\/|$)/;
+
 export default function MainLayout({ children }: MainLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +45,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const langFromPath = location.pathname.split('/')[1];
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
+  const latestEventPath = useLatestEventPath(i18n.language);
 
   const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
@@ -359,8 +365,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
-            {/* SEO Tags (defaults — child pages override these via their own Helmet) */}
-            <>
+            {/* Default SEO tags for pages that don't render their own */}
+            {!PAGE_OWNS_SEO.test(location.pathname) && <>
               <title>{t('seo.title')}</title>
               <meta name="description" content={t('seo.description')} />
               <link rel="canonical" href={currentUrl} />
@@ -373,7 +379,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <meta name="twitter:title" content={t('seo.title')} />
               <meta name="twitter:description" content={t('seo.description')} />
               <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
-            </>
+            </>}
 
             {/* Page Title - scrolls away, not in sticky bar */}
             <div className="page-title-banner">
@@ -387,7 +393,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <DailyBonusQuest />
                 </React.Suspense>
                 <div className="quick-actions-row">
-                  <Link to={`/${i18n.language}/event`} className="quick-action-btn btn-events">{NAV_ICONS.events} {t('tabs.event')}</Link>
+                  <Link to={latestEventPath} className="quick-action-btn btn-events">{NAV_ICONS.events} {t('tabs.event')}</Link>
                   <Link to={`/${i18n.language}/merges`} className="quick-action-btn btn-merges">{NAV_ICONS.merges} {t('nav.merges')}</Link>
                   <Link to={`/${i18n.language}/support`} className="quick-action-btn btn-support">{NAV_ICONS.support} {t('nav.support')}</Link>
                 </div>

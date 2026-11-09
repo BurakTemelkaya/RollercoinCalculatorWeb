@@ -1204,7 +1204,7 @@ function App() {
           <Route path="/:lang" element={<CalculatorArea />} />
           <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
           <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
-          <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
+          <Route path="/:lang/event/:eventSlug" element={<CalculatorArea isEventPage={true} />} />
           <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
           <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
           <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
@@ -1215,7 +1215,7 @@ function App() {
           <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/sets" element={<React.Suspense fallback={null}><HamsterSetsPage /></React.Suspense>} />
-          <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
+          <Route path="/:lang/merges/miner/:minerSlug" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
           <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
           <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
           <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />

@@ -6,6 +6,7 @@ import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge
 import CdnImage from './CdnImage';
 import MinerStatusBadges from './MinerStatusBadges';
 import type { PaginatedResponse } from '../types/pagination';
+import { forgeBatchParts } from '../utils/forgeAnalysis';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
 import Pagination from './Pagination';
@@ -516,9 +517,10 @@ export default function MergePage() {
                 const displayName = getPartDisplayName(item.itemName, item.level);
                 const customPrice = customPartPrices[displayName];
                 const unitPriceRlt = customPrice !== undefined ? customPrice : defaultPrice;
-                const discountedCount = applyForgeDiscount(item.count, forgeLevel);
+                // Discount applies to the whole batch, rounded like Rollercoin (23 × 0.95 → 22)
+                const discountedCount = forgeBatchParts(item.count, count, forgeLevel);
                 // Return to 1e6 scale so it matches the original logic that is expected by formatRltAmount
-                return sum + (discountedCount * count * (unitPriceRlt * 1e6));
+                return sum + (discountedCount * (unitPriceRlt * 1e6));
             }, 0);
     };
 
@@ -540,11 +542,11 @@ export default function MergePage() {
             <>
                 <title>{`${t('merge.title')} | RollerCoin Calculator`}</title>
                 <meta name="description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
-                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/merge`} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/merges`} />
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={`${t('merge.title')} | RollerCoin Calculator`} />
                 <meta property="og:description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
-                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/merge`} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/merges`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('merge.title')} | RollerCoin Calculator`} />
@@ -999,7 +1001,7 @@ export default function MergePage() {
                                 </h3>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                     <Link
-                                        to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemName)}`}
+                                        to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemSlug || selectedMerge.resultItemName)}`}
                                         className="btn-primary"
                                         style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
                                         title={t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
@@ -1170,8 +1172,7 @@ export default function MergePage() {
                                     const customPrice = customPartPrices[displayName];
                                     const unitPriceRlt = isMutationComponent ? (customPrice !== undefined ? customPrice : defaultUnitPrice) : null;
 
-                                    const discountedCount = isMutationComponent ? applyForgeDiscount(item.count, forgeLevel) : item.count;
-                                    const effectiveCount = discountedCount * mergeCount;
+                                    const effectiveCount = isMutationComponent ? forgeBatchParts(item.count, mergeCount, forgeLevel) : item.count * mergeCount;
 
                                     const isLevel1Part = isMutationComponent && item.level === 0;
                                     const shouldShowCost = !isLevel1Part || showLevel1Cost;

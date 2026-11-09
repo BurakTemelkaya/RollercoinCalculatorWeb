@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { fetchProgressionEventList } from '../services/progressionEventApi';
+import { eventPathSegment, fetchProgressionEventList } from '../services/progressionEventApi';
 import type { ProgressionEventListItem } from '../types/progressionEvent';
 import type { PaginatedResponse } from '../types/pagination';
-import { buildEventSlug } from '../utils/slugUtils';
+import { useLatestEventPath } from '../hooks/useLatestEventPath';
+import { getCdnBaseUrl } from '../config/api';
 import Pagination from './Pagination';
 import './ProgressionEvent.css';
 import './ProgressionEventHistory.css';
@@ -43,6 +44,7 @@ function formatEventDateRange(createdDate: string, endDate: string): string {
 
 export default function ProgressionEventHistory() {
     const { lang } = useParams<{ lang: string }>();
+    const latestEventPath = useLatestEventPath(lang ?? i18n.language);
     const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -81,11 +83,11 @@ export default function ProgressionEventHistory() {
             <>
                 <title>{`${t('event.eventHistory')} | RollerCoin Calculator`}</title>
                 <meta name="description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
-                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/event/history`} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/events`} />
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={`${t('event.eventHistory')} | RollerCoin Calculator`} />
                 <meta property="og:description" content={t('event.historyDesc', 'History of past RollerCoin Progression Events')} />
-                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/event/history`} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/events`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('event.eventHistory')} | RollerCoin Calculator`} />
@@ -98,7 +100,7 @@ export default function ProgressionEventHistory() {
                     <Link to={`/${lang}`} className="pe-header-back-btn">
                         {t('event.backToCalc')}
                     </Link>
-                    <Link to={`/${lang}/event`} className="pe-header-back-btn peh-current-event-btn">
+                    <Link to={latestEventPath} className="pe-header-back-btn peh-current-event-btn">
                         🎉 {t('tabs.event')}
                     </Link>
                 </div>
@@ -145,14 +147,29 @@ export default function ProgressionEventHistory() {
                             return (
                                 <Link
                                     key={event.id}
-                                    to={`/${lang}/event/${buildEventSlug(event.name, event.id)}`}
+                                    to={`/${lang}/event/${eventPathSegment(event)}`}
                                     className={`peh-card ${isFirst ? 'peh-card-latest' : ''}`}
                                 >
-                                    <div className="peh-card-header">
-                                        <span className="peh-card-name">{event.name}</span>
-                                        {isFirst && (
-                                            <span className="peh-badge-latest">{t('event.latest')}</span>
-                                        )}
+                                    <div className="peh-card-banner">
+                                        <img
+                                            src={`${getCdnBaseUrl()}/pe/${event.id}/progression-event-modal-bg.png`}
+                                            alt=""
+                                            width={648}
+                                            height={192}
+                                            loading={index < 2 ? 'eager' : 'lazy'}
+                                            onError={(e) => {
+                                                const target = e.currentTarget;
+                                                if (!target.src.includes('static.rollercoin.com')) {
+                                                    target.src = `https://static.rollercoin.com/static/img/pe/${event.id}/progression-event-modal-bg.png?v=1`;
+                                                }
+                                            }}
+                                        />
+                                        <div className="peh-card-header">
+                                            <span className="peh-card-name">{event.name}</span>
+                                            {isFirst && (
+                                                <span className="peh-badge-latest">{t('event.latest')}</span>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="peh-card-meta">
                                         <div className="peh-card-date">

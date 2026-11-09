@@ -59,9 +59,9 @@
 
 /* Grid */
 .peh-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+    gap: 14px;
 }
 
 /* Card */
@@ -69,48 +69,64 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 16px 20px;
+    padding: 0 0 14px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-md, 10px);
     text-decoration: none;
     color: inherit;
-    transition: all 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
 }
 
-.peh-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--accent-primary, #6366f1);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
 .peh-card:hover {
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(99, 102, 241, 0.25);
-    transform: translateX(4px);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
-.peh-card:hover::before {
-    opacity: 1;
+/* Event artwork banner (648x192 source) with the title over a bottom fade */
+.peh-card-banner {
+    position: relative;
+    aspect-ratio: 648 / 192;
+    background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+}
+
+.peh-card-banner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.peh-card:hover .peh-card-banner img {
+    transform: scale(1.05);
+}
+
+.peh-card-banner .peh-card-header {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 28px 16px 10px;
+    background: linear-gradient(to top, rgba(10, 12, 24, 0.92), rgba(10, 12, 24, 0));
+}
+
+.peh-card-banner .peh-card-name {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.peh-card-meta,
+.peh-card-action {
+    padding: 0 16px;
 }
 
 .peh-card-latest {
-    border-color: rgba(99, 102, 241, 0.2);
+    border-color: rgba(139, 92, 246, 0.45);
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(168, 85, 247, 0.04));
-}
-
-.peh-card-latest::before {
-    opacity: 1;
-    background: linear-gradient(to bottom, var(--accent-primary, #6366f1), #a855f7);
 }
 
 /* Card Header */
@@ -225,7 +241,7 @@
     }
 
     .peh-card {
-        padding: 14px 16px;
+        padding: 0 0 12px;
     }
 
     .peh-card-name {

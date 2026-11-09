@@ -22,6 +22,8 @@ export interface MergeListItem {
     xpReward: number;
     resultItemId: string;
     resultItemName: string;
+    /** Shared by all levels of the miner; used in /merges/miner/{slug} URLs */
+    resultItemSlug?: string | null;
     resultItemLevel: number;
     /** Result miner power in Gh/s (may be 0 if not yet populated) */
     resultItemPower: number;
