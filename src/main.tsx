@@ -46,6 +46,12 @@ normalizeInitialUrl()
 
 sessionStorage.removeItem('rollercoin_chunk_reload');
 
+// React 19 hoists each page's <title>/<meta>/<link> into <head> but never dedupes them, so drop the
+// shell defaults (and, on pre-rendered pages, the captured copies) before React renders its own.
+document.head
+  .querySelectorAll('title, meta[name="description"], link[rel="canonical"], link[rel="alternate"][hreflang], meta[property^="og:"], meta[name^="twitter:"]')
+  .forEach((el) => el.remove())
+
 const container = document.getElementById('root')!
 
 // Pre-rendered HTML sadece SEO crawlerlar için kullanılır.

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import rawHamsters from '../data/hamsters.json';
 import rawSets from '../data/hamsterSets.json';
 import { EXPEDITION_MAPS } from '../data/expeditionMaps';
@@ -34,6 +34,7 @@ const ANIMATIONS: { action: HamsterAnimationAction; label: string }[] = [
 
 export default function HamstersPage() {
   const { t, i18n } = useTranslation();
+  const { lang } = useParams<{ lang: string }>();
   const [searchParams] = useSearchParams();
   const initialHamster = HAMSTERS_BY_SLUG.get(searchParams.get('hamster') || '') || HAMSTERS[0];
   const { owned, toggleOwned } = useHamsterCollection();
@@ -85,15 +86,12 @@ export default function HamstersPage() {
     selectHamster(member);
   };
 
-  useEffect(() => {
-    document.title = `${t('hamsters.title')} | Rollercoin Calculator`;
-    return () => { document.title = t('seo.title'); };
-  }, [t, i18n.language]);
-
   return (
     <section className="hamsters-page">
       <HamsterSectionNav />
+      <title>{`${t('hamsters.title')} | Rollercoin Calculator`}</title>
       <meta name="description" content={t('hamsters.description')} />
+      <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/hamsters`} />
       <header className="hamsters-heading">
         <div>
           <span className="hamsters-eyebrow">ROLLERCOIN · EXPEDITION</span>

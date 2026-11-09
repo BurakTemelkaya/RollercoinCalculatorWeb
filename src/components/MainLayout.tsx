@@ -34,7 +34,10 @@ interface MainLayoutProps {
 
 // Routes whose page renders its own <title>/canonical. React 19 does not dedupe hoisted
 // <meta>/<link>, so rendering the layout defaults there too yields conflicting canonicals.
-const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides)(\/|$)/;
+const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
+
+// Pages that render only their own <title> and use the layout's other defaults
+const PAGE_OWNS_TITLE = /^\/[^/]+\/hamsters\//;
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const navigate = useNavigate();
@@ -236,6 +239,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     normalizedPath = normalizedPath.slice(0, -1);
   }
   const currentUrl = `https://rollercoincalculator.app${normalizedPath}`;
+  // Same page in every language, e.g. "/en/faq" -> "/faq"
+  const pathWithoutLang = normalizedPath.replace(/^\/[^/]+/, '');
 
   const changeLanguage = (newLang: string) => {
     // Replace current lang in path
@@ -365,9 +370,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
+            {isValidLang && <>
+              {SUPPORTED_LANGUAGES.map(l => (
+                <link key={l.value} rel="alternate" hrefLang={l.value} href={`https://rollercoincalculator.app/${l.value}${pathWithoutLang}`} />
+              ))}
+              <link rel="alternate" hrefLang="x-default" href={`https://rollercoincalculator.app/en${pathWithoutLang}`} />
+            </>}
             {/* Default SEO tags for pages that don't render their own */}
             {!PAGE_OWNS_SEO.test(location.pathname) && <>
-              <title>{t('seo.title')}</title>
+              {!PAGE_OWNS_TITLE.test(location.pathname) && <title>{t('seo.title')}</title>}
               <meta name="description" content={t('seo.description')} />
               <link rel="canonical" href={currentUrl} />
               <meta property="og:type" content="website" />
