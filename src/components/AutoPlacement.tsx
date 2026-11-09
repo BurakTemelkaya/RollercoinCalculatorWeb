@@ -33,6 +33,8 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
     const [mode, setMode] = useState<AutoPlacementMode>('optimal');
     const [keepPlaced, setKeepPlaced] = useState(false);
     const [noMovePlaced, setNoMovePlaced] = useState(true);
+    const [allowRemove, setAllowRemove] = useState(true);
+    const noRemovePlaced = !allowRemove;
     const sortedLeagues = [...leagues].filter(league => Number.isFinite(league.minPower)).sort((a, b) => a.minPower - b.minPower);
     const currentLeague = leagues.find(league => league.id === currentLeagueId);
     const nextLeague = sortedLeagues.find(league => league.minPower > (currentLeague?.minPower ?? Infinity));
@@ -52,10 +54,10 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
         maxPowerGh = toBaseUnit({ value, unit: limitUnit }) / 1e9;
     }
     const invalidLimit = maxPowerGh !== undefined && (!Number.isFinite(maxPowerGh) || maxPowerGh < 0);
-    const [job, setJob] = useState<{ room: RollercoinRoomResponse; sets?: GetRackSetListDto[]; maxPowerGh?: number; mode: AutoPlacementMode; keepPlaced: boolean; noMovePlaced: boolean } | null>(null);
+    const [job, setJob] = useState<{ room: RollercoinRoomResponse; sets?: GetRackSetListDto[]; maxPowerGh?: number; mode: AutoPlacementMode; keepPlaced: boolean; noMovePlaced: boolean; noRemovePlaced: boolean } | null>(null);
     const [result, setResult] = useState<AutoPlacementResult | null>(null);
     const [notice, setNotice] = useState<{ room: RollercoinRoomResponse; key: string; error?: boolean } | null>(null);
-    const running = job?.room === room && job?.sets === sets && Object.is(job?.maxPowerGh, maxPowerGh) && job?.mode === mode && job?.keepPlaced === keepPlaced && job?.noMovePlaced === noMovePlaced;
+    const running = job?.room === room && job?.sets === sets && Object.is(job?.maxPowerGh, maxPowerGh) && job?.mode === mode && job?.keepPlaced === keepPlaced && job?.noMovePlaced === noMovePlaced && job?.noRemovePlaced === noRemovePlaced;
     const visibleResult = result?.room === room ? result : null;
     const stopWorker = useCallback(() => {
         workerRef.current?.terminate(); workerRef.current = null;
@@ -83,7 +85,7 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
             window.removeEventListener(MINER_IMPORT_CHANGE_EVENT, stockChanged);
             window.removeEventListener('storage', storageChanged);
         };
-    }, [room, sets, maxPowerGh, mode, keepPlaced, noMovePlaced, stopWorker]);
+    }, [room, sets, maxPowerGh, mode, keepPlaced, noMovePlaced, noRemovePlaced, stopWorker]);
 
     const start = () => {
         setNotice(null); setResult(null);
@@ -95,7 +97,7 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
             const snapshot = localStorage.getItem(MINER_IMPORT_STORAGE_KEY);
             const inventory = snapshot === null ? [] : parseMinerImport(snapshot);
             const worker = new Worker(new URL('../workers/autoPlacement.worker.ts', import.meta.url), { type: 'module' });
-            workerRef.current = worker; setJob({ room, sets, maxPowerGh, mode, keepPlaced, noMovePlaced });
+            workerRef.current = worker; setJob({ room, sets, maxPowerGh, mode, keepPlaced, noMovePlaced, noRemovePlaced });
             worker.onerror = () => { if (workerRef.current === worker) fail(); };
             worker.onmessageerror = () => { if (workerRef.current === worker) fail(); };
             worker.onmessage = (event: MessageEvent<{ result?: AutoPlacementResult; error?: boolean }>) => {
@@ -114,7 +116,7 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
                 } catch { fail(); }
             };
             timeoutRef.current = setTimeout(() => fail(), 15000);
-            worker.postMessage({ room, inventory, sets, maxPowerGh, options: { mode, keepPlaced, noMovePlaced } });
+            worker.postMessage({ room, inventory, sets, maxPowerGh, options: { mode, keepPlaced, noMovePlaced, noRemovePlaced } });
         } catch { fail(); }
     };
     const power = (value: number) => formatHashPower(autoScalePower(value * 1e9));
@@ -146,6 +148,11 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
                     setNoMovePlaced(!event.target.checked); if (event.target.checked) setKeepPlaced(false);
                 }} />
                 <span>{t('autoPlacement.allowMovingPlaced')}</span>
+            </label>
+            <label className="auto-placement-keep" title={t('autoPlacement.allowRemovingPlacedHelp')}>
+                <input type="checkbox" checked={allowRemove && !keepPlaced} disabled={running || keepPlaced}
+                    onChange={event => setAllowRemove(event.target.checked)} />
+                <span>{t('autoPlacement.allowRemovingPlaced')}</span>
             </label>
             <label className="auto-placement-limit-mode">
                 <span>{t('autoPlacement.powerLimit')}</span>

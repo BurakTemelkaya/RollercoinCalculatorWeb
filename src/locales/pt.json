@@ -41,14 +41,15 @@
     "limitHelp": "Busca o maior poder de liga sem ultrapassar o limite. O poder pode diminuir; os mineradores retirados voltam ao estoque.",
     "leagueLimit": "Escolher limite por liga",
     "selectLeague": "Selecionar liga",
-    "noLeagueCeiling": "Sem limite superior"
+    "noLeagueCeiling": "Sem limite superior",
+    "allowRemovingPlaced": "Permitir remover mineradores",
+    "allowRemovingPlacedHelp": "Ativado, mineradores posicionados podem voltar ao inventário para dar lugar a melhores. Caso contrário, todos permanecem na sala."
   },
   "minerImport": {
     "apiMethod": "Resposta da API (JSON)",
     "apiHelp": "Para usar a API, cole a resposta JSON completa retornada por:",
     "apiSteps": "Abra as ferramentas de desenvolvedor com F12 e selecione Network (Rede). Entre na sua sala do RollerCoin e avance para a próxima página na aba de mineradores na parte inferior. Selecione a requisição inventory e copie os dados de Response (Resposta). Repita para outras páginas se necessário.",
     "collectionHelp": "Na página de coleção, selecione e copie o texto dos cartões como na imagem e cole abaixo.",
-    "collectionExampleAlt": "Cartões da coleção com bônus, nome e poder selecionados para copiar",
     "addAllPower": "Adicionar todos os mineradores ao simulador de poder",
     "decreaseQuantity": "Diminuir quantidade",
     "increaseQuantity": "Aumentar quantidade",
@@ -71,7 +72,29 @@
     "invalid": "Não foi possível ler os dados ou encontrar um minerador no catálogo. Cole o JSON completo ou os cartões com ID e poder. Verifique a conexão.",
     "quantityError": "As quantidades devem ser inteiros não negativos, com total máximo de {{max}}.",
     "addError": "Não foi possível adicionar. Verifique as quantidades e a capacidade livre dos racks. A simulação atual foi mantida.",
-    "storageError": "Não foi possível salvar no navegador. A lista está disponível nesta sessão; verifique as configurações de armazenamento."
+    "storageError": "Não foi possível salvar no navegador. A lista está disponível nesta sessão; verifique as configurações de armazenamento.",
+    "anim": {
+      "title": "Como copiar a resposta do inventário",
+      "play": "Reproduzir",
+      "pause": "Pausar",
+      "step": "Passo {{n}}",
+      "s1": "Pressione F12 (ou Ctrl+Shift+I) e abra a aba Network.",
+      "s2": "Digite inventory na caixa Filter para ver apenas as requisições de inventário.",
+      "s3": "No jogo, clique em um número de sala para abri-la. Uma requisição inventory aparece.",
+      "s4": "No painel Miners abaixo, clique na seta para a direita. A próxima página envia uma nova requisição inventory.",
+      "s5": "Clique em uma requisição e abra a aba Response.",
+      "s6": "Clique dentro da resposta e pressione Ctrl+A e depois Ctrl+C para copiar tudo.",
+      "s7": "Cole na caixa abaixo e clique em {{read}}. Repita para cada página."
+    },
+    "copyAnim": {
+      "title": "Como copiar mineradores da página do RollerCoin",
+      "s1": "Abra a página de mineradores do RollerCoin no link acima.",
+      "s2": "Clique logo antes de \"Bonus power\" no primeiro cartão e segure o botão do mouse.",
+      "s3": "Arraste até o fim do último cartão para selecionar todos.",
+      "s4": "Pressione Ctrl+C para copiar a seleção.",
+      "s5": "Cole na caixa abaixo e clique em {{read}}. Repita para outras páginas."
+    },
+    "shrinkHint": "Você pode reduzir o painel aqui"
   },
   "calculatorEmpty": {
     "earnings": "Para ver seus ganhos, insira seu nome de usuário acima e clique em Buscar, ou insira sua potência.",
