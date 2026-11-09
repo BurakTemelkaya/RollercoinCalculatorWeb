@@ -81,8 +81,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
   const [country, setCountry] = useState<string | null>(null);
+  const [cleverNoFill, setCleverNoFill] = useState(() => window.__cleverCoreNoFill === true);
   const cleverNoFillTrackedRef = useRef(false);
-  const topAdNetwork = resolveTopAdNetwork(country);
+  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill);
 
   const trackCleverNoFill = useCallback((reason: string) => {
     if (cleverNoFillTrackedRef.current) return;
@@ -97,8 +98,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, []);
 
   const markCleverNoFill = useCallback((reason: string) => {
+    // Never swap away a slot Clever already filled: both ads would show.
+    if (document.querySelector('#top-ad-container .clever-core-ads')?.childElementCount) return;
     window.__cleverCoreNoFill = true;
     window.__cleverCoreNoFillReason = reason;
+    setCleverNoFill(true);
     trackCleverNoFill(reason);
   }, [trackCleverNoFill]);
 
@@ -251,9 +255,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   let topAdSlot: React.ReactNode = null;
   if (topAdNetwork === 'clever') {
-    topAdSlot = <div className="clever-core-ads"></div>;
+    topAdSlot = <div key="clever" className="clever-core-ads"></div>;
   } else if (topAdNetwork === 'coinzilla') {
-    topAdSlot = <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
+    // Separate key: a fresh node, so a late Clever creative lands in the detached old one.
+    topAdSlot = <div key="coinzilla" className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
   }
 
   return (
