@@ -178,13 +178,19 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
   });
 
   try {
+    // "/" redirects by saved/browser language; pin English so root.html never depends on the
+    // build machine's locale or on another page's lang left in the shared localStorage.
+    if (route === '/') {
+      await page.evaluateOnNewDocument(() => localStorage.setItem('rollercoin_web_language', 'en'));
+    }
     const url = `http://localhost:${PORT}${route}`;
     // HTML'i hızlıca yükle (domcontentloaded)
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
     // Lazy page chunks can take longer than a fixed delay; every page renders its own
     // canonical once mounted, so wait for it (capped) instead of capturing an empty shell.
-    await page.waitForSelector('link[rel="canonical"]', { timeout: 5000 }).catch(() => {});
+    // Some lazy pages (hamster sub-pages) render their own <title> after the layout's canonical.
+    await page.waitForFunction(() => document.querySelector('link[rel="canonical"]') && document.title, { timeout: 5000 }).catch(() => {});
 
     // Discover internal links on this page
     const links = await page.evaluate(() =>
@@ -203,14 +209,15 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // Capture rendered HTML
     const html = await page.content();
 
-    // "/" only redirects to a language. Never overwrite dist/index.html: nginx serves it as
-    // the fallback for every non-prerendered route (event, miner, blog pages), so it must
-    // stay the clean shell instead of carrying the /en page's canonical and title.
-    if (route !== '/') {
-      const outputPath = path.join(DIST_DIR, route, 'index.html');
-      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-      fs.writeFileSync(outputPath, html);
-    }
+    // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
+    // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
+    // language (English for crawlers), so its render is the /en page with canonical /en; nginx
+    // serves it from root.html for "/" only.
+    const outputPath = route === '/'
+      ? path.join(DIST_DIR, 'root.html')
+      : path.join(DIST_DIR, route, 'index.html');
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, html);
 
     return true;
   } catch (error) {
