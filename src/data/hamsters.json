@@ -12215,8 +12215,8 @@
         "idleAnimation": {
           "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_idle.png",
           "frames": 6,
-          "frameWidth": 62,
-          "frameHeight": 62,
+          "frameWidth": 160,
+          "frameHeight": 160,
           "frameDurationMs": 100
         },
         "animations": {

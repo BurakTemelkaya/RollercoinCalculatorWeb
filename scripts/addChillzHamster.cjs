@@ -48,8 +48,8 @@ const hamster = {
     idleAnimation: {
       path: `${prefix}/sprite_idle.png`,
       frames: 6,
-      frameWidth: 62,
-      frameHeight: 62,
+      frameWidth: 160,
+      frameHeight: 160,
       frameDurationMs: 100,
     },
     animations: {
@@ -74,4 +74,4 @@ if (index === -1) catalog.push(hamster);
 else catalog[index] = hamster;
 catalog.sort((a, b) => a.order - b.order);
 fs.writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
-console.log('Added Chillz with official abilities and the supplied level 50 animations.');
+console.log('Added Chillz with official abilities and the supplied level 1 animations.');

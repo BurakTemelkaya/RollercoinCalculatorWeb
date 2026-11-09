@@ -74,51 +74,32 @@ function encodePng(width, height, rgbaBuffer) {
   return Buffer.concat([sig, makeChunk('IHDR', ihdr), makeChunk('IDAT', idat), makeChunk('IEND', Buffer.alloc(0))]);
 }
 
+// Source: 6 native 48x48 frames from the user's Chillz_idle_preview.gif (kept in scripts/).
+// Output follows the official idle standard: 160x160 cells, feet on row 147.
+// Official idles are 4x game pixels; Chillz's walk sprite is 27 rows tall, so the idle should be ~108px.
+// The 40-row source needs 2.75x (a regular 3,3,3,2 pixel pattern) to reach 110px.
+const SRC = 48, SCALE = 2.75, CELL = 160, FRAMES = 6, FEET_Y = 147;
+const SIZE = Math.ceil(SRC * SCALE);
 const dir = path.resolve(__dirname, '../public/assets/rollercoin/hamsters/pets/chillz/lvl01');
-const srcSprite = decodePng(path.join(dir, 'sprite_idle.png'));
+const src = decodePng(path.join(__dirname, 'chillz-idle-source.png'));
+if (src.w !== SRC * FRAMES || src.h !== SRC) throw new Error(`Unexpected source size ${src.w}x${src.h}`);
 
-// If it's already 372x62, nothing to do
-if (srcSprite.w === 372 && srcSprite.h === 62) {
-  console.log('sprite_idle.png is already 372x62.');
-  process.exit(0);
-}
+let bottom = 0;
+for (let y = 0; y < SRC; y++) for (let x = 0; x < src.w; x++) if (src.pixels[(y * src.w + x) * 4 + 3]) bottom = y;
+const offsetX = Math.floor((CELL - SIZE) / 2);
+const offsetY = FEET_Y - (Math.ceil((bottom + 1) * SCALE) - 1);
+if (offsetY < 0 || offsetY + SIZE > CELL) throw new Error('Scaled frame does not fit the cell');
 
-const TARGET_FRAME_W = 80;
-const TARGET_FRAME_H = 80;
-const OFFSET_X = 16;
-const OFFSET_Y = 28;
-const FRAMES = 6;
-
-const dstW = TARGET_FRAME_W * FRAMES;
-const dstH = TARGET_FRAME_H;
-const dstSprite = Buffer.alloc(dstW * dstH * 4, 0);
-
-for (let f = 0; f < FRAMES; f++) {
-  for (let y = 0; y < 48; y++) {
-    for (let x = 0; x < 48; x++) {
-      const srcIdx = (y * srcSprite.w + f * 48 + x) * 4;
-      const dstX = f * TARGET_FRAME_W + x + OFFSET_X;
-      const dstY = y + OFFSET_Y;
-      const dstIdx = (dstY * dstW + dstX) * 4;
-      srcSprite.pixels.copy(dstSprite, dstIdx, srcIdx, srcIdx + 4);
-    }
+function render(frames) {
+  const w = CELL * frames;
+  const out = Buffer.alloc(w * CELL * 4, 0);
+  for (let f = 0; f < frames; f++) for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+    const from = (Math.floor(y / SCALE) * src.w + f * SRC + Math.floor(x / SCALE)) * 4;
+    src.pixels.copy(out, ((y + offsetY) * w + f * CELL + x + offsetX) * 4, from, from + 4);
   }
+  return encodePng(w, CELL, out);
 }
 
-const encodedSprite = encodePng(dstW, dstH, dstSprite);
-fs.writeFileSync(path.join(dir, 'sprite_idle.png'), encodedSprite);
-
-const dstIdle = Buffer.alloc(TARGET_FRAME_W * TARGET_FRAME_H * 4, 0);
-for (let y = 0; y < 48; y++) {
-  for (let x = 0; x < 48; x++) {
-    const srcIdx = (y * srcSprite.w + x) * 4;
-    const dstIdx = ((y + OFFSET_Y) * TARGET_FRAME_W + x + OFFSET_X) * 4;
-    srcSprite.pixels.copy(dstIdle, dstIdx, srcIdx, srcIdx + 4);
-  }
-}
-
-const encodedIdle = encodePng(TARGET_FRAME_W, TARGET_FRAME_H, dstIdle);
-fs.writeFileSync(path.join(dir, 'idle.png'), encodedIdle);
-
-console.log('Successfully reframed Chillz idle.png (62x62) and sprite_idle.png (372x62).');
-
+fs.writeFileSync(path.join(dir, 'sprite_idle.png'), render(FRAMES));
+fs.writeFileSync(path.join(dir, 'idle.png'), render(1));
+console.log(`Chillz idle.png (160x160) and sprite_idle.png (960x160) written, ${SCALE}x scale, feet on row ${FEET_Y}.`);

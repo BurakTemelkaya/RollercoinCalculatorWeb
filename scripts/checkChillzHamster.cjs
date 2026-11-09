@@ -16,12 +16,12 @@ assert.deepEqual(Object.fromEntries(Object.entries(skin.animations).map(([action
   walk: 16, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6,
 });
 assert.equal(skin.idleAnimation.frames, 6);
-assert.equal(skin.idleAnimation.frameWidth, 62);
-assert.equal(skin.idleAnimation.frameHeight, 62);
+assert.equal(skin.idleAnimation.frameWidth, 160);
+assert.equal(skin.idleAnimation.frameHeight, 160);
 assert.equal(skin.idleAnimation.previewRegion, undefined);
 for (const [file, width, height] of [
-  [skin.idle, 62, 62],
-  [skin.idleAnimation.path, 372, 62],
+  [skin.idle, 160, 160],
+  [skin.idleAnimation.path, 960, 160],
   ...Object.values(skin.animations).map(item => [item.path, item.frames * item.frameWidth, item.frameHeight]),
   ...hamster.abilities.map(item => [item.icon, null, null]),
   [hamster.ultimate.icon, null, null],
