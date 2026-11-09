@@ -12206,7 +12206,7 @@
       {
         "level": 1,
         "walk": "rollercoin/hamsters/pets/chillz/lvl01/sprite_walk.png",
-        "frames": 16,
+        "frames": 8,
         "jump": "rollercoin/hamsters/pets/chillz/lvl01/sprite_jump.png",
         "jumpFrames": 7,
         "frameWidth": 128,
@@ -12222,7 +12222,7 @@
         "animations": {
           "walk": {
             "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_walk.png",
-            "frames": 16,
+            "frames": 8,
             "frameWidth": 128,
             "frameHeight": 128
           },

@@ -13,7 +13,7 @@ assert.equal(hamster.animationsPending, false);
 
 const skin = hamster.skins[0];
 assert.deepEqual(Object.fromEntries(Object.entries(skin.animations).map(([action, item]) => [action, item.frames])), {
-  walk: 16, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6,
+  walk: 8, jump: 7, tap_reaction: 11, go_sleep: 24, take_chest: 9, win_loop: 6,
 });
 assert.equal(skin.idleAnimation.frames, 6);
 assert.equal(skin.idleAnimation.frameWidth, 160);

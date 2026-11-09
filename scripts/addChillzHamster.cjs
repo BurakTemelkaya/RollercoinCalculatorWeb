@@ -41,7 +41,7 @@ const hamster = {
   ultimateChargePoints: 24,
   skins: [{
     level: 1,
-    walk: `${prefix}/sprite_walk.png`, frames: 16,
+    walk: `${prefix}/sprite_walk.png`, frames: 8,
     jump: `${prefix}/sprite_jump.png`, jumpFrames: 7,
     frameWidth: 128, frameHeight: 128,
     idle: `${prefix}/idle.png`,
@@ -53,7 +53,7 @@ const hamster = {
       frameDurationMs: 100,
     },
     animations: {
-      walk: animation('walk', 16),
+      walk: animation('walk', 8),
       jump: animation('jump', 7),
       tap_reaction: animation('tap_reaction', 11),
       go_sleep: animation('go_sleep', 24),
