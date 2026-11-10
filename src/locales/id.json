@@ -1319,7 +1319,9 @@
     "no": "Tidak",
     "neverAsk": "Jangan tanya lagi",
     "energyAlert": "Kirim email saat power saya mulai turun",
-    "energyAlertDesc": "Paling banyak sekali sehari, hingga 3 hari, jika energi tidak diperbarui. Dapat diubah di pengaturan notifikasi."
+    "energyAlertDesc": "Paling banyak sekali sehari, hingga 3 hari, jika energi tidak diperbarui. Dapat diubah di pengaturan notifikasi.",
+    "country": "Negara (opsional)",
+    "countryNone": "Tidak ditentukan"
   },
   "leaderboard": {
     "title": "Papan Peringkat",
@@ -1331,6 +1333,11 @@
     "empty": "Belum ada yang bergabung di papan peringkat.",
     "user": "Pengguna",
     "league": "Liga",
-    "power": "Power"
+    "power": "Power",
+    "filterCountry": "Filter menurut negara",
+    "filterLeague": "Filter menurut liga",
+    "allCountries": "Semua negara",
+    "allLeagues": "Semua liga",
+    "noResults": "Tidak ada akun yang cocok dengan filter ini."
   }
 }

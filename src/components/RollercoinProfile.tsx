@@ -4,9 +4,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile, updateUserProfile, UserProfile } from '../services/userProfileApi';
 import { getNotificationPreferences, updateNotificationPreferences } from '../services/notificationApi';
 import { SUPPORTED_LANGUAGES } from './MainLayout';
+import RadixSelect from './RadixSelect';
+import { countryOptions } from '../data/countries';
 import './auth/AuthPages.css';
 
 const PROMPT_DISMISSED_KEY = 'rollercoin_profile_prompt_dismissed';
+// Radix Select does not allow an empty item value
+const NO_COUNTRY = 'none';
 
 interface FormProps {
     initial: UserProfile;
@@ -25,6 +29,7 @@ export function RollercoinProfileForm({ initial, showLanguage = false, showEnerg
     const [showInLeaderboard, setShowInLeaderboard] = useState(initial.showInLeaderboard);
     const [language, setLanguage] = useState(initial.preferredLanguage ?? i18n.language);
     const [energyAlert, setEnergyAlert] = useState(false);
+    const [country, setCountry] = useState(initial.country ?? '');
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [saved, setSaved] = useState(false);
@@ -41,6 +46,7 @@ export function RollercoinProfileForm({ initial, showLanguage = false, showEnerg
                 rollercoinUserName: userName.trim() || null,
                 preferredLanguage: language,
                 showInLeaderboard: !!userName.trim() && showInLeaderboard,
+                country: country || null,
             });
             if (showEnergyAlert && energyAlert && result.rollercoinUserName) {
                 // Diğer tercihleri koruyarak yalnızca enerji uyarısının e-postasını aç
@@ -87,6 +93,18 @@ export function RollercoinProfileForm({ initial, showLanguage = false, showEnerg
                 <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
                     {t('profile.rollercoinUserNameHint', 'The name in your Rollercoin profile link (rollercoin.com/p/...). Optional.')}
                 </span>
+            </div>
+
+            <div className="auth-field">
+                <label id="rc-country-label">{t('profile.country', 'Country (optional)')}</label>
+                <RadixSelect
+                    value={country || NO_COUNTRY}
+                    onValueChange={v => setCountry(v === NO_COUNTRY ? '' : v)}
+                    options={[{ value: NO_COUNTRY, label: t('profile.countryNone', 'Not specified') }, ...countryOptions(i18n.language)]}
+                    ariaLabel={t('profile.country', 'Country (optional)')}
+                    disabled={isSaving}
+                    fullWidth
+                />
             </div>
 
             <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: userName.trim() ? 'pointer' : 'not-allowed', color: '#e2e8f0', opacity: userName.trim() ? 1 : 0.5 }}>
@@ -173,6 +191,8 @@ export function RollercoinProfileCard() {
 }
 
 const SUGGEST_NEVER_KEY = 'rollercoin_profile_suggest_never';
+// "Later" on the first popup only hides it for this browser session
+const PROMPT_LATER_SESSION_KEY = 'rollercoin_profile_prompt_later';
 const SUGGEST_DECLINED_KEY = 'rollercoin_profile_suggest_declined';
 
 function readStorage(key: string): string | null {
@@ -180,6 +200,12 @@ function readStorage(key: string): string | null {
 }
 function writeStorage(key: string, value: string) {
     try { localStorage.setItem(key, value); } catch { /* storage blocked */ }
+}
+function readSession(key: string): string | null {
+    try { return sessionStorage.getItem(key); } catch { return null; }
+}
+function writeSession(key: string, value: string) {
+    try { sessionStorage.setItem(key, value); } catch { /* storage blocked */ }
 }
 function declinedNames(): string[] {
     try { return JSON.parse(readStorage(SUGGEST_DECLINED_KEY) ?? '[]'); } catch { return []; }
@@ -208,7 +234,7 @@ export function RollercoinProfilePrompt() {
                 const data = await getUserProfile(token);
                 if (cancelled) return;
                 setLoaded(data);
-                if (!data.rollercoinUserName && readStorage(PROMPT_DISMISSED_KEY) !== '1') {
+                if (!data.rollercoinUserName && readStorage(PROMPT_DISMISSED_KEY) !== '1' && readSession(PROMPT_LATER_SESSION_KEY) !== '1') {
                     setShown({ profile: data });
                 } else if (!data.preferredLanguage) {
                     // Eski kullanıcılar: otomatik mailler için mevcut site dilini kaydet
@@ -242,14 +268,15 @@ export function RollercoinProfilePrompt() {
         if (suggestedName) {
             writeStorage(SUGGEST_DECLINED_KEY, JSON.stringify([...declinedNames(), suggestedName.toLowerCase()]));
         } else {
-            writeStorage(PROMPT_DISMISSED_KEY, '1');
+            writeSession(PROMPT_LATER_SESSION_KEY, '1');
         }
         setShown(null);
     };
 
+    // First popup: never show the invite again (calculator suggestions still allowed). Suggestion: never suggest again.
     const neverAsk = () => {
-        writeStorage(SUGGEST_NEVER_KEY, '1');
         writeStorage(PROMPT_DISMISSED_KEY, '1');
+        if (suggestedName) writeStorage(SUGGEST_NEVER_KEY, '1');
         setShown(null);
     };
 
@@ -282,11 +309,9 @@ export function RollercoinProfilePrompt() {
                                 <button type="button" onClick={close} style={linkButtonStyle}>
                                     {suggestedName ? t('profile.no', 'No') : t('profile.later', 'Later')}
                                 </button>
-                                {suggestedName && (
-                                    <button type="button" onClick={neverAsk} style={linkButtonStyle}>
-                                        {t('profile.neverAsk', "Don't ask again")}
-                                    </button>
-                                )}
+                                <button type="button" onClick={neverAsk} style={linkButtonStyle}>
+                                    {t('profile.neverAsk', "Don't ask again")}
+                                </button>
                             </div>
                         }
                     />

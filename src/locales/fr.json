@@ -1297,7 +1297,9 @@
     "no": "Non",
     "neverAsk": "Ne plus demander",
     "energyAlert": "Me prévenir par e-mail quand ma puissance baisse",
-    "energyAlertDesc": "Au plus une fois par jour, pendant 3 jours maximum, si votre énergie n'est pas renouvelée. Modifiable dans les paramètres de notification."
+    "energyAlertDesc": "Au plus une fois par jour, pendant 3 jours maximum, si votre énergie n'est pas renouvelée. Modifiable dans les paramètres de notification.",
+    "country": "Pays (facultatif)",
+    "countryNone": "Non précisé"
   },
   "leaderboard": {
     "title": "Classement",
@@ -1309,6 +1311,11 @@
     "empty": "Personne n'a encore rejoint le classement.",
     "user": "Utilisateur",
     "league": "Ligue",
-    "power": "Puissance"
+    "power": "Puissance",
+    "filterCountry": "Filtrer par pays",
+    "filterLeague": "Filtrer par ligue",
+    "allCountries": "Tous les pays",
+    "allLeagues": "Toutes les ligues",
+    "noResults": "Aucun compte ne correspond à ces filtres."
   }
 }
