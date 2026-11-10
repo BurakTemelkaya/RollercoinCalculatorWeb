@@ -131,7 +131,8 @@
     "adminPanel": "Admin Panel",
     "userPanel": "User Panel",
     "myBlogs": "My Blogs",
-    "notificationSettings": "Notification Settings"
+    "notificationSettings": "Notification Settings",
+    "leaderboard": "Leaderboard"
   },
   "hamsters": {
     "title": "Hamsters",
@@ -678,7 +679,9 @@
     "generalMailEnabledMsg": "Email notifications re-enabled.",
     "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "You cannot receive notifications because Web Push is enabled but browser permission is denied. Please grant permission in your browser.",
-    "enableInBrowser": "Open in Browser"
+    "enableInBrowser": "Open in Browser",
+    "energyRenewal": "Power decrease alert",
+    "energyRenewalDesc": "Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above."
   },
   "event": {
     "loading": "Loading event data...",
@@ -1382,5 +1385,37 @@
     "room": "Room",
     "noChange": "Placement unchanged.",
     "otherNames": "and {{count}} other names"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin username",
+    "rollercoinUserNamePlaceholder": "your-name",
+    "rollercoinUserNameHint": "The name in your Rollercoin profile link (rollercoin.com/p/...). Optional.",
+    "showInLeaderboard": "Show my Rollercoin account in the site leaderboard",
+    "showInLeaderboardDesc": "Your Rollercoin username and power will be publicly visible. Your email is never shown.",
+    "emailLanguage": "Language of automatic emails",
+    "save": "Save",
+    "saveError": "Failed to save.",
+    "promptTitle": "Add your Rollercoin username",
+    "promptDesc": "Link your Rollercoin account to appear in the leaderboard and to get notified when your power starts decreasing.",
+    "later": "Later",
+    "cardTitle": "Rollercoin Account & Email Language",
+    "suggestTitle": "Use this username in your account?",
+    "suggestDesc": "You used {{name}} in the calculator. Save it to your account to appear in the leaderboard and get notified when your power starts decreasing.",
+    "no": "No",
+    "neverAsk": "Don't ask again",
+    "energyAlert": "Email me when my power starts decreasing",
+    "energyAlertDesc": "At most once a day, for up to 3 days, if your energy is not renewed. You can change this in notification settings."
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "description": "Rollercoin power ranking of RollercoinCalculator members.",
+    "joinSettings": "Join from your settings.",
+    "joinRegister": "Sign up to join.",
+    "updated": "Updated every 30 minutes. Last update:",
+    "loadError": "Leaderboard could not be loaded.",
+    "empty": "No one has joined the leaderboard yet.",
+    "user": "User",
+    "league": "League",
+    "power": "Power"
   }
 }

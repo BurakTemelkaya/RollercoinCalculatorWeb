@@ -131,7 +131,8 @@
     "adminPanel": "Panneau d'Administration",
     "userPanel": "Panneau Utilisateur",
     "myBlogs": "Mes Blogs",
-    "notificationSettings": "Paramètres de notification"
+    "notificationSettings": "Paramètres de notification",
+    "leaderboard": "Classement"
   },
   "lpp": {
     "title": "Répartition de la Puissance",
@@ -600,7 +601,9 @@
     "generalMailEnabledMsg": "Notifications par e-mail réactivées.",
     "generalMailDisabledMsg": "Toutes les notifications par e-mail sont désactivées.",
     "browserPushWarning": "Vous ne pouvez pas recevoir de notifications car Web Push est activé mais l'autorisation du navigateur est refusée. Veuillez accorder l'autorisation dans votre navigateur.",
-    "enableInBrowser": "Ouvrir dans le Navigateur"
+    "enableInBrowser": "Ouvrir dans le Navigateur",
+    "energyRenewal": "Alerte de baisse de puissance",
+    "energyRenewalDesc": "Vérifié toutes les 30 minutes. Tant que votre puissance Rollercoin baisse parce que votre énergie n'a pas été renouvelée, vous recevez au plus une alerte par jour, pendant 3 jours maximum. Nécessite votre nom d'utilisateur Rollercoin ci-dessus."
   },
   "event": {
     "loading": "Chargement...",
@@ -1275,5 +1278,37 @@
     "room": "Salle",
     "noChange": "Placement inchangé.",
     "otherNames": "et {{count}} autres noms"
+  },
+  "profile": {
+    "rollercoinUserName": "Nom d'utilisateur Rollercoin",
+    "rollercoinUserNamePlaceholder": "votre-nom",
+    "rollercoinUserNameHint": "Le nom dans le lien de votre profil Rollercoin (rollercoin.com/p/...). Facultatif.",
+    "showInLeaderboard": "Afficher mon compte Rollercoin dans le classement du site",
+    "showInLeaderboardDesc": "Votre nom d'utilisateur Rollercoin et votre puissance seront publics. Votre e-mail n'est jamais affiché.",
+    "emailLanguage": "Langue des e-mails automatiques",
+    "save": "Enregistrer",
+    "saveError": "Échec de l'enregistrement.",
+    "promptTitle": "Ajoutez votre nom d'utilisateur Rollercoin",
+    "promptDesc": "Liez votre compte Rollercoin pour apparaître dans le classement et être averti quand votre puissance baisse.",
+    "later": "Plus tard",
+    "cardTitle": "Compte Rollercoin et langue des e-mails",
+    "suggestTitle": "Utiliser ce nom d'utilisateur dans votre compte ?",
+    "suggestDesc": "Vous avez utilisé {{name}} dans le calculateur. Enregistrez-le dans votre compte pour apparaître dans le classement et être averti quand votre puissance baisse.",
+    "no": "Non",
+    "neverAsk": "Ne plus demander",
+    "energyAlert": "Me prévenir par e-mail quand ma puissance baisse",
+    "energyAlertDesc": "Au plus une fois par jour, pendant 3 jours maximum, si votre énergie n'est pas renouvelée. Modifiable dans les paramètres de notification."
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "description": "Classement de puissance Rollercoin des membres de RollercoinCalculator.",
+    "joinSettings": "Rejoignez-le depuis vos paramètres.",
+    "joinRegister": "Inscrivez-vous pour participer.",
+    "updated": "Mis à jour toutes les 30 minutes. Dernière mise à jour :",
+    "loadError": "Le classement n'a pas pu être chargé.",
+    "empty": "Personne n'a encore rejoint le classement.",
+    "user": "Utilisateur",
+    "league": "Ligue",
+    "power": "Puissance"
   }
 }

@@ -82,6 +82,7 @@ const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangeP
 const NotificationSettingsPage = lazyWithRetry(() => import('./components/NotificationSettingsPage'));
 const RewardChangeModal = lazyWithRetry(() => import('./components/RewardChangeModal'));
 const UnsubscribePage = lazyWithRetry(() => import('./components/UnsubscribePage'));
+const LeaderboardPage = lazyWithRetry(() => import('./components/LeaderboardPage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -278,6 +279,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       const data = await fetchUserFromApi(parsed.username);
       setFetchedRoom(null); // Replace the previous room only after the lookup succeeds.
       setFetchedUser(data);
+      // Giriş yapmış ve adı kayıtlı olmayan kullanıcıya hesabına kaydetmeyi önermek için (RollercoinProfilePrompt dinler)
+      window.dispatchEvent(new CustomEvent('rollercoin-username-used', { detail: parsed.username }));
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
 
@@ -1211,6 +1214,7 @@ function App() {
           <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
           <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
           <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+          <Route path="/:lang/leaderboard" element={<React.Suspense fallback={null}><LeaderboardPage /></React.Suspense>} />
           <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
           <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />

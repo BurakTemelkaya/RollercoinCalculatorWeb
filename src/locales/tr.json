@@ -131,7 +131,8 @@
     "adminPanel": "Admin Paneli",
     "userPanel": "Kullanıcı Paneli",
     "myBlogs": "Bloglarım",
-    "notificationSettings": "Bildirim Ayarları"
+    "notificationSettings": "Bildirim Ayarları",
+    "leaderboard": "Sıralama"
   },
   "hamsters": {
     "title": "Hamsterlar",
@@ -679,7 +680,9 @@
     "generalMailEnabledMsg": "E-posta bildirimleri tekrar açıldı.",
     "generalMailDisabledMsg": "Tüm e-posta bildirimleri kapatıldı.",
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
-    "enableInBrowser": "Tarayıcıda Aç"
+    "enableInBrowser": "Tarayıcıda Aç",
+    "energyRenewal": "Güç düşüşü uyarısı",
+    "energyRenewalDesc": "30 dakikada bir kontrol edilir. Enerjiniz yenilenmediği için Rollercoin gücünüz düşmeye devam ettikçe günde en fazla bir kez, en fazla 3 gün uyarı alırsınız. Yukarıda Rollercoin kullanıcı adınızı girmeniz gerekir."
   },
   "event": {
     "loading": "Etkinlik verileri yükleniyor...",
@@ -1383,5 +1386,37 @@
     "room": "Oda",
     "noChange": "Yerleşim değişmedi.",
     "otherNames": "ve {{count}} farklı isim daha"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin kullanıcı adı",
+    "rollercoinUserNamePlaceholder": "kullanici-adiniz",
+    "rollercoinUserNameHint": "Rollercoin profil bağlantınızdaki ad (rollercoin.com/p/...). İsteğe bağlı.",
+    "showInLeaderboard": "Rollercoin hesabım site sıralamasında gözüksün",
+    "showInLeaderboardDesc": "Rollercoin kullanıcı adınız ve gücünüz herkese açık görünür. E-postanız asla gösterilmez.",
+    "emailLanguage": "Otomatik e-postaların dili",
+    "save": "Kaydet",
+    "saveError": "Kaydedilemedi.",
+    "promptTitle": "Rollercoin kullanıcı adınızı girin",
+    "promptDesc": "Rollercoin hesabınızı bağlayarak sıralamada yer alabilir ve gücünüz düşmeye başladığında bildirim alabilirsiniz.",
+    "later": "Daha sonra",
+    "cardTitle": "Rollercoin Hesabı ve E-posta Dili",
+    "suggestTitle": "Bu kullanıcı adını hesabınızda kullanmak ister misiniz?",
+    "suggestDesc": "Hesaplayıcıda {{name}} kullanıcı adını kullandınız. Hesabınıza kaydederek sıralamada yer alabilir ve gücünüz düşmeye başladığında bildirim alabilirsiniz.",
+    "no": "Hayır",
+    "neverAsk": "Bir daha gösterme",
+    "energyAlert": "Gücüm düştüğünde e-posta ile bildirim almak istiyorum",
+    "energyAlertDesc": "Enerjiniz yenilenmezse günde en fazla bir kez, en fazla 3 gün gönderilir. Bildirim ayarlarından değiştirebilirsiniz."
+  },
+  "leaderboard": {
+    "title": "Sıralama",
+    "description": "RollercoinCalculator üyelerinin Rollercoin güç sıralaması.",
+    "joinSettings": "Ayarlarınızdan katılın.",
+    "joinRegister": "Katılmak için kayıt olun.",
+    "updated": "30 dakikada bir güncellenir. Son güncelleme:",
+    "loadError": "Sıralama yüklenemedi.",
+    "empty": "Henüz sıralamaya katılan yok.",
+    "user": "Kullanıcı",
+    "league": "Lig",
+    "power": "Güç"
   }
 }

@@ -131,7 +131,8 @@
     "adminPanel": "Painel de Administração",
     "userPanel": "Painel do Usuário",
     "myBlogs": "Meus Blogs",
-    "notificationSettings": "Configurações de Notificação"
+    "notificationSettings": "Configurações de Notificação",
+    "leaderboard": "Ranking"
   },
   "lpp": {
     "title": "Divisão de Poder da Liga",
@@ -614,7 +615,9 @@
     "generalMailEnabledMsg": "Notificações por e-mail reativadas.",
     "generalMailDisabledMsg": "Todas as notificações por e-mail desativadas.",
     "browserPushWarning": "Você não pode receber notificações porque o Web Push está ativado, mas a permissão do navegador foi negada. Por favor, conceda permissão no seu navegador.",
-    "enableInBrowser": "Abrir no Navegador"
+    "enableInBrowser": "Abrir no Navegador",
+    "energyRenewal": "Alerta de queda de poder",
+    "energyRenewalDesc": "Verificado a cada 30 minutos. Enquanto seu poder no Rollercoin continuar caindo porque sua energia não foi renovada, você recebe no máximo um alerta por dia, por até 3 dias. Requer seu usuário do Rollercoin acima."
   },
   "event": {
     "loading": "Carregando...",
@@ -1297,5 +1300,37 @@
     "room": "Sala",
     "noChange": "O posicionamento não mudou.",
     "otherNames": "e mais {{count}} nomes"
+  },
+  "profile": {
+    "rollercoinUserName": "Usuário do Rollercoin",
+    "rollercoinUserNamePlaceholder": "seu-nome",
+    "rollercoinUserNameHint": "O nome no link do seu perfil do Rollercoin (rollercoin.com/p/...). Opcional.",
+    "showInLeaderboard": "Mostrar minha conta Rollercoin no ranking do site",
+    "showInLeaderboardDesc": "Seu usuário do Rollercoin e seu poder ficarão públicos. Seu e-mail nunca é exibido.",
+    "emailLanguage": "Idioma dos e-mails automáticos",
+    "save": "Salvar",
+    "saveError": "Falha ao salvar.",
+    "promptTitle": "Adicione seu usuário do Rollercoin",
+    "promptDesc": "Vincule sua conta Rollercoin para aparecer no ranking e ser avisado quando seu poder começar a cair.",
+    "later": "Mais tarde",
+    "cardTitle": "Conta Rollercoin e idioma do e-mail",
+    "suggestTitle": "Usar este usuário na sua conta?",
+    "suggestDesc": "Você usou {{name}} na calculadora. Salve-o na sua conta para aparecer no ranking e ser avisado quando seu poder começar a cair.",
+    "no": "Não",
+    "neverAsk": "Não perguntar novamente",
+    "energyAlert": "Avisar por e-mail quando meu poder começar a cair",
+    "energyAlertDesc": "No máximo uma vez por dia, por até 3 dias, se sua energia não for renovada. Você pode alterar isso nas configurações de notificação."
+  },
+  "leaderboard": {
+    "title": "Ranking",
+    "description": "Ranking de poder no Rollercoin dos membros do RollercoinCalculator.",
+    "joinSettings": "Participe pelas suas configurações.",
+    "joinRegister": "Cadastre-se para participar.",
+    "updated": "Atualizado a cada 30 minutos. Última atualização:",
+    "loadError": "Não foi possível carregar o ranking.",
+    "empty": "Ninguém entrou no ranking ainda.",
+    "user": "Usuário",
+    "league": "Liga",
+    "power": "Poder"
   }
 }

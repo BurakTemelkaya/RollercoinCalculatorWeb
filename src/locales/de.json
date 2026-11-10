@@ -131,7 +131,8 @@
     "adminPanel": "Admin-Panel",
     "userPanel": "Benutzer-Panel",
     "myBlogs": "Meine Blogs",
-    "notificationSettings": "Benachrichtigungseinstellungen"
+    "notificationSettings": "Benachrichtigungseinstellungen",
+    "leaderboard": "Rangliste"
   },
   "lpp": {
     "title": "Liga-Machtverteilung",
@@ -617,7 +618,9 @@
     "generalMailEnabledMsg": "E-Mail-Benachrichtigungen wieder aktiviert.",
     "generalMailDisabledMsg": "Alle E-Mail-Benachrichtigungen deaktiviert.",
     "browserPushWarning": "Sie können keine Benachrichtigungen erhalten, da Web-Push aktiviert ist, aber die Browserberechtigung verweigert wurde. Bitte erteilen Sie die Berechtigung in Ihrem Browser.",
-    "enableInBrowser": "Im Browser öffnen"
+    "enableInBrowser": "Im Browser öffnen",
+    "energyRenewal": "Warnung bei Leistungsabfall",
+    "energyRenewalDesc": "Wird alle 30 Minuten geprüft. Solange deine Rollercoin-Leistung sinkt, weil deine Energie nicht erneuert wurde, erhältst du höchstens eine Warnung pro Tag, maximal 3 Tage lang. Erfordert oben deinen Rollercoin-Benutzernamen."
   },
   "event": {
     "loading": "Eventdaten werden geladen...",
@@ -1336,5 +1339,37 @@
     "room": "Raum",
     "noChange": "Platzierung unverändert.",
     "otherNames": "und {{count}} weitere Namen"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin-Benutzername",
+    "rollercoinUserNamePlaceholder": "dein-name",
+    "rollercoinUserNameHint": "Der Name in deinem Rollercoin-Profillink (rollercoin.com/p/...). Optional.",
+    "showInLeaderboard": "Mein Rollercoin-Konto in der Rangliste anzeigen",
+    "showInLeaderboardDesc": "Dein Rollercoin-Benutzername und deine Leistung sind öffentlich sichtbar. Deine E-Mail wird nie angezeigt.",
+    "emailLanguage": "Sprache automatischer E-Mails",
+    "save": "Speichern",
+    "saveError": "Speichern fehlgeschlagen.",
+    "promptTitle": "Rollercoin-Benutzernamen hinzufügen",
+    "promptDesc": "Verknüpfe dein Rollercoin-Konto, um in der Rangliste zu erscheinen und benachrichtigt zu werden, wenn deine Leistung sinkt.",
+    "later": "Später",
+    "cardTitle": "Rollercoin-Konto & E-Mail-Sprache",
+    "suggestTitle": "Diesen Benutzernamen in deinem Konto verwenden?",
+    "suggestDesc": "Du hast {{name}} im Rechner verwendet. Speichere ihn in deinem Konto, um in der Rangliste zu erscheinen und benachrichtigt zu werden, wenn deine Leistung sinkt.",
+    "no": "Nein",
+    "neverAsk": "Nicht mehr fragen",
+    "energyAlert": "Benachrichtige mich per E-Mail, wenn meine Leistung sinkt",
+    "energyAlertDesc": "Höchstens einmal pro Tag, maximal 3 Tage lang, wenn deine Energie nicht erneuert wird. In den Benachrichtigungseinstellungen änderbar."
+  },
+  "leaderboard": {
+    "title": "Rangliste",
+    "description": "Rollercoin-Leistungsrangliste der RollercoinCalculator-Mitglieder.",
+    "joinSettings": "In deinen Einstellungen beitreten.",
+    "joinRegister": "Registrieren, um beizutreten.",
+    "updated": "Alle 30 Minuten aktualisiert. Letzte Aktualisierung:",
+    "loadError": "Rangliste konnte nicht geladen werden.",
+    "empty": "Noch niemand ist der Rangliste beigetreten.",
+    "user": "Benutzer",
+    "league": "Liga",
+    "power": "Leistung"
   }
 }
