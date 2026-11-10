@@ -1407,7 +1407,8 @@
     "energyAlert": "Gücüm düştüğünde e-posta ile bildirim almak istiyorum",
     "energyAlertDesc": "Enerjiniz yenilenmezse günde en fazla bir kez, en fazla 3 gün gönderilir. Bildirim ayarlarından değiştirebilirsiniz.",
     "country": "Ülke (isteğe bağlı)",
-    "countryNone": "Belirtilmedi"
+    "countryNone": "Belirtilmedi",
+    "countrySearch": "Ülke ara"
   },
   "leaderboard": {
     "title": "Sıralama",

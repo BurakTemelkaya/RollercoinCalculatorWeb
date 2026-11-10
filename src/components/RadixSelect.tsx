@@ -6,7 +6,7 @@
  * across EarningsTable, DataInputForm, and LeagueChart.
  */
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import classNames from 'classnames';
 
@@ -33,7 +33,11 @@ interface RadixSelectProps {
     showSelectedIcon?: boolean; // Show icon next to trigger value
     zIndex?: number;
     fullWidth?: boolean; // Add fullWidth prop
+    searchPlaceholder?: string; // When set, shows a search box above long option lists
 }
+
+// Case- and accent-insensitive ("turkiye" matches "Türkiye")
+const normalize = (text: string) => text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
 
 const RadixSelect: React.FC<RadixSelectProps> = ({
     value,
@@ -49,15 +53,59 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
     showSelectedIcon = true,
     zIndex = 1000005,
     fullWidth = false,
+    searchPlaceholder,
 }) => {
     const selectedOption = options.find(o => o.value === value);
+    const [query, setQuery] = useState('');
+    const [open, setOpen] = useState(false);
+    const searchRef = useRef<HTMLInputElement>(null);
+
+    // Keyboard handling while searching, in one place: Radix keeps moving focus between the box and items.
+    // Typed characters always go to the search box (instead of Radix's typeahead); Enter picks the first match
+    // and ArrowDown moves into the list unless an item is already focused (then Radix handles the key).
+    const handleSearchKeys = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement;
+        const inBox = target === searchRef.current;
+        if (e.key === 'Escape' || e.key === 'Tab' || e.ctrlKey || e.metaKey || e.altKey) return;
+        if (e.key.length === 1 || e.key === 'Backspace') {
+            e.stopPropagation();
+            if (!inBox) {
+                e.preventDefault();
+                setQuery(q => (e.key === 'Backspace' ? q.slice(0, -1) : q + e.key));
+                searchRef.current?.focus();
+            }
+            return;
+        }
+        if (target.getAttribute('role') === 'option') return;
+        const first = visibleOptions.find(o => !o.disabled);
+        if (e.key === 'Enter' && first) {
+            e.preventDefault();
+            e.stopPropagation();
+            onValueChange(first.value);
+            setOpen(false);
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.querySelector<HTMLElement>('[role=option]:not([data-disabled])')?.focus();
+        }
+    };
+
+    // Radix focuses the selected item on open; move focus to the search box after it
+    useEffect(() => {
+        if (!open || !searchPlaceholder) return;
+        const timer = window.setTimeout(() => searchRef.current?.focus(), 0);
+        return () => window.clearTimeout(timer);
+    }, [open, searchPlaceholder]);
+    const visibleOptions = searchPlaceholder && query.trim()
+        ? options.filter(o => normalize(o.label).includes(normalize(query.trim())) || normalize(o.value).includes(normalize(query.trim())))
+        : options;
 
     return (
         <div className={classNames('radix-select-wrapper', className)} style={{ display: 'flex', alignItems: 'center', gap: '0', ...(fullWidth ? { width: '100%' } : {}) }}>
             {/* Selected icon outside trigger (not used in current design move to item list) */}
             {/* If we want to hide persistent icons, we keep this false by default */}
 
-            <Select.Root value={value} onValueChange={onValueChange} disabled={disabled}>
+            <Select.Root value={value} onValueChange={onValueChange} disabled={disabled} open={open} onOpenChange={isOpen => { setOpen(isOpen); setQuery(''); }}>
                 <Select.Trigger
                     className={classNames('custom-dropdown-trigger', triggerClassName, { disabled })}
                     aria-label={ariaLabel || placeholder}
@@ -95,16 +143,29 @@ const RadixSelect: React.FC<RadixSelectProps> = ({
                         position="popper"
                         sideOffset={5}
                         style={{ zIndex, width: 'var(--radix-select-trigger-width)' }}
+                        onKeyDownCapture={searchPlaceholder ? handleSearchKeys : undefined}
                     >
+                        {searchPlaceholder && (
+                            <input
+                                type="search"
+                                className="custom-dropdown-search"
+                                value={query}
+                                onChange={e => setQuery(e.target.value)}
+                                ref={searchRef}
+                                placeholder={searchPlaceholder}
+                                aria-label={searchPlaceholder}
+                                style={{ width: '100%', boxSizing: 'border-box', padding: '8px 10px', marginBottom: 4, background: 'rgba(15, 15, 30, 0.6)', border: '1px solid var(--border-color)', borderRadius: 8, color: 'var(--text-primary)', fontSize: '0.9rem', outline: 'none' }}
+                            />
+                        )}
                         <Select.Viewport>
-                            {options.length === 0 && emptyText ? (
+                            {visibleOptions.length === 0 && (emptyText || searchPlaceholder) ? (
                                 <Select.Item className="custom-dropdown-item" value="__empty_placeholder__" disabled>
-                                    <Select.ItemText>{emptyText}</Select.ItemText>
+                                    <Select.ItemText>{query ? '—' : emptyText}</Select.ItemText>
                                 </Select.Item>
                             ) : (
                                 (() => {
                                     const groups: Record<string, typeof options> = { '': [] };
-                                    options.forEach(opt => {
+                                    visibleOptions.forEach(opt => {
                                         const g = opt.group || '';
                                         if (!groups[g]) groups[g] = [];
                                         groups[g].push(opt);

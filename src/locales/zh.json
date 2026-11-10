@@ -1321,7 +1321,8 @@
     "energyAlert": "算力下降时通过邮件通知我",
     "energyAlertDesc": "如果能量未续充，每天最多一次，最多 3 天。可在通知设置中更改。",
     "country": "国家/地区（可选）",
-    "countryNone": "未指定"
+    "countryNone": "未指定",
+    "countrySearch": "搜索国家/地区"
   },
   "leaderboard": {
     "title": "排行榜",
