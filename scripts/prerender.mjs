@@ -132,6 +132,8 @@ function isInternalPage(href) {
   if (href.includes('/blog/') || href.includes('/author/') || href.includes('/admin') || href.includes('/my-blogs')) return false;
   // "/{lang}/event" only redirects to the latest event's slug (needs the API, blocked here)
   if (/^\/[^/]+\/event\/?$/.test(href.split(/[?#]/)[0])) return false;
+  // Leaderboard is entirely API data; prerendering would bake its "could not be loaded" state
+  if (/^\/[^/]+\/leaderboard\/?$/.test(href.split(/[?#]/)[0])) return false;
 
   const clean = href.split('?')[0].split('#')[0];
   const ext = clean.split('.').pop();
