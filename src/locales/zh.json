@@ -131,7 +131,8 @@
     "adminPanel": "管理后台",
     "userPanel": "用户后台",
     "myBlogs": "我的博客",
-    "notificationSettings": "通知设置"
+    "notificationSettings": "通知设置",
+    "leaderboard": "排行榜"
   },
   "lpp": {
     "title": "联赛算力分配",
@@ -614,7 +615,9 @@
     "generalMailEnabledMsg": "电子邮件通知已重新启用。",
     "generalMailDisabledMsg": "所有电子邮件通知已禁用。",
     "browserPushWarning": "您无法接收通知，因为网络推送已启用，但浏览器权限被拒绝。请在您的浏览器中授予权限。",
-    "enableInBrowser": "在浏览器中打开"
+    "enableInBrowser": "在浏览器中打开",
+    "energyRenewal": "算力下降提醒",
+    "energyRenewalDesc": "每 30 分钟检查一次。当您的 Rollercoin 算力因能量未续充而持续下降时，每天最多提醒一次，最多 3 天。需要在上方填写您的 Rollercoin 用户名。"
   },
   "event": {
     "loading": "加载中...",
@@ -1297,5 +1300,37 @@
     "room": "房间",
     "noChange": "布局未改变。",
     "otherNames": "另有{{count}}个名称"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin 用户名",
+    "rollercoinUserNamePlaceholder": "your-name",
+    "rollercoinUserNameHint": "您 Rollercoin 个人资料链接中的名称（rollercoin.com/p/...）。可选。",
+    "showInLeaderboard": "在网站排行榜中显示我的 Rollercoin 账户",
+    "showInLeaderboardDesc": "您的 Rollercoin 用户名和算力将公开显示。您的邮箱永远不会显示。",
+    "emailLanguage": "自动邮件语言",
+    "save": "保存",
+    "saveError": "保存失败。",
+    "promptTitle": "添加您的 Rollercoin 用户名",
+    "promptDesc": "关联您的 Rollercoin 账户即可进入排行榜，并在算力开始下降时收到通知。",
+    "later": "稍后",
+    "cardTitle": "Rollercoin 账户与邮件语言",
+    "suggestTitle": "在您的账户中使用此用户名？",
+    "suggestDesc": "您在计算器中使用了 {{name}}。保存到您的账户即可进入排行榜，并在算力开始下降时收到通知。",
+    "no": "否",
+    "neverAsk": "不再询问",
+    "energyAlert": "算力下降时通过邮件通知我",
+    "energyAlertDesc": "如果能量未续充，每天最多一次，最多 3 天。可在通知设置中更改。"
+  },
+  "leaderboard": {
+    "title": "排行榜",
+    "description": "RollercoinCalculator 会员的 Rollercoin 算力排行。",
+    "joinSettings": "在设置中加入。",
+    "joinRegister": "注册即可加入。",
+    "updated": "每 30 分钟更新一次。上次更新：",
+    "loadError": "无法加载排行榜。",
+    "empty": "还没有人加入排行榜。",
+    "user": "用户",
+    "league": "联赛",
+    "power": "算力"
   }
 }

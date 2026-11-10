@@ -10,6 +10,7 @@ import {
     updateGeneralMailNotificationStatus,
     CreateNotificationPreferenceDto
 } from '../services/notificationApi';
+import { RollercoinProfileCard } from './RollercoinProfile';
 import './auth/AuthPages.css';
 
 // Utility to convert VAPID key
@@ -241,8 +242,8 @@ export default function NotificationSettingsPage() {
 
     return (
         <DashboardLayout title={t('nav.notificationSettings', 'Notification Settings')} isAdmin={false}>
-            <div className="auth-container" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                <div className="auth-card">
+            <div className="auth-container" style={{ maxWidth: '860px', margin: '0 auto' }}>
+                <div className="auth-card" style={{ maxWidth: 'none' }}>
                     <div className="auth-header">
                         <h2>{t('nav.notificationSettings', 'Notification Settings')}</h2>
                         <p>{t('settings.notificationDesc', 'Manage how you receive updates and alerts.')}</p>
@@ -256,6 +257,8 @@ export default function NotificationSettingsPage() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                             {error && <div className="auth-error" style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>{error}</div>}
                             {successMessage && <div className="auth-success" style={{ padding: '12px', background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderRadius: '8px', border: '1px solid rgba(52, 211, 153, 0.2)' }}>{successMessage}</div>}
+
+                            <RollercoinProfileCard />
 
                             <div style={{
                                 background: 'rgba(15, 15, 30, 0.4)',
@@ -320,8 +323,17 @@ export default function NotificationSettingsPage() {
                                     gap: '16px'
                                 }}>
                                     <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#f8fafc', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
-                                        {pref.notificationType === 'ProgressionEvent' ? 'Progression Event' : pref.notificationType}
+                                        {pref.notificationType === 'ProgressionEvent'
+                                            ? 'Progression Event'
+                                            : pref.notificationType === 'EnergyRenewal'
+                                                ? t('settings.energyRenewal', 'Power decrease alert')
+                                                : pref.notificationType}
                                     </h3>
+                                    {pref.notificationType === 'EnergyRenewal' && (
+                                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
+                                            {t('settings.energyRenewalDesc', 'Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.')}
+                                        </p>
+                                    )}
 
                                     <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

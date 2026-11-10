@@ -131,7 +131,8 @@
     "adminPanel": "Panel Admin",
     "userPanel": "Panel Pengguna",
     "myBlogs": "Blog Saya",
-    "notificationSettings": "Pengaturan Notifikasi"
+    "notificationSettings": "Pengaturan Notifikasi",
+    "leaderboard": "Papan Peringkat"
   },
   "lpp": {
     "title": "Pembagian Kekuatan Liga",
@@ -614,7 +615,9 @@
     "generalMailEnabledMsg": "Notifikasi email diaktifkan kembali.",
     "generalMailDisabledMsg": "Semua notifikasi email dinonaktifkan.",
     "browserPushWarning": "Anda tidak dapat menerima notifikasi karena Web Push diaktifkan tetapi izin peramban ditolak. Harap berikan izin di peramban Anda.",
-    "enableInBrowser": "Buka di Peramban"
+    "enableInBrowser": "Buka di Peramban",
+    "energyRenewal": "Peringatan penurunan power",
+    "energyRenewalDesc": "Diperiksa setiap 30 menit. Selama power Rollercoin Anda terus turun karena energi belum diperbarui, Anda mendapat paling banyak satu peringatan per hari, hingga 3 hari. Memerlukan username Rollercoin Anda di atas."
   },
   "event": {
     "loading": "Memuat...",
@@ -1297,5 +1300,37 @@
     "room": "Ruangan",
     "noChange": "Penempatan tidak berubah.",
     "otherNames": "dan {{count}} nama lainnya"
+  },
+  "profile": {
+    "rollercoinUserName": "Username Rollercoin",
+    "rollercoinUserNamePlaceholder": "nama-anda",
+    "rollercoinUserNameHint": "Nama di tautan profil Rollercoin Anda (rollercoin.com/p/...). Opsional.",
+    "showInLeaderboard": "Tampilkan akun Rollercoin saya di papan peringkat situs",
+    "showInLeaderboardDesc": "Username Rollercoin dan power Anda akan terlihat publik. Email Anda tidak pernah ditampilkan.",
+    "emailLanguage": "Bahasa email otomatis",
+    "save": "Simpan",
+    "saveError": "Gagal menyimpan.",
+    "promptTitle": "Tambahkan username Rollercoin Anda",
+    "promptDesc": "Hubungkan akun Rollercoin Anda untuk tampil di papan peringkat dan mendapat notifikasi saat power Anda mulai turun.",
+    "later": "Nanti",
+    "cardTitle": "Akun Rollercoin & Bahasa Email",
+    "suggestTitle": "Gunakan username ini di akun Anda?",
+    "suggestDesc": "Anda menggunakan {{name}} di kalkulator. Simpan ke akun Anda untuk tampil di papan peringkat dan mendapat notifikasi saat power Anda mulai turun.",
+    "no": "Tidak",
+    "neverAsk": "Jangan tanya lagi",
+    "energyAlert": "Kirim email saat power saya mulai turun",
+    "energyAlertDesc": "Paling banyak sekali sehari, hingga 3 hari, jika energi tidak diperbarui. Dapat diubah di pengaturan notifikasi."
+  },
+  "leaderboard": {
+    "title": "Papan Peringkat",
+    "description": "Peringkat power Rollercoin anggota RollercoinCalculator.",
+    "joinSettings": "Bergabung dari pengaturan Anda.",
+    "joinRegister": "Daftar untuk bergabung.",
+    "updated": "Diperbarui setiap 30 menit. Pembaruan terakhir:",
+    "loadError": "Papan peringkat gagal dimuat.",
+    "empty": "Belum ada yang bergabung di papan peringkat.",
+    "user": "Pengguna",
+    "league": "Liga",
+    "power": "Power"
   }
 }

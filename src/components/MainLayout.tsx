@@ -23,6 +23,7 @@ export const SUPPORTED_LANGUAGES: SelectOption[] = [
 ];
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
+const RollercoinProfilePrompt = React.lazy(() => import('./RollercoinProfile').then(m => ({ default: m.RollercoinProfilePrompt })));
 const HAMSTERS_NOTICE_KEY = 'rollercoin_hamsters_notice_seen';
 const HAMSTERS_NOTICE_EXPIRES = Date.UTC(2026, 9, 1);
 
@@ -34,7 +35,7 @@ interface MainLayoutProps {
 
 // Routes whose page renders its own <title>/canonical. React 19 does not dedupe hoisted
 // <meta>/<link>, so rendering the layout defaults there too yields conflicting canonicals.
-const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
+const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|leaderboard|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
 
 // Pages that render only their own <title> and use the layout's other defaults
 const PAGE_OWNS_TITLE = /^\/[^/]+\/hamsters\//;
@@ -274,6 +275,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="sticky-nav-links desktop-only">
             <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
@@ -337,6 +339,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="mobile-nav-content">
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
@@ -434,6 +437,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <main className="main-content">
               {children}
             </main>
+
+            {isAuthenticated && (
+              <React.Suspense fallback={null}><RollercoinProfilePrompt /></React.Suspense>
+            )}
 
             {/* Footer */}
             <Footer />

@@ -131,7 +131,8 @@
     "adminPanel": "Administrátorský panel",
     "userPanel": "Uživatelský panel",
     "myBlogs": "Mé blogy",
-    "notificationSettings": "Nastavení oznámení"
+    "notificationSettings": "Nastavení oznámení",
+    "leaderboard": "Žebříček"
   },
   "lpp": {
     "title": "Rozdělení síly ligy",
@@ -617,7 +618,9 @@
     "generalMailEnabledMsg": "E-mailová upozornění znovu povolena.",
     "generalMailDisabledMsg": "Všechna e-mailová upozornění jsou vypnuta.",
     "browserPushWarning": "Nemůžete přijímat oznámení, protože je povoleno Web Push, ale oprávnění v prohlížeči je zamítnuto. Prosím, udělte oprávnění ve svém prohlížeči.",
-    "enableInBrowser": "Otevřít v prohlížeči"
+    "enableInBrowser": "Otevřít v prohlížeči",
+    "energyRenewal": "Upozornění na pokles výkonu",
+    "energyRenewalDesc": "Kontroluje se každých 30 minut. Dokud váš výkon v Rollercoinu klesá, protože jste neobnovili energii, dostanete nejvýše jedno upozornění denně, nejdéle 3 dny. Vyžaduje vaše uživatelské jméno Rollercoin výše."
   },
   "event": {
     "loading": "Načítání dat události...",
@@ -1326,5 +1329,37 @@
     "room": "Místnost",
     "noChange": "Rozmístění se nezměnilo.",
     "otherNames": "a {{count}} dalších názvů"
+  },
+  "profile": {
+    "rollercoinUserName": "Uživatelské jméno Rollercoin",
+    "rollercoinUserNamePlaceholder": "vase-jmeno",
+    "rollercoinUserNameHint": "Jméno v odkazu na váš profil Rollercoin (rollercoin.com/p/...). Nepovinné.",
+    "showInLeaderboard": "Zobrazit můj účet Rollercoin v žebříčku webu",
+    "showInLeaderboardDesc": "Vaše uživatelské jméno Rollercoin a výkon budou veřejně viditelné. Váš e-mail se nikdy nezobrazí.",
+    "emailLanguage": "Jazyk automatických e-mailů",
+    "save": "Uložit",
+    "saveError": "Uložení se nezdařilo.",
+    "promptTitle": "Přidejte své uživatelské jméno Rollercoin",
+    "promptDesc": "Propojte svůj účet Rollercoin, abyste se objevili v žebříčku a dostali upozornění, když váš výkon začne klesat.",
+    "later": "Později",
+    "cardTitle": "Účet Rollercoin a jazyk e-mailů",
+    "suggestTitle": "Použít toto uživatelské jméno ve vašem účtu?",
+    "suggestDesc": "V kalkulačce jste použili {{name}}. Uložte ho do účtu, abyste se objevili v žebříčku a dostali upozornění, když váš výkon začne klesat.",
+    "no": "Ne",
+    "neverAsk": "Už se neptat",
+    "energyAlert": "Upozornit mě e-mailem, když můj výkon začne klesat",
+    "energyAlertDesc": "Nejvýše jednou denně, nejdéle 3 dny, pokud neobnovíte energii. Lze změnit v nastavení oznámení."
+  },
+  "leaderboard": {
+    "title": "Žebříček",
+    "description": "Žebříček výkonu v Rollercoinu mezi členy RollercoinCalculator.",
+    "joinSettings": "Připojte se v nastavení.",
+    "joinRegister": "Zaregistrujte se a připojte se.",
+    "updated": "Aktualizováno každých 30 minut. Poslední aktualizace:",
+    "loadError": "Žebříček se nepodařilo načíst.",
+    "empty": "Do žebříčku se zatím nikdo nepřipojil.",
+    "user": "Uživatel",
+    "league": "Liga",
+    "power": "Výkon"
   }
 }
