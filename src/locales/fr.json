@@ -1299,7 +1299,8 @@
     "energyAlert": "Me prévenir par e-mail quand ma puissance baisse",
     "energyAlertDesc": "Au plus une fois par jour, pendant 3 jours maximum, si votre énergie n'est pas renouvelée. Modifiable dans les paramètres de notification.",
     "country": "Pays (facultatif)",
-    "countryNone": "Non précisé"
+    "countryNone": "Non précisé",
+    "countrySearch": "Rechercher un pays"
   },
   "leaderboard": {
     "title": "Classement",

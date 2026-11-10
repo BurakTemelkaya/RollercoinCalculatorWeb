@@ -1406,7 +1406,8 @@
     "energyAlert": "Email me when my power starts decreasing",
     "energyAlertDesc": "At most once a day, for up to 3 days, if your energy is not renewed. You can change this in notification settings.",
     "country": "Country (optional)",
-    "countryNone": "Not specified"
+    "countryNone": "Not specified",
+    "countrySearch": "Search country"
   },
   "leaderboard": {
     "title": "Leaderboard",

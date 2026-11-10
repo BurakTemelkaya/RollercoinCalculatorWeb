@@ -1321,7 +1321,8 @@
     "energyAlert": "Kirim email saat power saya mulai turun",
     "energyAlertDesc": "Paling banyak sekali sehari, hingga 3 hari, jika energi tidak diperbarui. Dapat diubah di pengaturan notifikasi.",
     "country": "Negara (opsional)",
-    "countryNone": "Tidak ditentukan"
+    "countryNone": "Tidak ditentukan",
+    "countrySearch": "Cari negara"
   },
   "leaderboard": {
     "title": "Papan Peringkat",

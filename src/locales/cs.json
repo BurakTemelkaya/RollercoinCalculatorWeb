@@ -1350,7 +1350,8 @@
     "energyAlert": "Upozornit mě e-mailem, když můj výkon začne klesat",
     "energyAlertDesc": "Nejvýše jednou denně, nejdéle 3 dny, pokud neobnovíte energii. Lze změnit v nastavení oznámení.",
     "country": "Země (nepovinné)",
-    "countryNone": "Neuvedeno"
+    "countryNone": "Neuvedeno",
+    "countrySearch": "Hledat zemi"
   },
   "leaderboard": {
     "title": "Žebříček",

@@ -75,7 +75,7 @@ export default function LeaderboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, margin: '16px 0' }}>
           <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.8rem', color: '#94a3b8' }}>
             {t('leaderboard.filterCountry', 'Filter by country')}
-            <RadixSelect value={country} onValueChange={changeFilter(setCountry)} options={countryFilterOptions} ariaLabel={t('leaderboard.filterCountry', 'Filter by country')} fullWidth />
+            <RadixSelect value={country} onValueChange={changeFilter(setCountry)} options={countryFilterOptions} ariaLabel={t('leaderboard.filterCountry', 'Filter by country')} searchPlaceholder={t('profile.countrySearch', 'Search country')} fullWidth />
           </label>
           <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.8rem', color: '#94a3b8' }}>
             {t('leaderboard.filterLeague', 'Filter by league')}

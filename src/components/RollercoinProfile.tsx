@@ -102,6 +102,7 @@ export function RollercoinProfileForm({ initial, showLanguage = false, showEnerg
                     onValueChange={v => setCountry(v === NO_COUNTRY ? '' : v)}
                     options={[{ value: NO_COUNTRY, label: t('profile.countryNone', 'Not specified') }, ...countryOptions(i18n.language)]}
                     ariaLabel={t('profile.country', 'Country (optional)')}
+                    searchPlaceholder={t('profile.countrySearch', 'Search country')}
                     disabled={isSaving}
                     fullWidth
                 />

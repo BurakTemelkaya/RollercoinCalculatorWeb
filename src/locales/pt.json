@@ -1321,7 +1321,8 @@
     "energyAlert": "Avisar por e-mail quando meu poder começar a cair",
     "energyAlertDesc": "No máximo uma vez por dia, por até 3 dias, se sua energia não for renovada. Você pode alterar isso nas configurações de notificação.",
     "country": "País (opcional)",
-    "countryNone": "Não informado"
+    "countryNone": "Não informado",
+    "countrySearch": "Pesquisar país"
   },
   "leaderboard": {
     "title": "Ranking",

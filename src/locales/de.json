@@ -1360,7 +1360,8 @@
     "energyAlert": "Benachrichtige mich per E-Mail, wenn meine Leistung sinkt",
     "energyAlertDesc": "Höchstens einmal pro Tag, maximal 3 Tage lang, wenn deine Energie nicht erneuert wird. In den Benachrichtigungseinstellungen änderbar.",
     "country": "Land (optional)",
-    "countryNone": "Nicht angegeben"
+    "countryNone": "Nicht angegeben",
+    "countrySearch": "Land suchen"
   },
   "leaderboard": {
     "title": "Rangliste",

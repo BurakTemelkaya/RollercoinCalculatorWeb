@@ -1298,7 +1298,8 @@
     "energyAlert": "Avisarme por correo cuando mi poder empiece a bajar",
     "energyAlertDesc": "Como máximo una vez al día, durante hasta 3 días, si no renuevas tu energía. Puedes cambiarlo en los ajustes de notificaciones.",
     "country": "País (opcional)",
-    "countryNone": "Sin especificar"
+    "countryNone": "Sin especificar",
+    "countrySearch": "Buscar país"
   },
   "leaderboard": {
     "title": "Clasificación",
