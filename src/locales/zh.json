@@ -1319,7 +1319,9 @@
     "no": "否",
     "neverAsk": "不再询问",
     "energyAlert": "算力下降时通过邮件通知我",
-    "energyAlertDesc": "如果能量未续充，每天最多一次，最多 3 天。可在通知设置中更改。"
+    "energyAlertDesc": "如果能量未续充，每天最多一次，最多 3 天。可在通知设置中更改。",
+    "country": "国家/地区（可选）",
+    "countryNone": "未指定"
   },
   "leaderboard": {
     "title": "排行榜",
@@ -1331,6 +1333,11 @@
     "empty": "还没有人加入排行榜。",
     "user": "用户",
     "league": "联赛",
-    "power": "算力"
+    "power": "算力",
+    "filterCountry": "按国家/地区筛选",
+    "filterLeague": "按联赛筛选",
+    "allCountries": "所有国家/地区",
+    "allLeagues": "所有联赛",
+    "noResults": "没有符合这些筛选条件的账户。"
   }
 }

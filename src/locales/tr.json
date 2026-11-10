@@ -1405,7 +1405,9 @@
     "no": "Hayır",
     "neverAsk": "Bir daha gösterme",
     "energyAlert": "Gücüm düştüğünde e-posta ile bildirim almak istiyorum",
-    "energyAlertDesc": "Enerjiniz yenilenmezse günde en fazla bir kez, en fazla 3 gün gönderilir. Bildirim ayarlarından değiştirebilirsiniz."
+    "energyAlertDesc": "Enerjiniz yenilenmezse günde en fazla bir kez, en fazla 3 gün gönderilir. Bildirim ayarlarından değiştirebilirsiniz.",
+    "country": "Ülke (isteğe bağlı)",
+    "countryNone": "Belirtilmedi"
   },
   "leaderboard": {
     "title": "Sıralama",
@@ -1417,6 +1419,11 @@
     "empty": "Henüz sıralamaya katılan yok.",
     "user": "Kullanıcı",
     "league": "Lig",
-    "power": "Güç"
+    "power": "Güç",
+    "filterCountry": "Ülkeye göre filtrele",
+    "filterLeague": "Lige göre filtrele",
+    "allCountries": "Tüm ülkeler",
+    "allLeagues": "Tüm ligler",
+    "noResults": "Bu filtrelere uyan hesap yok."
   }
 }

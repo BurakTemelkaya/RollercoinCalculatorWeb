@@ -1358,7 +1358,9 @@
     "no": "Nein",
     "neverAsk": "Nicht mehr fragen",
     "energyAlert": "Benachrichtige mich per E-Mail, wenn meine Leistung sinkt",
-    "energyAlertDesc": "Höchstens einmal pro Tag, maximal 3 Tage lang, wenn deine Energie nicht erneuert wird. In den Benachrichtigungseinstellungen änderbar."
+    "energyAlertDesc": "Höchstens einmal pro Tag, maximal 3 Tage lang, wenn deine Energie nicht erneuert wird. In den Benachrichtigungseinstellungen änderbar.",
+    "country": "Land (optional)",
+    "countryNone": "Nicht angegeben"
   },
   "leaderboard": {
     "title": "Rangliste",
@@ -1370,6 +1372,11 @@
     "empty": "Noch niemand ist der Rangliste beigetreten.",
     "user": "Benutzer",
     "league": "Liga",
-    "power": "Leistung"
+    "power": "Leistung",
+    "filterCountry": "Nach Land filtern",
+    "filterLeague": "Nach Liga filtern",
+    "allCountries": "Alle Länder",
+    "allLeagues": "Alle Ligen",
+    "noResults": "Keine Konten entsprechen diesen Filtern."
   }
 }

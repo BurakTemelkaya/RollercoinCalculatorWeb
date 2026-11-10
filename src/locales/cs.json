@@ -1348,7 +1348,9 @@
     "no": "Ne",
     "neverAsk": "Už se neptat",
     "energyAlert": "Upozornit mě e-mailem, když můj výkon začne klesat",
-    "energyAlertDesc": "Nejvýše jednou denně, nejdéle 3 dny, pokud neobnovíte energii. Lze změnit v nastavení oznámení."
+    "energyAlertDesc": "Nejvýše jednou denně, nejdéle 3 dny, pokud neobnovíte energii. Lze změnit v nastavení oznámení.",
+    "country": "Země (nepovinné)",
+    "countryNone": "Neuvedeno"
   },
   "leaderboard": {
     "title": "Žebříček",
@@ -1360,6 +1362,11 @@
     "empty": "Do žebříčku se zatím nikdo nepřipojil.",
     "user": "Uživatel",
     "league": "Liga",
-    "power": "Výkon"
+    "power": "Výkon",
+    "filterCountry": "Filtrovat podle země",
+    "filterLeague": "Filtrovat podle ligy",
+    "allCountries": "Všechny země",
+    "allLeagues": "Všechny ligy",
+    "noResults": "Těmto filtrům neodpovídá žádný účet."
   }
 }

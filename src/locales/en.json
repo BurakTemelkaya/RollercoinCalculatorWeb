@@ -1404,7 +1404,9 @@
     "no": "No",
     "neverAsk": "Don't ask again",
     "energyAlert": "Email me when my power starts decreasing",
-    "energyAlertDesc": "At most once a day, for up to 3 days, if your energy is not renewed. You can change this in notification settings."
+    "energyAlertDesc": "At most once a day, for up to 3 days, if your energy is not renewed. You can change this in notification settings.",
+    "country": "Country (optional)",
+    "countryNone": "Not specified"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -1416,6 +1418,11 @@
     "empty": "No one has joined the leaderboard yet.",
     "user": "User",
     "league": "League",
-    "power": "Power"
+    "power": "Power",
+    "filterCountry": "Filter by country",
+    "filterLeague": "Filter by league",
+    "allCountries": "All countries",
+    "allLeagues": "All leagues",
+    "noResults": "No accounts match these filters."
   }
 }

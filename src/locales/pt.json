@@ -1319,7 +1319,9 @@
     "no": "Não",
     "neverAsk": "Não perguntar novamente",
     "energyAlert": "Avisar por e-mail quando meu poder começar a cair",
-    "energyAlertDesc": "No máximo uma vez por dia, por até 3 dias, se sua energia não for renovada. Você pode alterar isso nas configurações de notificação."
+    "energyAlertDesc": "No máximo uma vez por dia, por até 3 dias, se sua energia não for renovada. Você pode alterar isso nas configurações de notificação.",
+    "country": "País (opcional)",
+    "countryNone": "Não informado"
   },
   "leaderboard": {
     "title": "Ranking",
@@ -1331,6 +1333,11 @@
     "empty": "Ninguém entrou no ranking ainda.",
     "user": "Usuário",
     "league": "Liga",
-    "power": "Poder"
+    "power": "Poder",
+    "filterCountry": "Filtrar por país",
+    "filterLeague": "Filtrar por liga",
+    "allCountries": "Todos os países",
+    "allLeagues": "Todas as ligas",
+    "noResults": "Nenhuma conta corresponde a esses filtros."
   }
 }

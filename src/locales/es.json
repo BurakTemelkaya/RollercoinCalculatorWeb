@@ -1296,7 +1296,9 @@
     "no": "No",
     "neverAsk": "No volver a preguntar",
     "energyAlert": "Avisarme por correo cuando mi poder empiece a bajar",
-    "energyAlertDesc": "Como máximo una vez al día, durante hasta 3 días, si no renuevas tu energía. Puedes cambiarlo en los ajustes de notificaciones."
+    "energyAlertDesc": "Como máximo una vez al día, durante hasta 3 días, si no renuevas tu energía. Puedes cambiarlo en los ajustes de notificaciones.",
+    "country": "País (opcional)",
+    "countryNone": "Sin especificar"
   },
   "leaderboard": {
     "title": "Clasificación",
@@ -1308,6 +1310,11 @@
     "empty": "Nadie se ha unido a la clasificación todavía.",
     "user": "Usuario",
     "league": "Liga",
-    "power": "Poder"
+    "power": "Poder",
+    "filterCountry": "Filtrar por país",
+    "filterLeague": "Filtrar por liga",
+    "allCountries": "Todos los países",
+    "allLeagues": "Todas las ligas",
+    "noResults": "Ninguna cuenta coincide con estos filtros."
   }
 }
