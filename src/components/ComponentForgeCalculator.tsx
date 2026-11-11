@@ -1,3 +1,4 @@
+import MergeMarketTiers from './MergeMarketTiers';
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchComponentPrices, type ComponentPrice } from '../services/componentApi';
@@ -489,6 +490,7 @@ export default function ComponentForgeCalculator({ forgeLevel, customPartPrices,
                     </div>
                 </div>
 
+                {<MergeMarketTiers quantity={partCount} offers={apiPrices.find(price => price.name.toLowerCase() === componentType.toLowerCase() && price.level === startLevel)?.componentPrices} />}
                 <div className="cfc-target-requirement" aria-live="polite">
                     <p>
                         <span>
