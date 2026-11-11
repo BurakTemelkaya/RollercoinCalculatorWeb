@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import { fetchProgressionEvent, fetchProgressionEventById, fetchCurrencyDiscounts, type ParsedProgressionEvent } from '../services/progressionEventApi';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { fetchProgressionEvent, fetchProgressionEventBySlug, fetchCurrencyDiscounts, eventPathSegment, type ParsedProgressionEvent } from '../services/progressionEventApi';
 import CdnImage from './CdnImage';
 import { extractEventIdFromSlug } from '../utils/slugUtils';
 import { getCdnBaseUrl } from '../config/api';
@@ -194,6 +194,8 @@ interface RewardDisplay {
     type?: string;
     itemId?: string;
     itemType?: 'miner' | 'rack';
+    /** Miner slug for the all-levels page link */
+    slug?: string | null;
     scale?: number;
     isMysteryBox?: boolean;
     singlePieceUrl?: string;
@@ -208,7 +210,7 @@ function RewardLink({ display, lang, className, children }: {
 }) {
     if (display?.itemType === 'miner') {
         return <Link className={`${className} pe-miner-levels-link`}
-            to={`/${lang}/merges/miner/${encodeURIComponent(display.text)}`}
+            to={`/${lang}/merges/miner/${encodeURIComponent(display.slug || display.text)}`}
             target="_blank" rel="noopener noreferrer">{children}</Link>;
     }
     return <div className={className}>{children}</div>;
@@ -266,6 +268,7 @@ function getRewardDisplay(
                     type: miner.type,
                     itemId: miner.filename?.split('.')[0] || '',
                     itemType: 'miner',
+                    slug: miner.slug,
                 };
             }
             return { text: t('event.rewardTypes.miner'), subText: `x${reward.amount}` };
@@ -370,9 +373,29 @@ function getRewardDisplay(
     }
 }
 
+/** Compact reward tile (image, name, power/bonus) shared with the puzzle event page. */
+export function RewardTile({ reward, lang, className = '' }: { reward: ProgressionReward; lang?: string; className?: string }) {
+    const { t } = useTranslation();
+    const display = getRewardDisplay(reward, t);
+    const image = display.localImage ?? display.rcImageUrl ?? display.imageUrl;
+    return (
+        <RewardLink display={display} lang={lang} className={`reward-tile ${className}`}>
+            <span className="reward-tile-img">
+                {(display.level ?? 0) > 1 && <img className="reward-tile-level" src={`/miner-levels/level_${display.level}.webp`} alt={`Level ${display.level}`} />}
+                {image && <img src={image} alt="" loading="lazy" />}
+            </span>
+            <span className="reward-tile-name">{display.text}</span>
+            {display.subText && <span className="reward-tile-sub">{display.subText}</span>}
+        </RewardLink>
+    );
+}
+
 export default function ProgressionEvent() {
-    const { lang, eventId: eventSlug } = useParams<{ lang: string; eventId?: string }>();
-    const eventId = eventSlug ? extractEventIdFromSlug(eventSlug) : undefined;
+    const { lang, eventSlug } = useParams<{ lang: string; eventSlug?: string }>();
+    const navigate = useNavigate();
+    const location = useLocation();
+    // Slug we just redirected to; skips refetching data we already have
+    const redirectedSlugRef = useRef<string | null>(null);
     const { t } = useTranslation();
     const [eventData, setEventData] = useState<ParsedProgressionEvent | null>(null);
     const [loading, setLoading] = useState(true);
@@ -461,19 +484,25 @@ export default function ProgressionEvent() {
         }
     }, [MAX_MULTIPLIER, eventData]);
 
-    // Fetch event data — by specific ID or latest
+    // Fetch event data — by slug or latest; then normalise the URL to /event/{slug}
     useEffect(() => {
+        if (eventSlug && eventSlug === redirectedSlugRef.current) return;
+
         const loadEvent = async () => {
-
-
             try {
                 setLoading(true);
                 setError(null);
-                const data = eventId
-                    ? await fetchProgressionEventById(eventId)
+                // Legacy "name-{objectId}" URLs: the backend resolves the bare ID too
+                const data = eventSlug
+                    ? await fetchProgressionEventBySlug(extractEventIdFromSlug(eventSlug))
                     : await fetchProgressionEvent();
                 setEventData(data);
 
+                const canonicalSegment = data.id ? eventPathSegment(data) : null;
+                if (canonicalSegment && canonicalSegment !== eventSlug) {
+                    redirectedSlugRef.current = canonicalSegment;
+                    navigate(`/${lang}/event/${canonicalSegment}${location.search}`, { replace: true });
+                }
             } catch (err) {
                 console.error('Failed to fetch progression event:', err);
                 setError(err instanceof Error ? err.message : t('event.fetchError'));
@@ -483,7 +512,8 @@ export default function ProgressionEvent() {
         };
 
         loadEvent();
-    }, [t, eventId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- location.search is only carried over on redirect
+    }, [t, eventSlug, lang, navigate]);
 
     // Fetch currency discounts when event data is available
     useEffect(() => {
@@ -979,6 +1009,7 @@ export default function ProgressionEvent() {
         );
     };
 
+    const canonicalUrl = `https://rollercoincalculator.app/${lang}/event/${eventPathSegment(eventData)}`;
     const finalReward = eventData?.rewards && eventData.rewards.length > 0 ? eventData.rewards[eventData.rewards.length - 1] : null;
     const finalRewardDisplay = finalReward ? getRewardDisplay(finalReward, t) : null;
 
@@ -988,12 +1019,12 @@ export default function ProgressionEvent() {
             <>
                 <title>{`${eventData.name} | Rollercoin Calculator`}</title>
                 <meta name="description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
-                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/event`} />
+                <link rel="canonical" href={canonicalUrl} />
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={`${eventData.name} | Rollercoin Calculator`} />
                 <meta property="og:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
                 <meta property="og:image" content={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`} />
-                <meta property="og:url" content={window.location.href} />
+                <meta property="og:url" content={canonicalUrl} />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={`${eventData.name} - Rollercoin Calculator`} />
                 <meta name="twitter:description" content={`Track rewards and optimize your strategy for the ${eventData.name} progression event in Rollercoin.`} />

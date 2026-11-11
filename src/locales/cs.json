@@ -41,14 +41,15 @@
     "limitHelp": "Hledá nejvyšší ligový výkon bez překročení stropu. Výkon může klesnout; odebrané minery se vrátí do zásob.",
     "leagueLimit": "Vybrat strop ligy",
     "selectLeague": "Vyberte ligu",
-    "noLeagueCeiling": "Bez horního limitu"
+    "noLeagueCeiling": "Bez horního limitu",
+    "allowRemovingPlaced": "Povolit odebírání minerů",
+    "allowRemovingPlacedHelp": "Je-li zapnuto, umístění mineři se mohou vrátit do inventáře a uvolnit místo lepším. Jinak každý umístěný miner zůstane v místnosti."
   },
   "minerImport": {
     "apiMethod": "Odpověď API (JSON)",
     "apiHelp": "Pro import přes API vložte celou odpověď JSON z této adresy:",
     "apiSteps": "Klávesou F12 otevřete nástroje pro vývojáře a vyberte Network (Síť). Vstupte do místnosti RollerCoin a přejděte na další stránku na spodní kartě těžařů. Vyberte požadavek inventory a zkopírujte data z Response (Odpověď). Podle potřeby opakujte pro další stránky.",
     "collectionHelp": "Na stránce kolekce označte a zkopírujte text karet podle obrázku a vložte jej níže.",
-    "collectionExampleAlt": "Karty kolekce s bonusem, názvem a výkonem označenými ke kopírování",
     "addAllPower": "Přidat všechny minery do simulátoru výkonu",
     "decreaseQuantity": "Snížit počet",
     "increaseQuantity": "Zvýšit počet",
@@ -71,7 +72,29 @@
     "invalid": "Data nelze přečíst nebo miner nebyl nalezen v katalogu. Vložte celý JSON nebo karty s ID a výkonem. Zkontrolujte připojení.",
     "quantityError": "Počty musí být nezáporná celá čísla, celkem nejvýše {{max}}.",
     "addError": "Minery nelze přidat. Zkontrolujte počty a volnou kapacitu racků. Aktuální simulace zůstává.",
-    "storageError": "Do prohlížeče nelze uložit. Seznam je dostupný pro tuto relaci; zkontrolujte nastavení úložiště."
+    "storageError": "Do prohlížeče nelze uložit. Seznam je dostupný pro tuto relaci; zkontrolujte nastavení úložiště.",
+    "anim": {
+      "title": "Jak zkopírovat odpověď inventáře",
+      "play": "Přehrát",
+      "pause": "Pozastavit",
+      "step": "Krok {{n}}",
+      "s1": "Stiskněte F12 (nebo Ctrl+Shift+I) a otevřete kartu Network.",
+      "s2": "Do pole Filter napište inventory, aby se zobrazily jen požadavky inventáře.",
+      "s3": "Ve hře klikněte na číslo místnosti a otevřete ji. Objeví se požadavek inventory.",
+      "s4": "V panelu Miners dole klikněte na šipku vpravo. Další stránka odešle nový požadavek inventory.",
+      "s5": "Klikněte na požadavek a otevřete kartu Response.",
+      "s6": "Klikněte do odpovědi a stiskněte Ctrl+A, poté Ctrl+C pro zkopírování celé odpovědi.",
+      "s7": "Vložte ji do pole níže a klikněte na {{read}}. Opakujte pro každou stránku."
+    },
+    "copyAnim": {
+      "title": "Jak zkopírovat minery ze stránky RollerCoin",
+      "s1": "Otevřete stránku minerů RollerCoin z odkazu výše.",
+      "s2": "Klikněte těsně před \"Bonus power\" na první kartě a podržte tlačítko myši.",
+      "s3": "Táhněte až na konec poslední karty, aby byly vybrány všechny karty.",
+      "s4": "Stiskněte Ctrl+C a zkopírujte výběr.",
+      "s5": "Vložte jej do pole níže a klikněte na {{read}}. Opakujte pro další stránky."
+    },
+    "shrinkHint": "Zde můžete panel zmenšit"
   },
   "calculatorEmpty": {
     "earnings": "Pro zobrazení výdělků zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon.",
@@ -108,7 +131,8 @@
     "adminPanel": "Administrátorský panel",
     "userPanel": "Uživatelský panel",
     "myBlogs": "Mé blogy",
-    "notificationSettings": "Nastavení oznámení"
+    "notificationSettings": "Nastavení oznámení",
+    "leaderboard": "Žebříček"
   },
   "lpp": {
     "title": "Rozdělení síly ligy",
@@ -594,7 +618,11 @@
     "generalMailEnabledMsg": "E-mailová upozornění znovu povolena.",
     "generalMailDisabledMsg": "Všechna e-mailová upozornění jsou vypnuta.",
     "browserPushWarning": "Nemůžete přijímat oznámení, protože je povoleno Web Push, ale oprávnění v prohlížeči je zamítnuto. Prosím, udělte oprávnění ve svém prohlížeči.",
-    "enableInBrowser": "Otevřít v prohlížeči"
+    "enableInBrowser": "Otevřít v prohlížeči",
+    "energyRenewal": "Upozornění na pokles výkonu",
+    "energyRenewalDesc": "Kontroluje se každých 30 minut. Dokud váš výkon v Rollercoinu klesá, protože jste neobnovili energii, dostanete nejvýše jedno upozornění denně, nejdéle 3 dny. Vyžaduje vaše uživatelské jméno Rollercoin výše.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Dostávejte upozornění, když začne nový Rollercoin puzzle event. Ve výchozím stavu vypnuto."
   },
   "event": {
     "loading": "Načítání dat události...",
@@ -1303,5 +1331,62 @@
     "room": "Místnost",
     "noChange": "Rozmístění se nezměnilo.",
     "otherNames": "a {{count}} dalších názvů"
+  },
+  "profile": {
+    "rollercoinUserName": "Uživatelské jméno Rollercoin",
+    "rollercoinUserNamePlaceholder": "vase-jmeno",
+    "rollercoinUserNameHint": "Jméno v odkazu na váš profil Rollercoin (rollercoin.com/p/...). Nepovinné.",
+    "showInLeaderboard": "Zobrazit můj účet Rollercoin v žebříčku webu",
+    "showInLeaderboardDesc": "Vaše uživatelské jméno Rollercoin a výkon budou veřejně viditelné. Váš e-mail se nikdy nezobrazí.",
+    "emailLanguage": "Jazyk automatických e-mailů",
+    "save": "Uložit",
+    "saveError": "Uložení se nezdařilo.",
+    "promptTitle": "Přidejte své uživatelské jméno Rollercoin",
+    "promptDesc": "Propojte svůj účet Rollercoin, abyste se objevili v žebříčku a dostali upozornění, když váš výkon začne klesat.",
+    "later": "Později",
+    "cardTitle": "Účet Rollercoin a jazyk e-mailů",
+    "suggestTitle": "Použít toto uživatelské jméno ve vašem účtu?",
+    "suggestDesc": "V kalkulačce jste použili {{name}}. Uložte ho do účtu, abyste se objevili v žebříčku a dostali upozornění, když váš výkon začne klesat.",
+    "no": "Ne",
+    "neverAsk": "Už se neptat",
+    "energyAlert": "Upozornit mě e-mailem, když můj výkon začne klesat",
+    "energyAlertDesc": "Nejvýše jednou denně, nejdéle 3 dny, pokud neobnovíte energii. Lze změnit v nastavení oznámení.",
+    "country": "Země (nepovinné)",
+    "countryNone": "Neuvedeno",
+    "countrySearch": "Hledat zemi"
+  },
+  "leaderboard": {
+    "title": "Žebříček",
+    "description": "Žebříček výkonu v Rollercoinu mezi členy RollercoinCalculator.",
+    "joinSettings": "Připojte se v nastavení.",
+    "joinRegister": "Zaregistrujte se a připojte se.",
+    "updated": "Aktualizováno každých 30 minut. Poslední aktualizace:",
+    "loadError": "Žebříček se nepodařilo načíst.",
+    "empty": "Do žebříčku se zatím nikdo nepřipojil.",
+    "user": "Uživatel",
+    "league": "Liga",
+    "power": "Výkon",
+    "filterCountry": "Filtrovat podle země",
+    "filterLeague": "Filtrovat podle ligy",
+    "allCountries": "Všechny země",
+    "allLeagues": "Všechny ligy",
+    "noResults": "Těmto filtrům neodpovídá žádný účet."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Úkoly, odměny na puzzle desce a odměny za úrovně aktuálního RollerCoin puzzle eventu.",
+    "intro": "Plňte úkoly a získejte náhodnou odměnu z puzzle desky. Nasbírané dílky odemykají odměny za úrovně.",
+    "notify": "Upozornit, když začne nový puzzle event",
+    "levelRewards": "Odměny za úrovně",
+    "tasks": "Úkoly",
+    "board": "Odměny na puzzle desce",
+    "taskGroups": {
+      "buy_rlt": "Směna RLT",
+      "games": "Hraní her",
+      "open_particular_lootbox": "Otevírání beden",
+      "other": "Ostatní"
+    },
+    "noEvent": "Zatím není žádný puzzle event."
   }
 }

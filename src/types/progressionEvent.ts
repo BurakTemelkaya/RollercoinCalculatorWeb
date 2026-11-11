@@ -8,6 +8,7 @@
 export interface ProgressionEventResponse {
   id: string;
   name: string;
+  slug?: string | null;
   endDate: string;
   createdDate: string;
   totalPoint: number;
@@ -21,6 +22,7 @@ export interface ProgressionEventResponse {
 export interface ProgressionEventListItem {
   id: string;
   name: string;
+  slug?: string | null;
   createdDate: string;
   endDate: string;
   totalPoint?: number;
@@ -50,6 +52,7 @@ export interface ApiReward {
 export interface ApiMiner {
   id: string;
   name: string;
+  slug?: string | null;
   fileName: string;
   imageVersion: number;
   level: number;
@@ -144,6 +147,7 @@ export interface MinerItem {
   is_can_be_sold_on_mp: boolean | null;
   bonus: number;
   is_in_set: boolean | null;
+  slug?: string | null;
 }
 
 export interface RackItem {

@@ -27,7 +27,6 @@
 .miner-import-source > summary { padding: 0.5rem 0; font-size: 0.875rem; color: var(--text-secondary); }
 .miner-import-source-content { display: grid; gap: 0.75rem; padding: 0.75rem 0; }
 .miner-import-guide { display: grid; gap: 0.5rem; min-width: 0; overflow-wrap: anywhere; font-size: 0.875rem; }
-.miner-import-guide-image { display: block; width: 100%; max-width: 520px; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-sizing: border-box; }
 .miner-import-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
 .miner-import-search { display: flex; flex: 1 1 160px; align-items: center; gap: 6px; min-width: 0; padding: 0 8px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-tertiary); color: var(--text-secondary); }
 .miner-import-search svg { flex-shrink: 0; }

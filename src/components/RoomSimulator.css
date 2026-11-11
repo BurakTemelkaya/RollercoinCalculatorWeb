@@ -2391,6 +2391,18 @@
 
 @media (min-width: 992px) {
     .desktop-inventory-dock.import-expanded { height: 65dvh; }
+    .inventory-size-toggle { position: relative; }
+    .inventory-size-toggle.hint { animation: inventory-size-pulse 1.2s ease-out infinite; border-color: #03e1e4; color: #03e1e4; }
+    .inventory-size-hint {
+        position: absolute; right: 0; top: calc(100% + 10px); z-index: 5;
+        padding: 5px 9px; border-radius: 6px; background: #03e1e4; color: #10121c;
+        font-size: 12px; font-weight: 600; white-space: nowrap; pointer-events: none;
+        animation: inventory-size-nudge 1.2s ease-in-out infinite;
+    }
+    .inventory-size-hint::after { content: ''; position: absolute; right: 10px; bottom: 100%; border: 6px solid transparent; border-bottom-color: #03e1e4; }
+    @keyframes inventory-size-pulse { from { box-shadow: 0 0 0 0 #03e1e4aa; } to { box-shadow: 0 0 0 10px #03e1e400; } }
+    @keyframes inventory-size-nudge { 50% { transform: translateY(4px); } }
+    @media (prefers-reduced-motion: reduce) { .inventory-size-toggle.hint, .inventory-size-hint { animation: none; } }
     .desktop-inventory-dock.importing-miners .inventory-toolbar { justify-content: flex-end; }
     .desktop-inventory-dock .inventory-import-panel { padding: 8px 16px; }
 }

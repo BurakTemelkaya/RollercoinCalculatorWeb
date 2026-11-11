@@ -41,14 +41,15 @@
     "limitHelp": "Busca o maior poder de liga sem ultrapassar o limite. O poder pode diminuir; os mineradores retirados voltam ao estoque.",
     "leagueLimit": "Escolher limite por liga",
     "selectLeague": "Selecionar liga",
-    "noLeagueCeiling": "Sem limite superior"
+    "noLeagueCeiling": "Sem limite superior",
+    "allowRemovingPlaced": "Permitir remover mineradores",
+    "allowRemovingPlacedHelp": "Ativado, mineradores posicionados podem voltar ao inventário para dar lugar a melhores. Caso contrário, todos permanecem na sala."
   },
   "minerImport": {
     "apiMethod": "Resposta da API (JSON)",
     "apiHelp": "Para usar a API, cole a resposta JSON completa retornada por:",
     "apiSteps": "Abra as ferramentas de desenvolvedor com F12 e selecione Network (Rede). Entre na sua sala do RollerCoin e avance para a próxima página na aba de mineradores na parte inferior. Selecione a requisição inventory e copie os dados de Response (Resposta). Repita para outras páginas se necessário.",
     "collectionHelp": "Na página de coleção, selecione e copie o texto dos cartões como na imagem e cole abaixo.",
-    "collectionExampleAlt": "Cartões da coleção com bônus, nome e poder selecionados para copiar",
     "addAllPower": "Adicionar todos os mineradores ao simulador de poder",
     "decreaseQuantity": "Diminuir quantidade",
     "increaseQuantity": "Aumentar quantidade",
@@ -71,7 +72,29 @@
     "invalid": "Não foi possível ler os dados ou encontrar um minerador no catálogo. Cole o JSON completo ou os cartões com ID e poder. Verifique a conexão.",
     "quantityError": "As quantidades devem ser inteiros não negativos, com total máximo de {{max}}.",
     "addError": "Não foi possível adicionar. Verifique as quantidades e a capacidade livre dos racks. A simulação atual foi mantida.",
-    "storageError": "Não foi possível salvar no navegador. A lista está disponível nesta sessão; verifique as configurações de armazenamento."
+    "storageError": "Não foi possível salvar no navegador. A lista está disponível nesta sessão; verifique as configurações de armazenamento.",
+    "anim": {
+      "title": "Como copiar a resposta do inventário",
+      "play": "Reproduzir",
+      "pause": "Pausar",
+      "step": "Passo {{n}}",
+      "s1": "Pressione F12 (ou Ctrl+Shift+I) e abra a aba Network.",
+      "s2": "Digite inventory na caixa Filter para ver apenas as requisições de inventário.",
+      "s3": "No jogo, clique em um número de sala para abri-la. Uma requisição inventory aparece.",
+      "s4": "No painel Miners abaixo, clique na seta para a direita. A próxima página envia uma nova requisição inventory.",
+      "s5": "Clique em uma requisição e abra a aba Response.",
+      "s6": "Clique dentro da resposta e pressione Ctrl+A e depois Ctrl+C para copiar tudo.",
+      "s7": "Cole na caixa abaixo e clique em {{read}}. Repita para cada página."
+    },
+    "copyAnim": {
+      "title": "Como copiar mineradores da página do RollerCoin",
+      "s1": "Abra a página de mineradores do RollerCoin no link acima.",
+      "s2": "Clique logo antes de \"Bonus power\" no primeiro cartão e segure o botão do mouse.",
+      "s3": "Arraste até o fim do último cartão para selecionar todos.",
+      "s4": "Pressione Ctrl+C para copiar a seleção.",
+      "s5": "Cole na caixa abaixo e clique em {{read}}. Repita para outras páginas."
+    },
+    "shrinkHint": "Você pode reduzir o painel aqui"
   },
   "calculatorEmpty": {
     "earnings": "Para ver seus ganhos, insira seu nome de usuário acima e clique em Buscar, ou insira sua potência.",
@@ -108,7 +131,8 @@
     "adminPanel": "Painel de Administração",
     "userPanel": "Painel do Usuário",
     "myBlogs": "Meus Blogs",
-    "notificationSettings": "Configurações de Notificação"
+    "notificationSettings": "Configurações de Notificação",
+    "leaderboard": "Ranking"
   },
   "lpp": {
     "title": "Divisão de Poder da Liga",
@@ -591,7 +615,11 @@
     "generalMailEnabledMsg": "Notificações por e-mail reativadas.",
     "generalMailDisabledMsg": "Todas as notificações por e-mail desativadas.",
     "browserPushWarning": "Você não pode receber notificações porque o Web Push está ativado, mas a permissão do navegador foi negada. Por favor, conceda permissão no seu navegador.",
-    "enableInBrowser": "Abrir no Navegador"
+    "enableInBrowser": "Abrir no Navegador",
+    "energyRenewal": "Alerta de queda de poder",
+    "energyRenewalDesc": "Verificado a cada 30 minutos. Enquanto seu poder no Rollercoin continuar caindo porque sua energia não foi renovada, você recebe no máximo um alerta por dia, por até 3 dias. Requer seu usuário do Rollercoin acima.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Receba um aviso quando um novo puzzle event do Rollercoin começar. Desativado por padrão."
   },
   "event": {
     "loading": "Carregando...",
@@ -1274,5 +1302,62 @@
     "room": "Sala",
     "noChange": "O posicionamento não mudou.",
     "otherNames": "e mais {{count}} nomes"
+  },
+  "profile": {
+    "rollercoinUserName": "Usuário do Rollercoin",
+    "rollercoinUserNamePlaceholder": "seu-nome",
+    "rollercoinUserNameHint": "O nome no link do seu perfil do Rollercoin (rollercoin.com/p/...). Opcional.",
+    "showInLeaderboard": "Mostrar minha conta Rollercoin no ranking do site",
+    "showInLeaderboardDesc": "Seu usuário do Rollercoin e seu poder ficarão públicos. Seu e-mail nunca é exibido.",
+    "emailLanguage": "Idioma dos e-mails automáticos",
+    "save": "Salvar",
+    "saveError": "Falha ao salvar.",
+    "promptTitle": "Adicione seu usuário do Rollercoin",
+    "promptDesc": "Vincule sua conta Rollercoin para aparecer no ranking e ser avisado quando seu poder começar a cair.",
+    "later": "Mais tarde",
+    "cardTitle": "Conta Rollercoin e idioma do e-mail",
+    "suggestTitle": "Usar este usuário na sua conta?",
+    "suggestDesc": "Você usou {{name}} na calculadora. Salve-o na sua conta para aparecer no ranking e ser avisado quando seu poder começar a cair.",
+    "no": "Não",
+    "neverAsk": "Não perguntar novamente",
+    "energyAlert": "Avisar por e-mail quando meu poder começar a cair",
+    "energyAlertDesc": "No máximo uma vez por dia, por até 3 dias, se sua energia não for renovada. Você pode alterar isso nas configurações de notificação.",
+    "country": "País (opcional)",
+    "countryNone": "Não informado",
+    "countrySearch": "Pesquisar país"
+  },
+  "leaderboard": {
+    "title": "Ranking",
+    "description": "Ranking de poder no Rollercoin dos membros do RollercoinCalculator.",
+    "joinSettings": "Participe pelas suas configurações.",
+    "joinRegister": "Cadastre-se para participar.",
+    "updated": "Atualizado a cada 30 minutos. Última atualização:",
+    "loadError": "Não foi possível carregar o ranking.",
+    "empty": "Ninguém entrou no ranking ainda.",
+    "user": "Usuário",
+    "league": "Liga",
+    "power": "Poder",
+    "filterCountry": "Filtrar por país",
+    "filterLeague": "Filtrar por liga",
+    "allCountries": "Todos os países",
+    "allLeagues": "Todas as ligas",
+    "noResults": "Nenhuma conta corresponde a esses filtros."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tarefas, recompensas do tabuleiro e recompensas de nível do puzzle event atual do RollerCoin.",
+    "intro": "Complete tarefas para receber uma recompensa aleatória do tabuleiro. As peças coletadas desbloqueiam as recompensas de nível.",
+    "notify": "Avise-me quando um novo puzzle event começar",
+    "levelRewards": "Recompensas de nível",
+    "tasks": "Tarefas",
+    "board": "Recompensas do tabuleiro",
+    "taskGroups": {
+      "buy_rlt": "Trocar RLT",
+      "games": "Jogar jogos",
+      "open_particular_lootbox": "Abrir caixas",
+      "other": "Outros"
+    },
+    "noEvent": "Ainda não há nenhum puzzle event."
   }
 }

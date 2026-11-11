@@ -41,14 +41,15 @@
     "limitHelp": "Mencari daya liga tertinggi tanpa melewati batas. Daya dapat turun; miner yang dilepas kembali ke stok.",
     "leagueLimit": "Pilih batas atas liga",
     "selectLeague": "Pilih liga",
-    "noLeagueCeiling": "Tanpa batas atas"
+    "noLeagueCeiling": "Tanpa batas atas",
+    "allowRemovingPlaced": "Izinkan melepas miner",
+    "allowRemovingPlacedHelp": "Jika aktif, miner yang terpasang dapat kembali ke inventaris untuk memberi tempat bagi yang lebih baik. Jika tidak, semua miner terpasang tetap di ruangan."
   },
   "minerImport": {
     "apiMethod": "Respons API (JSON)",
     "apiHelp": "Untuk metode API, tempel seluruh respons JSON dari alamat ini:",
     "apiSteps": "Buka alat pengembang dengan F12 dan pilih Network. Masuk ke ruangan RollerCoin, lalu buka halaman berikutnya pada tab miner di bagian bawah. Pilih permintaan inventory dan salin data Response. Ulangi untuk halaman lain jika diperlukan.",
     "collectionHelp": "Di halaman koleksi, pilih dan salin teks kartu miner seperti pada gambar, lalu tempel di bawah.",
-    "collectionExampleAlt": "Kartu koleksi dengan teks bonus, nama miner, dan daya yang dipilih untuk disalin",
     "addAllPower": "Tambahkan semua miner ke simulator daya",
     "decreaseQuantity": "Kurangi jumlah",
     "increaseQuantity": "Tambah jumlah",
@@ -71,7 +72,29 @@
     "invalid": "Data tidak terbaca atau miner tidak ditemukan di katalog. Tempel JSON lengkap atau kartu dengan ID dan daya. Periksa koneksi.",
     "quantityError": "Jumlah harus bilangan bulat non-negatif, dengan total maksimal {{max}}.",
     "addError": "Miner tidak dapat ditambahkan. Periksa jumlah dan kapasitas rak kosong. Simulasi saat ini tetap tersimpan.",
-    "storageError": "Tidak dapat menyimpan di browser. Daftar tersedia selama sesi ini; periksa pengaturan penyimpanan."
+    "storageError": "Tidak dapat menyimpan di browser. Daftar tersedia selama sesi ini; periksa pengaturan penyimpanan.",
+    "anim": {
+      "title": "Cara menyalin respons inventaris",
+      "play": "Putar",
+      "pause": "Jeda",
+      "step": "Langkah {{n}}",
+      "s1": "Tekan F12 (atau Ctrl+Shift+I) dan buka tab Network.",
+      "s2": "Ketik inventory di kotak Filter agar hanya permintaan inventaris yang tampil.",
+      "s3": "Di game, klik nomor ruangan untuk membukanya. Permintaan inventory akan muncul.",
+      "s4": "Di panel Miners bagian bawah, klik panah kanan. Halaman berikutnya mengirim permintaan inventory baru.",
+      "s5": "Klik sebuah permintaan, lalu buka tab Response.",
+      "s6": "Klik di dalam respons, tekan Ctrl+A lalu Ctrl+C untuk menyalin semuanya.",
+      "s7": "Tempel di kotak di bawah dan klik {{read}}. Ulangi untuk setiap halaman."
+    },
+    "copyAnim": {
+      "title": "Cara menyalin miner dari halaman RollerCoin",
+      "s1": "Buka halaman miner RollerCoin dari tautan di atas.",
+      "s2": "Klik tepat sebelum \"Bonus power\" pada kartu pertama dan tahan tombol mouse.",
+      "s3": "Seret sampai akhir kartu terakhir agar semua kartu terpilih.",
+      "s4": "Tekan Ctrl+C untuk menyalin pilihan.",
+      "s5": "Tempel di kotak di bawah dan klik {{read}}. Ulangi untuk halaman lain."
+    },
+    "shrinkHint": "Kamu bisa mengecilkan panel di sini"
   },
   "calculatorEmpty": {
     "earnings": "Untuk melihat pendapatan, masukkan nama pengguna di atas dan klik Ambil, atau masukkan daya Anda.",
@@ -108,7 +131,8 @@
     "adminPanel": "Panel Admin",
     "userPanel": "Panel Pengguna",
     "myBlogs": "Blog Saya",
-    "notificationSettings": "Pengaturan Notifikasi"
+    "notificationSettings": "Pengaturan Notifikasi",
+    "leaderboard": "Papan Peringkat"
   },
   "lpp": {
     "title": "Pembagian Kekuatan Liga",
@@ -591,7 +615,11 @@
     "generalMailEnabledMsg": "Notifikasi email diaktifkan kembali.",
     "generalMailDisabledMsg": "Semua notifikasi email dinonaktifkan.",
     "browserPushWarning": "Anda tidak dapat menerima notifikasi karena Web Push diaktifkan tetapi izin peramban ditolak. Harap berikan izin di peramban Anda.",
-    "enableInBrowser": "Buka di Peramban"
+    "enableInBrowser": "Buka di Peramban",
+    "energyRenewal": "Peringatan penurunan power",
+    "energyRenewalDesc": "Diperiksa setiap 30 menit. Selama power Rollercoin Anda terus turun karena energi belum diperbarui, Anda mendapat paling banyak satu peringatan per hari, hingga 3 hari. Memerlukan username Rollercoin Anda di atas.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Dapatkan notifikasi saat puzzle event Rollercoin baru dimulai. Nonaktif secara default."
   },
   "event": {
     "loading": "Memuat...",
@@ -1274,5 +1302,62 @@
     "room": "Ruangan",
     "noChange": "Penempatan tidak berubah.",
     "otherNames": "dan {{count}} nama lainnya"
+  },
+  "profile": {
+    "rollercoinUserName": "Username Rollercoin",
+    "rollercoinUserNamePlaceholder": "nama-anda",
+    "rollercoinUserNameHint": "Nama di tautan profil Rollercoin Anda (rollercoin.com/p/...). Opsional.",
+    "showInLeaderboard": "Tampilkan akun Rollercoin saya di papan peringkat situs",
+    "showInLeaderboardDesc": "Username Rollercoin dan power Anda akan terlihat publik. Email Anda tidak pernah ditampilkan.",
+    "emailLanguage": "Bahasa email otomatis",
+    "save": "Simpan",
+    "saveError": "Gagal menyimpan.",
+    "promptTitle": "Tambahkan username Rollercoin Anda",
+    "promptDesc": "Hubungkan akun Rollercoin Anda untuk tampil di papan peringkat dan mendapat notifikasi saat power Anda mulai turun.",
+    "later": "Nanti",
+    "cardTitle": "Akun Rollercoin & Bahasa Email",
+    "suggestTitle": "Gunakan username ini di akun Anda?",
+    "suggestDesc": "Anda menggunakan {{name}} di kalkulator. Simpan ke akun Anda untuk tampil di papan peringkat dan mendapat notifikasi saat power Anda mulai turun.",
+    "no": "Tidak",
+    "neverAsk": "Jangan tanya lagi",
+    "energyAlert": "Kirim email saat power saya mulai turun",
+    "energyAlertDesc": "Paling banyak sekali sehari, hingga 3 hari, jika energi tidak diperbarui. Dapat diubah di pengaturan notifikasi.",
+    "country": "Negara (opsional)",
+    "countryNone": "Tidak ditentukan",
+    "countrySearch": "Cari negara"
+  },
+  "leaderboard": {
+    "title": "Papan Peringkat",
+    "description": "Peringkat power Rollercoin anggota RollercoinCalculator.",
+    "joinSettings": "Bergabung dari pengaturan Anda.",
+    "joinRegister": "Daftar untuk bergabung.",
+    "updated": "Diperbarui setiap 30 menit. Pembaruan terakhir:",
+    "loadError": "Papan peringkat gagal dimuat.",
+    "empty": "Belum ada yang bergabung di papan peringkat.",
+    "user": "Pengguna",
+    "league": "Liga",
+    "power": "Power",
+    "filterCountry": "Filter menurut negara",
+    "filterLeague": "Filter menurut liga",
+    "allCountries": "Semua negara",
+    "allLeagues": "Semua liga",
+    "noResults": "Tidak ada akun yang cocok dengan filter ini."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tugas, hadiah papan puzzle, dan hadiah level dari puzzle event RollerCoin saat ini.",
+    "intro": "Selesaikan tugas untuk mendapatkan hadiah acak dari papan puzzle. Kepingan yang terkumpul membuka hadiah level.",
+    "notify": "Beri tahu saya saat puzzle event baru dimulai",
+    "levelRewards": "Hadiah level",
+    "tasks": "Tugas",
+    "board": "Hadiah papan puzzle",
+    "taskGroups": {
+      "buy_rlt": "Tukar RLT",
+      "games": "Bermain game",
+      "open_particular_lootbox": "Buka kotak",
+      "other": "Lainnya"
+    },
+    "noEvent": "Belum ada puzzle event."
   }
 }

@@ -420,8 +420,43 @@ a:hover {
   align-items: center;
   gap: 6px;
   flex-wrap: nowrap;
-  justify-content: center;
-  flex: 0 0 auto;
+  /* Shrinks and scrolls sideways (drag, wheel or swipe) instead of pushing the language picker off screen */
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sticky-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+/* Centred while everything fits; auto margins (unlike justify-content: center) keep the left end reachable when it scrolls */
+.sticky-nav-links > :first-child {
+  margin-left: auto;
+}
+
+.sticky-nav-links > :last-child {
+  margin-right: auto;
+}
+
+/* Fade the side that still has hidden links */
+.sticky-nav-links[data-fade-right="true"] {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+}
+
+.sticky-nav-links[data-fade-left="true"] {
+  -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+}
+
+.sticky-nav-links[data-fade-left="true"][data-fade-right="true"] {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
 }
 
 /* Actions (lang + auth + hamburger) */
@@ -1305,6 +1340,8 @@ a:hover {
 
 .coin-symbol {
   font-weight: 600;
+  /* fixed width so the prices next to it line up in one column */
+  min-width: 3em;
 }
 
 .coin-info-wrapper {
@@ -2685,17 +2722,18 @@ a:hover {
     font-size: 10px;
   }
 
+  /* grow with screen width; tuned so the coin price stays on one line from 360px up */
   .coin-cell {
-    gap: 2px;
+    gap: clamp(2px, calc(2px + (100vw - 360px) * 0.05), 8px);
   }
 
   .coin-cell img {
-    width: 16px;
-    height: 16px;
+    width: clamp(16px, calc(16px + (100vw - 360px) * 0.1), 24px);
+    height: clamp(16px, calc(16px + (100vw - 360px) * 0.1), 24px);
   }
 
   .coin-symbol {
-    font-size: 10px;
+    font-size: clamp(10px, 3.2vw, 16px);
   }
 
   .coin-info-wrapper {
@@ -2705,13 +2743,13 @@ a:hover {
   }
 
   .coin-market-price {
-    font-size: 9px;
+    font-size: clamp(9px, calc(9px + (100vw - 360px) * 0.0074), 12px);
     max-width: 100%;
   }
 
 
   .league-power {
-    font-size: 11px;
+    font-size: clamp(10px, calc(10px + (100vw - 360px) * 0.0098), 14px);
   }
 
   .power-share {
@@ -2760,8 +2798,11 @@ a:hover {
   }
 
   .table-container.fit-default-columns .earnings-table th:nth-child(1),
-  .table-container.fit-default-columns .earnings-table td:nth-child(1) {
+  .table-container.fit-default-columns .earnings-table td:nth-child(1),
+  .fixed-thead-clone .earnings-table th:nth-child(1) {
     width: 18%;
+    /* centre the coin between the table edge and the league power column once there is room (500px+) */
+    padding-left: clamp(2px, calc((100vw - 484px) * 0.096), 26px);
   }
 
   .table-container.fit-default-columns .earnings-table th:nth-child(2),
@@ -2775,16 +2816,16 @@ a:hover {
   }
 
   .table-container.fit-default-columns .coin-cell {
-    gap: 2px;
+    gap: clamp(2px, calc(2px + (100vw - 360px) * 0.05), 8px);
   }
 
   .table-container.fit-default-columns .coin-cell img {
-    width: 16px;
-    height: 16px;
+    width: clamp(16px, calc(16px + (100vw - 360px) * 0.1), 24px);
+    height: clamp(16px, calc(16px + (100vw - 360px) * 0.1), 24px);
   }
 
   .table-container.fit-default-columns .coin-symbol {
-    font-size: 10px;
+    font-size: clamp(10px, 3.2vw, 16px);
     white-space: nowrap;
   }
 
@@ -2795,8 +2836,8 @@ a:hover {
   }
 
 
-  .table-container.fit-default-columns .league-power {
-    font-size: 11px;
+  .table-container.fit-default-columns td.league-power {
+    font-size: clamp(10px, calc(10px + (100vw - 360px) * 0.0098), 14px);
     white-space: nowrap;
   }
 
@@ -3402,14 +3443,14 @@ a:hover {
 
   .earning-crypto,
   .table-container.fit-default-columns .earning-crypto {
-    font-size: 11px !important;
+    font-size: clamp(11px, 2.2vw, 13px) !important;
     line-height: 1.15;
     white-space: nowrap;
   }
 
   .earning-usd,
   .table-container.fit-default-columns .earning-usd {
-    font-size: 12px !important;
+    font-size: clamp(12px, 2.4vw, 14px) !important;
     margin-top: 2px !important;
     line-height: 1.1;
     white-space: nowrap;
@@ -3590,10 +3631,6 @@ a:hover {
 }
 
 @media (max-width: 600px) {
-  .collapsed-summary {
-    display: none;
-  }
-
   .modal-content {
     max-height: 95vh;
     display: flex;

@@ -72,6 +72,43 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const tooltipRef = React.useRef<HTMLDivElement>(null);
     const helpPanelRef = React.useRef<HTMLDivElement>(null);
     const tooltipHoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const headerRef = React.useRef<HTMLDivElement>(null);
+
+    // Collapsed header: when the title would overlap the chips, drop title, then coins chip, then league chip (power always stays).
+    React.useLayoutEffect(() => {
+        const header = headerRef.current;
+        if (!header) return;
+        const steps = ['hide-title', 'hide-coins', 'hide-league'];
+        const fit = () => {
+            header.classList.remove(...steps);
+            const summary = header.querySelector('.collapsed-summary');
+            if (!summary) return;
+            const fits = () => {
+                // offset* ignores the slide/fade transforms, so this measures the settled layout mid-animation
+                const chips = [...summary.children].filter(c => (c as HTMLElement).offsetParent !== null) as HTMLElement[];
+                if (!chips.length) return true;
+                const title = header.querySelector<HTMLElement>('.header-left')!;
+                const titleRight = 20 + title.offsetWidth; // collapsed header-left sits at left: 20px (DataInputForm.css)
+                return chips.every(c => c.offsetTop < chips[0].offsetTop + chips[0].offsetHeight)
+                    && chips[0].offsetLeft >= titleRight + 8;
+            };
+            for (const step of steps) {
+                if (fits()) return;
+                header.classList.add(step);
+            }
+        };
+        fit();
+        const observer = new ResizeObserver(fit);
+        observer.observe(header);
+        // collapsing animates the header, so the first measurement can be off: re-measure once it settles
+        header.addEventListener('transitionend', fit);
+        header.addEventListener('animationend', fit);
+        return () => {
+            observer.disconnect();
+            header.removeEventListener('transitionend', fit);
+            header.removeEventListener('animationend', fit);
+        };
+    });
     const [profileLinkInput, setProfileLinkInput] = useState('');
 
     const [isLoadingApi, setIsLoadingApi] = useState(false);
@@ -293,7 +330,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     return (
         <>
             <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
-                <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
+                <div className="section-header" ref={headerRef} onClick={() => setIsExpanded(!isExpanded)}>
                     <div className="header-left">
                         <span className="section-icon">⚙️</span>
                         <h2 className="section-title">{t('input.title')}</h2>

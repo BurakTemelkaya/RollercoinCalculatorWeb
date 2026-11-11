@@ -9,6 +9,7 @@ import type { MergeListItem, MergeDetail, MergeListParams } from '../types/merge
 import CdnImage from './CdnImage';
 import MinerStatusBadges from './MinerStatusBadges';
 import type { PaginatedResponse } from '../types/pagination';
+import { forgeBatchParts } from '../utils/forgeAnalysis';
 import { autoScalePower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
 import Pagination from './Pagination';
@@ -60,10 +61,6 @@ const FORGE_DISCOUNTS: Record<number, number> = {
 function applyForgeDiscount(rawAmount: number, forgeLevel: number): number {
     const discount = FORGE_DISCOUNTS[forgeLevel] || 0;
     return Math.floor(rawAmount * (1 - discount));
-}
-
-function discountedPartCount(count: number, forgeLevel: number): number {
-    return count > 0 ? Math.max(1, applyForgeDiscount(count, forgeLevel)) : 0;
 }
 
 /** Builds a CDN URL for a miner GIF by filename, with optional version cache-buster */
@@ -545,7 +542,8 @@ export default function MergePage() {
 
     const calcPartsCost = (detail: MergeDetail, count: number) => detail.requiredItems.reduce((sum, item) => {
         if (item.type !== 'mutation_components' || (item.level === 0 && !showLevel1Cost)) return sum;
-        const quantity = discountedPartCount(item.count, forgeLevel) * count;
+        // Discount applies to the whole batch, rounded like Rollercoin (23 × 0.95 → 22)
+        const quantity = forgeBatchParts(item.count, count, forgeLevel);
         return sum + getPartCost(item, quantity).total;
     }, 0);
 
@@ -567,11 +565,11 @@ export default function MergePage() {
             <>
                 <title>{`${t('merge.title')} | RollerCoin Calculator`}</title>
                 <meta name="description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
-                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/merge`} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/merges`} />
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={`${t('merge.title')} | RollerCoin Calculator`} />
                 <meta property="og:description" content={t('merge.seoContent', 'RollerCoin Merge Calculator and Parts Cost Analysis')} />
-                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/merge`} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/merges`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('merge.title')} | RollerCoin Calculator`} />
@@ -1026,7 +1024,7 @@ export default function MergePage() {
                                 </h3>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                     <Link
-                                        to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemName)}`}
+                                        to={`/${lang}/merges/miner/${encodeURIComponent(selectedMerge.resultItemSlug || selectedMerge.resultItemName)}`}
                                         className="btn-primary"
                                         style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
                                         title={t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
@@ -1191,12 +1189,11 @@ export default function MergePage() {
                                         : 0;
 
                                     // Determine display name first
-                                    let displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
+                                    const displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
 
                                     const customPrice = customPartPrices[displayName];
 
-                                    const discountedCount = isMutationComponent ? discountedPartCount(item.count, forgeLevel) : item.count;
-                                    const effectiveCount = discountedCount * mergeCount;
+                                    const effectiveCount = isMutationComponent ? forgeBatchParts(item.count, mergeCount, forgeLevel) : item.count * mergeCount;
 
                                     const isLevel1Part = isMutationComponent && item.level === 0;
                                     const shouldShowCost = !isLevel1Part || showLevel1Cost;

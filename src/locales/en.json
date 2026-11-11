@@ -41,14 +41,15 @@
     "limitHelp": "Find the highest league power without exceeding the ceiling. Power may decrease; removed miners return to stock.",
     "leagueLimit": "Choose a league ceiling",
     "selectLeague": "Select a league",
-    "noLeagueCeiling": "No upper limit"
+    "noLeagueCeiling": "No upper limit",
+    "allowRemovingPlaced": "Allow removing miners",
+    "allowRemovingPlacedHelp": "When enabled, placed miners may return to inventory to make room for better ones. Otherwise every placed miner stays in the room."
   },
   "minerImport": {
     "apiMethod": "API response (JSON)",
     "apiHelp": "For the API method, paste the full JSON response returned by:",
     "apiSteps": "Open developer tools with F12 and select Network. Enter your RollerCoin room and go to the next page in the Miners tab at the bottom. Select the inventory request and copy its Response data. Repeat for other pages as needed.",
     "collectionHelp": "On the collection page, select and copy the miner card text as shown below, then paste it here.",
-    "collectionExampleAlt": "Collection cards with bonus, miner name and power text selected for copying",
     "addAllPower": "Add all miners to power simulator",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
@@ -71,7 +72,29 @@
     "invalid": "Could not read data or find a miner in the catalog. Paste the full JSON response or collection cards including IDs and power. Also check your connection.",
     "quantityError": "Quantities must be non-negative whole numbers, with a total up to {{max}}.",
     "addError": "Could not add miners. Check quantities and free rack capacity in the room. The current simulation is kept.",
-    "storageError": "Could not save in this browser. The list is available for this session; check browser storage settings."
+    "storageError": "Could not save in this browser. The list is available for this session; check browser storage settings.",
+    "anim": {
+      "title": "How to copy the inventory response",
+      "play": "Play",
+      "pause": "Pause",
+      "step": "Step {{n}}",
+      "s1": "Press F12 (or Ctrl+Shift+I) and open the Network tab.",
+      "s2": "Type inventory in the Filter box to show only inventory requests.",
+      "s3": "In the game, click a room number to open the room. An inventory request appears.",
+      "s4": "In the Miners panel at the bottom, click the right arrow. The next page sends a new inventory request.",
+      "s5": "Click a request, then open the Response tab.",
+      "s6": "Click inside the response and press Ctrl+A, then Ctrl+C to copy all of it.",
+      "s7": "Paste it in the box below and click {{read}}. Repeat for every page."
+    },
+    "copyAnim": {
+      "title": "How to copy miners from the RollerCoin page",
+      "s1": "Open the RollerCoin miners page linked above.",
+      "s2": "Click just before \"Bonus power\" on the first card and hold the mouse button.",
+      "s3": "Drag to the end of the last card so every card is selected.",
+      "s4": "Press Ctrl+C to copy the selection.",
+      "s5": "Paste it in the box below and click {{read}}. Repeat for other pages."
+    },
+    "shrinkHint": "You can shrink the panel here"
   },
   "calculatorEmpty": {
     "earnings": "To see your earnings, enter your username above and click Fetch, or enter your power.",
@@ -108,7 +131,8 @@
     "adminPanel": "Admin Panel",
     "userPanel": "User Panel",
     "myBlogs": "My Blogs",
-    "notificationSettings": "Notification Settings"
+    "notificationSettings": "Notification Settings",
+    "leaderboard": "Leaderboard"
   },
   "hamsters": {
     "title": "Hamsters",
@@ -655,7 +679,11 @@
     "generalMailEnabledMsg": "Email notifications re-enabled.",
     "generalMailDisabledMsg": "All email notifications disabled.",
     "browserPushWarning": "You cannot receive notifications because Web Push is enabled but browser permission is denied. Please grant permission in your browser.",
-    "enableInBrowser": "Open in Browser"
+    "enableInBrowser": "Open in Browser",
+    "energyRenewal": "Power decrease alert",
+    "energyRenewalDesc": "Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Get notified when a new Rollercoin puzzle event starts. Off by default."
   },
   "event": {
     "loading": "Loading event data...",
@@ -1359,5 +1387,62 @@
     "room": "Room",
     "noChange": "Placement unchanged.",
     "otherNames": "and {{count}} other names"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin username",
+    "rollercoinUserNamePlaceholder": "your-name",
+    "rollercoinUserNameHint": "The name in your Rollercoin profile link (rollercoin.com/p/...). Optional.",
+    "showInLeaderboard": "Show my Rollercoin account in the site leaderboard",
+    "showInLeaderboardDesc": "Your Rollercoin username and power will be publicly visible. Your email is never shown.",
+    "emailLanguage": "Language of automatic emails",
+    "save": "Save",
+    "saveError": "Failed to save.",
+    "promptTitle": "Add your Rollercoin username",
+    "promptDesc": "Link your Rollercoin account to appear in the leaderboard and to get notified when your power starts decreasing.",
+    "later": "Later",
+    "cardTitle": "Rollercoin Account & Email Language",
+    "suggestTitle": "Use this username in your account?",
+    "suggestDesc": "You used {{name}} in the calculator. Save it to your account to appear in the leaderboard and get notified when your power starts decreasing.",
+    "no": "No",
+    "neverAsk": "Don't ask again",
+    "energyAlert": "Email me when my power starts decreasing",
+    "energyAlertDesc": "At most once a day, for up to 3 days, if your energy is not renewed. You can change this in notification settings.",
+    "country": "Country (optional)",
+    "countryNone": "Not specified",
+    "countrySearch": "Search country"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "description": "Rollercoin power ranking of RollercoinCalculator members.",
+    "joinSettings": "Join from your settings.",
+    "joinRegister": "Sign up to join.",
+    "updated": "Updated every 30 minutes. Last update:",
+    "loadError": "Leaderboard could not be loaded.",
+    "empty": "No one has joined the leaderboard yet.",
+    "user": "User",
+    "league": "League",
+    "power": "Power",
+    "filterCountry": "Filter by country",
+    "filterLeague": "Filter by league",
+    "allCountries": "All countries",
+    "allLeagues": "All leagues",
+    "noResults": "No accounts match these filters."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tasks, puzzle board rewards and level rewards of the current RollerCoin puzzle event.",
+    "intro": "Complete tasks to receive a random reward from the puzzle board. Collected pieces unlock the level rewards.",
+    "notify": "Get notified when a new puzzle event starts",
+    "levelRewards": "Level rewards",
+    "tasks": "Tasks",
+    "board": "Puzzle board rewards",
+    "taskGroups": {
+      "buy_rlt": "Exchange RLT",
+      "games": "Play games",
+      "open_particular_lootbox": "Open cases",
+      "other": "Other"
+    },
+    "noEvent": "There is no puzzle event yet."
   }
 }

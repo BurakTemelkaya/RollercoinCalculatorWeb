@@ -5,6 +5,8 @@ const recipes = { 0: { count: 50, fee: 2000 }, 1: { count: 20, fee: 50000 }, 2: 
 assert.equal(forgeBatchParts(5, 3, 5), 11);
 assert.equal(forgeBatchParts(10, 11, 5), 83);
 assert.equal(forgeBatchParts(20, 83, 5), 1245);
+// Miner merge screenshot: Grand Builder Lv6 needs 23 Legendary Fans; Forge 2 shows 22 (21.85 rounds up, not down)
+assert.equal(forgeBatchParts(23, 1, 2), 22);
 const plan = forgePlan(recipes, 1, 4, 3, 5);
 assert.equal(plan.required, 1245);
 assert.deepEqual(plan.steps.map(x => x.mergeCount), [83, 11, 3]);

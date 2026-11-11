@@ -41,14 +41,15 @@
     "limitHelp": "Üst sınırı aşmadan en yüksek lig gücünü arar. Gerekirse güç düşürülür; çıkarılan minerlar stoğa döner.",
     "leagueLimit": "Lig seçerek sınırla",
     "selectLeague": "Lig seçin",
-    "noLeagueCeiling": "Üst sınır yok"
+    "noLeagueCeiling": "Üst sınır yok",
+    "allowRemovingPlaced": "Miner kaldırmaya izin ver",
+    "allowRemovingPlacedHelp": "Açıkken yerleşmiş minerlar daha iyileri için envantere kaldırılabilir. Kapalıyken yerleşmiş her miner odada kalır."
   },
   "minerImport": {
     "apiMethod": "API yanıtı (JSON)",
     "apiHelp": "API yöntemi için şu adresten dönen JSON yanıtının tamamını yapıştırın:",
     "apiSteps": "F12 ile geliştirici araçlarını açıp Network (Ağ) sekmesine geçin. RollerCoin odanıza girin ve alt taraftaki Miner sekmesinde sonraki sayfaya ilerleyin. Oluşan inventory isteğini seçip Response (Yanıt) bölümündeki veriyi kopyalayın. Diğer sayfalar için tekrarlayabilirsiniz.",
     "collectionHelp": "Koleksiyon sayfasındaki miner kartlarının metnini görseldeki gibi seçip kopyalayın ve aşağıya yapıştırın.",
-    "collectionExampleAlt": "Koleksiyon sayfasında bonus, miner adı ve güç bilgileri seçilerek kopyalanan kartlar",
     "addAllPower": "Tüm minerları güç simülatörüne ekle",
     "decreaseQuantity": "Adedi azalt",
     "increaseQuantity": "Adedi artır",
@@ -71,7 +72,29 @@
     "invalid": "Veri okunamadı veya miner katalogda bulunamadı. Tam JSON yanıtını ya da kimlik ve güç bilgileriyle birlikte koleksiyon kartlarını yapıştırın. Bağlantınızı da kontrol edin.",
     "quantityError": "Adetler sıfır veya pozitif tam sayı olmalı; toplam en fazla {{max}} olabilir.",
     "addError": "Ekleme tamamlanamadı. Adetleri ve odadaki boş raf kapasitesini kontrol edin. Mevcut simülasyon korunuyor.",
-    "storageError": "Tarayıcıya kaydedilemedi. Liste bu oturumda kullanılabilir; tarayıcı depolama ayarlarını kontrol edin."
+    "storageError": "Tarayıcıya kaydedilemedi. Liste bu oturumda kullanılabilir; tarayıcı depolama ayarlarını kontrol edin.",
+    "anim": {
+      "title": "Envanter yanıtı nasıl kopyalanır",
+      "play": "Oynat",
+      "pause": "Duraklat",
+      "step": "Adım {{n}}",
+      "s1": "F12 (veya Ctrl+Shift+I) tuşuna basın ve Network sekmesini açın.",
+      "s2": "Yalnızca envanter isteklerini görmek için Filter kutusuna inventory yazın.",
+      "s3": "Oyunda bir oda numarasına tıklayarak odayı açın. Bir inventory isteği görünür.",
+      "s4": "Alttaki Miners panelinde sağ oka tıklayın. Sonraki sayfa yeni bir inventory isteği gönderir.",
+      "s5": "Bir isteğe tıklayın, ardından Response sekmesini açın.",
+      "s6": "Yanıtın içine tıklayın; tümünü kopyalamak için Ctrl+A, ardından Ctrl+C tuşlarına basın.",
+      "s7": "Aşağıdaki kutuya yapıştırın ve {{read}} düğmesine tıklayın. Her sayfa için tekrarlayın."
+    },
+    "copyAnim": {
+      "title": "RollerCoin sayfasından minerlar nasıl kopyalanır",
+      "s1": "Yukarıdaki bağlantıdan RollerCoin miner sayfasını açın.",
+      "s2": "İlk kartta \"Bonus power\" yazısının hemen önüne tıklayın ve fare tuşunu basılı tutun.",
+      "s3": "Tüm kartlar seçilene kadar son kartın sonuna sürükleyin.",
+      "s4": "Seçimi kopyalamak için Ctrl+C tuşlarına basın.",
+      "s5": "Aşağıdaki kutuya yapıştırın ve {{read}} düğmesine tıklayın. Diğer sayfalar için tekrarlayın."
+    },
+    "shrinkHint": "Paneli buradan küçültebilirsin"
   },
   "calculatorEmpty": {
     "earnings": "Kazançlarınızı görmek için yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin.",
@@ -108,7 +131,8 @@
     "adminPanel": "Admin Paneli",
     "userPanel": "Kullanıcı Paneli",
     "myBlogs": "Bloglarım",
-    "notificationSettings": "Bildirim Ayarları"
+    "notificationSettings": "Bildirim Ayarları",
+    "leaderboard": "Sıralama"
   },
   "hamsters": {
     "title": "Hamsterlar",
@@ -656,7 +680,11 @@
     "generalMailEnabledMsg": "E-posta bildirimleri tekrar açıldı.",
     "generalMailDisabledMsg": "Tüm e-posta bildirimleri kapatıldı.",
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
-    "enableInBrowser": "Tarayıcıda Aç"
+    "enableInBrowser": "Tarayıcıda Aç",
+    "energyRenewal": "Güç düşüşü uyarısı",
+    "energyRenewalDesc": "30 dakikada bir kontrol edilir. Enerjiniz yenilenmediği için Rollercoin gücünüz düşmeye devam ettikçe günde en fazla bir kez, en fazla 3 gün uyarı alırsınız. Yukarıda Rollercoin kullanıcı adınızı girmeniz gerekir.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Yeni bir Rollercoin puzzle event başladığında bildirim alın. Varsayılan olarak kapalıdır."
   },
   "event": {
     "loading": "Etkinlik verileri yükleniyor...",
@@ -1360,5 +1388,62 @@
     "room": "Oda",
     "noChange": "Yerleşim değişmedi.",
     "otherNames": "ve {{count}} farklı isim daha"
+  },
+  "profile": {
+    "rollercoinUserName": "Rollercoin kullanıcı adı",
+    "rollercoinUserNamePlaceholder": "kullanici-adiniz",
+    "rollercoinUserNameHint": "Rollercoin profil bağlantınızdaki ad (rollercoin.com/p/...). İsteğe bağlı.",
+    "showInLeaderboard": "Rollercoin hesabım site sıralamasında gözüksün",
+    "showInLeaderboardDesc": "Rollercoin kullanıcı adınız ve gücünüz herkese açık görünür. E-postanız asla gösterilmez.",
+    "emailLanguage": "Otomatik e-postaların dili",
+    "save": "Kaydet",
+    "saveError": "Kaydedilemedi.",
+    "promptTitle": "Rollercoin kullanıcı adınızı girin",
+    "promptDesc": "Rollercoin hesabınızı bağlayarak sıralamada yer alabilir ve gücünüz düşmeye başladığında bildirim alabilirsiniz.",
+    "later": "Daha sonra",
+    "cardTitle": "Rollercoin Hesabı ve E-posta Dili",
+    "suggestTitle": "Bu kullanıcı adını hesabınızda kullanmak ister misiniz?",
+    "suggestDesc": "Hesaplayıcıda {{name}} kullanıcı adını kullandınız. Hesabınıza kaydederek sıralamada yer alabilir ve gücünüz düşmeye başladığında bildirim alabilirsiniz.",
+    "no": "Hayır",
+    "neverAsk": "Bir daha gösterme",
+    "energyAlert": "Gücüm düştüğünde e-posta ile bildirim almak istiyorum",
+    "energyAlertDesc": "Enerjiniz yenilenmezse günde en fazla bir kez, en fazla 3 gün gönderilir. Bildirim ayarlarından değiştirebilirsiniz.",
+    "country": "Ülke (isteğe bağlı)",
+    "countryNone": "Belirtilmedi",
+    "countrySearch": "Ülke ara"
+  },
+  "leaderboard": {
+    "title": "Sıralama",
+    "description": "RollercoinCalculator üyelerinin Rollercoin güç sıralaması.",
+    "joinSettings": "Ayarlarınızdan katılın.",
+    "joinRegister": "Katılmak için kayıt olun.",
+    "updated": "30 dakikada bir güncellenir. Son güncelleme:",
+    "loadError": "Sıralama yüklenemedi.",
+    "empty": "Henüz sıralamaya katılan yok.",
+    "user": "Kullanıcı",
+    "league": "Lig",
+    "power": "Güç",
+    "filterCountry": "Ülkeye göre filtrele",
+    "filterLeague": "Lige göre filtrele",
+    "allCountries": "Tüm ülkeler",
+    "allLeagues": "Tüm ligler",
+    "noResults": "Bu filtrelere uyan hesap yok."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Güncel RollerCoin puzzle event'inin görevleri, puzzle tahtası ödülleri ve seviye ödülleri.",
+    "intro": "Görevleri tamamlayarak puzzle tahtasından rastgele bir ödül kazanın. Toplanan parçalar seviye ödüllerinin kilidini açar.",
+    "notify": "Yeni puzzle event başladığında bildirim al",
+    "levelRewards": "Seviye ödülleri",
+    "tasks": "Görevler",
+    "board": "Puzzle tahtası ödülleri",
+    "taskGroups": {
+      "buy_rlt": "RLT takası",
+      "games": "Oyun oynama",
+      "open_particular_lootbox": "Kutu açma",
+      "other": "Diğer"
+    },
+    "noEvent": "Henüz bir puzzle event yok."
   }
 }

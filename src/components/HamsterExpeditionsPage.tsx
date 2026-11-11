@@ -69,11 +69,6 @@ export default function HamsterExpeditionsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, sort, selectedMap, levels, sets, builders, ultimates, smartStudyPoints]);
 
-  useEffect(() => {
-    document.title = `${copy.title} | Rollercoin Calculator`;
-    return () => { document.title = 'Rollercoin Calculator'; };
-  }, [copy.title]);
-
   // Keep scroll-only UI out of React state so moving the table does not rerender every row.
   const updateScrollControls = useCallback(() => {
     const left = tableScrollRef.current?.scrollLeft ?? 0;
@@ -150,6 +145,7 @@ export default function HamsterExpeditionsPage() {
 
   return <section className="expedition-calculator">
     <HamsterSectionNav />
+    <title>{`${copy.title} | Rollercoin Calculator`}</title>
     <header className="expedition-calculator-heading">
       <div><span className="hamsters-eyebrow">{copy.eyebrow}</span><h1>{copy.title}</h1><p>{copy.intro}</p></div>
     </header>

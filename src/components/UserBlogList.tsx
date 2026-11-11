@@ -133,7 +133,7 @@ export default function UserBlogList() {
 
   return (
     <DashboardLayout title="My Blogs" isAdmin={false}>
-      <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1>{t('nav.myBlogs')}</h1>
           <p className="blog-description">{t('blog.myBlogsDesc')}</p>

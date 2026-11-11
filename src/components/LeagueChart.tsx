@@ -494,11 +494,11 @@ export default function LeagueChart() {
             <>
                 <title>{`${t('charts.title')} | RollerCoin Calculator`}</title>
                 <meta name="description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
-                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/league-chart`} />
+                <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/charts`} />
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={`${t('charts.title')} | RollerCoin Calculator`} />
                 <meta property="og:description" content={t('charts.seoContent', 'RollerCoin Network Power and Block Reward History')} />
-                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/league-chart`} />
+                <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/charts`} />
                 <meta property="og:image" content="https://rollercoincalculator.app/icon.png" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:title" content={`${t('charts.title')} | RollerCoin Calculator`} />

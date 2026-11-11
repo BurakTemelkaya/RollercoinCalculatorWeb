@@ -7,6 +7,7 @@ import { MAX_IMPORTED_MINERS, MINER_IMPORT_STORAGE_KEY, MINER_IMPORT_CHANGE_EVEN
     validateImportedQuantities, type ImportedMiner } from '../utils/minerImport';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
 import CdnImage from './CdnImage';
+import { ApiGuideAnimation, CopyGuideAnimation } from './ImportGuideAnimation';
 import './MinerImport.css';
 
 export default function MinerImport({ onAdd, embedded = false, onMinerPointerDown, addAllLabel, actions }: {
@@ -113,12 +114,12 @@ export default function MinerImport({ onAdd, embedded = false, onMinerPointerDow
                         <strong>{t('minerImport.apiMethod')}</strong>
                         <p>{t('minerImport.apiHelp')} <a href="https://rollercoin.com/api/game/inventory" target="_blank" rel="noreferrer">https://rollercoin.com/api/game/inventory</a></p>
                         <p>{t('minerImport.apiSteps')}</p>
+                        <ApiGuideAnimation />
                     </div>
                     <div className="miner-import-guide">
                         <a href="https://rollercoin.com/storage/collection" target="_blank" rel="noreferrer">{t('minerImport.collection')}</a>
                         <p>{t('minerImport.collectionHelp')}</p>
-                        <img className="miner-import-guide-image" src="/guides/miner-get-data.png" width={1014} height={781}
-                            alt={t('minerImport.collectionExampleAlt')} loading="lazy" />
+                        <CopyGuideAnimation url="https://rollercoin.com/storage/collection" />
                     </div>
                     <p>{t('minerImport.quantityHelp')}</p>
                     <label htmlFor={id}>{t('minerImport.input')}</label>

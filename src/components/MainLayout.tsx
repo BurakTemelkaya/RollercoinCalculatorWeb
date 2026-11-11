@@ -5,6 +5,8 @@ import appLogo from '../assets/logo.png';
 import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
+import { useLatestEventPath } from '../hooks/useLatestEventPath';
+import { useDragScroll } from '../hooks/useDragScroll';
 import { GlobalAds } from './GlobalAds';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
 
@@ -22,6 +24,7 @@ export const SUPPORTED_LANGUAGES: SelectOption[] = [
 ];
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
+const RollercoinProfilePrompt = React.lazy(() => import('./RollercoinProfile').then(m => ({ default: m.RollercoinProfilePrompt })));
 const HAMSTERS_NOTICE_KEY = 'rollercoin_hamsters_notice_seen';
 const HAMSTERS_NOTICE_EXPIRES = Date.UTC(2026, 9, 1);
 
@@ -30,6 +33,13 @@ import { NAV_ICONS } from '../utils/icons';
 interface MainLayoutProps {
   children: React.ReactNode;
 }
+
+// Routes whose page renders its own <title>/canonical. React 19 does not dedupe hoisted
+// <meta>/<link>, so rendering the layout defaults there too yields conflicting canonicals.
+const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|leaderboard|merges(?!\/)|events?|puzzle|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
+
+// Pages that render only their own <title> and use the layout's other defaults
+const PAGE_OWNS_TITLE = /^\/[^/]+\/hamsters\//;
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const navigate = useNavigate();
@@ -40,6 +50,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const langFromPath = location.pathname.split('/')[1];
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
+  const latestEventPath = useLatestEventPath(i18n.language);
+  const navLinksRef = useDragScroll<HTMLDivElement>();
 
   const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
@@ -72,8 +84,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
   const [country, setCountry] = useState<string | null>(null);
+  const [cleverNoFill, setCleverNoFill] = useState(() => window.__cleverCoreNoFill === true);
   const cleverNoFillTrackedRef = useRef(false);
-  const topAdNetwork = resolveTopAdNetwork(country);
+  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill);
 
   const trackCleverNoFill = useCallback((reason: string) => {
     if (cleverNoFillTrackedRef.current) return;
@@ -90,6 +103,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const markCleverNoFill = useCallback((reason: string) => {
     window.__cleverCoreNoFill = true;
     window.__cleverCoreNoFillReason = reason;
+    setCleverNoFill(true);
     trackCleverNoFill(reason);
   }, [trackCleverNoFill]);
 
@@ -230,6 +244,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     normalizedPath = normalizedPath.slice(0, -1);
   }
   const currentUrl = `https://rollercoincalculator.app${normalizedPath}`;
+  // Same page in every language, e.g. "/en/faq" -> "/faq"
+  const pathWithoutLang = normalizedPath.replace(/^\/[^/]+/, '');
 
   const changeLanguage = (newLang: string) => {
     // Replace current lang in path
@@ -240,9 +256,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   let topAdSlot: React.ReactNode = null;
   if (topAdNetwork === 'clever') {
-    topAdSlot = <div className="clever-core-ads"></div>;
+    // Clever deletes div.clever-core-ads itself when it rejects a creative, so React owns only the wrapper.
+    topAdSlot = <div key="clever"><div className="clever-core-ads"></div></div>;
   } else if (topAdNetwork === 'coinzilla') {
-    topAdSlot = <div className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
+    // Separate key: a fresh node, so a late Clever creative lands in the detached old one.
+    topAdSlot = <div key="coinzilla" className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
   }
 
   return (
@@ -256,9 +274,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </Link>
           </div>
 
-          <div className="sticky-nav-links desktop-only">
+          <div className="sticky-nav-links desktop-only" ref={navLinksRef}>
             <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link to={`/${i18n.language}/events?type=puzzle`} className="nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
+            <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
@@ -322,6 +342,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="mobile-nav-content">
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events?type=puzzle`} className="mobile-nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
@@ -359,9 +381,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
-            {/* SEO Tags (defaults — child pages override these via their own Helmet) */}
-            <>
-              <title>{t('seo.title')}</title>
+            {isValidLang && <>
+              {SUPPORTED_LANGUAGES.map(l => (
+                <link key={l.value} rel="alternate" hrefLang={l.value} href={`https://rollercoincalculator.app/${l.value}${pathWithoutLang}`} />
+              ))}
+              <link rel="alternate" hrefLang="x-default" href={`https://rollercoincalculator.app/en${pathWithoutLang}`} />
+            </>}
+            {/* Default SEO tags for pages that don't render their own */}
+            {!PAGE_OWNS_SEO.test(location.pathname) && <>
+              {!PAGE_OWNS_TITLE.test(location.pathname) && <title>{t('seo.title')}</title>}
               <meta name="description" content={t('seo.description')} />
               <link rel="canonical" href={currentUrl} />
               <meta property="og:type" content="website" />
@@ -373,7 +401,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <meta name="twitter:title" content={t('seo.title')} />
               <meta name="twitter:description" content={t('seo.description')} />
               <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
-            </>
+            </>}
 
             {/* Page Title - scrolls away, not in sticky bar */}
             <div className="page-title-banner">
@@ -387,7 +415,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <DailyBonusQuest />
                 </React.Suspense>
                 <div className="quick-actions-row">
-                  <Link to={`/${i18n.language}/event`} className="quick-action-btn btn-events">{NAV_ICONS.events} {t('tabs.event')}</Link>
+                  <Link to={latestEventPath} className="quick-action-btn btn-events">{NAV_ICONS.events} {t('tabs.event')}</Link>
                   <Link to={`/${i18n.language}/merges`} className="quick-action-btn btn-merges">{NAV_ICONS.merges} {t('nav.merges')}</Link>
                   <Link to={`/${i18n.language}/support`} className="quick-action-btn btn-support">{NAV_ICONS.support} {t('nav.support')}</Link>
                 </div>
@@ -413,6 +441,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <main className="main-content">
               {children}
             </main>
+
+            {isAuthenticated && (
+              <React.Suspense fallback={null}><RollercoinProfilePrompt /></React.Suspense>
+            )}
 
             {/* Footer */}
             <Footer />

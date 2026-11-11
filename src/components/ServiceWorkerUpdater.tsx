@@ -2,53 +2,50 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
+// Silent update: a new SW waits until the user can't notice the reload —
+// on the next route change, or while the tab is in the background.
 export default function ServiceWorkerUpdater() {
   const location = useLocation();
   const previousPathnameRef = useRef(location.pathname);
-  
+
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
-      if (r) {
-        console.log('SW Registered. Will check for updates every hour.');
-        setInterval(() => {
-          r.update();
-        }, 60 * 60 * 1000);
-      }
+      if (!r) return;
+      setInterval(() => r.update(), 60 * 60 * 1000);
+      // Returning to the tab is the cheapest moment to look for a new deploy.
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') r.update();
+      });
     },
-    onNeedRefresh() {
-      console.log('New Service Worker update detected! Waiting for route change to apply...');
-    },
-    onOfflineReady() {
-      console.log('App is ready for offline use.');
-    }
   });
 
+  // The plugin's 'controlling' reload is sometimes late; reload ourselves as a safety net.
+  const applyUpdate = () => {
+    updateServiceWorker(true);
+    setTimeout(() => window.location.reload(), 2000);
+  };
+
+  // Route change: user expects a "page change" anyway.
   useEffect(() => {
-    if (previousPathnameRef.current !== location.pathname) {
-      previousPathnameRef.current = location.pathname;
-      
-      if (needRefresh) {
-        console.log('Route changed and update is pending. Applying new SW now...');
-        // updateServiceWorker, SW'ye SKIP_WAITING mesajı gönderir.
-        // Eklentinin "controlling" event'ı sayfayı otomatik yeniler.
-        // Ama controlling event'ı asenkron çalıştığı için bazen bir sonraki
-        // navigasyonda yakalanıyordu. Bunu çözmek için SW kontrolü devralana
-        // kadar kısa bir süre bekleyip, kontrolün devralınıp devralınmadığını
-        // kontrol ediyoruz. Eğer devralınmadıysa biz kendimiz reload yapıyoruz.
-        updateServiceWorker(true);
-        
-        // Güvenlik ağı: Eğer controlling event 2 saniye içinde reload tetiklemediyse,
-        // biz kendimiz reload yapalım. Bu sayede 3. sayfaya geçmeden güncellenir.
-        setTimeout(() => {
-          console.log('Safety net: reloading page for SW update.');
-          window.location.reload();
-        }, 2000);
-      }
-    }
-  }, [location.pathname, needRefresh, updateServiceWorker]);
+    if (previousPathnameRef.current === location.pathname) return;
+    previousPathnameRef.current = location.pathname;
+    if (needRefresh) applyUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, needRefresh]);
+
+  // Background tab: reload happens off-screen.
+  useEffect(() => {
+    if (!needRefresh) return;
+    const onHidden = () => {
+      if (document.visibilityState === 'hidden') applyUpdate();
+    };
+    document.addEventListener('visibilitychange', onHidden);
+    return () => document.removeEventListener('visibilitychange', onHidden);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needRefresh]);
 
   return null;
 }

@@ -82,6 +82,26 @@
     font-size: 18px;
 }
 
+/* set by DataInputForm when the collapsed header runs out of room */
+.section-header.hide-title .section-title,
+.section-header.hide-coins .summary-chip.success,
+.section-header.hide-league .summary-chip.league {
+    display: none;
+}
+
+/* without the title, centre the chips between the gear icon and the arrow */
+.data-input-section>.section-header.hide-title .collapsed-summary {
+    justify-content: center;
+    /* arrow (20px) + header gap (16px) + own margin-right (16px), so the centre matches the header's */
+    margin-left: 52px;
+}
+
+@media (max-width: 768px) {
+    .data-input-section>.section-header.hide-title .collapsed-summary {
+        margin-left: 36px; /* 20px arrow + 8px gap + 8px margin-right */
+    }
+}
+
 .collapsed-summary {
     display: flex;
     align-items: center;
@@ -913,9 +933,5 @@
 
     .section-header {
         padding: 10px 12px;
-    }
-
-    .collapsed-summary {
-        display: none;
     }
 }

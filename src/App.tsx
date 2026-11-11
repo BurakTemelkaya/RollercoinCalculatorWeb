@@ -50,6 +50,7 @@ const SettingsModal = lazyWithRetry(() => import('./components/SettingsModal'));
 const ColumnSettingsModal = lazyWithRetry(() => import('./components/ColumnSettingsModal'));
 const ProgressionEvent = lazyWithRetry(() => import('./components/ProgressionEvent'));
 const ProgressionEventHistory = lazyWithRetry(() => import('./components/ProgressionEventHistory'));
+const PuzzleEvent = lazyWithRetry(() => import('./components/PuzzleEvent'));
 const AboutPage = lazyWithRetry(() => import('./components/AboutPage'));
 const PrivacyPage = lazyWithRetry(() => import('./components/PrivacyPage'));
 const FaqPage = lazyWithRetry(() => import('./components/FaqPage'));
@@ -82,6 +83,7 @@ const ChangePasswordPage = lazyWithRetry(() => import('./components/auth/ChangeP
 const NotificationSettingsPage = lazyWithRetry(() => import('./components/NotificationSettingsPage'));
 const RewardChangeModal = lazyWithRetry(() => import('./components/RewardChangeModal'));
 const UnsubscribePage = lazyWithRetry(() => import('./components/UnsubscribePage'));
+const LeaderboardPage = lazyWithRetry(() => import('./components/LeaderboardPage'));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -278,6 +280,8 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
       const data = await fetchUserFromApi(parsed.username);
       setFetchedRoom(null); // Replace the previous room only after the lookup succeeds.
       setFetchedUser(data);
+      // Giriş yapmış ve adı kayıtlı olmayan kullanıcıya hesabına kaydetmeyi önermek için (RollercoinProfilePrompt dinler)
+      window.dispatchEvent(new CustomEvent('rollercoin-username-used', { detail: parsed.username }));
 
       const apiLeagueId = data.userProfileResponseDto.league_Id;
 
@@ -413,19 +417,9 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
   const [customPeriodDays, setCustomPeriodDays] = useState<number>(0);
   const [customPeriodHours, setCustomPeriodHours] = useState<number>(0);
 
-  const CACHE_VERSION_KEY = 'rollercoin_web_cache_version';
-  const CURRENT_CACHE_VERSION = '20261105.204311';
-
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const savedVersion = localStorage.getItem(CACHE_VERSION_KEY);
-      if (savedVersion !== CURRENT_CACHE_VERSION) {
-        // App version updated, just update the stored version without clearing user data
-        console.log(`Cache version mismatch (${savedVersion} vs ${CURRENT_CACHE_VERSION}). Updating cache version...`);
-        localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION);
-      }
-
       const savedCoins = localStorage.getItem(STORAGE_KEYS.COINS);
       const savedBalances = localStorage.getItem(STORAGE_KEYS.BALANCES);
       const savedTab = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
@@ -1214,18 +1208,21 @@ function App() {
           <Route path="/:lang" element={<CalculatorArea />} />
           <Route path="/:lang/unsubscribe" element={<React.Suspense fallback={null}><UnsubscribePage /></React.Suspense>} />
           <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
-          <Route path="/:lang/event/:eventId" element={<CalculatorArea isEventPage={true} />} />
+          <Route path="/:lang/event/:eventSlug" element={<CalculatorArea isEventPage={true} />} />
           <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
+          <Route path="/:lang/puzzle" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
+          <Route path="/:lang/puzzle/:puzzleSlug" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
           <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
           <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
           <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
           <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
           <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
+          <Route path="/:lang/leaderboard" element={<React.Suspense fallback={null}><LeaderboardPage /></React.Suspense>} />
           <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
           <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/sets" element={<React.Suspense fallback={null}><HamsterSetsPage /></React.Suspense>} />
-          <Route path="/:lang/merges/miner/:minerName" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
+          <Route path="/:lang/merges/miner/:minerSlug" element={<React.Suspense fallback={null}><MergeMinerLevelsPage /></React.Suspense>} />
           <Route path="/:lang/daily-quests" element={<React.Suspense fallback={null}><DailyBonusQuestHistory /></React.Suspense>} />
           <Route path="/:lang/blog" element={<React.Suspense fallback={null}><BlogPage /></React.Suspense>} />
           <Route path="/:lang/blog/:slug" element={<React.Suspense fallback={null}><BlogDetailPage /></React.Suspense>} />

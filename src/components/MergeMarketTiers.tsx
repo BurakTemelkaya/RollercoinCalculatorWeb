@@ -7,11 +7,11 @@ export default function MergeMarketTiers({ offers, quantity }: { offers?: Market
         .slice(0, 5);
     if (tiers.length === 0) return null;
 
-    let remaining = quantity;
-    const rows = tiers.map(tier => {
-        const taken = Math.min(remaining, tier.quantity);
-        remaining -= taken;
-        return { ...tier, taken };
+    const stock = tiers.reduce((sum, tier) => sum + tier.quantity, 0);
+    const remaining = Math.max(0, quantity - stock);
+    const rows = tiers.map((tier, i) => {
+        const before = tiers.slice(0, i).reduce((sum, t) => sum + t.quantity, 0);
+        return { ...tier, taken: Math.max(0, Math.min(tier.quantity, quantity - before)) };
     });
 
     return <details open style={{ marginTop: 8, fontSize: '0.8rem' }}>

@@ -32,7 +32,7 @@ const SEED_ROUTES = [
   '/',
   '/en',
   '/tr',
-  '/en/event', '/tr/event',
+  '/en/events', '/tr/events',
   '/en/about', '/tr/about',
   '/en/privacy', '/tr/privacy',
   '/en/faq', '/tr/faq',
@@ -69,6 +69,11 @@ const MIME = {
   '.webm': 'video/webm',
 };
 
+// The SPA shell, read before any page overwrites dist/index.html with rendered
+// "/" output. Serving that rendered HTML as the fallback leaked the home page's
+// <title>/canonical/description into every other pre-rendered page.
+let SPA_TEMPLATE = null;
+
 function resolveFilePath(url) {
   const pathname = url.split('?')[0].split('#')[0];
   let filePath = path.join(DIST_DIR, pathname);
@@ -92,7 +97,8 @@ function startServer() {
       const contentType = MIME[ext] || 'application/octet-stream';
 
       try {
-        const content = fs.readFileSync(filePath);
+        // Every page route renders from the pristine shell, never from earlier output
+        const content = ext === '.html' ? SPA_TEMPLATE : fs.readFileSync(filePath);
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(content);
       } catch {
@@ -124,6 +130,10 @@ function isInternalPage(href) {
   
   // Exclude dynamic routes and admin/user panels from crawling
   if (href.includes('/blog/') || href.includes('/author/') || href.includes('/admin') || href.includes('/my-blogs')) return false;
+  // "/{lang}/event" only redirects to the latest event's slug (needs the API, blocked here)
+  if (/^\/[^/]+\/event\/?$/.test(href.split(/[?#]/)[0])) return false;
+  // Leaderboard is entirely API data; prerendering would bake its "could not be loaded" state
+  if (/^\/[^/]+\/leaderboard\/?$/.test(href.split(/[?#]/)[0])) return false;
 
   const clean = href.split('?')[0].split('#')[0];
   const ext = clean.split('.').pop();
@@ -156,7 +166,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // Reklam ve Analytics domainlerini engelle (networkidle'ı sonsuza sokarlar)
     const blockedDomains = [
       'api.rollercoincalculator.app', // Kendi API'ni ekledik
-      'ad.a-ads.com', 'a-ads.com', 'adsterra',
+      'ad.a-ads.com', 'a-ads.com', 'adsterra', 'cleverwebserver.com',
       'googletagmanager.com', 'google-analytics.com',
       'challenges.cloudflare.com'
     ];
@@ -170,13 +180,19 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
   });
 
   try {
+    // "/" redirects by saved/browser language; pin English so root.html never depends on the
+    // build machine's locale or on another page's lang left in the shared localStorage.
+    if (route === '/') {
+      await page.evaluateOnNewDocument(() => localStorage.setItem('rollercoin_web_language', 'en'));
+    }
     const url = `http://localhost:${PORT}${route}`;
     // HTML'i hızlıca yükle (domcontentloaded)
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-    // React'ın hydrate etmesi ve API'den veri çekmesi için sabit bir süre bekle
-    // Bu, networkidle beklemekten çok daha güvenli ve hızlıdır.
-    await new Promise(r => setTimeout(r, 500));
+    // Lazy page chunks can take longer than a fixed delay; every page renders its own
+    // canonical once mounted, so wait for it (capped) instead of capturing an empty shell.
+    // Some lazy pages (hamster sub-pages) render their own <title> after the layout's canonical.
+    await page.waitForFunction(() => document.querySelector('link[rel="canonical"]') && document.title, { timeout: 5000 }).catch(() => {});
 
     // Discover internal links on this page
     const links = await page.evaluate(() =>
@@ -192,15 +208,22 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
       }
     }
 
+    // index.html's boot injects the Clever loader at runtime; a baked-in copy would make
+    // Clever run twice on the live page (once from this tag, once from boot's exec()).
+    await page.evaluate(() => {
+      document.querySelectorAll('script[src*="cleverwebserver.com"]').forEach((s) => s.remove());
+    });
+
     // Capture rendered HTML
     const html = await page.content();
 
-    // Determine output path
-    const outputPath =
-      route === '/'
-        ? path.join(DIST_DIR, 'index.html')
-        : path.join(DIST_DIR, route, 'index.html');
-
+    // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
+    // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
+    // language (English for crawlers), so its render is the /en page with canonical /en; nginx
+    // serves it from root.html for "/" only.
+    const outputPath = route === '/'
+      ? path.join(DIST_DIR, 'root.html')
+      : path.join(DIST_DIR, route, 'index.html');
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, html);
 
@@ -220,6 +243,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
 }
 
 async function prerender() {
+  SPA_TEMPLATE = fs.readFileSync(path.join(DIST_DIR, 'index.html'));
   const server = await startServer();
 
   const browser = await puppeteer.launch({

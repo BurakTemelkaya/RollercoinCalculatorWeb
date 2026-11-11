@@ -26,6 +26,7 @@ import type { PaginatedResponse } from '../types/pagination';
 export interface ParsedProgressionEvent {
     id: string;
     name: string;
+    slug?: string | null;
     endDate: string;
     createdDate?: string;
     totalPoint?: number;
@@ -55,6 +56,7 @@ function convertApiMiner(apiMiner: ApiMiner): MinerItem {
         is_can_be_sold_on_mp: apiMiner.isCanBeSoldOnMp,
         bonus: apiMiner.percent,
         is_in_set: apiMiner.isInSet,
+        slug: apiMiner.slug,
     };
 }
 
@@ -161,6 +163,7 @@ function parseProgressionEventResponse(raw: ProgressionEventResponse): ParsedPro
     return {
         id: raw.id,
         name: raw.name,
+        slug: raw.slug,
         endDate,
         createdDate,
         totalPoint: raw.totalPoint,
@@ -182,12 +185,31 @@ export async function fetchProgressionEvent(): Promise<ParsedProgressionEvent> {
 }
 
 /**
- * Fetches a specific progression event by ID
+ * Fetches a specific progression event by slug (the backend also accepts a legacy ID)
  */
-export async function fetchProgressionEventById(id: string): Promise<ParsedProgressionEvent> {
-    const url = buildApiUrl(`/api/ProgressionEvents/GetById?id=${encodeURIComponent(id)}`);
+export async function fetchProgressionEventBySlug(slug: string): Promise<ParsedProgressionEvent> {
+    const url = buildApiUrl(`/api/ProgressionEvents/GetBySlug?slug=${encodeURIComponent(slug)}`);
     const raw = await apiGet<ProgressionEventResponse>(url);
     return parseProgressionEventResponse(raw);
+}
+
+/** URL path segment for an event: its slug, or the ID until the backend has backfilled slugs. */
+export const eventPathSegment = (event: { slug?: string | null; id: string }) => event.slug || event.id;
+
+let latestEventPathPromise: Promise<string | null> | null = null;
+
+/**
+ * Path segment of the latest event (shared, fetched once per page load) so links
+ * point straight at `/event/{slug}` instead of the redirecting `/event`.
+ */
+export function fetchLatestEventPathSegment(): Promise<string | null> {
+    latestEventPathPromise ??= fetchProgressionEventList(0, 1)
+        .then(res => (res.items[0] ? eventPathSegment(res.items[0]) : null))
+        .catch(() => {
+            latestEventPathPromise = null; // allow retry on next call
+            return null;
+        });
+    return latestEventPathPromise;
 }
 
 /**

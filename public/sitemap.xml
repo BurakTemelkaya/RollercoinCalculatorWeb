@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- Default (Turkish) Root -->
-  <url>
-    <loc>https://rollercoincalculator.app/</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/"/>
-  </url>
   <!-- Explicit Turkish Version -->
   <url>
     <loc>https://rollercoincalculator.app/tr</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en"/>
   </url>
   <!-- Explicit English Version -->
   <url>
     <loc>https://rollercoincalculator.app/en</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en"/>
   </url>
   <!-- About - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/about</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/about"/>
@@ -43,7 +33,7 @@
   <!-- About - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/about</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/about"/>
@@ -53,7 +43,7 @@
   <!-- Privacy - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/privacy</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/privacy"/>
@@ -63,7 +53,7 @@
   <!-- Privacy - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/privacy</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/privacy"/>
@@ -72,28 +62,28 @@
   </url>
   <!-- Event - Turkish -->
   <url>
-    <loc>https://rollercoincalculator.app/tr/event</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://rollercoincalculator.app/tr/events</loc>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/event"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/event"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/event"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/events"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/events"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/events"/>
   </url>
   <!-- Event - English -->
   <url>
-    <loc>https://rollercoincalculator.app/en/event</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://rollercoincalculator.app/en/events</loc>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/event"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/event"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/event"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/events"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/events"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/events"/>
   </url>
   <!-- FAQ - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/faq</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/faq"/>
@@ -103,7 +93,7 @@
   <!-- FAQ - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/faq</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/faq"/>
@@ -113,7 +103,7 @@
   <!-- Guides Index - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides"/>
@@ -123,7 +113,7 @@
   <!-- Guides Index - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides"/>
@@ -133,7 +123,7 @@
   <!-- Guide: F2P Strategy - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides/f2p-strategy</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/f2p-strategy"/>
@@ -143,7 +133,7 @@
   <!-- Guide: F2P Strategy - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides/f2p-strategy</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/f2p-strategy"/>
@@ -153,7 +143,7 @@
   <!-- Guide: Bonus Power - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides/bonus-power</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/bonus-power"/>
@@ -163,7 +153,7 @@
   <!-- Guide: Bonus Power - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides/bonus-power</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/bonus-power"/>
@@ -173,7 +163,7 @@
   <!-- Guide: Marketplace Arbitrage - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides/marketplace-arbitrage</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/marketplace-arbitrage"/>
@@ -183,7 +173,7 @@
   <!-- Guide: Marketplace Arbitrage - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides/marketplace-arbitrage</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/marketplace-arbitrage"/>
@@ -193,7 +183,7 @@
   <!-- Guide: Mining Power - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides/mining-power</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/mining-power"/>
@@ -203,7 +193,7 @@
   <!-- Guide: Mining Power - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides/mining-power</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/mining-power"/>
@@ -213,7 +203,7 @@
   <!-- Guide: Calculation Logic - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/guides/calculation-logic</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/calculation-logic"/>
@@ -223,7 +213,7 @@
   <!-- Guide: Calculation Logic - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/guides/calculation-logic</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/guides/calculation-logic"/>
@@ -233,7 +223,7 @@
   <!-- Charts - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/charts</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/charts"/>
@@ -243,7 +233,7 @@
   <!-- Charts - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/charts</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/charts"/>
@@ -253,7 +243,7 @@
   <!-- Support - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/support</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/support"/>
@@ -263,7 +253,7 @@
   <!-- Support - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/support</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/support"/>
@@ -273,7 +263,7 @@
   <!-- Blog Index - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog"/>
@@ -283,7 +273,7 @@
   <!-- Blog Index - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog"/>
@@ -293,7 +283,7 @@
   <!-- Blog: What is RollerCoin - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog/what-is-rollercoin</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/what-is-rollercoin"/>
@@ -303,7 +293,7 @@
   <!-- Blog: What is RollerCoin - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog/what-is-rollercoin</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/what-is-rollercoin"/>
@@ -313,7 +303,7 @@
   <!-- Blog: League System - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog/league-system-explained</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/league-system-explained"/>
@@ -323,7 +313,7 @@
   <!-- Blog: League System - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog/league-system-explained</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/league-system-explained"/>
@@ -333,7 +323,7 @@
   <!-- Blog: Marketplace Trading - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog/marketplace-trading-guide</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/marketplace-trading-guide"/>
@@ -343,7 +333,7 @@
   <!-- Blog: Marketplace Trading - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog/marketplace-trading-guide</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/marketplace-trading-guide"/>
@@ -353,7 +343,7 @@
   <!-- Blog: Most Profitable Coin - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog/most-profitable-coin</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/most-profitable-coin"/>
@@ -363,7 +353,7 @@
   <!-- Blog: Most Profitable Coin - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog/most-profitable-coin</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/most-profitable-coin"/>
@@ -373,7 +363,7 @@
   <!-- Blog: Beginners Guide - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/blog/beginners-complete-guide</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/beginners-complete-guide"/>
@@ -383,7 +373,7 @@
   <!-- Blog: Beginners Guide - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/blog/beginners-complete-guide</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/blog/beginners-complete-guide"/>
@@ -393,7 +383,7 @@
 <!-- Merges - English -->
   <url>
     <loc>https://rollercoincalculator.app/en/merges</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/merges"/>
@@ -403,7 +393,7 @@
 <!-- Merges - Turkish -->
   <url>
     <loc>https://rollercoincalculator.app/tr/merges</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/merges"/>
@@ -412,7 +402,7 @@
   </url>
   <url>
     <loc>https://rollercoincalculator.app/en/hamsters</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters"/>
@@ -421,7 +411,7 @@
   </url>
   <url>
     <loc>https://rollercoincalculator.app/tr/hamsters</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters"/>
@@ -430,7 +420,7 @@
   </url>
   <url>
     <loc>https://rollercoincalculator.app/en/hamsters/expeditions</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters/expeditions"/>
@@ -439,7 +429,7 @@
   </url>
   <url>
     <loc>https://rollercoincalculator.app/tr/hamsters/expeditions</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/hamsters/expeditions"/>

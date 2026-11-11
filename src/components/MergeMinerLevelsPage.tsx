@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import { fetchMergesByMinerName } from '../services/mergeApi';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { fetchMergesByMinerSlug } from '../services/mergeApi';
 import type { MergeDetail } from '../types/merge';
+import { forgeBatchParts } from '../utils/forgeAnalysis';
 import { autoScalePower } from '../utils/powerParser';
 import CdnImage from './CdnImage';
 import MinerStatusBadges from './MinerStatusBadges';
@@ -122,7 +123,10 @@ function getPartDisplayName(itemName: string, level?: number | null): string {
 type ForgeLevel = 1 | 2 | 3 | 4 | 5;
 
 export default function MergeMinerLevelsPage() {
-    const { lang, minerName } = useParams<{ lang: string, minerName: string }>();
+    const { lang, minerSlug } = useParams<{ lang: string, minerSlug: string }>();
+    const navigate = useNavigate();
+    // Slug we just redirected to; skips refetching data we already have
+    const redirectedSlugRef = useRef<string | null>(null);
     const { t } = useTranslation();
 
     const [data, setData] = useState<MergeDetail[]>([]);
@@ -156,14 +160,21 @@ export default function MergeMinerLevelsPage() {
 
     useEffect(() => {
         const loadData = async () => {
-            if (!minerName) return;
+            if (!minerSlug || minerSlug === redirectedSlugRef.current) return;
             try {
                 setLoading(true);
                 setError(null);
-                const result = await fetchMergesByMinerName(minerName);
+                const result = await fetchMergesByMinerSlug(minerSlug);
                 // Sort by level ascending
                 const sorted = result.sort((a, b) => a.resultItemLevel - b.resultItemLevel);
                 setData(sorted);
+
+                // Legacy name URLs (e.g. "Poolside%20Haul") → canonical /merges/miner/{slug}
+                const slug = sorted[0]?.resultItemSlug;
+                if (slug && slug !== minerSlug) {
+                    redirectedSlugRef.current = slug;
+                    navigate(`/${lang}/merges/miner/${slug}`, { replace: true });
+                }
             } catch (err) {
                 console.error('Failed to fetch miner levels:', err);
                 setError(err instanceof Error ? err.message : t('merge.fetchError'));
@@ -173,7 +184,7 @@ export default function MergeMinerLevelsPage() {
         };
 
         loadData();
-    }, [minerName, t]);
+    }, [minerSlug, t, lang, navigate]);
 
     // Calculate cost logic
     const calcLevelCost = (detail: MergeDetail): { partsCost: number, totalCost: number } => {
@@ -188,7 +199,7 @@ export default function MergeMinerLevelsPage() {
                 const displayName = getPartDisplayName(item.itemName, item.level);
                 const customPrice = customPartPrices[displayName];
                 const unitPriceRlt = customPrice !== undefined ? customPrice : defaultPrice;
-                const discountedCount = applyForgeDiscount(item.count, forgeLevel);
+                const discountedCount = forgeBatchParts(item.count, 1, forgeLevel);
                 return sum + (discountedCount * (unitPriceRlt * 1e6));
             }, 0);
 
@@ -223,7 +234,7 @@ export default function MergeMinerLevelsPage() {
             
             const reqMinerLevel = isMiner ? (item.level > 0 ? item.level : Math.max(0, detail.resultItemLevel - 1)) + 1 : 0;
             const displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
-            const discountedCount = isMutationComponent ? applyForgeDiscount(item.count, forgeLevel) : item.count;
+            const discountedCount = isMutationComponent ? forgeBatchParts(item.count, 1, forgeLevel) : item.count;
             const key = `${item.itemId}-${reqMinerLevel}`;
             
             if (aggregatedItems.has(key)) {
@@ -261,7 +272,7 @@ export default function MergeMinerLevelsPage() {
                     </Link>
                 </div>
                 <h2 className="merge-title">
-                    {minerName} - {t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
+                    {data[0]?.resultItemName ?? minerSlug} - {t('merge.allLevelsCost', 'Tüm Seviyelerin Maliyeti')}
                 </h2>
                 <div className="merge-header-right">
                     {/* Forge Level Selector */}
@@ -399,7 +410,7 @@ export default function MergeMinerLevelsPage() {
                                                     const reqMinerLevel = isMiner ? (item.level > 0 ? item.level : Math.max(0, detail.resultItemLevel - 1)) + 1 : 0;
                                                     const displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
 
-                                                    const discountedCount = isMutationComponent ? applyForgeDiscount(item.count, forgeLevel) : item.count;
+                                                    const discountedCount = isMutationComponent ? forgeBatchParts(item.count, 1, forgeLevel) : item.count;
 
 
                                                     let imgSrc: string | null = null;

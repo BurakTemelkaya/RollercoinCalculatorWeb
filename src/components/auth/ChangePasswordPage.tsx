@@ -62,7 +62,7 @@ export default function ChangePasswordPage() {
           {t('auth.changePasswordDesc', 'Hesabınızın güvenliği için şifrenizi güçlü tutun.')}
         </p>
 
-        <form onSubmit={handleSubmit} style={{ background: 'rgba(15, 15, 30, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <form onSubmit={handleSubmit} style={{ background: 'rgba(15, 15, 30, 0.4)', padding: 'clamp(20px, 5vw, 32px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
           {error && (
             <div style={{ marginBottom: '24px', padding: '14px 16px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#f87171', borderRadius: '10px', border: '1px solid rgba(239, 68, 68, 0.2)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>

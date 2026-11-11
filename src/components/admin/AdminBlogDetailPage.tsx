@@ -225,14 +225,14 @@ export default function AdminBlogDetailPage() {
       ) : (
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
           {/* Left: Blog Info */}
-          <div style={{ flex: '1 1 500px', minWidth: 0 }}>
+          <div style={{ flex: '999 1 500px', minWidth: 0 }}>
             <div style={{
               background: 'rgba(15, 15, 30, 0.5)',
               border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 12, padding: 24, marginBottom: 24,
             }}>
               {/* Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
                 <div>
                   <h1 style={{ color: '#f1f5f9', margin: 0, fontSize: '1.5rem' }}>
                     {selectedContent?.title || 'Untitled'}
@@ -345,7 +345,7 @@ export default function AdminBlogDetailPage() {
           </div>
 
           {/* Right: Reviews */}
-          <div style={{ flex: '0 0 400px', minWidth: 0 }}>
+          <div style={{ flex: '1 1 340px', maxWidth: '100%', minWidth: 0 }}>
             
             {/* Write Review Form (Isolated state) */}
             {blogId && (
@@ -442,7 +442,7 @@ export default function AdminBlogDetailPage() {
             </button>
           </div>
           <div style={{
-            flex: 1, overflow: 'auto', padding: '32px',
+            flex: 1, overflow: 'auto', padding: 'clamp(16px, 4vw, 32px)',
             maxWidth: 1000, margin: '0 auto', width: '100%',
             color: '#e2e8f0', fontSize: '1.05rem', lineHeight: 1.8,
             boxSizing: 'border-box'
