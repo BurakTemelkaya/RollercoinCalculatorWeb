@@ -262,3 +262,16 @@
         opacity: 1;
     }
 }
+
+/* Progression / Puzzle switch */
+.peh-kind-tabs {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+    .peh-kind-tabs .pe-tab {
+        padding: 10px 8px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+}

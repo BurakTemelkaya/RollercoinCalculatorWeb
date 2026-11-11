@@ -6,6 +6,7 @@ import RadixSelect, { SelectOption } from './RadixSelect';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useLatestEventPath } from '../hooks/useLatestEventPath';
+import { useDragScroll } from '../hooks/useDragScroll';
 import { GlobalAds } from './GlobalAds';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
 
@@ -35,7 +36,7 @@ interface MainLayoutProps {
 
 // Routes whose page renders its own <title>/canonical. React 19 does not dedupe hoisted
 // <meta>/<link>, so rendering the layout defaults there too yields conflicting canonicals.
-const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|leaderboard|merges(?!\/)|events?|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
+const PAGE_OWNS_SEO = /^\/[^/]+\/(about|privacy|faq|support|charts|leaderboard|merges(?!\/)|events?|puzzle|daily-quests|blog|author|login|register|forgot-password|guides|hamsters(?!\/))(\/|$)/;
 
 // Pages that render only their own <title> and use the layout's other defaults
 const PAGE_OWNS_TITLE = /^\/[^/]+\/hamsters\//;
@@ -50,6 +51,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const isValidLang = SUPPORTED_LANGUAGES.some(l => l.value === langFromPath);
   const lang = isValidLang ? langFromPath : i18n.language;
   const latestEventPath = useLatestEventPath(i18n.language);
+  const navLinksRef = useDragScroll<HTMLDivElement>();
 
   const { isAuthenticated, isAdmin, logout, user } = useAuth();
 
@@ -272,9 +274,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </Link>
           </div>
 
-          <div className="sticky-nav-links desktop-only">
+          <div className="sticky-nav-links desktop-only" ref={navLinksRef}>
             <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link to={`/${i18n.language}/events?type=puzzle`} className="nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
             <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
@@ -339,6 +342,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="mobile-nav-content">
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events?type=puzzle`} className="mobile-nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
             <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>

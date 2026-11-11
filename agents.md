@@ -34,4 +34,7 @@ Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zek
    - Satılabilirlik ve set miner ikonları
    - Ortak backend eşlemeleri ve kontroller
 
+8. **[Puzzle Event](file:///.agents/PuzzleEvent.md)**
+   - Puzzle (spin) event sayfası, backend veri akışı ve varsayılanı kapalı bildirim
+
 Yapay zeka asistanları bu index dosyasını kullanarak projenin ilgili bölümleri hakkında daha hızlı ve spesifik bilgi edinebilir.

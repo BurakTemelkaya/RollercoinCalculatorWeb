@@ -50,6 +50,7 @@ const SettingsModal = lazyWithRetry(() => import('./components/SettingsModal'));
 const ColumnSettingsModal = lazyWithRetry(() => import('./components/ColumnSettingsModal'));
 const ProgressionEvent = lazyWithRetry(() => import('./components/ProgressionEvent'));
 const ProgressionEventHistory = lazyWithRetry(() => import('./components/ProgressionEventHistory'));
+const PuzzleEvent = lazyWithRetry(() => import('./components/PuzzleEvent'));
 const AboutPage = lazyWithRetry(() => import('./components/AboutPage'));
 const PrivacyPage = lazyWithRetry(() => import('./components/PrivacyPage'));
 const FaqPage = lazyWithRetry(() => import('./components/FaqPage'));
@@ -1209,6 +1210,8 @@ function App() {
           <Route path="/:lang/event" element={<CalculatorArea isEventPage={true} />} />
           <Route path="/:lang/event/:eventSlug" element={<CalculatorArea isEventPage={true} />} />
           <Route path="/:lang/events" element={<React.Suspense fallback={null}><ProgressionEventHistory /></React.Suspense>} />
+          <Route path="/:lang/puzzle" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
+          <Route path="/:lang/puzzle/:puzzleSlug" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
           <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
           <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
           <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />

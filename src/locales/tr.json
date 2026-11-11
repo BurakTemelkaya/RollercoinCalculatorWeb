@@ -682,7 +682,9 @@
     "browserPushWarning": "Web Push ayarı açık fakat tarayıcı izin vermediği için bildirim alamıyorsunuz. Lütfen tarayıcıdan izin verin.",
     "enableInBrowser": "Tarayıcıda Aç",
     "energyRenewal": "Güç düşüşü uyarısı",
-    "energyRenewalDesc": "30 dakikada bir kontrol edilir. Enerjiniz yenilenmediği için Rollercoin gücünüz düşmeye devam ettikçe günde en fazla bir kez, en fazla 3 gün uyarı alırsınız. Yukarıda Rollercoin kullanıcı adınızı girmeniz gerekir."
+    "energyRenewalDesc": "30 dakikada bir kontrol edilir. Enerjiniz yenilenmediği için Rollercoin gücünüz düşmeye devam ettikçe günde en fazla bir kez, en fazla 3 gün uyarı alırsınız. Yukarıda Rollercoin kullanıcı adınızı girmeniz gerekir.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Yeni bir Rollercoin puzzle event başladığında bildirim alın. Varsayılan olarak kapalıdır."
   },
   "event": {
     "loading": "Etkinlik verileri yükleniyor...",
@@ -1426,5 +1428,22 @@
     "allCountries": "Tüm ülkeler",
     "allLeagues": "Tüm ligler",
     "noResults": "Bu filtrelere uyan hesap yok."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Güncel RollerCoin puzzle event'inin görevleri, puzzle tahtası ödülleri ve seviye ödülleri.",
+    "intro": "Görevleri tamamlayarak puzzle tahtasından rastgele bir ödül kazanın. Toplanan parçalar seviye ödüllerinin kilidini açar.",
+    "notify": "Yeni puzzle event başladığında bildirim al",
+    "levelRewards": "Seviye ödülleri",
+    "tasks": "Görevler",
+    "board": "Puzzle tahtası ödülleri",
+    "taskGroups": {
+      "buy_rlt": "RLT takası",
+      "games": "Oyun oynama",
+      "open_particular_lootbox": "Kutu açma",
+      "other": "Diğer"
+    },
+    "noEvent": "Henüz bir puzzle event yok."
   }
 }

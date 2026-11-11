@@ -373,6 +373,23 @@ function getRewardDisplay(
     }
 }
 
+/** Compact reward tile (image, name, power/bonus) shared with the puzzle event page. */
+export function RewardTile({ reward, lang, className = '' }: { reward: ProgressionReward; lang?: string; className?: string }) {
+    const { t } = useTranslation();
+    const display = getRewardDisplay(reward, t);
+    const image = display.localImage ?? display.rcImageUrl ?? display.imageUrl;
+    return (
+        <RewardLink display={display} lang={lang} className={`reward-tile ${className}`}>
+            <span className="reward-tile-img">
+                {(display.level ?? 0) > 1 && <img className="reward-tile-level" src={`/miner-levels/level_${display.level}.webp`} alt={`Level ${display.level}`} />}
+                {image && <img src={image} alt="" loading="lazy" />}
+            </span>
+            <span className="reward-tile-name">{display.text}</span>
+            {display.subText && <span className="reward-tile-sub">{display.subText}</span>}
+        </RewardLink>
+    );
+}
+
 export default function ProgressionEvent() {
     const { lang, eventSlug } = useParams<{ lang: string; eventSlug?: string }>();
     const navigate = useNavigate();

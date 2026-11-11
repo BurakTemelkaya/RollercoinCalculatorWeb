@@ -681,7 +681,9 @@
     "browserPushWarning": "You cannot receive notifications because Web Push is enabled but browser permission is denied. Please grant permission in your browser.",
     "enableInBrowser": "Open in Browser",
     "energyRenewal": "Power decrease alert",
-    "energyRenewalDesc": "Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above."
+    "energyRenewalDesc": "Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Get notified when a new Rollercoin puzzle event starts. Off by default."
   },
   "event": {
     "loading": "Loading event data...",
@@ -1425,5 +1427,22 @@
     "allCountries": "All countries",
     "allLeagues": "All leagues",
     "noResults": "No accounts match these filters."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tasks, puzzle board rewards and level rewards of the current RollerCoin puzzle event.",
+    "intro": "Complete tasks to receive a random reward from the puzzle board. Collected pieces unlock the level rewards.",
+    "notify": "Get notified when a new puzzle event starts",
+    "levelRewards": "Level rewards",
+    "tasks": "Tasks",
+    "board": "Puzzle board rewards",
+    "taskGroups": {
+      "buy_rlt": "Exchange RLT",
+      "games": "Play games",
+      "open_particular_lootbox": "Open cases",
+      "other": "Other"
+    },
+    "noEvent": "There is no puzzle event yet."
   }
 }

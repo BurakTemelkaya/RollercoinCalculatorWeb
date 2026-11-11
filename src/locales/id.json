@@ -617,7 +617,9 @@
     "browserPushWarning": "Anda tidak dapat menerima notifikasi karena Web Push diaktifkan tetapi izin peramban ditolak. Harap berikan izin di peramban Anda.",
     "enableInBrowser": "Buka di Peramban",
     "energyRenewal": "Peringatan penurunan power",
-    "energyRenewalDesc": "Diperiksa setiap 30 menit. Selama power Rollercoin Anda terus turun karena energi belum diperbarui, Anda mendapat paling banyak satu peringatan per hari, hingga 3 hari. Memerlukan username Rollercoin Anda di atas."
+    "energyRenewalDesc": "Diperiksa setiap 30 menit. Selama power Rollercoin Anda terus turun karena energi belum diperbarui, Anda mendapat paling banyak satu peringatan per hari, hingga 3 hari. Memerlukan username Rollercoin Anda di atas.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Dapatkan notifikasi saat puzzle event Rollercoin baru dimulai. Nonaktif secara default."
   },
   "event": {
     "loading": "Memuat...",
@@ -1340,5 +1342,22 @@
     "allCountries": "Semua negara",
     "allLeagues": "Semua liga",
     "noResults": "Tidak ada akun yang cocok dengan filter ini."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tugas, hadiah papan puzzle, dan hadiah level dari puzzle event RollerCoin saat ini.",
+    "intro": "Selesaikan tugas untuk mendapatkan hadiah acak dari papan puzzle. Kepingan yang terkumpul membuka hadiah level.",
+    "notify": "Beri tahu saya saat puzzle event baru dimulai",
+    "levelRewards": "Hadiah level",
+    "tasks": "Tugas",
+    "board": "Hadiah papan puzzle",
+    "taskGroups": {
+      "buy_rlt": "Tukar RLT",
+      "games": "Bermain game",
+      "open_particular_lootbox": "Buka kotak",
+      "other": "Lainnya"
+    },
+    "noEvent": "Belum ada puzzle event."
   }
 }
