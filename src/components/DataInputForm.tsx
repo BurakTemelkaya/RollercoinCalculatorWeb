@@ -72,6 +72,34 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     const tooltipRef = React.useRef<HTMLDivElement>(null);
     const helpPanelRef = React.useRef<HTMLDivElement>(null);
     const tooltipHoverTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const headerRef = React.useRef<HTMLDivElement>(null);
+
+    // Collapsed header: when the title would overlap the chips, drop title, then coins chip, then league chip (power always stays).
+    React.useLayoutEffect(() => {
+        const header = headerRef.current;
+        if (!header) return;
+        const steps = ['hide-title', 'hide-coins', 'hide-league'];
+        const fit = () => {
+            header.classList.remove(...steps);
+            const summary = header.querySelector('.collapsed-summary');
+            if (!summary) return;
+            const fits = () => {
+                const chips = [...summary.children].filter(c => (c as HTMLElement).offsetParent !== null);
+                if (!chips.length) return true;
+                const rects = chips.map(c => c.getBoundingClientRect());
+                const title = header.querySelector('.header-left')!.getBoundingClientRect();
+                return rects.every(r => r.top < rects[0].bottom) && rects[0].left >= title.right + 8;
+            };
+            for (const step of steps) {
+                if (fits()) return;
+                header.classList.add(step);
+            }
+        };
+        fit();
+        const observer = new ResizeObserver(fit);
+        observer.observe(header);
+        return () => observer.disconnect();
+    });
     const [profileLinkInput, setProfileLinkInput] = useState('');
 
     const [isLoadingApi, setIsLoadingApi] = useState(false);
@@ -293,7 +321,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
     return (
         <>
             <section className={`data-input-section ${isExpanded ? 'expanded' : 'collapsed'}`}>
-                <div className="section-header" onClick={() => setIsExpanded(!isExpanded)}>
+                <div className="section-header" ref={headerRef} onClick={() => setIsExpanded(!isExpanded)}>
                     <div className="header-left">
                         <span className="section-icon">⚙️</span>
                         <h2 className="section-title">{t('input.title')}</h2>
