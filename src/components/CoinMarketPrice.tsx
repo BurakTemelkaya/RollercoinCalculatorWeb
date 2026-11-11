@@ -17,8 +17,12 @@ export default function CoinMarketPrice({ currency, price, change }: CoinMarketP
         Number.isFinite(change.changePercent) ? change : undefined;
     const direction = validChange ? Math.sign(validChange.changePercent) : 0;
     const formatPrice = (value: number, detailed = false) => value.toLocaleString('en-US', {
-        style: 'currency', currency: 'USD', minimumFractionDigits: 2,
-        maximumFractionDigits: detailed ? 8 : value < 1 ? 6 : 2,
+        style: 'currency', currency: 'USD',
+        // Table shows a short price (full precision is in the tooltip).
+        ...(detailed ? { minimumFractionDigits: 2, maximumFractionDigits: 8 }
+            : value >= 1000 ? { maximumFractionDigits: 0 }
+            : value >= 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+            : { maximumSignificantDigits: 3 }),
     });
     const changeText = validChange?.changePercent.toLocaleString('en-US', {
         minimumFractionDigits: 2,
