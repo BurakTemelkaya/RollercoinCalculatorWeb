@@ -84,11 +84,13 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
             const summary = header.querySelector('.collapsed-summary');
             if (!summary) return;
             const fits = () => {
-                const chips = [...summary.children].filter(c => (c as HTMLElement).offsetParent !== null);
+                // offset* ignores the slide/fade transforms, so this measures the settled layout mid-animation
+                const chips = [...summary.children].filter(c => (c as HTMLElement).offsetParent !== null) as HTMLElement[];
                 if (!chips.length) return true;
-                const rects = chips.map(c => c.getBoundingClientRect());
-                const title = header.querySelector('.header-left')!.getBoundingClientRect();
-                return rects.every(r => r.top < rects[0].bottom) && rects[0].left >= title.right + 8;
+                const title = header.querySelector<HTMLElement>('.header-left')!;
+                const titleRight = 20 + title.offsetWidth; // collapsed header-left sits at left: 20px (DataInputForm.css)
+                return chips.every(c => c.offsetTop < chips[0].offsetTop + chips[0].offsetHeight)
+                    && chips[0].offsetLeft >= titleRight + 8;
             };
             for (const step of steps) {
                 if (fits()) return;
@@ -98,7 +100,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
         fit();
         const observer = new ResizeObserver(fit);
         observer.observe(header);
-        return () => observer.disconnect();
+        // collapsing animates the header, so the first measurement can be off: re-measure once it settles
+        header.addEventListener('transitionend', fit);
+        header.addEventListener('animationend', fit);
+        return () => {
+            observer.disconnect();
+            header.removeEventListener('transitionend', fit);
+            header.removeEventListener('animationend', fit);
+        };
     });
     const [profileLinkInput, setProfileLinkInput] = useState('');
 
