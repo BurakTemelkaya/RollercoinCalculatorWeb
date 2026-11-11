@@ -620,7 +620,9 @@
     "browserPushWarning": "Nemůžete přijímat oznámení, protože je povoleno Web Push, ale oprávnění v prohlížeči je zamítnuto. Prosím, udělte oprávnění ve svém prohlížeči.",
     "enableInBrowser": "Otevřít v prohlížeči",
     "energyRenewal": "Upozornění na pokles výkonu",
-    "energyRenewalDesc": "Kontroluje se každých 30 minut. Dokud váš výkon v Rollercoinu klesá, protože jste neobnovili energii, dostanete nejvýše jedno upozornění denně, nejdéle 3 dny. Vyžaduje vaše uživatelské jméno Rollercoin výše."
+    "energyRenewalDesc": "Kontroluje se každých 30 minut. Dokud váš výkon v Rollercoinu klesá, protože jste neobnovili energii, dostanete nejvýše jedno upozornění denně, nejdéle 3 dny. Vyžaduje vaše uživatelské jméno Rollercoin výše.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Dostávejte upozornění, když začne nový Rollercoin puzzle event. Ve výchozím stavu vypnuto."
   },
   "event": {
     "loading": "Načítání dat události...",
@@ -1369,5 +1371,22 @@
     "allCountries": "Všechny země",
     "allLeagues": "Všechny ligy",
     "noResults": "Těmto filtrům neodpovídá žádný účet."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Úkoly, odměny na puzzle desce a odměny za úrovně aktuálního RollerCoin puzzle eventu.",
+    "intro": "Plňte úkoly a získejte náhodnou odměnu z puzzle desky. Nasbírané dílky odemykají odměny za úrovně.",
+    "notify": "Upozornit, když začne nový puzzle event",
+    "levelRewards": "Odměny za úrovně",
+    "tasks": "Úkoly",
+    "board": "Odměny na puzzle desce",
+    "taskGroups": {
+      "buy_rlt": "Směna RLT",
+      "games": "Hraní her",
+      "open_particular_lootbox": "Otevírání beden",
+      "other": "Ostatní"
+    },
+    "noEvent": "Zatím není žádný puzzle event."
   }
 }

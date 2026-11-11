@@ -602,7 +602,9 @@
     "browserPushWarning": "Web Push está habilitado pero el navegador denegó el permiso. Por favor, habilítelo en su navegador.",
     "enableInBrowser": "Abrir en el Navegador",
     "energyRenewal": "Alerta de caída de poder",
-    "energyRenewalDesc": "Se comprueba cada 30 minutos. Mientras tu poder en Rollercoin siga bajando porque no renovaste tu energía, recibirás como máximo una alerta al día, durante hasta 3 días. Requiere tu usuario de Rollercoin arriba."
+    "energyRenewalDesc": "Se comprueba cada 30 minutos. Mientras tu poder en Rollercoin siga bajando porque no renovaste tu energía, recibirás como máximo una alerta al día, durante hasta 3 días. Requiere tu usuario de Rollercoin arriba.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Recibe un aviso cuando empiece un nuevo puzzle event de Rollercoin. Desactivado por defecto."
   },
   "event": {
     "loading": "Cargando datos del evento...",
@@ -1317,5 +1319,22 @@
     "allCountries": "Todos los países",
     "allLeagues": "Todas las ligas",
     "noResults": "Ninguna cuenta coincide con estos filtros."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Tareas, recompensas del tablero y recompensas de nivel del puzzle event actual de RollerCoin.",
+    "intro": "Completa tareas para recibir una recompensa aleatoria del tablero. Las piezas reunidas desbloquean las recompensas de nivel.",
+    "notify": "Avisarme cuando empiece un nuevo puzzle event",
+    "levelRewards": "Recompensas de nivel",
+    "tasks": "Tareas",
+    "board": "Recompensas del tablero",
+    "taskGroups": {
+      "buy_rlt": "Intercambiar RLT",
+      "games": "Jugar partidas",
+      "open_particular_lootbox": "Abrir cajas",
+      "other": "Otros"
+    },
+    "noEvent": "Todavía no hay ningún puzzle event."
   }
 }

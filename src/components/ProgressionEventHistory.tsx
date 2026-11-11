@@ -5,13 +5,20 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { eventPathSegment, fetchProgressionEventList } from '../services/progressionEventApi';
 import type { ProgressionEventListItem } from '../types/progressionEvent';
 import type { PaginatedResponse } from '../types/pagination';
-import { useLatestEventPath } from '../hooks/useLatestEventPath';
+import { fetchPuzzleEventList } from '../services/puzzleEventApi';
+import { useLatestEventPath, useLatestPuzzlePath } from '../hooks/useLatestEventPath';
 import { getCdnBaseUrl } from '../config/api';
 import Pagination from './Pagination';
 import './ProgressionEvent.css';
 import './ProgressionEventHistory.css';
 
 const PAGE_SIZE = 10;
+
+/** Which history is shown; `?type=puzzle` selects the puzzle events. */
+type EventKind = 'progression' | 'puzzle';
+
+/** Puzzle rows carry their banner URL; progression banners are derived from the id. */
+type EventRow = ProgressionEventListItem & { headerImg?: string | null };
 
 function formatEventDate(dateStr: string, locale: string): string {
     const date = new Date(
@@ -45,12 +52,17 @@ function formatEventDateRange(createdDate: string, endDate: string): string {
 export default function ProgressionEventHistory() {
     const { lang } = useParams<{ lang: string }>();
     const latestEventPath = useLatestEventPath(lang ?? i18n.language);
+    const latestPuzzlePath = useLatestPuzzlePath(lang ?? i18n.language);
     const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const kind: EventKind = searchParams.get('type') === 'puzzle' ? 'puzzle' : 'progression';
+    const fetchList: (pageIndex: number, pageSize: number) => Promise<PaginatedResponse<EventRow>> =
+        kind === 'puzzle' ? fetchPuzzleEventList : fetchProgressionEventList;
     const pageFromUrl = parseInt(searchParams.get('page') || '1', 10) - 1;
-    const [currentPage, setCurrentPage] = useState<number>(Math.max(0, pageFromUrl));
-    const [data, setData] = useState<PaginatedResponse<ProgressionEventListItem> | null>(null);
+    // Read from the URL (not component state) so the menu links, the tabs and the back button all land on the right page
+    const currentPage = Math.max(0, pageFromUrl);
+    const [data, setData] = useState<PaginatedResponse<EventRow> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const dateLocale = i18n.language || 'en-US';
@@ -60,7 +72,7 @@ export default function ProgressionEventHistory() {
             try {
                 setLoading(true);
                 setError(null);
-                const result = await fetchProgressionEventList(currentPage, PAGE_SIZE);
+                const result = await fetchList(currentPage, PAGE_SIZE);
                 setData(result);
             } catch (err) {
                 console.error('Failed to fetch event list:', err);
@@ -70,12 +82,16 @@ export default function ProgressionEventHistory() {
             }
         };
         load();
-    }, [currentPage, t]);
+    }, [currentPage, fetchList, t]);
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-        setSearchParams({ page: String(page + 1) });
+        setSearchParams({ ...(kind === 'puzzle' ? { type: 'puzzle' } : {}), page: String(page + 1) });
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleKindChange = (next: EventKind) => {
+        if (next === kind) return;
+        setSearchParams(next === 'puzzle' ? { type: 'puzzle' } : {});
     };
 
     return (
@@ -100,8 +116,8 @@ export default function ProgressionEventHistory() {
                     <Link to={`/${lang}`} className="pe-header-back-btn">
                         {t('event.backToCalc')}
                     </Link>
-                    <Link to={latestEventPath} className="pe-header-back-btn peh-current-event-btn">
-                        🎉 {t('tabs.event')}
+                    <Link to={kind === 'puzzle' ? latestPuzzlePath : latestEventPath} className="pe-header-back-btn peh-current-event-btn">
+                        {kind === 'puzzle' ? `🧩 ${t('puzzle.title')}` : `🎉 ${t('tabs.event')}`}
                     </Link>
                 </div>
 
@@ -114,6 +130,16 @@ export default function ProgressionEventHistory() {
                         </span>
                     )}
                 </div>
+            </div>
+
+            <div className="pe-tabs peh-kind-tabs" role="tablist">
+                {/* lang="en": the tabs are upper-cased by CSS, and Turkish casing would turn this name into "PROGRESSİON" */}
+                <button type="button" role="tab" lang="en" aria-selected={kind === 'progression'} className={`pe-tab ${kind === 'progression' ? 'active' : ''}`} onClick={() => handleKindChange('progression')}>
+                    Progression Event
+                </button>
+                <button type="button" role="tab" aria-selected={kind === 'puzzle'} className={`pe-tab ${kind === 'puzzle' ? 'active' : ''}`} onClick={() => handleKindChange('puzzle')}>
+                    {t('puzzle.title')}
+                </button>
             </div>
 
             {/* Content */}
@@ -129,7 +155,7 @@ export default function ProgressionEventHistory() {
                     <button className="btn-primary" onClick={() => {
                         setError(null);
                         setLoading(true);
-                        fetchProgressionEventList(currentPage, PAGE_SIZE)
+                        fetchList(currentPage, PAGE_SIZE)
                             .then(setData)
                             .catch(e => setError(e instanceof Error ? e.message : t('event.fetchError')))
                             .finally(() => setLoading(false));
@@ -147,19 +173,22 @@ export default function ProgressionEventHistory() {
                             return (
                                 <Link
                                     key={event.id}
-                                    to={`/${lang}/event/${eventPathSegment(event)}`}
+                                    to={`/${lang}/${kind === 'puzzle' ? 'puzzle' : 'event'}/${eventPathSegment(event)}`}
                                     className={`peh-card ${isFirst ? 'peh-card-latest' : ''}`}
                                 >
                                     <div className="peh-card-banner">
                                         <img
-                                            src={`${getCdnBaseUrl()}/pe/${event.id}/progression-event-modal-bg.png`}
+                                            src={event.headerImg ?? `${getCdnBaseUrl()}/pe/${event.id}/progression-event-modal-bg.png`}
                                             alt=""
                                             width={648}
                                             height={192}
                                             loading={index < 2 ? 'eager' : 'lazy'}
                                             onError={(e) => {
                                                 const target = e.currentTarget;
-                                                if (!target.src.includes('static.rollercoin.com')) {
+                                                if (kind === 'puzzle') {
+                                                    // No derived fallback URL for puzzle banners; show the plain card instead of a broken image
+                                                    target.style.display = 'none';
+                                                } else if (!target.src.includes('static.rollercoin.com')) {
                                                     target.src = `https://static.rollercoin.com/static/img/pe/${event.id}/progression-event-modal-bg.png?v=1`;
                                                 }
                                             }}

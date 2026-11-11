@@ -620,7 +620,9 @@
     "browserPushWarning": "Sie können keine Benachrichtigungen erhalten, da Web-Push aktiviert ist, aber die Browserberechtigung verweigert wurde. Bitte erteilen Sie die Berechtigung in Ihrem Browser.",
     "enableInBrowser": "Im Browser öffnen",
     "energyRenewal": "Warnung bei Leistungsabfall",
-    "energyRenewalDesc": "Wird alle 30 Minuten geprüft. Solange deine Rollercoin-Leistung sinkt, weil deine Energie nicht erneuert wurde, erhältst du höchstens eine Warnung pro Tag, maximal 3 Tage lang. Erfordert oben deinen Rollercoin-Benutzernamen."
+    "energyRenewalDesc": "Wird alle 30 Minuten geprüft. Solange deine Rollercoin-Leistung sinkt, weil deine Energie nicht erneuert wurde, erhältst du höchstens eine Warnung pro Tag, maximal 3 Tage lang. Erfordert oben deinen Rollercoin-Benutzernamen.",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "Lass dich benachrichtigen, wenn ein neues Rollercoin Puzzle Event startet. Standardmäßig aus."
   },
   "event": {
     "loading": "Eventdaten werden geladen...",
@@ -1379,5 +1381,22 @@
     "allCountries": "Alle Länder",
     "allLeagues": "Alle Ligen",
     "noResults": "Keine Konten entsprechen diesen Filtern."
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "Aufgaben, Belohnungen des Puzzle-Bretts und Level-Belohnungen des aktuellen RollerCoin Puzzle Events.",
+    "intro": "Erledige Aufgaben, um eine zufällige Belohnung vom Puzzle-Brett zu erhalten. Gesammelte Teile schalten die Level-Belohnungen frei.",
+    "notify": "Benachrichtigen, wenn ein neues Puzzle Event startet",
+    "levelRewards": "Level-Belohnungen",
+    "tasks": "Aufgaben",
+    "board": "Belohnungen des Puzzle-Bretts",
+    "taskGroups": {
+      "buy_rlt": "RLT tauschen",
+      "games": "Spiele spielen",
+      "open_particular_lootbox": "Kisten öffnen",
+      "other": "Sonstiges"
+    },
+    "noEvent": "Es gibt noch kein Puzzle Event."
   }
 }

@@ -1,0 +1,347 @@
+/* Puzzle (spin) event page */
+
+.pz-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Same cap as .app: wider than this runs under the fixed side ads */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pz-state {
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.pz-retry {
+  padding: 8px 20px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Header */
+.pz-header {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.pz-header-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* On narrow screens crop the sides instead of shrinking the title until it is unreadable */
+  min-height: 96px;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.pz-header-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px 20px;
+  text-align: center;
+}
+
+.pz-header-body h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+
+.pz-header-body p {
+  margin: 0;
+  max-width: 640px;
+  color: var(--text-secondary);
+}
+
+.pz-countdown {
+  padding: 4px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color-hover);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.pz-notify {
+  color: var(--accent-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pz-notify:hover {
+  text-decoration: underline;
+}
+
+/* Cards */
+.pz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-width: 0;
+}
+
+.pz-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.pz-count {
+  padding: 1px 9px;
+  background: var(--bg-tertiary);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.pz-piece {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+/* Level track */
+.pz-levels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.pz-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.pz-level-xp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--warning);
+}
+
+/* Reward tile */
+.reward-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.pz-container .pe-miner-levels-link:hover .reward-tile-name {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+.reward-tile-img {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+}
+
+.reward-tile-img > img:not(.reward-tile-level) {
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.reward-tile-level {
+  position: absolute;
+  top: -4px;
+  left: -14px;
+  width: 24px;
+  z-index: 1;
+}
+
+.reward-tile-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.reward-tile-sub {
+  font-size: 0.75rem;
+  color: #38bdf8;
+}
+
+/* Tasks + board */
+.pz-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.pz-task-group + .pz-task-group {
+  margin-top: 16px;
+}
+
+.pz-task-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.pz-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pz-tasks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+}
+
+.pz-task-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.pz-task-spins {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--warning);
+  white-space: nowrap;
+}
+
+.pz-board {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  background-size: cover;
+  background-position: center;
+}
+
+.pz-board > div {
+  min-height: 118px;
+  padding: 10px 6px;
+  background: rgba(10, 14, 23, 0.72);
+  border: 2px solid #7dd3fc;
+  border-radius: var(--radius-sm);
+}
+
+.pz-board > div:has(.pz-big) {
+  border-color: #facc15;
+  background: linear-gradient(rgba(113, 96, 9, 0.75), rgba(10, 14, 23, 0.8));
+}
+
+@media (max-width: 860px) {
+  .pz-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked: show the rewards before the long task list */
+  .pz-columns > section:last-child {
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .pz-header-body {
+    padding: 12px 14px 16px;
+  }
+
+  .pz-header-body h1 {
+    font-size: 1.3rem;
+  }
+
+  .pz-header-body p {
+    font-size: 0.9rem;
+  }
+
+  .pz-card {
+    padding: 12px;
+  }
+
+  .pz-levels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .pz-board {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .pz-board > div {
+    min-height: 104px;
+    padding: 8px 4px;
+  }
+
+  .reward-tile-img {
+    height: 44px;
+  }
+
+  .reward-tile-img > img:not(.reward-tile-level) {
+    max-height: 44px;
+  }
+
+  .reward-tile-level {
+    width: 20px;
+    left: -8px;
+  }
+
+  .reward-tile-name {
+    font-size: 0.75rem;
+  }
+
+  .reward-tile-sub {
+    font-size: 0.68rem;
+  }
+
+  .pz-tasks li {
+    padding: 9px 10px;
+    font-size: 0.9rem;
+  }
+}

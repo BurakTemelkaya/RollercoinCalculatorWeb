@@ -617,7 +617,9 @@
     "browserPushWarning": "您无法接收通知，因为网络推送已启用，但浏览器权限被拒绝。请在您的浏览器中授予权限。",
     "enableInBrowser": "在浏览器中打开",
     "energyRenewal": "算力下降提醒",
-    "energyRenewalDesc": "每 30 分钟检查一次。当您的 Rollercoin 算力因能量未续充而持续下降时，每天最多提醒一次，最多 3 天。需要在上方填写您的 Rollercoin 用户名。"
+    "energyRenewalDesc": "每 30 分钟检查一次。当您的 Rollercoin 算力因能量未续充而持续下降时，每天最多提醒一次，最多 3 天。需要在上方填写您的 Rollercoin 用户名。",
+    "puzzleEvent": "Puzzle Event",
+    "puzzleEventDesc": "新的 Rollercoin puzzle event 开始时接收通知。默认关闭。"
   },
   "event": {
     "loading": "加载中...",
@@ -1340,5 +1342,22 @@
     "allCountries": "所有国家/地区",
     "allLeagues": "所有联赛",
     "noResults": "没有符合这些筛选条件的账户。"
+  },
+  "puzzle": {
+    "nav": "Puzzle",
+    "title": "Puzzle Event",
+    "metaDesc": "当前 RollerCoin puzzle event 的任务、拼图面板奖励和等级奖励。",
+    "intro": "完成任务即可从拼图面板获得一个随机奖励。收集的碎片可解锁等级奖励。",
+    "notify": "新的 puzzle event 开始时通知我",
+    "levelRewards": "等级奖励",
+    "tasks": "任务",
+    "board": "拼图面板奖励",
+    "taskGroups": {
+      "buy_rlt": "兑换 RLT",
+      "games": "玩游戏",
+      "open_particular_lootbox": "开启宝箱",
+      "other": "其他"
+    },
+    "noEvent": "目前还没有 puzzle event。"
   }
 }

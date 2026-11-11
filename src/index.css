@@ -420,8 +420,43 @@ a:hover {
   align-items: center;
   gap: 6px;
   flex-wrap: nowrap;
-  justify-content: center;
-  flex: 0 0 auto;
+  /* Shrinks and scrolls sideways (drag, wheel or swipe) instead of pushing the language picker off screen */
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sticky-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+/* Centred while everything fits; auto margins (unlike justify-content: center) keep the left end reachable when it scrolls */
+.sticky-nav-links > :first-child {
+  margin-left: auto;
+}
+
+.sticky-nav-links > :last-child {
+  margin-right: auto;
+}
+
+/* Fade the side that still has hidden links */
+.sticky-nav-links[data-fade-right="true"] {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+}
+
+.sticky-nav-links[data-fade-left="true"] {
+  -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+}
+
+.sticky-nav-links[data-fade-left="true"][data-fade-right="true"] {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
 }
 
 /* Actions (lang + auth + hamburger) */

@@ -325,10 +325,17 @@ export default function NotificationSettingsPage() {
                                     <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#f8fafc', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
                                         {pref.notificationType === 'ProgressionEvent'
                                             ? 'Progression Event'
+                                            : pref.notificationType === 'Puzzle'
+                                                ? t('settings.puzzleEvent')
                                             : pref.notificationType === 'EnergyRenewal'
                                                 ? t('settings.energyRenewal', 'Power decrease alert')
                                                 : pref.notificationType}
                                     </h3>
+                                    {pref.notificationType === 'Puzzle' && (
+                                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
+                                            {t('settings.puzzleEventDesc')}
+                                        </p>
+                                    )}
                                     {pref.notificationType === 'EnergyRenewal' && (
                                         <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
                                             {t('settings.energyRenewalDesc', 'Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.')}
