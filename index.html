@@ -10,6 +10,13 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <!--
+    Blog pages: nginx (ssi on, $seo_page set) swaps the defaults below for the post's own tags from
+    the backend (/api/Seo). Everywhere else SSI is off, these are plain comments and the defaults stay.
+  -->
+  <!--# if expr="$seo_page" -->
+  <!--# include virtual="/__seo/head$seo_path" -->
+  <!--# else -->
   <!-- Primary SEO -->
   <title>Rollercoin Calculator | Earnings &amp; Withdrawal Calculator</title>
   <meta name="description"
@@ -38,6 +45,7 @@
   <meta name="twitter:description"
     content="Free Rollercoin earnings calculator. Calculate daily, weekly, monthly crypto mining rewards." />
   <meta name="twitter:image" content="https://rollercoincalculator.app/icon.png" />
+  <!--# endif -->
 
   <!-- Theme &amp; Favicon -->
   <meta name="theme-color" content="#6c5ce7" />
@@ -146,7 +154,8 @@
 
   <!-- Top Banner Ad moved to MainLayout.tsx -->
 
-  <div id="root"></div>
+  <!-- Blog pages get the article HTML here for crawlers; createRoot replaces it on load -->
+  <div id="root"><!--# if expr="$seo_page" --><!--# include virtual="/__seo/body$seo_path" --><!--# endif --></div>
 
 
 

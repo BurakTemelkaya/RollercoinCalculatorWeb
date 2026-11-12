@@ -913,6 +913,10 @@
     "verifyCode": "Ověřit"
   },
   "blog": {
+    "searchPlaceholder": "Hledat příspěvky...",
+    "contentLanguage": "Jazyk příspěvku",
+    "notTranslated": "Tento příspěvek zatím není dostupný v jazyce {{lang}}. Zobrazuje se verze: {{original}}.",
+    "noSearchResults": "Vašemu hledání neodpovídají žádné příspěvky.",
     "title": "Blog",
     "description": "Nejnovější články a průvodce o Rollercoin.",
     "seoDescription": "Přečtěte si nejnovější průvodce, tipy a strategie Rollercoin na blogu Rollercoin Kalkulačky.",

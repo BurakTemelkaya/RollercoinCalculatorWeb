@@ -885,6 +885,10 @@
     "verifyCode": "Vérifier"
   },
   "blog": {
+    "searchPlaceholder": "Rechercher des articles...",
+    "contentLanguage": "Langue de l'article",
+    "notTranslated": "Cet article n'est pas encore disponible en {{lang}}. Version {{original}} affichée.",
+    "noSearchResults": "Aucun article ne correspond à votre recherche.",
     "myBlogsDesc": "Tous les articles que vous avez écrits."
   },
   "author": {

@@ -28,15 +28,29 @@ export default function BlogPage() {
   const [hasNext, setHasNext] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // null = follow the site language; set when the reader picks another post language
+  const [pickedLangId, setPickedLangId] = useState<number | null>(null);
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
 
-  // Resolve language ID from the current app language
+  // Resolve language ID: the reader's pick, otherwise the current app language
   const getLanguageId = useCallback((): number | null => {
+    if (pickedLangId !== null) return pickedLangId;
     if (languages.length === 0) return null;
     const match = languages.find(
       (l) => l.code.toLowerCase() === (lang || 'en').toLowerCase()
     );
     return match?.id ?? languages[0]?.id ?? null;
-  }, [languages, lang]);
+  }, [languages, lang, pickedLangId]);
+
+  // Debounce search typing
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setSearch(searchInput.trim());
+      setCurrentPage(0);
+    }, 350);
+    return () => clearTimeout(id);
+  }, [searchInput]);
 
   // Fetch languages first
   useEffect(() => {
@@ -61,7 +75,7 @@ export default function BlogPage() {
     setIsLoading(true);
     setError(null);
 
-    fetchBlogList(languageId, currentPage, PAGE_SIZE)
+    fetchBlogList(languageId, currentPage, PAGE_SIZE, search)
       .then((data) => {
         if (!cancelled) {
           setBlogs(data.items || []);
@@ -79,12 +93,16 @@ export default function BlogPage() {
       });
 
     return () => { cancelled = true; };
-  }, [getLanguageId, currentPage, t]);
+  }, [getLanguageId, currentPage, search, t]);
 
-  // Reset page when language changes
+  // Site language changed: follow it again and start from the first page
   useEffect(() => {
+    setPickedLangId(null);
     setCurrentPage(0);
   }, [lang]);
+
+  // Posts open under their own language's URL, so the detail page keeps showing that version
+  const listLangCode = languages.find((l) => l.id === getLanguageId())?.code.toLowerCase() || lang || 'en';
 
   const formatDate = (dateStr: string) => {
     try {
@@ -126,6 +144,32 @@ export default function BlogPage() {
         <p className="blog-description">{t('blog.description')}</p>
       </div>
 
+      <div className="blog-toolbar">
+        <input
+          type="search"
+          className="blog-search-input"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder={t('blog.searchPlaceholder')}
+          aria-label={t('blog.searchPlaceholder')}
+        />
+        {languages.length > 1 && (
+          <select
+            className="blog-lang-select"
+            value={getLanguageId() ?? ''}
+            onChange={(e) => {
+              setPickedLangId(Number(e.target.value));
+              setCurrentPage(0);
+            }}
+            aria-label={t('blog.contentLanguage')}
+          >
+            {languages.map((l) => (
+              <option key={l.id} value={l.id}>{l.nativeName}</option>
+            ))}
+          </select>
+        )}
+      </div>
+
       {isLoading && (
         <div className="blog-loading">
           <span className="spinner" />
@@ -145,7 +189,7 @@ export default function BlogPage() {
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
           </svg>
-          <p>{t('blog.noBlogs')}</p>
+          <p>{search ? t('blog.noSearchResults') : t('blog.noBlogs')}</p>
         </div>
       )}
 
@@ -155,7 +199,7 @@ export default function BlogPage() {
             {blogs.map((blog) => (
               <Link
                 key={blog.id}
-                to={`/${lang}/blog/${blog.blogContent?.slug || blog.slug}`}
+                to={`/${listLangCode}/blog/${blog.blogContent?.slug || blog.slug}`}
                 className="blog-card"
               >
                 {blog.thumbnailImageUrl && (

@@ -966,6 +966,10 @@
     }
   },
   "blog": {
+    "searchPlaceholder": "Beiträge durchsuchen...",
+    "contentLanguage": "Sprache des Beitrags",
+    "notTranslated": "Dieser Beitrag ist noch nicht auf {{lang}} verfügbar. Es wird die Version auf {{original}} angezeigt.",
+    "noSearchResults": "Keine Beiträge entsprechen deiner Suche.",
     "title": "Blog",
     "subtitle": "Neueste Updates, Leitfäden und Strategien",
     "search": "Beiträge suchen...",

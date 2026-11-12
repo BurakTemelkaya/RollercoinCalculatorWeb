@@ -907,6 +907,10 @@
     "verifyCode": "Подтвердить"
   },
   "blog": {
+    "searchPlaceholder": "Поиск статей...",
+    "contentLanguage": "Язык статьи",
+    "notTranslated": "Эта статья пока недоступна на языке {{lang}}. Показана версия: {{original}}.",
+    "noSearchResults": "По вашему запросу ничего не найдено.",
     "myBlogsDesc": "Все посты, которые вы написали."
   },
   "author": {

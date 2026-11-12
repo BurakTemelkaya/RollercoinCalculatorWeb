@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://rollercoincalculator.app/sitemap.xml
+Sitemap: https://rollercoincalculator.app/sitemap-blog.xml

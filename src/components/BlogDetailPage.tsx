@@ -72,6 +72,18 @@ export default function BlogDetailPage() {
   // Current content's language ID
   const currentLangId = content?.languageId ?? null;
 
+  // Site language (from the URL). When it differs from the post's language and a
+  // translation exists, move to the translation's URL (like Medium / Wikipedia).
+  const siteLang = languages.find((l) => l.code.toLowerCase() === (lang || 'en').toLowerCase());
+  const translationSlug =
+    siteLang && currentLangId !== null && siteLang.id !== currentLangId
+      ? blog?.availableLanguages?.find((al) => al.languageId === siteLang.id)?.slug
+      : undefined;
+
+  useEffect(() => {
+    if (translationSlug) navigate(`/${lang}/blog/${translationSlug}`, { replace: true });
+  }, [translationSlug, lang, navigate]);
+
   // Handle language switch
   const handleLangSwitch = (targetSlug: string, targetLangId: number) => {
     const targetLangCode = getLangCode(targetLangId);
@@ -90,7 +102,7 @@ export default function BlogDetailPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || translationSlug) {
     return (
       <div className="blog-detail-page">
         <div className="blog-loading">
@@ -116,13 +128,24 @@ export default function BlogDetailPage() {
 
   const availableLangs = blog.availableLanguages || [];
   const showLangSwitcher = availableLangs.length > 1;
+  const contentLangCode = getLangCode(content.languageId);
+  const contentUrl = (code: string, s: string) => `https://rollercoincalculator.app/${code}/blog/${s}`;
+  // No version in the site language: the original is shown, say so
+  const showTranslationNotice = !!siteLang && siteLang.id !== content.languageId;
+  const mainVersion = availableLangs.find((al) => al.languageId === blog.mainLanguageId);
 
   return (
     <div className="blog-detail-page">
       <>
         <title>{`${content.title} | Rollercoin Calculator`}</title>
         <meta name="description" content={content.content.substring(0, 160).replace(/[#*_\[\]]/g, '')} />
-        <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/blog/${slug}`} />
+        <link rel="canonical" href={contentUrl(contentLangCode, content.slug || slug || '')} />
+        {languages.length > 0 && availableLangs.map((al) => (
+          <link key={al.languageId} rel="alternate" hrefLang={getLangCode(al.languageId)} href={contentUrl(getLangCode(al.languageId), al.slug)} />
+        ))}
+        {languages.length > 0 && mainVersion && (
+          <link rel="alternate" hrefLang="x-default" href={contentUrl(getLangCode(mainVersion.languageId), mainVersion.slug)} />
+        )}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`${content.title} | Rollercoin Calculator`} />
         <meta property="og:description" content={content.content.substring(0, 160).replace(/[#*_\[\]<>/]/g, '')} />
@@ -164,6 +187,15 @@ export default function BlogDetailPage() {
           </div>
         )}
       </div>
+
+      {showTranslationNotice && (
+        <p className="blog-translation-notice">
+          {t('blog.notTranslated', {
+            lang: siteLang?.nativeName,
+            original: getLangInfo(content.languageId)?.nativeName ?? contentLangCode,
+          })}
+        </p>
+      )}
 
       <div className="blog-detail-header">
         {blog.thumbnailImageUrl && (

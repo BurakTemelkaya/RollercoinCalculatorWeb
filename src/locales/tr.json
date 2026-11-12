@@ -975,6 +975,10 @@
     "verifyCode": "Doğrula"
   },
   "blog": {
+    "searchPlaceholder": "Yazılarda ara...",
+    "contentLanguage": "Yazı dili",
+    "notTranslated": "Bu yazının {{lang}} çevirisi henüz yok. {{original}} sürümü gösteriliyor.",
+    "noSearchResults": "Aramanızla eşleşen yazı bulunamadı.",
     "title": "Blog",
     "description": "Rollercoin hakkında en son makaleler ve rehberler.",
     "seoDescription": "Rollercoin Calculator blogunda en son Rollercoin rehberlerini, ipuçlarını ve stratejilerini okuyun.",

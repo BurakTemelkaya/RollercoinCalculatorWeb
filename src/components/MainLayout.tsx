@@ -381,7 +381,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
           <div className="calculator-container">
-            {isValidLang && <>
+            {/* Blog posts have a different slug per language, so BlogDetailPage renders its own hreflang links */}
+            {isValidLang && !/^\/blog\/[^/]+/.test(pathWithoutLang) && <>
               {SUPPORTED_LANGUAGES.map(l => (
                 <link key={l.value} rel="alternate" hrefLang={l.value} href={`https://rollercoincalculator.app/${l.value}${pathWithoutLang}`} />
               ))}

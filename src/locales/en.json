@@ -974,6 +974,10 @@
     "verifyCode": "Verify"
   },
   "blog": {
+    "searchPlaceholder": "Search posts...",
+    "contentLanguage": "Post language",
+    "notTranslated": "This post isn't available in {{lang}} yet. Showing the {{original}} version.",
+    "noSearchResults": "No posts match your search.",
     "title": "Blog",
     "description": "Latest articles and guides about Rollercoin.",
     "seoDescription": "Read the latest Rollercoin guides, tips, and strategies on the Rollercoin Calculator blog.",

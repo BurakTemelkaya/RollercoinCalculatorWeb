@@ -51,13 +51,15 @@ export async function fetchLanguages(): Promise<Language[]> {
 export async function fetchBlogList(
   languageId: number,
   pageIndex: number = 0,
-  pageSize: number = 10
+  pageSize: number = 10,
+  search?: string
 ): Promise<BlogListResponse> {
   const params = new URLSearchParams({
     LanguageId: String(languageId),
     'PageRequest.PageIndex': String(pageIndex),
     'PageRequest.PageSize': String(pageSize),
   });
+  if (search?.trim()) params.append('Search', search.trim());
   const url = buildApiUrl(`/api/Blog?${params.toString()}`);
   return apiGet<BlogListResponse>(url);
 }

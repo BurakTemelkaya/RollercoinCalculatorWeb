@@ -907,6 +907,10 @@
     "verifyCode": "验证"
   },
   "blog": {
+    "searchPlaceholder": "搜索文章...",
+    "contentLanguage": "文章语言",
+    "notTranslated": "本文暂无{{lang}}版本，当前显示{{original}}版本。",
+    "noSearchResults": "没有符合搜索条件的文章。",
     "myBlogsDesc": "您写的所有文章。"
   },
   "author": {

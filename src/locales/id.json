@@ -907,6 +907,10 @@
     "verifyCode": "Verifikasi"
   },
   "blog": {
+    "searchPlaceholder": "Cari artikel...",
+    "contentLanguage": "Bahasa artikel",
+    "notTranslated": "Artikel ini belum tersedia dalam {{lang}}. Menampilkan versi {{original}}.",
+    "noSearchResults": "Tidak ada artikel yang cocok dengan pencarian Anda.",
     "myBlogsDesc": "Semua postingan yang telah Anda tulis."
   },
   "author": {
