@@ -4,6 +4,7 @@ sevio.com, 0f243672-db3a-4529-a4dd-90d6e1c495d6, DIRECT
 #Google
 google.com, pub-2134012267069721, DIRECT, f08c47fec0942fa0
 google.com, pub-1623537859762709, DIRECT
+google.com, pub-6643171955921787, DIRECT, f08c47fec0942fa0
 
 #AdForm
 adform.com, 3224, DIRECT
