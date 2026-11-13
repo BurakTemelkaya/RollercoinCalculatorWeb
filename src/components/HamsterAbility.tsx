@@ -78,8 +78,8 @@ export default function HamsterAbility({ hamster, ability, language, ultimate = 
   const content = <>{ability.icon && <img src={hamsterAssetUrl(ability.icon)} alt="" loading="lazy" />}<span>{label}</span></>;
   if (inline) return <div className="hamster-ability-inline">
     <span className="hamster-trait">{content}</span>
-    <p className="hamster-ability-description">{guide ? t(`hamsterAbilityGuide.descriptions.${guide.description}`, guide.params) : effect}</p>
-    {guide?.example && <div className="hamster-ability-example"><strong>{t('hamsterAbilityGuide.example')}</strong><p>{t(`hamsterAbilityGuide.examples.${guide.example}`, guide.params)}</p></div>}
+    <p className="hamster-ability-description">{guide ? t(`hamsterAbilityGuide.descriptions.${guide.description}`, guide.params ?? {}) : effect}</p>
+    {guide?.example && <div className="hamster-ability-example"><strong>{t('hamsterAbilityGuide.example')}</strong><p>{t(`hamsterAbilityGuide.examples.${guide.example}`, guide.params ?? {})}</p></div>}
     {guide?.source && <a href={guide.source} target="_blank" rel="noreferrer">{t('hamsterAbilityGuide.source')} ↗</a>}
   </div>;
   if (!guide) return <span className={builder ? 'hamster-builder-option' : 'hamster-trait'}>{content}</span>;
@@ -102,8 +102,8 @@ export default function HamsterAbility({ hamster, ability, language, ultimate = 
       onMouseEnter={cancelClose} onMouseLeave={() => { cancelClose(); setOpen(false); }} onFocus={cancelClose} onBlur={() => hide()}>
       <strong id={`${id}-title`}>{label}</strong>
       {ultimate && effect !== label && !['x3_minus_5_chests_if_it_survives', 'chests_multiplier'].includes(ability.code) && <span className="hamster-ability-effect">{effect}</span>}
-      <p id={`${id}-description`}>{t(`hamsterAbilityGuide.descriptions.${guide.description}`, guide.params)}</p>
-      {guide.example && <div className="hamster-ability-example"><strong>{t('hamsterAbilityGuide.example')}</strong><p>{t(`hamsterAbilityGuide.examples.${guide.example}`, guide.params)}</p></div>}
+      <p id={`${id}-description`}>{t(`hamsterAbilityGuide.descriptions.${guide.description}`, guide.params ?? {})}</p>
+      {guide.example && <div className="hamster-ability-example"><strong>{t('hamsterAbilityGuide.example')}</strong><p>{t(`hamsterAbilityGuide.examples.${guide.example}`, guide.params ?? {})}</p></div>}
       {guide.source && <a href={guide.source} target="_blank" rel="noreferrer">{t('hamsterAbilityGuide.source')} ↗</a>}
     </div>, document.body)}
   </>;
