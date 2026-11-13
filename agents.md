@@ -1,5 +1,9 @@
 # Rollercoin Calculator Web - Proje Rehberi (Index)
 
+## Zorunlu kural: commit öncesi build
+
+GitHub'a commit/push etmeden önce **her zaman `npm run build` çalıştırın** ve başarıyla bittiğini görün. Build başarısızsa commit etmeyin; önce hatayı düzeltin. `tsc --noEmit -p .` yeterli değildir: build'in kullandığı `tsc -b` uygulama kodunu daha sıkı denetler ve Docker/GitHub Actions build'i aynı komutla çalışır.
+
 Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zeka entegrasyonu için parçalara ayrılmıştır. Aşağıdaki dosyalara giderek ilgili detayları bulabilirsiniz:
 
 1. **[Proje Genel Yapısı ve Kurulum](file:///.agents/ProjectOverview.md)**
