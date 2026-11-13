@@ -496,14 +496,8 @@
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-.desktop-only {
-    display: flex;
-}
-
-.mobile-only {
-    display: none;
-}
-
+/* Base .desktop-only/.mobile-only live in index.css (with !important); redefining them
+   here without it overrode those and showed the navbar hamburger on desktop. */
 @media (max-width: 768px) {
 
     .desktop-only {
