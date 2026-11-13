@@ -26,6 +26,8 @@ import CdnImage from './CdnImage';
 import sellableIcon from '../assets/sellable.svg';
 import setRackIcon from '../assets/items/set-rack.png';
 import { getCdnBaseUrl } from '../config/api';
+import { RoomSkinBackground } from './RoomSkinBackground';
+import { getSkinRoomSize, getSkinTiles, hasRoomSkin, mapSkinPoint } from '../utils/roomSkins';
 import './RoomSimulator.css';
 
 function SetRackBadge({ setName, className = '' }: { setName: string | null; className?: string }) {
@@ -56,6 +58,35 @@ const ROOM_RACK_SCALE = 0.9;
 const DESKTOP_ROOM_ROWS = 3;
 const DESKTOP_ROOM_WIDTH = DESKTOP_RACK_COLUMNS * DESKTOP_RACK_WIDTH + (DESKTOP_RACK_COLUMNS - 1) * DESKTOP_RACK_GAP;
 const DESKTOP_ROOM_HEIGHT = DESKTOP_ROOM_ROWS * DESKTOP_RACK_HEIGHT + (DESKTOP_ROOM_ROWS - 1) * DESKTOP_RACK_GAP;
+// Game racks are 75x120 sprites in a 720x450 room; scaling the room so they match our 97px card lines everything up exactly.
+const SKIN_SCALE = DESKTOP_RACK_WIDTH / 75;
+// Rack bottom-centre coordinates used by RollerCoin's desktop room scene (visual column / row); mobile remaps them per tile.
+const SKIN_RACK_X = [48, 133, 228, 313, 408, 493, 588, 673];
+const skinRackPosition = (level: number, isMobile: boolean, column: number, row: number): React.CSSProperties => {
+    const at = mapSkinPoint(SKIN_RACK_X[column], (level === 0 ? 289 : 139) + 150 * row, getSkinTiles(level, isMobile));
+    if (!at) return { display: 'none' };
+    return { position: 'absolute', left: at.x * SKIN_SCALE - DESKTOP_RACK_WIDTH / 2, top: at.y * SKIN_SCALE - DESKTOP_RACK_HEIGHT };
+};
+// Game miner sprites are frame/2 sized and our sprite box draws a frame at frame_width/126 of its width, so this box matches them.
+const SKIN_MINER_BOX = 58 * SKIN_SCALE * 126 / 116;
+const skinMinerStyle = (width: number, mX: number, mY: number, rackHeight: number): React.CSSProperties => {
+    const spriteHeight = (width === 2 ? 25 : 20) * SKIN_SCALE;
+    const boxHeight = SKIN_MINER_BOX * 100 / 126;
+    // Same anchor as the game: bottom-centre of the rack, 32px per shelf, single miners 17px off centre.
+    const centerX = DESKTOP_RACK_WIDTH / 2 + (width === 1 ? (mX === 0 ? -17 : 17) * SKIN_SCALE : 0);
+    const bottom = DESKTOP_RACK_HEIGHT - ((rackHeight - 1 - mY) * 32 + 10) * SKIN_SCALE;
+    return {
+        top: `${bottom - spriteHeight / 2 - boxHeight / 2}px`,
+        left: `${centerX - SKIN_MINER_BOX / 2}px`,
+        width: `${SKIN_MINER_BOX}px`,
+        zIndex: 10 + mY * 2 + (mX === 0 ? 1 : 0),
+        transform: 'none',
+    };
+};
+const SKIN_STYLE: React.CSSProperties = {
+    position: 'absolute', left: 0, top: 0, zIndex: -1, pointerEvents: 'none', overflow: 'hidden',
+    transform: `scale(${SKIN_SCALE})`, transformOrigin: '0 0', imageRendering: 'pixelated',
+};
 
 interface RoomSimulatorProps {
     room: RollercoinRoomResponse;
@@ -1090,6 +1121,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     };
 
     const getMinerStyle = (width: number, mX: number, mY: number, rackHeight: number, isModal: boolean = false): React.CSSProperties => {
+        if (showSkin && !isModal) return skinMinerStyle(width, mX, mY, rackHeight);
         const effectiveY = rackHeight === 3 ? mY + 1 : mY;
         let finalTop = 0;
         let finalLeft = 0;
@@ -1148,6 +1180,9 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const userRooms = room.rooms && room.rooms.length > 0 ? room.rooms : [];
     const currentRoom = userRooms[currentRoomIndex] || null;
     const currentRoomLevel = currentRoom?.room_info?.level || 0;
+    const showSkin = hasRoomSkin(room.appearance?.id, currentRoomLevel);
+    const skinRoomWidth = getSkinRoomSize(isMobile).width * SKIN_SCALE;
+    const skinRoomHeight = getSkinRoomSize(isMobile).height * SKIN_SCALE;
     const maxRows = currentRoomLevel === 0 ? 2 : 3;
     const currentRoomRacks = useMemo(
         () => (room.racks || []).filter(r => r.placement?.user_room_id === currentRoom?._id),
@@ -1179,7 +1214,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         const inner = roomGridInnerRef.current;
         const grid = racksGridRef.current;
         if (!area || !inner || !grid) return;
-        if (isMobile) {
+        if (isMobile && !showSkin) {
             // Clear the desktop grid before measuring the natural mobile layout.
             inner.style.removeProperty('width');
             inner.style.removeProperty('height');
@@ -1196,19 +1231,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             const styles = window.getComputedStyle(area);
             const availableWidth = area.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
             if (availableWidth <= 0) return;
-            if (isMobile) {
+            if (isMobile && !showSkin) {
                 inner.style.width = `${grid.offsetWidth * ROOM_RACK_SCALE}px`;
                 inner.style.height = `${grid.offsetHeight * ROOM_RACK_SCALE}px`;
                 grid.style.transformOrigin = 'top left';
                 grid.style.transform = `scale(${ROOM_RACK_SCALE})`;
                 return;
             }
-            const scale = Math.min(1, availableWidth / DESKTOP_ROOM_WIDTH) * ROOM_RACK_SCALE;
+            const roomWidth = showSkin ? skinRoomWidth : DESKTOP_ROOM_WIDTH;
+            const roomHeight = showSkin ? skinRoomHeight : DESKTOP_ROOM_HEIGHT;
+            const scale = Math.min(1, availableWidth / roomWidth) * (showSkin ? 1 : ROOM_RACK_SCALE);
             inner.style.width = `${availableWidth}px`;
-            inner.style.height = `${DESKTOP_ROOM_HEIGHT * scale}px`;
-            grid.style.width = `${DESKTOP_ROOM_WIDTH}px`;
-            grid.style.left = `${Math.max(0, (availableWidth - DESKTOP_ROOM_WIDTH * scale) / 2)}px`;
-            grid.style.top = currentRoomLevel === 0
+            inner.style.height = `${roomHeight * scale}px`;
+            grid.style.width = `${roomWidth}px`;
+            grid.style.left = `${Math.max(0, (availableWidth - roomWidth * scale) / 2)}px`;
+            grid.style.top = currentRoomLevel === 0 && !showSkin
                 ? `${(DESKTOP_RACK_HEIGHT + DESKTOP_RACK_GAP) * scale / 2}px`
                 : '0px';
             grid.style.transform = `scale(${scale})`;
@@ -1230,7 +1267,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             observer.disconnect();
             if (frame) window.cancelAnimationFrame(frame);
         };
-    }, [isMobile, currentRoomLevel, currentRoomRacks.length]);
+    }, [isMobile, currentRoomLevel, currentRoomRacks.length, showSkin, skinRoomWidth, skinRoomHeight]);
 
     const validDropZones: { x: number, y: number, gridX: number }[] = [];
     for (let y = 0; y < maxRows; y++) {
@@ -1244,11 +1281,10 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         return visualX === zone.x && visualY === zone.y;
     }));
     // Keep the mobile room compact while offering the next available rack positions.
-    const visibleDropZones = isMobile ? emptyDropZones.slice(0, 2) : emptyDropZones;
-    const getGridPosition = (originalColumn: number, originalRow: number) => ({
-        gridColumn: originalColumn,
-        gridRow: originalRow,
-    });
+    const visibleDropZones = isMobile && !showSkin ? emptyDropZones.slice(0, 2) : emptyDropZones;
+    const getGridPosition = (originalColumn: number, originalRow: number): React.CSSProperties => showSkin
+        ? skinRackPosition(currentRoomLevel, isMobile, originalColumn - 1, originalRow - 1)
+        : { gridColumn: originalColumn, gridRow: originalRow };
 
     const {
         roomBasePower, roomRackBonusPower, totalRoomBonus, totalSetPercentPower,
@@ -1614,11 +1650,11 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             }} onLocate={focusMiner} />
             <RoomOperationHistory entries={operationEntries} storageError={operationStorageError} placedMinerIds={placedMinerIds} onLocate={focusMiner} />
             <div className="room-grid-area" ref={roomGridAreaRef}>
-                <div className="room-grid-area-inner" ref={roomGridInnerRef}>
+                <div className={`room-grid-area-inner ${showSkin ? 'skin-room' : ''}`} ref={roomGridInnerRef}>
                     <div
                         className={`racks-grid ${sharedCanvasMiners.length > 0 ? 'has-shared-miner-canvas' : ''}`}
                         ref={racksGridRef}
-                        style={isMobile ? {} : {
+                        style={showSkin ? { display: 'block', width: skinRoomWidth, height: skinRoomHeight } : isMobile ? {} : {
                             gridTemplateColumns: `repeat(${DESKTOP_RACK_COLUMNS}, ${DESKTOP_RACK_WIDTH}px)`,
                             gridTemplateRows: `repeat(${DESKTOP_ROOM_ROWS}, ${DESKTOP_RACK_HEIGHT}px)`,
                             gap: DESKTOP_RACK_GAP,
@@ -1626,6 +1662,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                             height: DESKTOP_ROOM_HEIGHT
                         }}
                     >
+                        {showSkin && <RoomSkinBackground appearanceId={room.appearance?.id} level={currentRoomLevel} isMobile={isMobile} style={SKIN_STYLE} />}
                         {sharedCanvasMiners.length > 0 && (
                             <SharedRoomMinerCanvas
                                 miners={sharedCanvasMiners}
@@ -1641,7 +1678,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                 data-rack-drop-x={zone.x}
                                 data-rack-drop-y={zone.y}
                                 style={{
-                                    ...(isMobile ? { order: 1 } : getGridPosition(zone.gridX + 1, zone.y + 1)),
+                                    ...(isMobile && !showSkin ? { order: 1 } : getGridPosition(zone.gridX + 1, zone.y + 1)),
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
@@ -1742,7 +1779,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                             }
                                         }}
                                         onDrop={(e) => handleDropMiner(e, rack._id)}
-                                        style={isMobile ? { cursor: 'pointer' } : {
+                                        style={isMobile && !showSkin ? { cursor: 'pointer' } : {
                                             ...getGridPosition(gridX + 1, visualY + 1),
                                             cursor: 'pointer'
                                         }}
