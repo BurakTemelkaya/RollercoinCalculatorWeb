@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { fetchProgressionEvent, fetchProgressionEventBySlug, fetchCurrencyDiscounts, eventPathSegment, type ParsedProgressionEvent } from '../services/progressionEventApi';
 import CdnImage from './CdnImage';
@@ -218,7 +219,7 @@ function RewardLink({ display, lang, className, children }: {
 
 function getRewardDisplay(
     reward: ProgressionReward,
-    t: (key: string, opts?: Record<string, unknown>) => string
+    t: TFunction
 ): RewardDisplay {
     switch (reward.type) {
         case 'power': {
