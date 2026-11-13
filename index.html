@@ -139,11 +139,21 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
+    // Consent Mode: no Google cookies in the EEA/UK/CH until the AdSense
+    // Privacy & messaging banner records consent. Other regions are unchanged.
+    gtag('consent', 'default', {
+      ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      region: ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT',
+        'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'],
+      wait_for_update: 500
+    });
     gtag('js', new Date());
 
     gtag('config', 'G-VNK3N77NB2');
   </script>
-  <script async src="https://coinzillatag.com/lib/display.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6643171955921787"
+    crossorigin="anonymous"></script>
 
 
 </head>
@@ -166,7 +176,7 @@
 
       // Clever calls the function named in data-callback-no-load (without
       // arguments) when it cannot find an ad for this visitor. Tell React so it
-      // can swap the slot to Coinzilla and report the miss to GA4.
+      // can swap the slot to AdSense and report the miss to GA4.
       var notifyNoFill = function (reason) {
         if (window.__cleverCoreNoFill) return;
         window.__cleverCoreNoFill = true;
@@ -213,7 +223,7 @@
       };
 
       var boot = function () {
-        // Once Clever reported no fill, React switches the slot to Coinzilla.
+        // Once Clever reported no fill, React switches the slot to AdSense.
         if (window.__cleverCoreNoFill) {
           if (appObserver) appObserver.disconnect();
           return;
@@ -221,7 +231,7 @@
 
         var slot = document.querySelector(".clever-core-ads");
         if (!slot) {
-          if (document.querySelector("#top-ad-container .coinzilla") && appObserver) appObserver.disconnect();
+          if (document.querySelector("#top-ad-container .adsbygoogle") && appObserver) appObserver.disconnect();
           return;
         }
         if (slot.getAttribute("data-clever-bound") === "true") return;
