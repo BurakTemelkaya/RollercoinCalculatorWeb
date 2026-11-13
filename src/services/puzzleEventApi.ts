@@ -36,10 +36,13 @@ export interface PuzzleEventData {
     headerImg: string | null;
     backgroundImg: string | null;
     rewardIcon: string | null;
-    /** Our own copies of the three images above, relative to the CDN root; the ones above are Rollercoin URLs (fallback) */
+    /** Scene shown behind the reward board */
+    progressImg?: string | null;
+    /** Our own copies of the four images above, relative to the CDN root; the ones above are Rollercoin URLs (fallback) */
     headerImgPath?: string | null;
     backgroundImgPath?: string | null;
     rewardIconPath?: string | null;
+    progressImgPath?: string | null;
     levels: { level: number; requiredXp: number; rewards: PuzzleReward[] }[];
     board: PuzzleReward[];
     tasks: { title: string; type: string | null; spins: number }[];
