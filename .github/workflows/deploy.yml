@@ -64,7 +64,14 @@ jobs:
             # Dinamik imaj ismini .env dosyasına yazdır (Küçük harf garantisi)
             echo "IMAGE_TAG=ghcr.io/$REPO_OWNER/rollercoin-frontend:latest" > .env
             
-            docker pull ghcr.io/$REPO_OWNER/rollercoin-frontend:latest
+            # GHCR downloads from the VDS sometimes reset mid-layer; docker resumes
+            # finished layers, so a few retries are enough.
+            for attempt in 1 2 3 4 5; do
+              docker pull ghcr.io/$REPO_OWNER/rollercoin-frontend:latest && break
+              [ "$attempt" -eq 5 ] && exit 1
+              echo "docker pull failed (attempt $attempt), retrying in 10s"
+              sleep 10
+            done
             
             # Sadece frontend servisini ayağa kaldır
             docker compose up -d --force-recreate rollercoin_frontend
