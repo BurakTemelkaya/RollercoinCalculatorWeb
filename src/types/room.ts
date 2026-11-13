@@ -61,5 +61,6 @@ export interface RollercoinRoomResponse {
     miners: ApiRoomMiner[];
     racks?: ApiRoomRack[];
     rooms?: ApiRoom[];
-    // Other fields like skin, appearance are omitted as they are not needed for power calc
+    appearance?: { id: string };
+    // Other fields like skin are omitted as they are not needed for power calc
 }

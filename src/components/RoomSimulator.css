@@ -98,6 +98,34 @@
     text-align: left;
 }
 
+/* Skin rooms are scaled with a transform; keep the unscaled grid out of the layout on every breakpoint. */
+.room-grid-area-inner.skin-room {
+    position: relative;
+    vertical-align: top;
+}
+
+/* A skin room is always scaled to fit, so only the miner canvas bleed could make it scroll sideways. */
+@media (max-width: 1200px) {
+    .room-grid-area:has(> .room-grid-area-inner.skin-room) {
+        overflow-x: clip;
+    }
+}
+
+/* RollerCoin's mobile room spans the screen; let the skin room escape the nested section paddings. */
+@media (max-width: 991px) {
+    .room-grid-area:has(> .room-grid-area-inner.skin-room) {
+        margin-inline: calc(50% - 50vw + 8px);
+        padding-inline: 0;
+    }
+}
+
+.room-grid-area-inner.skin-room .racks-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+}
+
 .racks-grid {
     display: inline-grid;
     gap: 12px;
