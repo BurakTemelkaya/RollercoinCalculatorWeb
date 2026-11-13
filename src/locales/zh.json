@@ -96,7 +96,9 @@
     },
     "shrinkHint": "可在此缩小面板",
     "uncatalogued": "目录中未找到，已按复制的数据以 2 格宽添加（请检查宽度和图片）：{{names}}",
-    "addedPartial": "已添加 {{count}}/{{total}} 台矿机；房间已满，其余仍在列表中。"
+    "addedPartial": "已添加 {{count}}/{{total}} 台矿机；房间已满，其余仍在列表中。",
+    "replaceWeakerConfirm": "有 {{count}} 台矿机放不下。是否用它们替换房间中较弱的矿机？被移除的矿机会回到列表。",
+    "replacedWeaker": "已添加 {{added}} 台矿机；{{removed}} 台较弱的矿机已被替换并回到列表。"
   },
   "calculatorEmpty": {
     "earnings": "要查看收益，请在上方输入用户名并点击获取，或输入您的算力。",

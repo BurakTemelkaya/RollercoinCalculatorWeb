@@ -96,7 +96,9 @@
     },
     "shrinkHint": "Você pode reduzir o painel aqui",
     "uncatalogued": "Não encontrado no catálogo; adicionado com os dados copiados e 2 células de largura (verifique a largura e a imagem): {{names}}",
-    "addedPartial": "{{count}} de {{total}} mineradores adicionados; a sala está cheia e o restante continua na sua lista."
+    "addedPartial": "{{count}} de {{total}} mineradores adicionados; a sala está cheia e o restante continua na sua lista.",
+    "replaceWeakerConfirm": "{{count}} mineradores não cabem. Substituir os mineradores mais fracos da sala? Os removidos voltam para a sua lista.",
+    "replacedWeaker": "{{added}} mineradores adicionados; {{removed}} mais fracos foram substituídos e voltaram para a sua lista."
   },
   "calculatorEmpty": {
     "earnings": "Para ver seus ganhos, insira seu nome de usuário acima e clique em Buscar, ou insira sua potência.",

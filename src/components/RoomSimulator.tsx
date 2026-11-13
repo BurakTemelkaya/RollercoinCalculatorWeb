@@ -12,7 +12,7 @@ import RoomOperationHistory from './RoomOperationHistory';
 import { createRoomOperation, appendRoomOperation, readRoomOperations, serializeRoomOperations, roomOperationsKey, type RoomOperation } from '../utils/roomOperations';
 import type { AutoPlacementResult } from '../utils/autoPlacement';
 import type { LeagueInfo } from '../data/leagues';
-import { placeImportedMiners, adjustImportedQuantities, readSavedImportedMiners, saveImportedMiners, type ImportedMinerQuantity } from '../utils/minerImport';
+import { placeImportedMiners, adjustImportedQuantities, readSavedImportedMiners, saveImportedMiners, returnMinersToStock, type ImportedMinerQuantity } from '../utils/minerImport';
 import { PowerUnit } from '../types';
 import { fetchUserMinersFromApi, MinerDto, type MinerFilterParams } from '../services/userApi';
 import { fetchSellableMiners } from '../services/minerApi';
@@ -1603,15 +1603,26 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         onMinerPointerDown={isMobile ? undefined : (event, miner, onPlaced) => handleInventoryPointerDown(event, { type: 'miner', value: miner }, onPlaced)}
         onAdd={items => {
             if (suppressInventoryClick.current) return false;
-            const { room: next, placed } = placeImportedMiners(room, items);
+            let result = placeImportedMiners(room, items, { sets: dynamicSets });
+            if (result.left && room.miners.some(miner => miner.placement)
+                && window.confirm(t('minerImport.replaceWeakerConfirm', { count: result.left }))) {
+                result = placeImportedMiners(room, items, { replaceWeaker: true, sets: dynamicSets });
+            }
+            if (!result.placed.length) throw new Error('Insufficient room capacity');
+            const next = result.room;
             const racks = new Map((next.racks || []).map(rack => [rack._id, rack]));
             next.miners = next.miners.map(miner => {
                 const rack = racks.get(miner.placement?.user_rack_id || '');
                 return rack && miner._id.startsWith('import_') ? { ...miner,
                     is_in_set: minerBelongsToRackSet(rack, miner.miner_id, miner.filename, dynamicSets) } : miner;
             });
-            handleRoomChange(next, placed);
-            return placed;
+            if (!result.removed.length) { handleRoomChange(next, result.placed); return result.placed; }
+            // Swapped-out miners return to the list, like automatic placement; negative quantities undo that on rollback.
+            saveImportedMiners(returnMinersToStock(adjustImportedQuantities(readSavedImportedMiners(), result.placed, -1), result.removed));
+            handleRoomChange(next, [...result.placed, ...result.removed.map(miner => ({ id: miner.miner_id, quantity: -1 }))]);
+            addNotification(t('minerImport.replacedWeaker', { added: result.placed.reduce((sum, item) => sum + item.quantity, 0),
+                removed: result.removed.length }), 'success');
+            return false;
         }} />;
 
     return (

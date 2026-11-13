@@ -1,5 +1,7 @@
 import type { MinerDto } from '../services/userApi';
 import type { ApiRoomMiner, RollercoinRoomResponse } from '../types/room';
+import type { GetRackSetListDto } from '../services/rackApi';
+import { calculateExactRoomPower } from './roomParser';
 import { parseHashPower, toBaseUnit } from './powerParser';
 
 export interface ImportedMiner {
@@ -132,19 +134,39 @@ export function serializeMinerImport(items: ImportedMiner[]): string {
     return serialized;
 }
 
-/** Places as many copies as free cells allow; `placed` lists what was actually taken from stock. */
-export function placeImportedMiners(room: RollercoinRoomResponse, items: ImportedMiner[]): { room: RollercoinRoomResponse; placed: ImportedMinerQuantity[] } {
+export interface ImportedPlacement {
+    room: RollercoinRoomResponse;
+    /** Copies taken from stock. */
+    placed: ImportedMinerQuantity[];
+    /** Room miners swapped out for stronger imported ones. */
+    removed: ApiRoomMiner[];
+    /** Copies that found no cell. */
+    left: number;
+}
+
+/**
+ * Fills free cells, strongest first. With `replaceWeaker`, each copy that still has no cell takes the place of the
+ * weakest same-width room miner when it is stronger and the room's league power rises (losing a unique bonus can lower it).
+ */
+export function placeImportedMiners(room: RollercoinRoomResponse, items: ImportedMiner[],
+    options: { replaceWeaker?: boolean; sets?: GetRackSetListDto[] } = {}): ImportedPlacement {
     validateImportedQuantities(items);
     if (!items.some(item => item.quantity > 0)) throw new Error('No miners available');
-    const miners = [...room.miners];
-    const placed: ImportedMinerQuantity[] = [];
+    let miners = [...room.miners];
+    const placed = new Map<string, number>();
+    const removed: ApiRoomMiner[] = [];
+    let left = 0;
     // Only racks standing in a room have usable cells.
     const racks = (room.racks ?? []).filter(rack => rack.placement);
-    // Place wide miners first so one-cell miners do not fragment free rows.
-    for (const item of [...items].sort((a, b) => (b.miner?.width ?? 0) - (a.miner?.width ?? 0))) {
+    const create = (item: ImportedMiner, miner: MinerDto, placement: ApiRoomMiner['placement']): ApiRoomMiner => ({
+        _id: `import_${crypto.randomUUID()}`, miner_id: item.id, name: item.name,
+        power: item.power, bonus_percent: item.percent, width: miner.width, level: miner.level,
+        type: miner.type ?? 'miner', filename: miner.fileName ?? '', updated: new Date().toISOString(),
+        is_in_set: false, placement });
+    // Wide miners first so one-cell miners do not fragment free rows; stronger first so they get the free cells.
+    for (const item of [...items].sort((a, b) => (b.miner?.width ?? 0) - (a.miner?.width ?? 0) || b.power - a.power)) {
         const miner = item.miner;
         if (!miner) throw new Error('Unresolved miner');
-        let count = 0;
         for (let copy = 0; copy < item.quantity; copy++) {
             let placement: ApiRoomMiner['placement'] = null;
             for (const rack of racks) {
@@ -158,15 +180,44 @@ export function placeImportedMiners(room: RollercoinRoomResponse, items: Importe
                 }
                 if (placement) break;
             }
-            if (!placement) break;
-            miners.push({ _id: `import_${crypto.randomUUID()}`, miner_id: item.id, name: item.name,
-                power: item.power, bonus_percent: item.percent, width: miner.width, level: miner.level,
-                type: miner.type ?? 'miner', filename: miner.fileName ?? '', updated: new Date().toISOString(),
-                is_in_set: false, placement });
-            count++;
+            if (placement) {
+                miners.push(create(item, miner, placement));
+                placed.set(item.id, (placed.get(item.id) ?? 0) + 1);
+                continue;
+            }
+            left += item.quantity - copy;
+            break;
         }
-        if (count) placed.push({ id: item.id, quantity: count });
     }
-    if (!placed.length) throw new Error('Insufficient room capacity');
-    return { room: { ...room, miners }, placed };
+    if (options.replaceWeaker && left) {
+        left = 0;
+        let power = calculateExactRoomPower({ ...room, miners }, options.sets).totalLeaguePowerGh;
+        const pending = items.flatMap(item => Array.from({ length: item.quantity - (placed.get(item.id) ?? 0) }, () => item))
+            .sort((a, b) => b.power - a.power);
+        for (const item of pending) {
+            const miner = item.miner!;
+            // Imported miners placed in this call are never swapped out again.
+            const weakest = miners.filter(m => m.placement && m.width === miner.width && !m._id.startsWith('import_') && m.power < item.power)
+                .sort((a, b) => a.power - b.power)[0];
+            const next = weakest && miners.map(m => m === weakest ? create(item, miner, weakest.placement) : m);
+            const nextPower = next && calculateExactRoomPower({ ...room, miners: next }, options.sets).totalLeaguePowerGh;
+            if (!next || !(nextPower! > power)) { left++; continue; }
+            miners = next; power = nextPower!;
+            removed.push(weakest);
+            placed.set(item.id, (placed.get(item.id) ?? 0) + 1);
+        }
+    }
+    return { room: { ...room, miners }, placed: [...placed].map(([id, quantity]) => ({ id, quantity })), removed, left };
+}
+
+/** Adds room miners back to the import list, creating entries for models it does not have. */
+export function returnMinersToStock(items: ImportedMiner[], miners: readonly ApiRoomMiner[]): ImportedMiner[] {
+    const stock = new Map(items.map(item => [item.id, { ...item }]));
+    for (const miner of miners) {
+        const item = stock.get(miner.miner_id) ?? { id: miner.miner_id, name: miner.name, power: miner.power, percent: miner.bonus_percent,
+            quantity: 0, miner: { id: miner.miner_id, name: miner.name, power: miner.power, percent: miner.bonus_percent, width: miner.width,
+                level: miner.level, fileName: miner.filename, type: miner.type, imageVersion: 1, createdDate: miner.updated } };
+        stock.set(item.id, { ...item, quantity: item.quantity + 1 });
+    }
+    return [...stock.values()];
 }

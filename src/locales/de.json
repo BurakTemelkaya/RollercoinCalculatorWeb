@@ -96,7 +96,9 @@
     },
     "shrinkHint": "Hier kannst du das Panel verkleinern",
     "uncatalogued": "Nicht im Katalog gefunden, aus den kopierten Werten als 2 Zellen breit hinzugefügt (Breite und Bild prüfen): {{names}}",
-    "addedPartial": "{{count}} von {{total}} Minern hinzugefügt; der Raum ist voll, der Rest bleibt in deiner Liste."
+    "addedPartial": "{{count}} von {{total}} Minern hinzugefügt; der Raum ist voll, der Rest bleibt in deiner Liste.",
+    "replaceWeakerConfirm": "{{count}} Miner passen nicht. Schwächere Miner im Raum durch sie ersetzen? Entfernte Miner kommen zurück in deine Liste.",
+    "replacedWeaker": "{{added}} Miner hinzugefügt; {{removed}} schwächere Miner wurden ersetzt und in deine Liste zurückgelegt."
   },
   "calculatorEmpty": {
     "earnings": "Gib oben deinen Benutzernamen ein und klicke auf Abrufen oder gib deine Leistung ein, um deine Erträge zu sehen.",

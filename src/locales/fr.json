@@ -96,7 +96,9 @@
     },
     "shrinkHint": "Vous pouvez réduire le panneau ici",
     "uncatalogued": "Introuvable dans le catalogue, ajouté depuis les données copiées sur 2 cases de large (vérifiez la largeur et l’image) : {{names}}",
-    "addedPartial": "{{count}} mineurs sur {{total}} ajoutés ; la salle est pleine, le reste reste dans votre liste."
+    "addedPartial": "{{count}} mineurs sur {{total}} ajoutés ; la salle est pleine, le reste reste dans votre liste.",
+    "replaceWeakerConfirm": "{{count}} mineurs ne rentrent pas. Remplacer les mineurs plus faibles de la salle ? Les mineurs retirés retournent dans votre liste.",
+    "replacedWeaker": "{{added}} mineurs ajoutés ; {{removed}} mineurs plus faibles ont été remplacés et remis dans votre liste."
   },
   "calculatorEmpty": {
     "earnings": "Pour voir vos gains, saisissez votre nom d’utilisateur ci-dessus et cliquez sur Récupérer, ou saisissez votre puissance.",

@@ -96,7 +96,9 @@
     },
     "shrinkHint": "Paneli buradan küçültebilirsin",
     "uncatalogued": "Katalogda bulunamadı, kopyalanan bilgilerle 2 hücre genişliğinde eklendi (genişliği ve görseli kontrol edin): {{names}}",
-    "addedPartial": "{{total}} minerdan {{count}} tanesi eklendi; oda doldu, kalanlar listenizde duruyor."
+    "addedPartial": "{{total}} minerdan {{count}} tanesi eklendi; oda doldu, kalanlar listenizde duruyor.",
+    "replaceWeakerConfirm": "{{count}} miner sığmıyor. Odadaki daha güçsüz minerlarla değiştirilsin mi? Çıkarılan minerlar listenize geri döner.",
+    "replacedWeaker": "{{added}} miner eklendi; {{removed}} güçsüz miner değiştirildi ve listenize geri döndü."
   },
   "calculatorEmpty": {
     "earnings": "Kazançlarınızı görmek için yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin.",
