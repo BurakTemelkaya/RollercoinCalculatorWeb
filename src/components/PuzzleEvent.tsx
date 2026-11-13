@@ -226,11 +226,13 @@ export default function PuzzleEvent() {
                         className="pz-board"
                         style={{
                             gridTemplateColumns: `repeat(${data.cols}, minmax(0, 1fr))`,
-                            // A CSS background has no onError: our copy is layered over the original, so whichever loads is shown
-                            backgroundImage: data.backgroundImg
+                            // A CSS background has no onError: our copy is layered over the original, so whichever loads is shown.
+                            // The scene behind the rewards (progress image) sits on top of the tiled pattern.
+                            backgroundImage: data.progressImg || data.backgroundImg
                                 ? [
-                                    'linear-gradient(rgba(10, 14, 23, 0.55), rgba(10, 14, 23, 0.55))',
-                                    ...[ownImage(data.backgroundImgPath), data.backgroundImg].filter(Boolean).map(url => `url(${url})`),
+                                    'linear-gradient(rgba(10, 14, 23, 0.35), rgba(10, 14, 23, 0.35))',
+                                    ...[ownImage(data.progressImgPath), data.progressImg, ownImage(data.backgroundImgPath), data.backgroundImg]
+                                        .filter(Boolean).map(url => `url(${url})`),
                                 ].join(', ')
                                 : undefined,
                         }}
