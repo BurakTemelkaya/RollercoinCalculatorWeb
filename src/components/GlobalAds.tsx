@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { AdSenseSlot } from './AdSenseSlot';
 
 interface GlobalAdsProps {
   adsBlocked: boolean;
@@ -8,36 +9,10 @@ interface GlobalAdsProps {
 export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => {
   const [mobileAdVisible, setMobileAdVisible] = useState(true);
 
-  // Inject Coinzilla ads if necessary
-  useEffect(() => {
-    if (adsBlocked || !country) return;
-
-    // We wait slightly to ensure React has mounted the divs before pushing to coinzilla
-    const timer = setTimeout(() => {
-      const isTR = country === 'TR';
-      const showCoinzilla = isTR || country === 'UNKNOWN';
-
-      (window as any).coinzilla_display = (window as any).coinzilla_display || [];
-      // Right (Always show Coinzilla)
-      (window as any).coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
-
-      if (showCoinzilla) {
-        // Left
-        (window as any).coinzilla_display.push({ zone: "24569e7101752ae238", width: "160", height: "600" });
-        // Mobile
-        if (mobileAdVisible) {
-          (window as any).coinzilla_display.push({ zone: "4176a2678c2d7dc7660", width: "320", height: "50" });
-        }
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [country, adsBlocked, mobileAdVisible]);
-
   if (adsBlocked || !country) return null;
 
   const isTR = country === 'TR';
-  const showCoinzilla = isTR || country === 'UNKNOWN';
+  const showAdSense = isTR || country === 'UNKNOWN';
 
   return (
     <>
@@ -46,8 +21,8 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
         <div style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ width: 'max(170px, calc((100vw - 1200px) / 2))', height: '100%', position: 'fixed', top: 0, left: 0 }}>
             <div id="left-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 40, pointerEvents: 'auto' }}>
-              {showCoinzilla ? (
-                <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
+              {showAdSense ? (
+                <AdSenseSlot slot="8429846209" width={160} height={600} />
               ) : (
                 <iframe data-aa='2459663' src='//ad.a-ads.com/2459663/?size=160x600&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '160px', height: '600px', overflow: 'hidden', display: 'block', margin: 'auto' }}></iframe>
               )}
@@ -61,7 +36,7 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
         <div style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ width: 'max(170px, calc((100vw - 1200px) / 2))', height: '100%', position: 'fixed', top: 0, right: 0 }}>
             <div id="right-side-ad-container" style={{ width: '160px', height: '600px', position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, margin: 'auto', zIndex: 40, pointerEvents: 'auto' }}>
-              <div className="coinzilla" data-zone="C-24569e7101752ae238"></div>
+              <AdSenseSlot slot="8429846209" width={160} height={600} />
             </div>
           </div>
         </div>
@@ -84,8 +59,8 @@ export const GlobalAds: React.FC<GlobalAdsProps> = ({ adsBlocked, country }) => 
               </button>
               
               <div id="mobile-bottom-ad-container" style={{ width: '320px', maxWidth: '100%', height: '50px', position: 'absolute', top: 0, left: 0, right: 0, margin: 'auto', overflow: 'hidden' }}>
-                {showCoinzilla ? (
-                  <div className="coinzilla" data-zone="C-4176a2678c2d7dc7660"></div>
+                {showAdSense ? (
+                  <AdSenseSlot slot="3141201361" width={320} height={50} />
                 ) : (
                   <iframe data-aa='2459664' src='//ad.a-ads.com/2459664/?size=320x50&background_color=1e2433&title_color=fffffe' style={{ border: 0, padding: 0, width: '320px', height: '50px', overflow: 'hidden', display: 'block', margin: '0 auto' }}></iframe>
                 )}

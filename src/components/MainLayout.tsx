@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLatestEventPath } from '../hooks/useLatestEventPath';
 import { useDragScroll } from '../hooks/useDragScroll';
 import { GlobalAds } from './GlobalAds';
+import { AdSenseSlot } from './AdSenseSlot';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
 
 export const SUPPORTED_LANGUAGES: SelectOption[] = [
@@ -95,7 +96,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     window.gtag?.('event', 'ad_no_fill', {
       ad_unit: 'top_banner_300x250',
       ad_network: 'clevercore',
-      fallback_network: 'coinzilla',
+      fallback_network: 'adsense',
       reason,
     });
   }, []);
@@ -185,17 +186,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
     };
   }, [adsBlocked, topAdNetwork, markCleverNoFill]);
 
-  useEffect(() => {
-    if (adsBlocked || topAdNetwork !== 'coinzilla') return;
-
-    const timer = setTimeout(() => {
-      window.coinzilla_display ??= [];
-      window.coinzilla_display.push({ zone: '83069e710174ee88650', width: '300', height: '250' });
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [adsBlocked, topAdNetwork]);
-
   // Count a filled slot only after at least half of it is visible.
   useEffect(() => {
     if (adsBlocked || !topAdNetwork || !('IntersectionObserver' in window)) return;
@@ -206,9 +196,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     let viewObserver: IntersectionObserver | null = null;
     const hasCreative = () => {
       const cleverSlot = container.querySelector<HTMLElement>('.clever-core-ads');
-      const coinzillaSlot = container.querySelector<HTMLElement>('.coinzilla');
       return Boolean((cleverSlot && cleverSlot.childElementCount > 0) ||
-        (coinzillaSlot && coinzillaSlot.querySelector('iframe')));
+        container.querySelector('ins.adsbygoogle iframe'));
     };
 
     const observeVisibleCreative = () => {
@@ -258,9 +247,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
   if (topAdNetwork === 'clever') {
     // Clever deletes div.clever-core-ads itself when it rejects a creative, so React owns only the wrapper.
     topAdSlot = <div key="clever"><div className="clever-core-ads"></div></div>;
-  } else if (topAdNetwork === 'coinzilla') {
+  } else if (topAdNetwork === 'adsense') {
     // Separate key: a fresh node, so a late Clever creative lands in the detached old one.
-    topAdSlot = <div key="coinzilla" className="coinzilla" data-zone="C-83069e710174ee88650"></div>;
+    topAdSlot = <AdSenseSlot key="adsense" slot="1958826685" width={300} height={250} />;
   }
 
   return (

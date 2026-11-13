@@ -166,7 +166,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // Reklam ve Analytics domainlerini engelle (networkidle'ı sonsuza sokarlar)
     const blockedDomains = [
       'api.rollercoincalculator.app', // Kendi API'ni ekledik
-      'ad.a-ads.com', 'a-ads.com', 'adsterra', 'cleverwebserver.com',
+      'ad.a-ads.com', 'a-ads.com', 'adsterra', 'cleverwebserver.com', 'googlesyndication.com',
       'googletagmanager.com', 'google-analytics.com',
       'challenges.cloudflare.com'
     ];

@@ -2,7 +2,7 @@ export {};
 
 declare global {
   interface Window {
-    coinzilla_display?: Array<{ zone: string; width: string; height: string }>;
+    adsbygoogle?: unknown[];
     gtag?: (...args: unknown[]) => void;
     __cleverCoreNoFill?: boolean;
     __cleverCoreNoFillReason?: string;
