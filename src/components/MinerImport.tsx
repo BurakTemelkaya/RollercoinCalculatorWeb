@@ -70,13 +70,16 @@ export default function MinerImport({ onAdd, embedded = false, onMinerPointerDow
         setBusy(true); setError(''); setMessage('');
         try {
             const parsed = parseMinerImport(source);
-            const resolved = await resolveImportedMiners(parsed);
+            const { items: resolved, missing } = await resolveImportedMiners(parsed);
             if (!mounted.current) return;
             const combined = new Map(itemsRef.current.map(item => [item.id, item]));
             for (const item of resolved) combined.set(item.id, item);
             const next = [...combined.values()];
             validateImportedQuantities(next);
-            if (save(next)) { setSource(''); setMessage(t('minerImport.saved')); }
+            if (save(next)) {
+                setSource('');
+                setMessage(missing.length ? `${t('minerImport.saved')} ${t('minerImport.uncatalogued', { names: missing.join(', ') })}` : t('minerImport.saved'));
+            }
         } catch {
             if (mounted.current) setError(t('minerImport.invalid'));
         } finally { if (mounted.current) setBusy(false); }

@@ -94,7 +94,8 @@
       "s4": "Stiskněte Ctrl+C a zkopírujte výběr.",
       "s5": "Vložte jej do pole níže a klikněte na {{read}}. Opakujte pro další stránky."
     },
-    "shrinkHint": "Zde můžete panel zmenšit"
+    "shrinkHint": "Zde můžete panel zmenšit",
+    "uncatalogued": "Nenalezeno v katalogu, přidáno ze zkopírovaných údajů se šířkou 2 buňky (zkontrolujte šířku a obrázek): {{names}}"
   },
   "calculatorEmpty": {
     "earnings": "Pro zobrazení výdělků zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon.",
