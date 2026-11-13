@@ -67,3 +67,12 @@ Madenci, para, güç ve parça dışındaki ödüllerin (utility item, spor alet
 - Kopyanın yeri: utility item'lar `utility_items/{dosya}` (progression event ile ortak klasör), diğer her şey `rewards/{yolun tamamı alt çizgiyle}` (ör. `rewards/gym_equipment_treadmill_preview.gif`; dosya adı tek başına ayırt edici değildir).
 - Kopyalama `CreatePuzzleEventCommand` içinde, event aktifken her saatlik turda çağrılır; dosya zaten varsa indirme yapılmaz. Görsel inemezse event yine kaydedilir.
 - API ödülde iki alan döner: `imagePath` (bizim CDN'deki yol) ve `mediaUrl` (Rollercoin'deki yol). `RewardTile` önce kendi kopyamızı dener, yüklenemezse Rollercoin'deki asıl görsele düşer. Madenci görselleri `CdnImage` ile aynı şekilde önce kendi CDN'imizden gelir.
+
+### Event'in kendi görselleri
+
+Banner (`HeaderImg`), tahta arka planı (`BackgroundImg`) ve parça ikonu (`RewardIcon`) da aynı adımda kopyalanır: `puzzle/{eventId}/{dosya adı}`.
+
+- Kayıtlı **tüm** puzzle event'ler için her saatlik turda denenir (aktif event olmasa da), böylece biten event'lerin görselleri Rollercoin silmeden bizde kalır.
+- API, Rollercoin adreslerinin yanında kopyaların yolunu da döner: `headerImgPath`, `backgroundImgPath`, `rewardIconPath` (liste ucunda `headerImgPath`).
+- Sayfa ve Etkinlikler listesindeki kart önce kendi kopyamızı kullanır, yüklenemezse Rollercoin adresine düşer. Tahta arka planı CSS olduğu için iki adres üst üste katman olarak verilir.
+- Bildirim maili banner için Rollercoin adresini kullanmaya devam eder.

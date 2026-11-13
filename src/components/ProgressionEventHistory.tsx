@@ -18,7 +18,7 @@ const PAGE_SIZE = 10;
 type EventKind = 'progression' | 'puzzle';
 
 /** Puzzle rows carry their banner URL; progression banners are derived from the id. */
-type EventRow = ProgressionEventListItem & { headerImg?: string | null };
+type EventRow = ProgressionEventListItem & { headerImg?: string | null; headerImgPath?: string | null };
 
 function formatEventDate(dateStr: string, locale: string): string {
     const date = new Date(
@@ -178,7 +178,7 @@ export default function ProgressionEventHistory() {
                                 >
                                     <div className="peh-card-banner">
                                         <img
-                                            src={event.headerImg ?? `${getCdnBaseUrl()}/pe/${event.id}/progression-event-modal-bg.png`}
+                                            src={(event.headerImgPath ? `${getCdnBaseUrl()}/${event.headerImgPath}` : event.headerImg) ?? `${getCdnBaseUrl()}/pe/${event.id}/progression-event-modal-bg.png`}
                                             alt=""
                                             width={648}
                                             height={192}
@@ -186,8 +186,9 @@ export default function ProgressionEventHistory() {
                                             onError={(e) => {
                                                 const target = e.currentTarget;
                                                 if (kind === 'puzzle') {
-                                                    // No derived fallback URL for puzzle banners; show the plain card instead of a broken image
-                                                    target.style.display = 'none';
+                                                    // Our copy missing: try Rollercoin's original; if that fails too, show the plain card
+                                                    if (event.headerImg && target.src !== event.headerImg) target.src = event.headerImg;
+                                                    else target.style.display = 'none';
                                                 } else if (!target.src.includes('static.rollercoin.com')) {
                                                     target.src = `https://static.rollercoin.com/static/img/pe/${event.id}/progression-event-modal-bg.png?v=1`;
                                                 }

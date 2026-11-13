@@ -36,6 +36,10 @@ export interface PuzzleEventData {
     headerImg: string | null;
     backgroundImg: string | null;
     rewardIcon: string | null;
+    /** Our own copies of the three images above, relative to the CDN root; the ones above are Rollercoin URLs (fallback) */
+    headerImgPath?: string | null;
+    backgroundImgPath?: string | null;
+    rewardIconPath?: string | null;
     levels: { level: number; requiredXp: number; rewards: PuzzleReward[] }[];
     board: PuzzleReward[];
     tasks: { title: string; type: string | null; spins: number }[];
@@ -48,7 +52,7 @@ export function fetchPuzzleEvent(slug?: string): Promise<PuzzleEventData> {
 }
 
 /** History row; same fields as a progression event row so both lists share one page. */
-export type PuzzleEventListItem = ProgressionEventListItem & { headerImg: string | null };
+export type PuzzleEventListItem = ProgressionEventListItem & { headerImg: string | null; headerImgPath?: string | null };
 
 /** Paginated list of puzzle events, newest first. */
 export function fetchPuzzleEventList(pageIndex: number = 0, pageSize: number = 10): Promise<PaginatedResponse<PuzzleEventListItem>> {

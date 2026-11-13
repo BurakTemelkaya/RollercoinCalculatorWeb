@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { fetchPuzzleEvent, type PuzzleEventData, type PuzzleReward } from '../services/puzzleEventApi';
 import { getNotificationPreferences } from '../services/notificationApi';
 import { useAuth } from '../contexts/AuthContext';
+import { getCdnBaseUrl } from '../config/api';
 import type { ProgressionReward, RewardType } from '../types/progressionEvent';
 import { RewardTile } from './ProgressionEvent';
 import './PuzzleEvent.css';
@@ -24,6 +25,14 @@ function groupTasks(tasks: PuzzleEventData['tasks']) {
     }
     return [...groups];
 }
+
+/** URL of our own copy of an event image, or null when the backend did not give a path. */
+const ownImage = (path?: string | null) => (path ? `${getCdnBaseUrl()}/${path}` : null);
+
+/** `onError` handler: when our copy is missing, show Rollercoin's original instead. */
+const fallbackTo = (url?: string | null) => (e: SyntheticEvent<HTMLImageElement>) => {
+    if (url && e.currentTarget.src !== url) e.currentTarget.src = url;
+};
 
 /** Adapts a puzzle reward to the progression reward shape so both events share one image/label resolver. */
 function toProgressionReward(r: PuzzleReward): ProgressionReward {
@@ -134,7 +143,7 @@ export default function PuzzleEvent() {
             <meta property="og:title" content={pageTitle} />
             <meta property="og:description" content={t('puzzle.metaDesc')} />
             <meta property="og:url" content={pageUrl} />
-            <meta property="og:image" content={data?.headerImg ?? 'https://rollercoincalculator.app/icon.png'} />
+            <meta property="og:image" content={ownImage(data?.headerImgPath) ?? data?.headerImg ?? 'https://rollercoincalculator.app/icon.png'} />
         </>
     );
 
@@ -150,14 +159,18 @@ export default function PuzzleEvent() {
     if (!data) return <div className="pz-container pz-state">{head}<span className="spinner" /></div>;
     if (!data.id) return <div className="pz-container pz-state">{head}<p>{t('puzzle.noEvent')}</p></div>;
 
-    const pieceIcon = data.rewardIcon && <img className="pz-piece" src={data.rewardIcon} alt="" />;
+    const pieceIcon = data.rewardIcon && (
+        <img className="pz-piece" src={ownImage(data.rewardIconPath) ?? data.rewardIcon} alt="" onError={fallbackTo(data.rewardIcon)} />
+    );
 
     return (
         <div className="pz-container">
             {head}
 
             <header className="pz-header">
-                {data.headerImg && <img className="pz-header-img" src={data.headerImg} alt="" />}
+                {data.headerImg && (
+                    <img className="pz-header-img" src={ownImage(data.headerImgPath) ?? data.headerImg} alt="" onError={fallbackTo(data.headerImg)} />
+                )}
                 <div className="pz-header-body">
                     {countdown && <span className="pz-countdown">⏱ {countdown}</span>}
                     <h1>{data.name}</h1>
@@ -213,7 +226,13 @@ export default function PuzzleEvent() {
                         className="pz-board"
                         style={{
                             gridTemplateColumns: `repeat(${data.cols}, minmax(0, 1fr))`,
-                            backgroundImage: data.backgroundImg ? `linear-gradient(rgba(10, 14, 23, 0.55), rgba(10, 14, 23, 0.55)), url(${data.backgroundImg})` : undefined,
+                            // A CSS background has no onError: our copy is layered over the original, so whichever loads is shown
+                            backgroundImage: data.backgroundImg
+                                ? [
+                                    'linear-gradient(rgba(10, 14, 23, 0.55), rgba(10, 14, 23, 0.55))',
+                                    ...[ownImage(data.backgroundImgPath), data.backgroundImg].filter(Boolean).map(url => `url(${url})`),
+                                ].join(', ')
+                                : undefined,
                         }}
                     >
                         {data.board.map((reward, i) => (
