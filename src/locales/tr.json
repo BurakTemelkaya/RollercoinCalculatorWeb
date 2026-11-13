@@ -95,7 +95,8 @@
       "s5": "Aşağıdaki kutuya yapıştırın ve {{read}} düğmesine tıklayın. Diğer sayfalar için tekrarlayın."
     },
     "shrinkHint": "Paneli buradan küçültebilirsin",
-    "uncatalogued": "Katalogda bulunamadı, kopyalanan bilgilerle 2 hücre genişliğinde eklendi (genişliği ve görseli kontrol edin): {{names}}"
+    "uncatalogued": "Katalogda bulunamadı, kopyalanan bilgilerle 2 hücre genişliğinde eklendi (genişliği ve görseli kontrol edin): {{names}}",
+    "addedPartial": "{{total}} minerdan {{count}} tanesi eklendi; oda doldu, kalanlar listenizde duruyor."
   },
   "calculatorEmpty": {
     "earnings": "Kazançlarınızı görmek için yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin.",

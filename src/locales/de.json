@@ -95,7 +95,8 @@
       "s5": "Füge sie unten ein und klicke auf {{read}}. Wiederhole das für weitere Seiten."
     },
     "shrinkHint": "Hier kannst du das Panel verkleinern",
-    "uncatalogued": "Nicht im Katalog gefunden, aus den kopierten Werten als 2 Zellen breit hinzugefügt (Breite und Bild prüfen): {{names}}"
+    "uncatalogued": "Nicht im Katalog gefunden, aus den kopierten Werten als 2 Zellen breit hinzugefügt (Breite und Bild prüfen): {{names}}",
+    "addedPartial": "{{count}} von {{total}} Minern hinzugefügt; der Raum ist voll, der Rest bleibt in deiner Liste."
   },
   "calculatorEmpty": {
     "earnings": "Gib oben deinen Benutzernamen ein und klicke auf Abrufen oder gib deine Leistung ein, um deine Erträge zu sehen.",

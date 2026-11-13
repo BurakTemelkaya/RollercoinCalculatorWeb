@@ -95,7 +95,8 @@
       "s5": "Pégala en el cuadro de abajo y haz clic en {{read}}. Repite para otras páginas."
     },
     "shrinkHint": "Puedes reducir el panel aquí",
-    "uncatalogued": "No encontrado en el catálogo; añadido con los datos copiados y 2 celdas de ancho (revisa el ancho y la imagen): {{names}}"
+    "uncatalogued": "No encontrado en el catálogo; añadido con los datos copiados y 2 celdas de ancho (revisa el ancho y la imagen): {{names}}",
+    "addedPartial": "Se añadieron {{count}} de {{total}} mineros; la sala está llena y el resto sigue en tu lista."
   },
   "calculatorEmpty": {
     "earnings": "Para ver tus ganancias, introduce arriba tu nombre de usuario y pulsa Obtener, o introduce tu potencia.",

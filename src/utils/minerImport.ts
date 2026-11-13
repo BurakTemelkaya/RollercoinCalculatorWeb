@@ -132,17 +132,22 @@ export function serializeMinerImport(items: ImportedMiner[]): string {
     return serialized;
 }
 
-export function placeImportedMiners(room: RollercoinRoomResponse, items: ImportedMiner[]): RollercoinRoomResponse {
+/** Places as many copies as free cells allow; `placed` lists what was actually taken from stock. */
+export function placeImportedMiners(room: RollercoinRoomResponse, items: ImportedMiner[]): { room: RollercoinRoomResponse; placed: ImportedMinerQuantity[] } {
     validateImportedQuantities(items);
     if (!items.some(item => item.quantity > 0)) throw new Error('No miners available');
     const miners = [...room.miners];
+    const placed: ImportedMinerQuantity[] = [];
+    // Only racks standing in a room have usable cells.
+    const racks = (room.racks ?? []).filter(rack => rack.placement);
     // Place wide miners first so one-cell miners do not fragment free rows.
     for (const item of [...items].sort((a, b) => (b.miner?.width ?? 0) - (a.miner?.width ?? 0))) {
         const miner = item.miner;
         if (!miner) throw new Error('Unresolved miner');
+        let count = 0;
         for (let copy = 0; copy < item.quantity; copy++) {
             let placement: ApiRoomMiner['placement'] = null;
-            for (const rack of room.racks ?? []) {
+            for (const rack of racks) {
                 const height = rack.rack_info?.height ?? Math.ceil((rack.cells ?? 0) / 2);
                 for (let y = 0; y < height && !placement; y++) {
                     for (let x = 0; x <= 2 - miner.width; x++) {
@@ -153,12 +158,15 @@ export function placeImportedMiners(room: RollercoinRoomResponse, items: Importe
                 }
                 if (placement) break;
             }
-            if (!placement) throw new Error('Insufficient room capacity');
+            if (!placement) break;
             miners.push({ _id: `import_${crypto.randomUUID()}`, miner_id: item.id, name: item.name,
                 power: item.power, bonus_percent: item.percent, width: miner.width, level: miner.level,
                 type: miner.type ?? 'miner', filename: miner.fileName ?? '', updated: new Date().toISOString(),
                 is_in_set: false, placement });
+            count++;
         }
+        if (count) placed.push({ id: item.id, quantity: count });
     }
-    return { ...room, miners };
+    if (!placed.length) throw new Error('Insufficient room capacity');
+    return { room: { ...room, miners }, placed };
 }

@@ -95,7 +95,8 @@
       "s5": "Vložte jej do pole níže a klikněte na {{read}}. Opakujte pro další stránky."
     },
     "shrinkHint": "Zde můžete panel zmenšit",
-    "uncatalogued": "Nenalezeno v katalogu, přidáno ze zkopírovaných údajů se šířkou 2 buňky (zkontrolujte šířku a obrázek): {{names}}"
+    "uncatalogued": "Nenalezeno v katalogu, přidáno ze zkopírovaných údajů se šířkou 2 buňky (zkontrolujte šířku a obrázek): {{names}}",
+    "addedPartial": "Přidáno {{count}} z {{total}} minerů; místnost je plná, zbytek zůstává ve vašem seznamu."
   },
   "calculatorEmpty": {
     "earnings": "Pro zobrazení výdělků zadejte nahoře uživatelské jméno a klikněte na Načíst nebo zadejte svůj výkon.",

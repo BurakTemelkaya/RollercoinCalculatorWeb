@@ -95,7 +95,8 @@
       "s5": "Paste it in the box below and click {{read}}. Repeat for other pages."
     },
     "shrinkHint": "You can shrink the panel here",
-    "uncatalogued": "Not found in the catalog, added from the copied stats as 2-cell wide (check width and image): {{names}}"
+    "uncatalogued": "Not found in the catalog, added from the copied stats as 2-cell wide (check width and image): {{names}}",
+    "addedPartial": "{{count}} of {{total}} miners added; the room is full, the rest stay in your list."
   },
   "calculatorEmpty": {
     "earnings": "To see your earnings, enter your username above and click Fetch, or enter your power.",

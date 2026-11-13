@@ -1603,14 +1603,15 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         onMinerPointerDown={isMobile ? undefined : (event, miner, onPlaced) => handleInventoryPointerDown(event, { type: 'miner', value: miner }, onPlaced)}
         onAdd={items => {
             if (suppressInventoryClick.current) return false;
-            const next = placeImportedMiners(room, items);
+            const { room: next, placed } = placeImportedMiners(room, items);
             const racks = new Map((next.racks || []).map(rack => [rack._id, rack]));
             next.miners = next.miners.map(miner => {
                 const rack = racks.get(miner.placement?.user_rack_id || '');
                 return rack && miner._id.startsWith('import_') ? { ...miner,
                     is_in_set: minerBelongsToRackSet(rack, miner.miner_id, miner.filename, dynamicSets) } : miner;
             });
-            handleRoomChange(next, items.map(item => ({ id: item.id, quantity: item.quantity })));
+            handleRoomChange(next, placed);
+            return placed;
         }} />;
 
     return (
