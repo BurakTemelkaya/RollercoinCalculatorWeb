@@ -215,7 +215,9 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     });
 
     // Capture rendered HTML
-    const html = await page.content();
+    // Vite's lazy-chunk preloader adds <link>s with absolute URLs to this prerender server;
+    // make them root-relative so live visitors don't fetch http://localhost:PORT.
+    const html = (await page.content()).replaceAll(`http://localhost:${PORT}/`, '/');
 
     // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
     // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
