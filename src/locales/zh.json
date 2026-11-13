@@ -1146,7 +1146,7 @@
     "maxStat": "上限：{{value}}",
     "restTime": "基础休息：{{hours}} 小时",
     "officialBestiary": "官方图鉴",
-    "newFeature": "新的仓鼠页面"
+    "newFeature": "新仓鼠：BB Smoke"
   },
   "hamsterExpeditions": {
     "eyebrow": "ROLLERCOIN · 远征",
@@ -1182,13 +1182,13 @@
     "difficultyLabel": "难度",
     "method": "计算方法",
     "note": "基础概率曲线根据官方文章的示例推算；RollerCoin 未公布具体公式。结果会加入地图难度、被动生存加成和所选加成，并限制在 0–100%。",
-    "levelNote": "假设每升一级增加 1 点属性总值。GFeast 仅有 50 级数据。",
+    "levelNote": "假设每升一级增加 1 点属性总值；通过仓鼠健身房训练最高可达 100 级。GFeast 从 50 级开始。",
     "source": "RollerCoin 官方开发日志",
     "noResults": "未找到匹配的仓鼠。",
     "smartStudy": "通过 Smart Study 获得的额外属性点",
     "smartStudyTotal": "Smart Study 总属性",
     "smartStudyNote": "调整实际获得的总属性。Smart Study 点数加在等级基础属性总和之上，上限为 300。",
-    "maxStatsActive": "终极能力已启用：生命、力量和幸运均为 100。",
+    "maxStatsActive": "终极能力已启用：生命、力量和幸运均为 150。",
     "fullStats": "生命、力量和幸运均为 100。"
   },
   "hamsterHub": {
@@ -1237,6 +1237,8 @@
       "pirateLuck": "海盗运气",
       "hamstersChest": "仓鼠宝箱",
       "remotePowerUltimate": "远程算力",
+      "speedUpWalk": "加速漫步",
+      "overchargedRemotePower": "远程算力",
       "overchargedChests": "宝箱倍率 ×3",
       "overchargedConversion": "战利品转换"
     },
@@ -1261,7 +1263,7 @@
       "restRelay": "每个完整远征小时按所示分钟数减少其他仓鼠的休息。加速道具不增加效果，多余恢复量作废。",
       "chargeRelay": "按完整的原始远征小时为其他仓鼠的终极技能充能。仅计整数充能点，加速不提供额外效果。",
       "gamesBoost": "按所示百分比调整游戏增益；{{name}}的此选项同时改变赎回费用。",
-      "boostMode": "激活后一次远征中的生命、力量和幸运各为100。再次使用需{{charge}}充能点。",
+      "boostMode": "激活后一次远征中的生命、力量和幸运各为150。再次使用需{{charge}}充能点。",
       "chestsMultiplier": "远征前激活，结束时选择最多五份奖励，每份变为三倍。充能：{{charge}}点。",
       "plagueChests": "即使远征失败，也将最多五份选中奖励变为三倍。不提高生存概率。充能：30点。",
       "cryptoChest": "远征前激活，成功后获得装有加密货币奖励的宝箱。充能：{{charge}}点。",
@@ -1275,9 +1277,12 @@
       "overchargedChests": "完整等级以18 / 24 / 30点将3 / 5 / 8份奖励变为三倍。未完成等级不计。按原始远征小时充能，使用后归零。",
       "pirateLuck": "成功后，每份选中奖励有50%概率变为三倍或消失。未选奖励安全保留。使用后跳过休息。",
       "hamstersChest": "下一次成功远征增加装有Magic Wool或仓鼠的宝箱。失败会消耗技能且不生成宝箱。充能：100点。",
-      "remotePowerUltimate": "GFeast远征中存活期间增加临时矿机算力×5，不乘房间加成。持续时间按原始远征时长计算，不受加速或时长缩减影响。"
+      "remotePowerUltimate": "GFeast远征中存活期间增加临时矿机算力×5，不乘房间加成。持续时间按原始远征时长计算，不受加速或时长缩减影响。",
+      "speedUpWalk": "成功探险每满2小时获得1个加速道具；探险失败时，BB Smoke每存活满4小时获得1个。按原始时长计算并向下取整；加速不会改变时长，这些道具也不影响赎回费用。",
+      "overchargedRemotePower": "20 / 30 / 42点充能时，BB Smoke在探险中存活期间为房间增加矿机算力 ×4 / ×5 / ×7。只采用已充满的最高等级；百分比加成不会放大该算力。出发前激活，探险结束后充能清零。"
     },
     "examples": {
+      "bbSmokeSpeedUps": "成功完成24小时探险可获得12个加速道具。",
       "jackOLoot": "24点可激活第II级：+50%战利品。30点可激活第III级：+75%，并非+150%。",
       "cuscuzRemoteBonus": "基础属性：(90 + 75 + 90) ×2% = 510%房间加成。",
       "remoteBonus": "基础属性：(40 + 90 + 90) ×2% = 440%。100/100/100时：600%。",

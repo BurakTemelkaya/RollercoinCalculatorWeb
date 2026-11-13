@@ -15,6 +15,7 @@ import HamsterSprite from './HamsterSprite';
 import HamsterSectionNav from './HamsterSectionNav';
 import HamsterSetDetails from './HamsterSetDetails';
 import useHamsterCollection from '../hooks/useHamsterCollection';
+import { hamsterBackgroundUrl } from '../utils/hamsterAssets';
 import './HamstersPage.css';
 
 const HAMSTERS = rawHamsters as Hamster[];
@@ -236,7 +237,7 @@ export default function HamstersPage() {
                 onClick={() => selectHamster(hamster)}
                 aria-pressed={hamster.slug === selected.slug}
               >
-                <span className="hamster-card-art"><HamsterSprite skin={hamster.skins[0]} name={hamster.name} size={96} /></span>
+                <span className="hamster-card-art" style={{ backgroundImage: `url(${hamsterBackgroundUrl(hamster.skins[0].walk)})` }}><HamsterSprite skin={hamster.skins[0]} name={hamster.name} size={96} /></span>
                 <strong>{hamster.name}</strong>
                 <span className="hamster-card-generation">{hamster.generation}. {t('hamsters.generation')}</span>
                 <span className="hamster-card-stats">

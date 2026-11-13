@@ -24,6 +24,7 @@ const ARTICLE_PATHS: Record<string, string> = {
   cuscuz: 'meet-cuscuz-hero-hamster',
   'jack-o-mine': 'meet-jack-o-mine',
   chillz: 'new-season-roller-vice',
+  'bb-smoke': 'bb-smoke',
 };
 
 export function officialHamsterArticle(slug: string): string | undefined {
@@ -46,6 +47,7 @@ const PASSIVES: Record<string, string> = {
   remote_bonus: 'remoteBonus', remote_power: 'remotePower', rlt_chest: 'rltChest',
   season_xp_chest: 'seasonXpChest', keep_it_going: 'keepGoing',
   rest_relay: 'restRelay', charge_relay: 'chargeRelay', games_boost: 'gamesBoost', skip_rest_chest: 'skipRestChest',
+  speed_up_walk: 'speedUpWalk',
 };
 
 const ULTIMATES: Record<string, string> = {
@@ -81,6 +83,11 @@ export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = f
     guide.source = officialHamsterArticle(hamster.slug);
     if (code === 'influencer') guide.description = 'influencerShared';
     if (ultimate) guide.example = 'jackOLoot';
+  }
+  if (hamster.slug === 'bb-smoke') {
+    guide.source = officialHamsterArticle(hamster.slug);
+    if (code === 'speed_up_walk') guide.example = 'bbSmokeSpeedUps';
+    if (ultimate) guide.description = guide.label = 'overchargedRemotePower';
   }
   if (hamster.slug === 'plague-dancer' && ultimate) {
     guide.description = 'plagueChests';

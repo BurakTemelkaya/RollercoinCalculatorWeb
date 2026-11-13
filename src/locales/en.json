@@ -191,7 +191,7 @@
     "maxStat": "Max: {{value}}",
     "restTime": "Base rest: {{hours}}h",
     "officialBestiary": "Official bestiary",
-    "newFeature": "New hamster page"
+    "newFeature": "New hamster: BB Smoke"
   },
   "lpp": {
     "title": "League Power Partition",
@@ -1267,13 +1267,13 @@
     "difficultyLabel": "Difficulty",
     "method": "Calculation method",
     "note": "The base chance curve is inferred from the examples in the official article; RollerCoin does not publish the equation. Map difficulty, passive survival and selected bonuses are added. The result is clamped to 0–100%.",
-    "levelNote": "One total stat point per level is assumed. GFeast is available only at level 50.",
+    "levelNote": "One total stat point per level is assumed, up to level 100 with Hamster Gym training. GFeast starts at level 50.",
     "source": "Official RollerCoin dev diary",
     "noResults": "No matching hamster.",
     "smartStudy": "Extra stat points earned with Smart Study",
     "smartStudyTotal": "Total stats with Smart Study",
     "smartStudyNote": "Adjust the total stats actually earned. Smart Study points are added above the level’s base total, up to 300.",
-    "maxStatsActive": "Ultimate active: health, strength and luck are 100.",
+    "maxStatsActive": "Ultimate active: health, strength and luck are 150.",
     "fullStats": "Health, strength and luck are 100."
   },
   "hamsterHub": {
@@ -1322,6 +1322,8 @@
       "pirateLuck": "Pirate Luck",
       "hamstersChest": "Hamsters Chest",
       "remotePowerUltimate": "Remote Power",
+      "speedUpWalk": "Speed Up Walk",
+      "overchargedRemotePower": "Remote Power",
       "overchargedChests": "Chests Multiplier ×3",
       "overchargedConversion": "Loot Conversion"
     },
@@ -1346,7 +1348,7 @@
       "restRelay": "Each full Expedition hour reduces other hamsters’ rest by the displayed minutes. Speed-Ups add no bonus; unused recovery is discarded.",
       "chargeRelay": "Recharges other hamsters’ Ultimates from full original Expedition hours. Charge is rounded to whole points; Speed-Ups give no extra benefit.",
       "gamesBoost": "Changes Games Boost by the displayed percentage. {{name}} pairs this choice with a Buyback cost trade-off.",
-      "boostMode": "Sets health, strength and luck to 100 for one Expedition when activated. Recharge requires {{charge}} points.",
+      "boostMode": "Sets health, strength and luck to 150 for one Expedition when activated. Recharge requires {{charge}} points.",
       "chestsMultiplier": "Activate before an Expedition, then select up to five rewards at the end and triple each. Recharge: {{charge}} points.",
       "plagueChests": "Triples up to five chosen rewards, even if the Expedition fails. Does not boost survival chance. Recharge: 30 points.",
       "cryptoChest": "Activate before an Expedition. A successful Expedition grants a Crypto Chest with cryptocurrency rewards. Recharge: {{charge}} points.",
@@ -1360,9 +1362,12 @@
       "overchargedChests": "Completed tiers triple 3 / 5 / 8 rewards for 18 / 24 / 30 points. Partial tiers do not count. Original Expedition hours charge it; use resets charge.",
       "pirateLuck": "After success, each reward you choose has a 50% chance to triple or disappear. Unselected rewards stay safe. Using it skips rest.",
       "hamstersChest": "The next successful Expedition adds a chest containing Magic Wool or a hamster. Failure consumes the Ultimate without that chest. Recharge: 100 points.",
-      "remotePowerUltimate": "While GFeast is alive on the Expedition, adds temporary Miner Power ×5 without room bonus multipliers. Duration uses original Expedition time, unaffected by Speed-Ups or time reductions."
+      "remotePowerUltimate": "While GFeast is alive on the Expedition, adds temporary Miner Power ×5 without room bonus multipliers. Duration uses original Expedition time, unaffected by Speed-Ups or time reductions.",
+      "speedUpWalk": "Earns 1 Speed-Up item per 2 full hours of a successful Expedition, or per 4 full hours BB Smoke stayed alive on a failed one. Uses the original duration, rounded down; Speed-Ups do not change it and the items do not affect Buyback.",
+      "overchargedRemotePower": "Adds Miner Power ×4 / ×5 / ×7 to your room at 20 / 30 / 42 charge points while BB Smoke is alive on the Expedition. Only the highest completed tier applies; percentage bonuses do not multiply it. Activate before departure; charge resets after the Expedition."
     },
     "examples": {
+      "bbSmokeSpeedUps": "A successful 24-hour Expedition earns 12 Speed-Up items.",
       "jackOLoot": "24 charge points unlock Tier II: +50% Extra Loot. Wait for 30 points to use Tier III: +75%, rather than +150%.",
       "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",
       "remoteBonus": "Base stats: (40 + 90 + 90) ×2% = 440%. At 100/100/100: 600%.",

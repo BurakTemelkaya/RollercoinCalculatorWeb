@@ -26,8 +26,9 @@ export const SUPPORTED_LANGUAGES: SelectOption[] = [
 
 const DailyBonusQuest = React.lazy(() => import('./DailyBonusQuest'));
 const RollercoinProfilePrompt = React.lazy(() => import('./RollercoinProfile').then(m => ({ default: m.RollercoinProfilePrompt })));
-const HAMSTERS_NOTICE_KEY = 'rollercoin_hamsters_notice_seen';
-const HAMSTERS_NOTICE_EXPIRES = Date.UTC(2026, 9, 1);
+// New key per announcement so visitors who dismissed an earlier one see it again.
+const HAMSTERS_NOTICE_KEY = 'rollercoin_hamsters_notice_seen_bb_smoke';
+const HAMSTERS_NOTICE_EXPIRES = Date.UTC(2026, 10, 20); // BB Smoke added 13 Nov 2026, shown for a week
 
 import { NAV_ICONS } from '../utils/icons';
 

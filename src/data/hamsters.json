@@ -4600,16 +4600,16 @@
     "ultimate": {
       "code": "all_stats_become_100",
       "text": {
-        "en": "All stats become 100",
-        "tr": "Tüm istatistikler 100 olur",
-        "ru": "Все характеристики становятся равны 100",
-        "de": "Alle Werte werden 100",
-        "es": "Todas las estadísticas pasan a ser 100",
-        "fr": "Toutes les statistiques passent à 100",
-        "pt": "Todos os atributos passam a ser 100",
-        "id": "Semua statistik menjadi 100",
-        "zh": "所有属性变为 100",
-        "cs": "Všechny statistiky se zvýší na 100"
+        "en": "All stats become 150",
+        "tr": "Tüm istatistikler 150 olur",
+        "ru": "Все характеристики становятся равны 150",
+        "de": "Alle Werte werden 150",
+        "es": "Todas las estadísticas pasan a ser 150",
+        "fr": "Toutes les statistiques passent à 150",
+        "pt": "Todos os atributos passam a ser 150",
+        "id": "Semua statistik menjadi 150",
+        "zh": "所有属性变为 150",
+        "cs": "Všechny statistiky se zvýší na 150"
       },
       "icon": "rollercoin/hamsters/icons/boost_mode.webp"
     },
@@ -6734,16 +6734,16 @@
     "ultimate": {
       "code": "boost_mode_all_stats_become_100",
       "text": {
-        "en": "Boost Mode: all stats become 100",
-        "tr": "Boost modu: tüm istatistikler 100 olur",
-        "ru": "Режим ускорения: все характеристики становятся равны 100",
-        "de": "Boost-Modus: Alle Werte werden 100",
-        "es": "Modo Boost: todas las estadísticas pasan a ser 100",
-        "fr": "Mode Boost : toutes les statistiques passent à 100",
-        "pt": "Modo Boost: todos os atributos passam a ser 100",
-        "id": "Mode Boost: semua statistik menjadi 100",
-        "zh": "加速模式：所有属性变为 100",
-        "cs": "Režim posílení: všechny statistiky se zvýší na 100"
+        "en": "Boost Mode: all stats become 150",
+        "tr": "Boost modu: tüm istatistikler 150 olur",
+        "ru": "Режим ускорения: все характеристики становятся равны 150",
+        "de": "Boost-Modus: Alle Werte werden 150",
+        "es": "Modo Boost: todas las estadísticas pasan a ser 150",
+        "fr": "Mode Boost : toutes les statistiques passent à 150",
+        "pt": "Modo Boost: todos os atributos passam a ser 150",
+        "id": "Mode Boost: semua statistik menjadi 150",
+        "zh": "加速模式：所有属性变为 150",
+        "cs": "Režim posílení: všechny statistiky se zvýší na 150"
       },
       "icon": "rollercoin/hamsters/icons/boost_mode.webp"
     },
@@ -12252,6 +12252,378 @@
           },
           "win_loop": {
             "path": "rollercoin/hamsters/pets/chillz/lvl01/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ],
+    "animationsPending": false
+  },
+  {
+    "slug": "bb-smoke",
+    "name": "BB Smoke",
+    "generation": 2,
+    "order": 35,
+    "stats": {
+      "health": 50,
+      "strength": 70,
+      "luck": 90
+    },
+    "abilities": [
+      {
+        "code": "speed_up_walk",
+        "text": {
+          "en": "Speed Up Walk",
+          "tr": "Hızlandırma Yürüyüşü",
+          "ru": "Прогулка за ускорениями",
+          "de": "Beschleuniger-Spaziergang",
+          "es": "Paseo de aceleradores",
+          "fr": "Balade d’accélérateurs",
+          "pt": "Caminhada de aceleradores",
+          "id": "Jalan Percepatan",
+          "zh": "加速漫步",
+          "cs": "Procházka za zrychleními"
+        },
+        "icon": "rollercoin/hamsters/icons/speed_percent.webp"
+      },
+      {
+        "code": "extra_loot",
+        "text": {
+          "en": "Extra Loot +25%",
+          "tr": "%25 Ekstra ganimet",
+          "ru": "+25% доп. добычи",
+          "de": "Extra-Beute +25%",
+          "es": "Botín extra +25%",
+          "fr": "Butin supplémentaire +25%",
+          "pt": "Espólio extra +25%",
+          "id": "Loot Ekstra +25%",
+          "zh": "额外战利品 +25%",
+          "cs": "Extra kořist +25%"
+        },
+        "icon": "rollercoin/hamsters/icons/loot_percent.webp"
+      },
+      {
+        "code": "return_to_work",
+        "text": {
+          "en": "20% Return to Work",
+          "tr": "%20 İşe dönüş",
+          "ru": "+20% возврата к работе",
+          "de": "20% Rückkehr zur Arbeit",
+          "es": "20% Retorno al trabajo",
+          "fr": "20% retour au travail",
+          "pt": "20% Retorno ao trabalho",
+          "id": "20% Kembali Bekerja",
+          "zh": "20% 恢复工作",
+          "cs": "20% Návrat do práce"
+        },
+        "icon": "rollercoin/hamsters/icons/overtime_duty_percent.webp"
+      }
+    ],
+    "builderSlots": [],
+    "ultimate": {
+      "code": "remote_power",
+      "text": {
+        "en": "Remote Power",
+        "tr": "Uzaktan güç",
+        "ru": "Удалённая мощность",
+        "de": "Fernleistung",
+        "es": "Potencia remota",
+        "fr": "Puissance à distance",
+        "pt": "Potência remota",
+        "id": "Daya jarak jauh",
+        "zh": "远程算力",
+        "cs": "Vzdálený výkon"
+      },
+      "icon": "rollercoin/hamsters/icons/remote_power.webp"
+    },
+    "ultimateChargePoints": 20,
+    "ultimateTiers": [
+      {
+        "tier": 1,
+        "chargeRequired": 20,
+        "text": {
+          "en": "Miner Power ×4",
+          "tr": "Madenci Gücü ×4",
+          "ru": "Мощность майнеров ×4",
+          "de": "Miner-Leistung ×4",
+          "es": "Potencia de mineros ×4",
+          "fr": "Puissance des mineurs ×4",
+          "pt": "Poder dos mineradores ×4",
+          "id": "Daya Miner ×4",
+          "zh": "矿机算力 ×4",
+          "cs": "Výkon minerů ×4"
+        }
+      },
+      {
+        "tier": 2,
+        "chargeRequired": 30,
+        "text": {
+          "en": "Miner Power ×5",
+          "tr": "Madenci Gücü ×5",
+          "ru": "Мощность майнеров ×5",
+          "de": "Miner-Leistung ×5",
+          "es": "Potencia de mineros ×5",
+          "fr": "Puissance des mineurs ×5",
+          "pt": "Poder dos mineradores ×5",
+          "id": "Daya Miner ×5",
+          "zh": "矿机算力 ×5",
+          "cs": "Výkon minerů ×5"
+        }
+      },
+      {
+        "tier": 3,
+        "chargeRequired": 42,
+        "text": {
+          "en": "Miner Power ×7",
+          "tr": "Madenci Gücü ×7",
+          "ru": "Мощность майнеров ×7",
+          "de": "Miner-Leistung ×7",
+          "es": "Potencia de mineros ×7",
+          "fr": "Puissance des mineurs ×7",
+          "pt": "Poder dos mineradores ×7",
+          "id": "Daya Miner ×7",
+          "zh": "矿机算力 ×7",
+          "cs": "Výkon minerů ×7"
+        }
+      }
+    ],
+    "skins": [
+      {
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl01/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl01/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 10,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl10/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl10/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 20,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl20/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl20/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 30,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl30/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl30/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 40,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl40/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl40/sprite_win_loop.png",
             "frames": 6,
             "frameWidth": 128,
             "frameHeight": 128

@@ -9,6 +9,9 @@ export interface ChanceOptions {
   extraStatPoints?: number;
 }
 
+// Hamster Gym training raised the cap from 50 (https://rollercoin.com/blog/hamster-gym-guide).
+export const MAX_HAMSTER_LEVEL = 100;
+
 export function hasMaxStatsUltimate(hamster: Hamster): boolean {
   return hamster.ultimate?.code === 'all_stats_become_100' || hamster.ultimate?.code === 'boost_mode_all_stats_become_100';
 }
@@ -18,7 +21,8 @@ export function hasSmartStudy(hamster: Hamster): boolean {
 }
 
 export function totalHamsterStats(hamster: Hamster, level: number, ultimate = false, extraStatPoints = 0): number {
-  if (ultimate && hasMaxStatsUltimate(hamster)) return 300;
+  // Since the Gym update these ultimates set each stat to 150 (was 100).
+  if (ultimate && hasMaxStatsUltimate(hamster)) return 450;
   const startingLevel = hamster.skins[0]?.level ?? 1;
   const availableSmartStudyPoints = 300 - (hamster.stats.health + hamster.stats.strength + hamster.stats.luck);
   const smartStudyPoints = hasSmartStudy(hamster) ? Math.min(availableSmartStudyPoints, Math.max(0, Math.floor(extraStatPoints))) : 0;

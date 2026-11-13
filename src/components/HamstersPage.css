@@ -240,6 +240,11 @@
   overflow: hidden;
   border-radius: var(--radius-sm, 6px);
   background: radial-gradient(circle at 50% 75%, rgba(99, 102, 241, .18), var(--hamster-inset) 75%);
+  /* The inline per-hamster background.png replaces the gradient; the color stays while it loads. */
+  background-color: var(--hamster-inset);
+  background-position: center;
+  background-size: cover;
+  image-rendering: pixelated;
 }
 .hamster-card strong { text-align: center; line-height: 1.2; }
 .hamster-card-generation { margin: 4px 0; color: #a5b4fc; font-size: 11px; font-weight: 800; }

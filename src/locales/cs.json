@@ -1175,7 +1175,7 @@
     "maxStat": "Maximum: {{value}}",
     "restTime": "Základní odpočinek: {{hours}} h",
     "officialBestiary": "Oficiální bestiář",
-    "newFeature": "Nová stránka křečků"
+    "newFeature": "Nový křeček: BB Smoke"
   },
   "hamsterExpeditions": {
     "eyebrow": "ROLLERCOIN · EXPEDICE",
@@ -1211,13 +1211,13 @@
     "difficultyLabel": "Obtížnost",
     "method": "Metoda výpočtu",
     "note": "Křivka základní šance je odvozena z příkladů v oficiálním článku; RollerCoin rovnici nezveřejňuje. Přičítá se obtížnost mapy, pasivní bonus přežití a vybrané bonusy. Výsledek je omezen na 0–100 %.",
-    "levelNote": "Předpokládá se jeden souhrnný bod statistiky za úroveň. GFeast je dostupný pouze na úrovni 50.",
+    "levelNote": "Předpokládá se jeden souhrnný bod statistiky za úroveň; tréninkem v Hamster Gym lze dosáhnout úrovně 100. GFeast začíná na úrovni 50.",
     "source": "Oficiální vývojářský deník RollerCoin",
     "noResults": "Žádný odpovídající křeček.",
     "smartStudy": "Další body statistik ze Smart Study",
     "smartStudyTotal": "Celkové statistiky se Smart Study",
     "smartStudyNote": "Nastavte skutečně získaný součet statistik. Body Smart Study se přidávají k základnímu součtu úrovně, maximálně do 300.",
-    "maxStatsActive": "Ultimátní schopnost je aktivní: zdraví, síla a štěstí jsou 100.",
+    "maxStatsActive": "Ultimátní schopnost je aktivní: zdraví, síla a štěstí jsou 150.",
     "fullStats": "Zdraví, síla a štěstí jsou 100."
   },
   "hamsterHub": {
@@ -1266,6 +1266,8 @@
       "pirateLuck": "Pirátské štěstí",
       "hamstersChest": "Truhla křečků",
       "remotePowerUltimate": "Vzdálený výkon",
+      "speedUpWalk": "Procházka za zrychleními",
+      "overchargedRemotePower": "Vzdálený výkon",
       "overchargedChests": "Násobitel truhel ×3",
       "overchargedConversion": "Převod kořisti"
     },
@@ -1290,7 +1292,7 @@
       "restRelay": "Každá celá hodina snižuje odpočinek ostatních o uvedené minuty. Zrychlení nepřidává bonus; přebytek propadá.",
       "chargeRelay": "Nabíjí ultimátní schopnosti ostatních za celé původní hodiny. Jen celé body; zrychlení nedává další výhodu.",
       "gamesBoost": "Mění Games Boost o uvedené procento. U {{name}} je tato volba spojena se změnou výkupní ceny.",
-      "boostMode": "Nastaví zdraví, sílu a štěstí na 100 pro jednu expedici. Dobití: {{charge}} bodů.",
+      "boostMode": "Nastaví zdraví, sílu a štěstí na 150 pro jednu expedici. Dobití: {{charge}} bodů.",
       "chestsMultiplier": "Aktivujte před expedicí; na konci vyberte až pět odměn a každou ztrojnásobte. Dobití: {{charge}} bodů.",
       "plagueChests": "Ztrojnásobí až pět vybraných odměn i při neúspěchu. Nezvyšuje přežití. Dobití: 30 bodů.",
       "cryptoChest": "Aktivujte před expedicí. Při úspěchu získáte truhlu s kryptoměnami. Dobití: {{charge}} bodů.",
@@ -1304,9 +1306,12 @@
       "overchargedChests": "Dokončené stupně ztrojnásobí 3 / 5 / 8 odměn za 18 / 24 / 30 bodů. Částečné se nepočítají. Nabíjení původními hodinami; použití vynuluje nabití.",
       "pirateLuck": "Po úspěchu má každá vybraná odměna 50% šanci ztrojnásobit se nebo zmizet. Ostatní zůstávají bezpečné. Použití přeskočí odpočinek.",
       "hamstersChest": "Další úspěšná expedice přidá truhlu s Magic Wool nebo křečkem. Neúspěch spotřebuje schopnost bez truhly. Dobití: 100 bodů.",
-      "remotePowerUltimate": "Dokud GFeast žije, přidává dočasný výkon těžařů ×5 bez bonusu místnosti. Trvání dle původní doby, bez vlivu zrychlení a zkrácení."
+      "remotePowerUltimate": "Dokud GFeast žije, přidává dočasný výkon těžařů ×5 bez bonusu místnosti. Trvání dle původní doby, bez vlivu zrychlení a zkrácení.",
+      "speedUpWalk": "Za každé 2 celé hodiny úspěšné expedice získá 1 zrychlení, při neúspěchu za každé 4 celé hodiny, kdy BB Smoke zůstal naživu. Počítá se původní délka zaokrouhlená dolů; zrychlení ji nemění a předměty neovlivňují výkup.",
+      "overchargedRemotePower": "Při 20 / 30 / 42 bodech nabití přidá do místnosti výkon minerů ×4 / ×5 / ×7, dokud je BB Smoke v expedici naživu. Platí pouze nejvyšší plně nabitý stupeň; procentní bonusy jej nenásobí. Aktivujte před odchodem; náboj se po expedici vynuluje."
     },
     "examples": {
+      "bbSmokeSpeedUps": "Úspěšná 24hodinová expedice dá 12 zrychlení.",
       "jackOLoot": "24 bodů odemkne stupeň II: +50% kořisti. Při 30 bodech stupeň III dává +75%, nikoli +150%.",
       "cuscuzRemoteBonus": "Základní atributy: (90 + 75 + 90) ×2 % = 510% bonus místnosti.",
       "remoteBonus": "Základ: (40 + 90 + 90) ×2% = 440%. Při 100/100/100: 600%.",

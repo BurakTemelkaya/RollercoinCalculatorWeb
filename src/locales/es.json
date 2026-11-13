@@ -1123,7 +1123,7 @@
     "maxStat": "Máximo: {{value}}",
     "restTime": "Descanso base: {{hours}} h",
     "officialBestiary": "Bestiario oficial",
-    "newFeature": "Nueva página de hámsteres"
+    "newFeature": "Nuevo hámster: BB Smoke"
   },
   "hamsterExpeditions": {
     "eyebrow": "ROLLERCOIN · EXPEDICIÓN",
@@ -1159,13 +1159,13 @@
     "difficultyLabel": "Dificultad",
     "method": "Método de cálculo",
     "note": "La curva de probabilidad base se deduce de los ejemplos del artículo oficial; RollerCoin no publica la ecuación. Se suman la dificultad del mapa, la supervivencia pasiva y las bonificaciones elegidas. El resultado se limita entre 0 y 100%.",
-    "levelNote": "Se supone un punto de estadística total por nivel. GFeast solo está disponible en el nivel 50.",
+    "levelNote": "Se supone un punto de estadística total por nivel; con el entrenamiento del Hamster Gym se llega hasta el nivel 100. GFeast empieza en el nivel 50.",
     "source": "Diario oficial de desarrollo de RollerCoin",
     "noResults": "No se encontraron hámsteres.",
     "smartStudy": "Puntos extra de estadísticas obtenidos con Smart Study",
     "smartStudyTotal": "Estadísticas totales con Smart Study",
     "smartStudyNote": "Ajusta el total de estadísticas obtenido. Los puntos de Smart Study se añaden al total base del nivel, hasta 300.",
-    "maxStatsActive": "Habilidad definitiva activa: salud, fuerza y suerte son 100.",
+    "maxStatsActive": "Habilidad definitiva activa: salud, fuerza y suerte son 150.",
     "fullStats": "Salud, fuerza y suerte son 100."
   },
   "hamsterHub": {
@@ -1214,6 +1214,8 @@
       "pirateLuck": "Suerte pirata",
       "hamstersChest": "Cofre de hámsters",
       "remotePowerUltimate": "Potencia remota",
+      "speedUpWalk": "Paseo de aceleradores",
+      "overchargedRemotePower": "Potencia remota",
       "overchargedChests": "Multiplicador de cofres ×3",
       "overchargedConversion": "Conversión de botín"
     },
@@ -1238,7 +1240,7 @@
       "restRelay": "Cada hora completa reduce el descanso de otros hámsters en los minutos indicados. Los aceleradores no añaden beneficio; el sobrante se pierde.",
       "chargeRelay": "Recarga las definitivas de otros hámsters con horas completas originales. Solo puntos enteros; los aceleradores no dan beneficio extra.",
       "gamesBoost": "Modifica Games Boost en el porcentaje indicado. {{name}} lo combina con un cambio del coste de recompra.",
-      "boostMode": "Establece salud, fuerza y suerte en 100 durante una expedición. Recarga: {{charge}} puntos.",
+      "boostMode": "Establece salud, fuerza y suerte en 150 durante una expedición. Recarga: {{charge}} puntos.",
       "chestsMultiplier": "Activa antes de la expedición; al terminar, elige hasta cinco recompensas y triplica cada una. Recarga: {{charge}} puntos.",
       "plagueChests": "Triplica hasta cinco recompensas elegidas incluso si falla. No aumenta la supervivencia. Recarga: 30 puntos.",
       "cryptoChest": "Activa antes de la expedición. Si tiene éxito, recibes un cofre de criptomonedas. Recarga: {{charge}} puntos.",
@@ -1252,9 +1254,12 @@
       "overchargedChests": "Niveles completos triplican 3 / 5 / 8 recompensas por 18 / 24 / 30 puntos. Los parciales no cuentan. Horas originales cargan; se reinicia al usar.",
       "pirateLuck": "Tras el éxito, cada recompensa elegida tiene 50% de triplicarse o desaparecer. Las demás quedan seguras. El uso omite el descanso.",
       "hamstersChest": "La siguiente expedición exitosa añade un cofre con Magic Wool o un hámster. El fallo consume la definitiva sin cofre. Recarga: 100 puntos.",
-      "remotePowerUltimate": "Mientras GFeast vive, añade potencia temporal ×5 sin bonus de sala. Duración original; aceleradores y reducciones no la cambian."
+      "remotePowerUltimate": "Mientras GFeast vive, añade potencia temporal ×5 sin bonus de sala. Duración original; aceleradores y reducciones no la cambian.",
+      "speedUpWalk": "Otorga 1 acelerador por cada 2 horas completas de una expedición exitosa, o por cada 4 horas completas que BB Smoke siguió vivo en una fallida. Usa la duración original redondeada hacia abajo; los aceleradores no la cambian y los objetos no afectan la recompra.",
+      "overchargedRemotePower": "Con 20 / 30 / 42 puntos de carga añade potencia de mineros ×4 / ×5 / ×7 a tu sala mientras BB Smoke siga vivo en la expedición. Solo cuenta el nivel completo más alto; los bonos porcentuales no la multiplican. Actívala antes de salir; la carga se reinicia tras la expedición."
     },
     "examples": {
+      "bbSmokeSpeedUps": "Una expedición exitosa de 24 horas otorga 12 aceleradores.",
       "jackOLoot": "24 puntos permiten el nivel II: +50% de botín. Con 30 puntos, el nivel III da +75%, no +150%.",
       "cuscuzRemoteBonus": "Estadísticas base: (90 + 75 + 90) ×2% = 510% de bonus de sala.",
       "remoteBonus": "Base: (40 + 90 + 90) ×2% = 440%. Con 100/100/100: 600%.",

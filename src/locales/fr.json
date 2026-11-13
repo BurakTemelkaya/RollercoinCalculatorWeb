@@ -1124,7 +1124,7 @@
     "maxStat": "Maximum : {{value}}",
     "restTime": "Repos de base : {{hours}} h",
     "officialBestiary": "Bestiaire officiel",
-    "newFeature": "Nouvelle page des hamsters"
+    "newFeature": "Nouveau hamster : BB Smoke"
   },
   "hamsterExpeditions": {
     "eyebrow": "ROLLERCOIN · EXPÉDITION",
@@ -1160,13 +1160,13 @@
     "difficultyLabel": "Difficulté",
     "method": "Méthode de calcul",
     "note": "La courbe de chance de base est déduite des exemples de l'article officiel ; RollerCoin ne publie pas l'équation. La difficulté, les bonus de survie passifs et les bonus choisis sont ajoutés. Le résultat est limité de 0 à 100 %.",
-    "levelNote": "Un point de statistique total par niveau est supposé. GFeast n'est disponible qu'au niveau 50.",
+    "levelNote": "Un point de statistique total par niveau est supposé ; l’entraînement au Hamster Gym permet d’atteindre le niveau 100. GFeast commence au niveau 50.",
     "source": "Journal officiel des développeurs RollerCoin",
     "noResults": "Aucun hamster trouvé.",
     "smartStudy": "Points de statistique supplémentaires obtenus avec Smart Study",
     "smartStudyTotal": "Statistiques totales avec Smart Study",
     "smartStudyNote": "Ajustez le total réellement obtenu. Les points Smart Study s’ajoutent au total de base du niveau, jusqu’à 300.",
-    "maxStatsActive": "Capacité ultime active : santé, force et chance sont à 100.",
+    "maxStatsActive": "Capacité ultime active : santé, force et chance sont à 150.",
     "fullStats": "Santé, force et chance sont à 100."
   },
   "hamsterHub": {
@@ -1215,6 +1215,8 @@
       "pirateLuck": "Chance de pirate",
       "hamstersChest": "Coffre de hamsters",
       "remotePowerUltimate": "Puissance à distance",
+      "speedUpWalk": "Balade d’accélérateurs",
+      "overchargedRemotePower": "Puissance à distance",
       "overchargedChests": "Multiplicateur de coffres ×3",
       "overchargedConversion": "Conversion du butin"
     },
@@ -1239,7 +1241,7 @@
       "restRelay": "Chaque heure complète réduit le repos des autres hamsters des minutes indiquées. Pas de bonus des accélérateurs ; surplus perdu.",
       "chargeRelay": "Recharge les ultimes des autres hamsters selon les heures originales complètes. Points entiers uniquement ; aucun bonus des accélérateurs.",
       "gamesBoost": "Modifie Games Boost du pourcentage indiqué. Chez {{name}}, ce choix change aussi le coût de rachat.",
-      "boostMode": "Fixe santé, force et chance à 100 pour une expédition. Recharge : {{charge}} points.",
+      "boostMode": "Fixe santé, force et chance à 150 pour une expédition. Recharge : {{charge}} points.",
       "chestsMultiplier": "Activez avant l’expédition ; à la fin, choisissez jusqu’à cinq récompenses et triplez-les. Recharge : {{charge}} points.",
       "plagueChests": "Triple jusqu’à cinq récompenses choisies, même en cas d’échec. Aucun bonus de survie. Recharge : 30 points.",
       "cryptoChest": "Activez avant l’expédition. En cas de réussite, recevez un coffre de cryptomonnaies. Recharge : {{charge}} points.",
@@ -1253,9 +1255,12 @@
       "overchargedChests": "Paliers complets : 3 / 5 / 8 récompenses triplées pour 18 / 24 / 30 points. Paliers partiels ignorés. Charge par heures originales ; remise à zéro après usage.",
       "pirateLuck": "Après réussite, chaque récompense choisie a 50% de chance d’être triplée ou perdue. Les autres sont préservées. Utilisation sans repos.",
       "hamstersChest": "La prochaine réussite ajoute un coffre contenant Magic Wool ou un hamster. Un échec consomme l’ultime sans coffre. Recharge : 100 points.",
-      "remotePowerUltimate": "Tant que GFeast vit, puissance temporaire des mineurs ×5 sans bonus de salle. Durée originale, inchangée par accélérateurs ou réductions."
+      "remotePowerUltimate": "Tant que GFeast vit, puissance temporaire des mineurs ×5 sans bonus de salle. Durée originale, inchangée par accélérateurs ou réductions.",
+      "speedUpWalk": "Rapporte 1 accélérateur toutes les 2 heures complètes d’une expédition réussie, ou toutes les 4 heures complètes pendant lesquelles BB Smoke est resté en vie lors d’un échec. La durée initiale est arrondie à l’inférieur ; les accélérateurs ne la changent pas et les objets n’affectent pas le rachat.",
+      "overchargedRemotePower": "À 20 / 30 / 42 points de charge, ajoute la puissance des mineurs ×4 / ×5 / ×7 à votre salle tant que BB Smoke est en vie pendant l’expédition. Seul le palier complet le plus élevé compte ; les bonus en pourcentage ne la multiplient pas. Activez avant le départ ; la charge est réinitialisée après l’expédition."
     },
     "examples": {
+      "bbSmokeSpeedUps": "Une expédition réussie de 24 heures rapporte 12 accélérateurs.",
       "jackOLoot": "24 points donnent le palier II : +50% de butin. À 30 points, le palier III donne +75%, et non +150%.",
       "cuscuzRemoteBonus": "Stats de base : (90 + 75 + 90) ×2 % = 510 % de bonus de salle.",
       "remoteBonus": "Base : (40 + 90 + 90) ×2% = 440%. Avec 100/100/100 : 600%.",
