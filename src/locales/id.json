@@ -95,7 +95,10 @@
       "s5": "Tempel di kotak di bawah dan klik {{read}}. Ulangi untuk halaman lain."
     },
     "shrinkHint": "Kamu bisa mengecilkan panel di sini",
-    "uncatalogued": "Tidak ditemukan di katalog, ditambahkan dari data salinan dengan lebar 2 sel (periksa lebar dan gambar): {{names}}"
+    "uncatalogued": "Tidak ditemukan di katalog, ditambahkan dari data salinan dengan lebar 2 sel (periksa lebar dan gambar): {{names}}",
+    "addedPartial": "{{count}} dari {{total}} miner ditambahkan; ruangan penuh, sisanya tetap di daftar Anda.",
+    "replaceWeakerConfirm": "{{count}} miner tidak muat. Ganti miner yang lebih lemah di ruangan? Miner yang dilepas kembali ke daftar Anda.",
+    "replacedWeaker": "{{added}} miner ditambahkan; {{removed}} miner yang lebih lemah diganti dan kembali ke daftar Anda."
   },
   "calculatorEmpty": {
     "earnings": "Untuk melihat pendapatan, masukkan nama pengguna di atas dan klik Ambil, atau masukkan daya Anda.",

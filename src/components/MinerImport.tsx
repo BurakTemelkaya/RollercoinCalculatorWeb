@@ -4,14 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { resolveImportedMiners } from '../services/minerImport';
 import { MAX_IMPORTED_MINERS, MINER_IMPORT_STORAGE_KEY, MINER_IMPORT_CHANGE_EVENT, parseMinerImport,
     readSavedImportedMiners, saveImportedMiners, adjustImportedQuantities,
-    validateImportedQuantities, type ImportedMiner } from '../utils/minerImport';
+    validateImportedQuantities, type ImportedMiner, type ImportedMinerQuantity } from '../utils/minerImport';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
 import CdnImage from './CdnImage';
 import { ApiGuideAnimation, CopyGuideAnimation } from './ImportGuideAnimation';
 import './MinerImport.css';
 
 export default function MinerImport({ onAdd, embedded = false, onMinerPointerDown, addAllLabel, actions }: {
-    onAdd: (miners: ImportedMiner[]) => void | false;
+    /** Return what was actually added when it can be less than requested; false cancels. */
+    onAdd: (miners: ImportedMiner[]) => void | false | ImportedMinerQuantity[];
     embedded?: boolean;
     addAllLabel?: string;
     actions?: ReactNode;
@@ -89,9 +90,15 @@ export default function MinerImport({ onAdd, embedded = false, onMinerPointerDow
         try {
             const available = selected.filter(item => item.quantity > 0);
             if (!available.length) return;
-            const next = adjustImportedQuantities(itemsRef.current, available, -1);
-            if (onAdd(available) === false) return;
-            if (save(next)) setMessage(t('minerImport.added'));
+            adjustImportedQuantities(itemsRef.current, available, -1);
+            const added = onAdd(available);
+            if (added === false) return;
+            const taken = added ?? available;
+            const requested = available.reduce((sum, item) => sum + item.quantity, 0);
+            const count = taken.reduce((sum, item) => sum + item.quantity, 0);
+            if (save(adjustImportedQuantities(itemsRef.current, taken, -1))) {
+                setMessage(count < requested ? t('minerImport.addedPartial', { count, total: requested }) : t('minerImport.added'));
+            }
         } catch { setError(t('minerImport.addError')); }
     };
     const changeQuantity = (minerId: string, quantity: number) => {
