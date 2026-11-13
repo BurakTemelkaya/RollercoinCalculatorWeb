@@ -5,6 +5,6 @@ export function hamsterAssetUrl(path: string | null | undefined) {
 }
 
 // Card backgrounds live next to the level folders: pets/<folder>/background.png.
-export function hamsterBackgroundUrl(walkPath: string) {
-  return hamsterAssetUrl(walkPath.replace(/\/[^/]+\/[^/]+$/, '/background.png'));
+export function hamsterBackgroundUrl(walkPath: string | null | undefined) {
+  return hamsterAssetUrl(walkPath?.replace(/\/[^/]+\/[^/]+$/, '/background.png'));
 }
