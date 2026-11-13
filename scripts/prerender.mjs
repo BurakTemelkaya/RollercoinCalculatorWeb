@@ -215,7 +215,9 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     });
 
     // Capture rendered HTML
-    const html = await page.content();
+    // Vite's runtime preload links are absolute to this local server; a baked-in
+    // localhost URL makes Chrome ask live visitors for "apps on device" access.
+    const html = (await page.content()).replaceAll(`http://localhost:${PORT}`, '');
 
     // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
     // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
