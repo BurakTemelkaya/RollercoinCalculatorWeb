@@ -378,12 +378,28 @@ function getRewardDisplay(
 export function RewardTile({ reward, lang, className = '' }: { reward: ProgressionReward; lang?: string; className?: string }) {
     const { t } = useTranslation();
     const display = getRewardDisplay(reward, t);
-    const image = display.localImage ?? display.rcImageUrl ?? display.imageUrl;
+    // Our own copy first (the backend mirrors reward images, including types this page has never seen);
+    // Rollercoin's original is the fallback while a copy is missing.
+    const ownImage = reward.cdn_image_path ? `${getCdnBaseUrl()}/${reward.cdn_image_path}` : undefined;
+    const rollercoinImage = reward.item_media_url ? getCdnUrl(reward.item_media_url) : display.rcImageUrl;
+    const image = display.localImage ?? ownImage ?? display.imageUrl ?? rollercoinImage;
     return (
         <RewardLink display={display} lang={lang} className={`reward-tile ${className}`}>
             <span className="reward-tile-img">
                 {(display.level ?? 0) > 1 && <img className="reward-tile-level" src={`/miner-levels/level_${display.level}.webp`} alt={`Level ${display.level}`} />}
-                {image && <img src={image} alt="" loading="lazy" />}
+                {display.itemType === 'miner' && display.itemId && display.imageUrl ? (
+                    <CdnImage type="miner" itemId={display.itemId} fallbackUrl={display.imageUrl} alt="" loading="lazy" />
+                ) : image && (
+                    <img
+                        src={image}
+                        alt=""
+                        loading="lazy"
+                        onError={(e) => {
+                            const target = e.currentTarget;
+                            if (rollercoinImage && target.src !== rollercoinImage) target.src = rollercoinImage;
+                        }}
+                    />
+                )}
             </span>
             <span className="reward-tile-name">{display.text}</span>
             {display.subText && <span className="reward-tile-sub">{display.subText}</span>}

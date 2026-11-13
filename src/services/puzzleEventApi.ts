@@ -10,7 +10,10 @@ export interface PuzzleReward {
     currency: string | null;
     ttlTime: number;
     itemId: string | null;
+    /** Image path on static.rollercoin.com (fallback source) */
     mediaUrl: string | null;
+    /** Image path on our CDN; null for types resolved another way (miners, coins, parts…) */
+    imagePath: string | null;
     fileName: string | null;
     power: number | null;   // Gh/s
     bonus: number | null;   // percent * 100

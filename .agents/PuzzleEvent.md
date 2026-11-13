@@ -58,3 +58,12 @@ Development ortamında zamanlanmış job'lar kayıtlı değildir. `Program.cs` i
 3. Maili denemek için yerel hesapta Puzzle bildirimini aç, "PUZZLE NOTIFICATION (local test)" bloğunun da yorumunu kaldır ve yeniden başlat (açılıştan 30 sn sonra gönderir).
 
 Development'ta Rollercoin istekleri `appsettings.Development.json` içindeki proxy üzerinden gider ve geçerli bir Rollercoin oturumu gerekir. Bu blokları commit etmeden önce tekrar yoruma al.
+
+## Ödül görselleri
+
+Madenci, para, güç ve parça dışındaki ödüllerin (utility item, spor aleti, ileride gelecek yeni tipler) görselini backend otomatik olarak kendi CDN'imize kopyalar; yeni bir ödül tipi için kod değişikliği gerekmez.
+
+- Kural tek yerde durur: backend'deki `PuzzleRewardImage`. Kaynak yol ödülün `MediaUrl`'idir; tahta verisinde yolu gelmeyen utility item'lar için `static/img/market/utility_items/{itemId}.gif` kullanılır.
+- Kopyanın yeri: utility item'lar `utility_items/{dosya}` (progression event ile ortak klasör), diğer her şey `rewards/{yolun tamamı alt çizgiyle}` (ör. `rewards/gym_equipment_treadmill_preview.gif`; dosya adı tek başına ayırt edici değildir).
+- Kopyalama `CreatePuzzleEventCommand` içinde, event aktifken her saatlik turda çağrılır; dosya zaten varsa indirme yapılmaz. Görsel inemezse event yine kaydedilir.
+- API ödülde iki alan döner: `imagePath` (bizim CDN'deki yol) ve `mediaUrl` (Rollercoin'deki yol). `RewardTile` önce kendi kopyamızı dener, yüklenemezse Rollercoin'deki asıl görsele düşer. Madenci görselleri `CdnImage` ile aynı şekilde önce kendi CDN'imizden gelir.

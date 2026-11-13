@@ -40,6 +40,7 @@ function toProgressionReward(r: PuzzleReward): ProgressionReward {
         description: text,
         range_count: { min: 0, max: 0 },
         item_media_url: r.mediaUrl,
+        cdn_image_path: r.imagePath,
         item: r.type === 'miner' && r.fileName ? {
             _id: r.itemId ?? '',
             power: r.power ?? 0,

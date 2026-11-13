@@ -106,6 +106,8 @@ export interface ProgressionReward {
   description: LocalizedText;
   range_count: { min: number; max: number };
   item_media_url?: string | null;
+  /** Path of the backend's own copy of the reward image, relative to the CDN root (puzzle events) */
+  cdn_image_path?: string | null;
   single_piece_url?: string | null;
   box_image_url?: string | null;
   cover_image_url?: string | null;
