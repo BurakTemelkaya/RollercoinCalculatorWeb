@@ -94,7 +94,8 @@
       "s4": "Tekan Ctrl+C untuk menyalin pilihan.",
       "s5": "Tempel di kotak di bawah dan klik {{read}}. Ulangi untuk halaman lain."
     },
-    "shrinkHint": "Kamu bisa mengecilkan panel di sini"
+    "shrinkHint": "Kamu bisa mengecilkan panel di sini",
+    "uncatalogued": "Tidak ditemukan di katalog, ditambahkan dari data salinan dengan lebar 2 sel (periksa lebar dan gambar): {{names}}"
   },
   "calculatorEmpty": {
     "earnings": "Untuk melihat pendapatan, masukkan nama pengguna di atas dan klik Ambil, atau masukkan daya Anda.",

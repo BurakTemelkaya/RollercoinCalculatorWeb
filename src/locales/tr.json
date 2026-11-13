@@ -94,7 +94,8 @@
       "s4": "Seçimi kopyalamak için Ctrl+C tuşlarına basın.",
       "s5": "Aşağıdaki kutuya yapıştırın ve {{read}} düğmesine tıklayın. Diğer sayfalar için tekrarlayın."
     },
-    "shrinkHint": "Paneli buradan küçültebilirsin"
+    "shrinkHint": "Paneli buradan küçültebilirsin",
+    "uncatalogued": "Katalogda bulunamadı, kopyalanan bilgilerle 2 hücre genişliğinde eklendi (genişliği ve görseli kontrol edin): {{names}}"
   },
   "calculatorEmpty": {
     "earnings": "Kazançlarınızı görmek için yukarıdan kullanıcı adınızı girip Getir’e basın veya kullanıcı gücünüzü girin.",

@@ -94,7 +94,8 @@
       "s4": "Appuyez sur Ctrl+C pour copier la sélection.",
       "s5": "Collez-la dans le champ ci-dessous et cliquez sur {{read}}. Répétez pour les autres pages."
     },
-    "shrinkHint": "Vous pouvez réduire le panneau ici"
+    "shrinkHint": "Vous pouvez réduire le panneau ici",
+    "uncatalogued": "Introuvable dans le catalogue, ajouté depuis les données copiées sur 2 cases de large (vérifiez la largeur et l’image) : {{names}}"
   },
   "calculatorEmpty": {
     "earnings": "Pour voir vos gains, saisissez votre nom d’utilisateur ci-dessus et cliquez sur Récupérer, ou saisissez votre puissance.",
