@@ -20,8 +20,7 @@ const labels = key => Object.fromEntries(languages.map(language => {
 }));
 const minerPower = ['Miner Power', 'Madenci Gücü', 'Мощность майнеров', 'Miner-Leistung', 'Potencia de mineros', 'Puissance des mineurs', 'Poder dos mineradores', 'Daya Miner', '矿机算力', 'Výkon minerů'];
 
-// Level 50's CDN folder has not been found yet; add it here once it is available.
-const skins = [1, 10, 20, 30, 40].map(level => {
+const skins = [1, 10, 20, 30, 40, 50].map(level => {
   const prefix = `rollercoin/hamsters/pets/bb-smoke/lvl${String(level).padStart(2, '0')}`;
   const frameCounts = { walk: 8, jump: 7, tap_reaction: 10, go_sleep: 24, take_chest: 9, win_loop: 6 };
   const animations = Object.fromEntries(Object.entries(frameCounts).map(([action, frames]) => [action, {
@@ -68,4 +67,4 @@ set.members = [...new Set(set.members.map(slug => (slug === 'bb-hamster' ? hamst
 assert(set.members.includes(hamster.slug));
 fs.writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
 fs.writeFileSync(setsPath, `${JSON.stringify(sets, null, 2)}\n`);
-console.log('Added BB Smoke: five appearances, official abilities and Community Set membership.');
+console.log('Added BB Smoke: six appearances, official abilities and Community Set membership.');

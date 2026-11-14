@@ -5,7 +5,7 @@ import enLocale from '../locales/en.json';
 import { EXPEDITION_MAPS } from '../data/expeditionMaps';
 import HamsterSprite from './HamsterSprite';
 import type { Hamster } from '../types/hamster';
-import { abilitySurvivalBonus, basicSurvivalChance, builderSurvivalBonus, difficultyInfluence, expeditionSurvivalChance, hasMaxStatsUltimate, hasSmartStudy, MAX_HAMSTER_LEVEL, totalHamsterStats } from '../utils/expeditionChance';
+import { abilitySurvivalBonus, basicSurvivalChance, builderSurvivalBonus, difficultyInfluence, expeditionSurvivalChance, hasMaxStatsUltimate, hasSmartStudy, MAX_HAMSTER_LEVEL, MAX_TOTAL_STATS, totalHamsterStats } from '../utils/expeditionChance';
 import './HamsterExpeditionsPage.css';
 import HamsterSectionNav from './HamsterSectionNav';
 import HamsterNumberInput from './HamsterNumberInput';
@@ -57,7 +57,7 @@ export default function HamsterExpeditionsPage() {
   };
   const changeSmartStudyTotal = (hamster: Hamster, total: number | null) => {
     const base = totalHamsterStats(hamster, levelOf(hamster));
-    setSmartStudyPoints(previous => ({ ...previous, [hamster.slug]: Math.max(0, Math.min(300, total ?? base) - base) }));
+    setSmartStudyPoints(previous => ({ ...previous, [hamster.slug]: Math.max(0, Math.min(MAX_TOTAL_STATS, total ?? base) - base) }));
   };
   const chanceOf = (hamster: Hamster, difficulty: number) => expeditionSurvivalChance(hamster, difficulty, optionsOf(hamster));
   const visible = useMemo(() => {
@@ -158,9 +158,9 @@ export default function HamsterExpeditionsPage() {
         {hasSurvivalPenalty(selected) && <label className="expedition-calc-check"><input type="checkbox" checked={selectedOptions.builderPenalty} onChange={event => setBuilders(previous => ({ ...previous, [selected.slug]: event.target.checked ? 'negative' : null }))} />{copy.builder} {signed(builderSurvivalBonus(selected, selectedOptions.level, true))}</label>}
         {hasSurvivalBuilder(selected) && <label className="expedition-calc-check"><input type="checkbox" checked={selectedOptions.builderSurvival} onChange={event => setBuilders(previous => ({ ...previous, [selected.slug]: event.target.checked ? 'positive' : null }))} />{copy.builder} {signed(builderSurvivalBonus(selected, selectedOptions.level))}</label>}
         {isSpecialUltimate(selected) && <label className="expedition-calc-check"><input type="checkbox" checked={selectedOptions.ultimate} onChange={event => setUltimates(previous => ({ ...previous, [selected.slug]: event.target.checked }))} />{copy.ultimate}</label>}
-        {hasSmartStudy(selected) && <div className="expedition-calc-smart-study expedition-calc-number-label"><span>{copy.smartStudyTotal}</span><HamsterNumberInput stepper label={`${selected.name}: ${copy.smartStudyTotal}`} value={selectedStats} min={totalHamsterStats(selected, selectedOptions.level)} max={300} onChange={value => changeSmartStudyTotal(selected, value)} /><small>{copy.smartStudyNote}</small></div>}
+        {hasSmartStudy(selected) && <div className="expedition-calc-smart-study expedition-calc-number-label"><span>{copy.smartStudyTotal}</span><HamsterNumberInput stepper label={`${selected.name}: ${copy.smartStudyTotal}`} value={selectedStats} min={totalHamsterStats(selected, selectedOptions.level)} max={MAX_TOTAL_STATS} onChange={value => changeSmartStudyTotal(selected, value)} /><small>{copy.smartStudyNote}</small></div>}
         {selectedOptions.ultimate && hasMaxStatsUltimate(selected) && <p className="expedition-calc-ability-note">{copy.maxStatsActive}</p>}
-        {hasSmartStudy(selected) && selectedStats === 300 && <p className="expedition-calc-ability-note">{copy.fullStats}</p>}
+        {hasSmartStudy(selected) && selectedStats === MAX_TOTAL_STATS && <p className="expedition-calc-ability-note">{copy.fullStats}</p>}
       </div>
       <div className="expedition-calc-breakdown"><span>{copy.stats}<strong>{selectedStats}</strong></span><span>{copy.base}<strong>{percent(basicSurvivalChance(selectedStats))}</strong></span><span>{copy.difficulty}<strong>{signed(difficultyInfluence(selectedMap.difficulty))}</strong></span><span>{copy.abilities}<strong>{signed(abilityBonus + selectedOptions.setBonus)}</strong></span></div>
       <div className="expedition-calc-map-results" aria-label={copy.chooseMap}>{MAPS.map(map => <button type="button" key={map.id} className={`${map.id === selectedMapId ? 'selected' : ''} ${map.active === false ? 'inactive' : ''}`} onClick={() => setSelectedMapId(map.id)} aria-pressed={map.id === selectedMapId}><span>{map.name}</span>{map.active === false && <small>{t('hamsterHub.inactive')}</small>}<strong>{percent(chanceOf(selected, map.difficulty))}</strong></button>)}</div>
@@ -200,7 +200,7 @@ export default function HamsterExpeditionsPage() {
         <table><colgroup><col className="expedition-col-name" /><col className="expedition-col-level" /><col className="expedition-col-total" />{MAPS.map(map => <col className="expedition-col-map" key={map.id} />)}</colgroup><thead><tr><th scope="col">{copy.hamster}</th><th scope="col">{copy.level}</th><th scope="col">{copy.total}</th>{MAPS.map(map => <th scope="col" key={map.id}>{map.name}</th>)}</tr></thead>
           <tbody>{visible.map(hamster => <tr key={hamster.slug} className={hamster.slug === selectedSlug ? 'selected' : ''}>
             <th scope="row"><button type="button" className="expedition-calc-name" onClick={() => selectHamster(hamster.slug)}><HamsterSprite className="expedition-calc-idle" skin={skinAtLevel(hamster, levelOf(hamster))} name="" size={null} /><span>{hamster.name}</span></button></th>
-            <td className="expedition-calc-level-cell"><HamsterNumberInput label={`${hamster.name} ${copy.level}`} value={levelOf(hamster)} min={hamster.skins[0]?.level ?? 1} max={MAX_HAMSTER_LEVEL} onChange={value => changeLevel(hamster, value)} />{hasSmartStudy(hamster) && <HamsterNumberInput stepper label={`${hamster.name}: ${copy.smartStudyTotal}`} value={totalHamsterStats(hamster, levelOf(hamster), false, smartStudyPoints[hamster.slug])} min={totalHamsterStats(hamster, levelOf(hamster))} max={300} onChange={value => changeSmartStudyTotal(hamster, value)} />}</td>
+            <td className="expedition-calc-level-cell"><HamsterNumberInput label={`${hamster.name} ${copy.level}`} value={levelOf(hamster)} min={hamster.skins[0]?.level ?? 1} max={MAX_HAMSTER_LEVEL} onChange={value => changeLevel(hamster, value)} />{hasSmartStudy(hamster) && <HamsterNumberInput stepper label={`${hamster.name}: ${copy.smartStudyTotal}`} value={totalHamsterStats(hamster, levelOf(hamster), false, smartStudyPoints[hamster.slug])} min={totalHamsterStats(hamster, levelOf(hamster))} max={MAX_TOTAL_STATS} onChange={value => changeSmartStudyTotal(hamster, value)} />}</td>
             <td className="expedition-calc-stat-cell"><strong>{totalHamsterStats(hamster, levelOf(hamster), ultimates[hamster.slug], smartStudyPoints[hamster.slug])}</strong><div className="expedition-calc-row-bonuses">
               {abilitySurvivalBonus(hamster, levelOf(hamster)) !== 0 && <span className="expedition-calc-passive" title={copy.abilities}>{signed(abilitySurvivalBonus(hamster, levelOf(hamster)))}</span>}
               {isSpecialUltimate(hamster) && <label title={copy.ultimate}><input type="checkbox" aria-label={`${hamster.name}: ${copy.ultimate}`} checked={ultimates[hamster.slug] ?? false} onChange={event => setUltimates(previous => ({ ...previous, [hamster.slug]: event.target.checked }))} /><span>{copy.ultimate}</span></label>}

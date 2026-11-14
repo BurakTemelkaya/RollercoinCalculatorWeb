@@ -1220,9 +1220,9 @@
     "noResults": "Žádný odpovídající křeček.",
     "smartStudy": "Další body statistik ze Smart Study",
     "smartStudyTotal": "Celkové statistiky se Smart Study",
-    "smartStudyNote": "Nastavte skutečně získaný součet statistik. Body Smart Study se přidávají k základnímu součtu úrovně, maximálně do 300.",
+    "smartStudyNote": "Nastavte skutečně získaný součet statistik. Body Smart Study se přidávají k základnímu součtu úrovně, maximálně do 450.",
     "maxStatsActive": "Ultimátní schopnost je aktivní: zdraví, síla a štěstí jsou 150.",
-    "fullStats": "Zdraví, síla a štěstí jsou 100."
+    "fullStats": "Zdraví, síla a štěstí jsou 150."
   },
   "hamsterHub": {
     "navigation": "Stránky křečků",
@@ -1302,7 +1302,7 @@
       "cryptoChest": "Aktivujte před expedicí. Při úspěchu získáte truhlu s kryptoměnami. Dobití: {{charge}} bodů.",
       "sureWin": "Zaručuje úspěch další expedice. Ta nedává body nabití; poté se nabití vynuluje.",
       "partsChest": "Z expedic získává truhlu běžných součástek pro vylepšení těžařů.",
-      "smartStudy": "Po aktivaci bez odpočinku; každý úspěch přidá trvalý bod navíc mimo levelování. Každá statistika může časem dosáhnout 100.",
+      "smartStudy": "Po aktivaci bez odpočinku; každý úspěch přidá trvalý bod navíc mimo levelování. Každá statistika může časem dosáhnout 150.",
       "speedChest": "Dává zrychlení pro libovolného křečka. Dobití za tři hodiny expedic.",
       "highRisk": "Dvojnásobné odměny a zkušenosti, doba ×1,5, bez odpočinku. Při neúspěchu zachráněné odměny zůstávají dvojité, zotavení ×2, výkupní cena stejná.",
       "lootConversion": "Po expedici vyberte odměny k ponechání nebo převodu na RLT dle technické hodnoty. Dobití: {{charge}} bodů.",

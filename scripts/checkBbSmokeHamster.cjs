@@ -8,7 +8,7 @@ const hamster = catalog.find(item => item.slug === 'bb-smoke');
 assert(hamster, 'BB Smoke must be in the catalog');
 assert.equal(catalog.filter(item => item.slug === 'bb-smoke').length, 1);
 assert.deepEqual(hamster.stats, { health: 50, strength: 70, luck: 90 });
-assert.deepEqual(hamster.skins.map(skin => skin.level), [1, 10, 20, 30, 40]);
+assert.deepEqual(hamster.skins.map(skin => skin.level), [1, 10, 20, 30, 40, 50]);
 assert.deepEqual(hamster.abilities.map(item => item.code), ['speed_up_walk', 'extra_loot', 'return_to_work']);
 assert.equal(hamster.abilities[1].text.en, 'Extra Loot +25%');
 assert.match(hamster.abilities[2].text.en, /20%/);
@@ -42,4 +42,4 @@ for (const language of Object.keys(hamster.ultimate.text)) {
   const guide = require(`../src/locales/${language}.json`).hamsterAbilityGuide;
   assert(guide.descriptions.speedUpWalk && guide.descriptions.overchargedRemotePower && guide.examples.bbSmokeSpeedUps, language);
 }
-console.log('BB Smoke: stats, five appearances, sprite sheets, abilities, tiers, translations and set membership verified.');
+console.log('BB Smoke: stats, six appearances, sprite sheets, abilities, tiers, translations and set membership verified.');

@@ -1230,9 +1230,9 @@
     "noResults": "Keine passenden Hamster.",
     "smartStudy": "Zusätzliche Werte durch Smart Study",
     "smartStudyTotal": "Gesamtwerte mit Smart Study",
-    "smartStudyNote": "Passe die tatsächlich erreichten Gesamtwerte an. Smart-Study-Punkte ergänzen die Basiswerte des Levels, bis maximal 300.",
+    "smartStudyNote": "Passe die tatsächlich erreichten Gesamtwerte an. Smart-Study-Punkte ergänzen die Basiswerte des Levels, bis maximal 450.",
     "maxStatsActive": "Ultimative Fähigkeit aktiv: Gesundheit, Stärke und Glück sind 150.",
-    "fullStats": "Gesundheit, Stärke und Glück sind 100."
+    "fullStats": "Gesundheit, Stärke und Glück sind 150."
   },
   "hamsterHub": {
     "navigation": "Hamster-Seiten",
@@ -1312,7 +1312,7 @@
       "cryptoChest": "Vor der Expedition aktivieren. Bei Erfolg gibt es eine Krypto-Truhe. Aufladen: {{charge}} Punkte.",
       "sureWin": "Garantiert Erfolg bei der nächsten Expedition. Sie gibt keine Ladepunkte; danach wird die Ladung zurückgesetzt.",
       "partsChest": "Erzeugt durch Expeditionen eine Truhe gewöhnlicher Teile für Miner-Upgrades.",
-      "smartStudy": "Nach Aktivierung keine Ruhezeit; jeder Erfolg gibt einen permanenten zusätzlichen Punkt unabhängig vom Level. Jeder Wert kann langfristig 100 erreichen.",
+      "smartStudy": "Nach Aktivierung keine Ruhezeit; jeder Erfolg gibt einen permanenten zusätzlichen Punkt unabhängig vom Level. Jeder Wert kann langfristig 150 erreichen.",
       "speedChest": "Gibt Beschleuniger für jeden Hamster. Aufladen in drei Expeditionsstunden.",
       "highRisk": "Doppelte Beute und EP, Dauer ×1,5, keine Ruhe. Bei Fehlschlag bleiben gerettete Belohnungen doppelt, Erholungszeit ×2, Rückkaufpreis unverändert.",
       "lootConversion": "Nach der Expedition wählen, welche Belohnungen bleiben und welche zum technischen Wert in RLT umgewandelt werden. Aufladen: {{charge}} Punkte.",

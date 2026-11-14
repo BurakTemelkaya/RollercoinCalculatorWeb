@@ -7,8 +7,7 @@ const hamsters = require('../src/data/hamsters.json');
 
 const CODES = {
   valkirita: 'valkyrie', mamita: 'mammita', 'uncle-azoth': 'unclazoth', 'jack-o-mine': 'jack_omine',
-  // Not confirmed by RollerCoin data: the only gift-themed background left, matching the anniversary hamster.
-  'mr-jack': 'birthday_jack',
+  'mr-jack': 'birthday_jack', // In-game name "Baloncu Jack" (confirmed from /api/pets/user-pets, 14 Nov 2026)
 };
 const PNG = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 

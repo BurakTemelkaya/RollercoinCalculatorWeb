@@ -1191,9 +1191,9 @@
     "noResults": "Tidak ada hamster yang cocok.",
     "smartStudy": "Poin statistik tambahan dari Smart Study",
     "smartStudyTotal": "Total statistik dengan Smart Study",
-    "smartStudyNote": "Sesuaikan total statistik yang benar-benar diperoleh. Poin Smart Study ditambahkan ke total dasar level, hingga 300.",
+    "smartStudyNote": "Sesuaikan total statistik yang benar-benar diperoleh. Poin Smart Study ditambahkan ke total dasar level, hingga 450.",
     "maxStatsActive": "Ultimate aktif: kesehatan, kekuatan, dan keberuntungan menjadi 150.",
-    "fullStats": "Kesehatan, kekuatan, dan keberuntungan menjadi 100."
+    "fullStats": "Kesehatan, kekuatan, dan keberuntungan menjadi 150."
   },
   "hamsterHub": {
     "navigation": "Halaman hamster",
@@ -1273,7 +1273,7 @@
       "cryptoChest": "Aktifkan sebelum Ekspedisi. Jika berhasil, mendapat peti hadiah kripto. Isi ulang: {{charge}} poin.",
       "sureWin": "Menjamin Ekspedisi berikutnya berhasil. Perjalanan itu tidak menghasilkan poin daya; daya kembali nol setelahnya.",
       "partsChest": "Menghasilkan peti Common Parts dari Ekspedisi untuk meningkatkan penambang.",
-      "smartStudy": "Setelah diaktifkan, tanpa istirahat; setiap keberhasilan memberi satu poin permanen di luar kenaikan level. Setiap statistik dapat mencapai 100 seiring waktu.",
+      "smartStudy": "Setelah diaktifkan, tanpa istirahat; setiap keberhasilan memberi satu poin permanen di luar kenaikan level. Setiap statistik dapat mencapai 150 seiring waktu.",
       "speedChest": "Memberi hadiah percepatan untuk hamster mana pun. Isi ulang dalam tiga jam Ekspedisi.",
       "highRisk": "Menggandakan hadiah dan XP, durasi ×1,5, tanpa istirahat. Jika gagal, hadiah terselamatkan tetap ganda, pemulihan ×2 dan biaya Buyback tetap.",
       "lootConversion": "Setelah Ekspedisi, pilih hadiah untuk disimpan atau dikonversi ke RLT menurut nilai teknisnya. Isi ulang: {{charge}} poin.",

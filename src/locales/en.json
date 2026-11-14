@@ -1276,9 +1276,9 @@
     "noResults": "No matching hamster.",
     "smartStudy": "Extra stat points earned with Smart Study",
     "smartStudyTotal": "Total stats with Smart Study",
-    "smartStudyNote": "Adjust the total stats actually earned. Smart Study points are added above the level’s base total, up to 300.",
+    "smartStudyNote": "Adjust the total stats actually earned. Smart Study points are added above the level’s base total, up to 450.",
     "maxStatsActive": "Ultimate active: health, strength and luck are 150.",
-    "fullStats": "Health, strength and luck are 100."
+    "fullStats": "Health, strength and luck are 150."
   },
   "hamsterHub": {
     "navigation": "Hamster pages",
@@ -1358,7 +1358,7 @@
       "cryptoChest": "Activate before an Expedition. A successful Expedition grants a Crypto Chest with cryptocurrency rewards. Recharge: {{charge}} points.",
       "sureWin": "Guarantees success on the next Expedition. That run earns no charge points; charge resets to zero afterward.",
       "partsChest": "Generates a Common Parts Chest through Expeditions, providing parts for miner upgrades.",
-      "smartStudy": "After activation, no rest is needed; each successful Expedition grants one permanent extra stat point beyond leveling. Stats can eventually reach 100 each.",
+      "smartStudy": "After activation, no rest is needed; each successful Expedition grants one permanent extra stat point beyond leveling. Stats can eventually reach 150 each.",
       "speedChest": "Generates Speed-Up rewards usable on any hamster. Recharges in three Expedition hours.",
       "highRisk": "Doubles rewards and XP, makes the run 1.5× longer and skips rest. On failure, salvaged rewards stay doubled, recovery takes 2× time and Buyback cost stays unchanged.",
       "lootConversion": "After an Expedition, choose which rewards to keep and which to convert into RLT at their technical value. Recharge: {{charge}} points.",

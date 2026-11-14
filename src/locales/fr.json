@@ -1169,9 +1169,9 @@
     "noResults": "Aucun hamster trouvé.",
     "smartStudy": "Points de statistique supplémentaires obtenus avec Smart Study",
     "smartStudyTotal": "Statistiques totales avec Smart Study",
-    "smartStudyNote": "Ajustez le total réellement obtenu. Les points Smart Study s’ajoutent au total de base du niveau, jusqu’à 300.",
+    "smartStudyNote": "Ajustez le total réellement obtenu. Les points Smart Study s’ajoutent au total de base du niveau, jusqu’à 450.",
     "maxStatsActive": "Capacité ultime active : santé, force et chance sont à 150.",
-    "fullStats": "Santé, force et chance sont à 100."
+    "fullStats": "Santé, force et chance sont à 150."
   },
   "hamsterHub": {
     "navigation": "Pages des hamsters",
@@ -1251,7 +1251,7 @@
       "cryptoChest": "Activez avant l’expédition. En cas de réussite, recevez un coffre de cryptomonnaies. Recharge : {{charge}} points.",
       "sureWin": "Garantit la réussite de la prochaine expédition. Aucun point de charge gagné ; charge remise à zéro ensuite.",
       "partsChest": "Génère un coffre de pièces communes en expédition pour améliorer les mineurs.",
-      "smartStudy": "Après activation, aucun repos ; chaque réussite donne un point permanent en plus des niveaux. Chaque stat peut atteindre 100 avec le temps.",
+      "smartStudy": "Après activation, aucun repos ; chaque réussite donne un point permanent en plus des niveaux. Chaque stat peut atteindre 150 avec le temps.",
       "speedChest": "Donne des accélérateurs pour tout hamster. Recharge en trois heures d’expédition.",
       "highRisk": "Double récompenses et XP, durée ×1,5, aucun repos. En cas d’échec, butin récupéré doublé, récupération ×2, rachat inchangé.",
       "lootConversion": "Après l’expédition, choisissez les récompenses à garder ou à convertir en RLT à leur valeur technique. Recharge : {{charge}} points.",

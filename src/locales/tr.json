@@ -1277,9 +1277,9 @@
     "noResults": "Eşleşen hamster bulunamadı.",
     "smartStudy": "Smart Study ile kazanılan ek stat puanı",
     "smartStudyTotal": "Smart Study ile toplam özellik",
-    "smartStudyNote": "Gerçekte kazanılan toplam statı ayarlayın. Smart Study puanları seviyenin temel toplamına eklenir; üst sınır 300’dür.",
+    "smartStudyNote": "Gerçekte kazanılan toplam statı ayarlayın. Smart Study puanları seviyenin temel toplamına eklenir; üst sınır 450’dür.",
     "maxStatsActive": "Özel güç etkin: can, güç ve şans 150.",
-    "fullStats": "Can, güç ve şans 100."
+    "fullStats": "Can, güç ve şans 150."
   },
   "hamsterHub": {
     "navigation": "Hamster sayfaları",
@@ -1359,7 +1359,7 @@
       "cryptoChest": "Sefer öncesinde etkinleştirilir. Başarılı sefer, kripto para ödülleri içeren bir sandık verir. Şarj: {{charge}} puan.",
       "sureWin": "Sonraki seferin başarısını garanti eder. Bu sefer şarj puanı kazandırmaz; sefer sonunda şarj sıfırlanır.",
       "partsChest": "Seferlerden common parça sandığı getirerek madenci geliştirmelerinde kullanılacak parçalar sağlar.",
-      "smartStudy": "Etkinleştirildikten sonra dinlenme gerekmez; her başarılı sefer, seviyeden bağımsız bir kalıcı ek stat puanı verir. Her stat zamanla 100’e ulaşabilir.",
+      "smartStudy": "Etkinleştirildikten sonra dinlenme gerekmez; her başarılı sefer, seviyeden bağımsız bir kalıcı ek stat puanı verir. Her stat zamanla 150’e ulaşabilir.",
       "speedChest": "Herhangi bir hamsterda kullanılabilen hızlandırma ödülleri verir. Üç sefer saatiyle yeniden şarj olur.",
       "highRisk": "Ödül ve deneyimi ikiye, süreyi 1,5 kata çıkarır; dinlenmeyi atlar. Başarısızlıkta kurtarılan ödüller iki kat kalır, toparlanma süresi iki kat olur; geri alma maliyeti değişmez.",
       "lootConversion": "Seferden sonra hangi ödüllerin kalacağını, hangilerinin teknik değerleri üzerinden RLT’ye dönüşeceğini seçersin. Şarj: {{charge}} puan.",

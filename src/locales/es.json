@@ -1168,9 +1168,9 @@
     "noResults": "No se encontraron hámsteres.",
     "smartStudy": "Puntos extra de estadísticas obtenidos con Smart Study",
     "smartStudyTotal": "Estadísticas totales con Smart Study",
-    "smartStudyNote": "Ajusta el total de estadísticas obtenido. Los puntos de Smart Study se añaden al total base del nivel, hasta 300.",
+    "smartStudyNote": "Ajusta el total de estadísticas obtenido. Los puntos de Smart Study se añaden al total base del nivel, hasta 450.",
     "maxStatsActive": "Habilidad definitiva activa: salud, fuerza y suerte son 150.",
-    "fullStats": "Salud, fuerza y suerte son 100."
+    "fullStats": "Salud, fuerza y suerte son 150."
   },
   "hamsterHub": {
     "navigation": "Páginas de hámsteres",
@@ -1250,7 +1250,7 @@
       "cryptoChest": "Activa antes de la expedición. Si tiene éxito, recibes un cofre de criptomonedas. Recarga: {{charge}} puntos.",
       "sureWin": "Garantiza el éxito en la siguiente expedición. No genera carga; después la carga vuelve a cero.",
       "partsChest": "Genera un cofre de piezas comunes en expediciones para mejorar mineros.",
-      "smartStudy": "Tras activarse no necesita descanso; cada éxito da un punto permanente adicional al nivel. Cada estadística puede alcanzar 100 con el tiempo.",
+      "smartStudy": "Tras activarse no necesita descanso; cada éxito da un punto permanente adicional al nivel. Cada estadística puede alcanzar 150 con el tiempo.",
       "speedChest": "Da aceleradores utilizables en cualquier hámster. Recarga en tres horas de expedición.",
       "highRisk": "Duplica recompensas y XP, duración ×1,5 y sin descanso. Si falla, el botín recuperado sigue doble, recuperación ×2 y recompra sin cambios.",
       "lootConversion": "Tras la expedición elige qué guardar y qué convertir en RLT según su valor técnico. Recarga: {{charge}} puntos.",

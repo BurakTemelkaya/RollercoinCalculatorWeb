@@ -12629,6 +12629,54 @@
             "frameHeight": 128
           }
         }
+      },
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/bb-smoke/lvl50/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/bb-smoke/lvl50/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
       }
     ],
     "animationsPending": false

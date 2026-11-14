@@ -1191,9 +1191,9 @@
     "noResults": "Nenhum hamster encontrado.",
     "smartStudy": "Pontos extras de atributo ganhos com Smart Study",
     "smartStudyTotal": "Atributos totais com Smart Study",
-    "smartStudyNote": "Ajuste o total de atributos obtido. Os pontos de Smart Study são adicionados ao total base do nível, até 300.",
+    "smartStudyNote": "Ajuste o total de atributos obtido. Os pontos de Smart Study são adicionados ao total base do nível, até 450.",
     "maxStatsActive": "Ultimate ativo: vida, força e sorte estão em 150.",
-    "fullStats": "Vida, força e sorte estão em 100."
+    "fullStats": "Vida, força e sorte estão em 150."
   },
   "hamsterHub": {
     "navigation": "Páginas de hamsters",
@@ -1273,7 +1273,7 @@
       "cryptoChest": "Ative antes da expedição. Ao ter sucesso, receba um baú de criptomoedas. Recarga: {{charge}} pontos.",
       "sureWin": "Garante sucesso na próxima expedição. Ela não gera carga; a carga volta a zero depois.",
       "partsChest": "Gera um baú de peças comuns nas expedições para melhorar mineradores.",
-      "smartStudy": "Após ativação, sem descanso; cada sucesso dá um ponto permanente além dos níveis. Cada atributo pode chegar a 100 com o tempo.",
+      "smartStudy": "Após ativação, sem descanso; cada sucesso dá um ponto permanente além dos níveis. Cada atributo pode chegar a 150 com o tempo.",
       "speedChest": "Dá aceleradores utilizáveis em qualquer hamster. Recarga em três horas de expedição.",
       "highRisk": "Dobra recompensas e XP, duração ×1,5 e sem descanso. Ao falhar, saque recuperado continua dobrado, recuperação ×2 e recompra inalterada.",
       "lootConversion": "Após a expedição, escolha o que manter ou converter em RLT pelo valor técnico. Recarga: {{charge}} pontos.",

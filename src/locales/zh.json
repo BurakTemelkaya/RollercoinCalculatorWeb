@@ -1191,9 +1191,9 @@
     "noResults": "未找到匹配的仓鼠。",
     "smartStudy": "通过 Smart Study 获得的额外属性点",
     "smartStudyTotal": "Smart Study 总属性",
-    "smartStudyNote": "调整实际获得的总属性。Smart Study 点数加在等级基础属性总和之上，上限为 300。",
+    "smartStudyNote": "调整实际获得的总属性。Smart Study 点数加在等级基础属性总和之上，上限为 450。",
     "maxStatsActive": "终极能力已启用：生命、力量和幸运均为 150。",
-    "fullStats": "生命、力量和幸运均为 100。"
+    "fullStats": "生命、力量和幸运均为 150。"
   },
   "hamsterHub": {
     "navigation": "仓鼠页面",
@@ -1273,7 +1273,7 @@
       "cryptoChest": "远征前激活，成功后获得装有加密货币奖励的宝箱。充能：{{charge}}点。",
       "sureWin": "保证下一次远征成功。该次远征不产生充能点，结束后充能归零。",
       "partsChest": "通过远征生成普通零件宝箱，用于升级矿机。",
-      "smartStudy": "激活后无需休息，每次成功远征获得一个独立于升级的永久额外属性点。各项属性可逐渐达到100。",
+      "smartStudy": "激活后无需休息，每次成功远征获得一个独立于升级的永久额外属性点。各项属性可逐渐达到150。",
       "speedChest": "提供可用于任意仓鼠的加速奖励，三个远征小时即可充能。",
       "highRisk": "奖励与经验翻倍，时长变为1.5倍并跳过休息。失败时赎回奖励仍翻倍，恢复时间为2倍，赎回费用不变。",
       "lootConversion": "远征后选择保留哪些奖励、将哪些按技术价值转换为RLT。充能：{{charge}}点。",

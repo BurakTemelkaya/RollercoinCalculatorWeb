@@ -33,6 +33,7 @@ Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zek
 6. **[Hamster Kataloğu](file:///.agents/Hamsters.md)**
    - Hamster verisi, sprite animasyonu ve sefer haritaları
    - Yeni hamster ve harita ekleme adımları
+   - **Yeni hamster görsellerini bulma prosedürü (zorunlu):** önce Minaryganar, sonra `scripts/findHamsterSkinFolders.cjs` ile tüm görünüm klasörleri
 
 7. **[Merge Miner Bilgileri](file:///.agents/Merges.md)**
    - Satılabilirlik ve set miner ikonları

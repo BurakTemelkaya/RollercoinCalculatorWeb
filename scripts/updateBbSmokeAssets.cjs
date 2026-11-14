@@ -1,11 +1,15 @@
 // Official BB Smoke files from RollerCoin's CDN (13 November 2026).
 // Folder ids were found next to the set preview id; levels follow the blog GIF order
-// (https://rollercoin.com/blog/bb-smoke). Level 50's folder has not been found yet.
+// (https://rollercoin.com/blog/bb-smoke). Level 50's folder was supplied by the user (14 November 2026);
+// it was created a second earlier, so its id has a different timestamp prefix.
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
-const cdn = 'https://static.rollercoin.com/static/img/pets/bb_smoke/6af6ff5b75067243b0';
-const levels = { 1: 'eeb422', 10: 'eeb418', 20: 'eeb40e', 30: 'eeb404', 40: 'eeb3fa' };
+const cdn = 'https://static.rollercoin.com/static/img/pets/bb_smoke/';
+const levels = {
+  1: '6af6ff5b75067243b0eeb422', 10: '6af6ff5b75067243b0eeb418', 20: '6af6ff5b75067243b0eeb40e',
+  30: '6af6ff5b75067243b0eeb404', 40: '6af6ff5b75067243b0eeb3fa', 50: '6af6ff5a75067243b0eeb3c7',
+};
 const frames = { walk: 8, jump: 7, tap_reaction: 10, go_sleep: 24, take_chest: 9, win_loop: 6 };
 const PNG = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
