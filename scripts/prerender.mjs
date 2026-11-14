@@ -263,7 +263,8 @@ async function prerender() {
   const server = await startServer();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    // The lighter headless shell; the Docker build skips downloading full Chrome
+    headless: 'shell',
     protocolTimeout: 300000, // 5 min — Docker builds can be slow
     args: [
       '--no-sandbox',
