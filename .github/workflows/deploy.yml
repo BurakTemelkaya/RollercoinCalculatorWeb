@@ -5,6 +5,13 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+# Two merges close together ran two deploys at once; both recreated the same
+# container on the VDS and one failed with a name conflict. Queue them instead
+# (a newer pending run replaces an older pending one).
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
