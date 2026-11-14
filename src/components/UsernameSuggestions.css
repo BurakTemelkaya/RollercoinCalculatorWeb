@@ -1,6 +1,6 @@
 /* Username autocomplete list (portaled, placed by useUsernameSuggestions); matches the league picker */
 .username-suggestions {
-    position: fixed;
+    position: absolute;
     z-index: 9999;
     box-sizing: border-box;
     margin: 0;

@@ -19,6 +19,7 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(-1);
     const [position, setPosition] = useState<CSSProperties>();
+    const isFocused = () => inputRef.current !== null && document.activeElement === inputRef.current;
 
     useEffect(() => {
         const parsed = parseUsernameInput(value);
@@ -27,8 +28,9 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
             setItems([]);
             return;
         }
-        // Already a suggestion's value (right after picking one): skip the request
-        if (items.some(i => i.profileLink === query)) return;
+        // Only for typing: the saved username is written into the input on page load, and right
+        // after picking a suggestion the value is already one of them
+        if (!isFocused() || items.some(i => i.profileLink === query)) return;
 
         const controller = new AbortController();
         const timer = setTimeout(() => {
@@ -36,7 +38,7 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
                 .then(result => {
                     setItems(result);
                     setActive(-1);
-                    setOpen(true);
+                    setOpen(isFocused());
                 })
                 .catch(() => { /* autocomplete is best-effort; typing still works */ });
         }, DEBOUNCE_MS);
@@ -47,14 +49,23 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
         // eslint-disable-next-line react-hooks/exhaustive-deps -- items is only read to skip a redundant fetch
     }, [value]);
 
-    const expanded = open && items.length > 0;
+    // The value already in the input is not a suggestion
+    const shown = items.filter(i => i.profileLink !== value.trim());
+    const expanded = open && shown.length > 0;
 
-    // The list is portaled to <body> (the input sits in overflow:hidden cards), so it follows the input
+    // The list is portaled to <body> (the input sits in overflow:hidden cards). It is placed in page
+    // coordinates so window scrolling moves it natively with the input; JS only re-places it on
+    // resize or when an inner scroll container moves the input.
     useLayoutEffect(() => {
         if (!expanded) return;
         const place = () => {
             const rect = inputRef.current?.getBoundingClientRect();
-            if (rect) setPosition({ top: rect.bottom + 6, left: rect.left, width: rect.width });
+            if (!rect) return;
+            // body is position:relative, so it is the list's containing block
+            const body = document.body.getBoundingClientRect();
+            const top = rect.bottom - body.top + 6;
+            const left = rect.left - body.left;
+            setPosition(p => (p?.top === top && p.left === left && p.width === rect.width ? p : { top, left, width: rect.width }));
         };
         place();
         window.addEventListener('scroll', place, true);
@@ -73,7 +84,7 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): boolean => {
         if (!expanded) {
-            if (e.key === 'ArrowDown' && items.length > 0) {
+            if (e.key === 'ArrowDown' && shown.length > 0) {
                 e.preventDefault();
                 setOpen(true);
                 setActive(0);
@@ -84,16 +95,19 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
         switch (e.key) {
             case 'ArrowDown':
                 e.preventDefault();
-                setActive(i => (i + 1) % items.length);
+                setActive(i => (i + 1) % shown.length);
                 return true;
             case 'ArrowUp':
                 e.preventDefault();
-                setActive(i => (i <= 0 ? items.length - 1 : i - 1));
+                setActive(i => (i <= 0 ? shown.length - 1 : i - 1));
                 return true;
             case 'Enter':
-                if (active < 0) return false; // nothing highlighted: let Enter run the lookup
+                if (active < 0) {
+                    setOpen(false); // nothing highlighted: Enter runs the lookup, so get the list out of the way
+                    return false;
+                }
                 e.preventDefault();
-                select(items[active]);
+                select(shown[active]);
                 return true;
             case 'Escape':
                 e.preventDefault();
@@ -119,7 +133,7 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
 
     const listbox = expanded && position ? createPortal(
         <ul id={listId} role="listbox" className="username-suggestions" style={position}>
-            {items.map((item, index) => (
+            {shown.map((item, index) => (
                 <li
                     key={item.profileLink}
                     id={optionId(index)}
