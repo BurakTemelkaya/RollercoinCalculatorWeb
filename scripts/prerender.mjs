@@ -24,7 +24,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '..', 'dist');
 const PORT = 45678;
 const NAV_TIMEOUT = 90000;
-const CONCURRENCY = 4; // pages rendered in parallel
+const CONCURRENCY = 8; // pages rendered in parallel
 
 /** Routes to begin crawling from. Extra pages found via <a> links are
  *  added to the queue automatically. */
