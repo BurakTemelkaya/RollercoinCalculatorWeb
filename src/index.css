@@ -5591,3 +5591,9 @@ body.hide-global-ads .desktop-side-ad {
     font-size: 0.85rem;
     color: var(--text-secondary);
 }
+/* Independent V2 homepage entry beside the site logo. */
+.header-logo { display:flex; align-items:center; gap:10px; }
+.home-v2-nav { display:inline-flex; align-items:center; gap:5px; padding:6px 8px; border:1px solid #514879; border-radius:6px; color:#c5b9ff; background:rgba(124,92,230,.09); font-size:10px; font-weight:700; letter-spacing:.4px; text-decoration:none; white-space:nowrap; }
+.home-v2-nav span { color:#8c83a5; font-size:7px; letter-spacing:.8px; }
+.home-v2-nav:hover,.home-v2-nav[aria-current=page] { border-color:#8c72e8; color:#e2d9ff; background:rgba(124,92,230,.16); }
+
