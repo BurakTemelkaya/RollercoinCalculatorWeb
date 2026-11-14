@@ -43,14 +43,16 @@ export default function BlogPage() {
     return match?.id ?? languages[0]?.id ?? null;
   }, [languages, lang, pickedLangId]);
 
-  // Debounce search typing
-  useEffect(() => {
-    const id = setTimeout(() => {
-      setSearch(searchInput.trim());
-      setCurrentPage(0);
-    }, 350);
-    return () => clearTimeout(id);
+  const applySearch = useCallback(() => {
+    setSearch(searchInput.trim());
+    setCurrentPage(0);
   }, [searchInput]);
+
+  // Debounce search typing; Enter searches right away
+  useEffect(() => {
+    const id = setTimeout(applySearch, 800);
+    return () => clearTimeout(id);
+  }, [applySearch]);
 
   // Fetch languages first
   useEffect(() => {
@@ -150,6 +152,7 @@ export default function BlogPage() {
           className="blog-search-input"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') applySearch(); }}
           placeholder={t('blog.searchPlaceholder')}
           aria-label={t('blog.searchPlaceholder')}
         />
