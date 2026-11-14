@@ -9,6 +9,7 @@ import CdnImage from './CdnImage';
 import AccountPowerBreakdown from './AccountPowerBreakdown';
 import MinerImport from './MinerImport';
 import { parseUsernameInput } from '../utils/usernameParser';
+import { useUsernameSuggestions } from '../hooks/useUsernameSuggestions';
 
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { PowerUnit } from '../types';
@@ -80,6 +81,11 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
     const { t } = useTranslation();
     const { canFetch, setFetchStarted } = useApiCooldown();
     const [localUserName, setLocalUserName] = useState(globalUserName);
+    const usernameSuggest = useUsernameSuggestions(localUserName, link => {
+        setLocalUserName(link);
+        setGlobalUserName(link);
+        onClearUsernameError?.();
+    });
     const [savedBaseline] = useState(readBaseline);
     const [baselineMode, setBaselineMode] = useState(savedBaseline.mode);
     const [startingPower, setStartingPower] = useState(savedBaseline.power);
@@ -416,6 +422,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                             <input
                                 type="text"
                                 value={localUserName}
+                                {...usernameSuggest.inputProps}
                                 onChange={(e) => {
                                     setLocalUserName(e.target.value);
                                     if (usernameError) onClearUsernameError?.();
@@ -429,6 +436,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                     onClearUsernameError?.();
                                 }}
                                 onBlur={() => {
+                                    usernameSuggest.close();
                                     const parsed = parseUsernameInput(localUserName);
                                     if (parsed) {
                                         setLocalUserName(parsed.username);
@@ -438,9 +446,11 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                                 placeholder={t('simulator.enterUsername')}
                                 className="power-value-input"
                                 onKeyDown={(e) => {
+                                    if (usernameSuggest.handleKeyDown(e)) return;
                                     if (e.key === 'Enter') handleFetchClick();
                                 }}
                             />
+                            {usernameSuggest.listbox}
                             <button
                                 className="fetch-btn"
                                 onClick={handleFetchClick}

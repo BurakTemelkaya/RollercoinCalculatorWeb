@@ -30,6 +30,19 @@ export async function fetchUserFromApi(userName: string): Promise<RollercoinUser
     return response.json() as Promise<RollercoinUserResponse>;
 }
 
+export interface UsernameSuggestion {
+    name: string;
+    /** The value the user lookup expects (Rollercoin public profile link). */
+    profileLink: string;
+}
+
+/** Username autocomplete from the backend's player directory (top ranks + previously searched players). */
+export async function fetchUsernameSuggestions(query: string, signal?: AbortSignal): Promise<UsernameSuggestion[]> {
+    const url = `${getApiUrl('user')}/suggest?q=${encodeURIComponent(query)}`;
+    const response = await apiFetch(url, { signal });
+    return response.json() as Promise<UsernameSuggestion[]>;
+}
+
 /**
  * Fetches user room data (miners and racks) from the API by userId.
  *
