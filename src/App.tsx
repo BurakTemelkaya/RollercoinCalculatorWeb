@@ -52,6 +52,12 @@ const ProgressionEvent = lazyWithRetry(() => import('./components/ProgressionEve
 const ProgressionEventHistory = lazyWithRetry(() => import('./components/ProgressionEventHistory'));
 const PuzzleEvent = lazyWithRetry(() => import('./components/PuzzleEvent'));
 const AboutPage = lazyWithRetry(() => import('./components/AboutPage'));
+const GuidesPage = lazyWithRetry(() => import('./components/GuidesPage'));
+const F2PGuide = lazyWithRetry(() => import('./components/guides/F2PGuide'));
+const BonusPowerGuide = lazyWithRetry(() => import('./components/guides/BonusPowerGuide'));
+const MarketplaceArbitrageGuide = lazyWithRetry(() => import('./components/guides/MarketplaceArbitrageGuide'));
+const MiningPowerGuide = lazyWithRetry(() => import('./components/guides/MiningPowerGuide'));
+const CalculationLogicGuide = lazyWithRetry(() => import('./components/guides/CalculationLogicGuide'));
 const PrivacyPage = lazyWithRetry(() => import('./components/PrivacyPage'));
 const FaqPage = lazyWithRetry(() => import('./components/FaqPage'));
 const SupportPage = lazyWithRetry(() => import('./components/SupportPage'));
@@ -1213,6 +1219,12 @@ function App() {
           <Route path="/:lang/puzzle" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
           <Route path="/:lang/puzzle/:puzzleSlug" element={<React.Suspense fallback={null}><PuzzleEvent /></React.Suspense>} />
           <Route path="/:lang/about" element={<React.Suspense fallback={null}><AboutPage /></React.Suspense>} />
+          <Route path="/:lang/guides" element={<React.Suspense fallback={null}><GuidesPage /></React.Suspense>} />
+          <Route path="/:lang/guides/f2p-strategy" element={<React.Suspense fallback={null}><F2PGuide /></React.Suspense>} />
+          <Route path="/:lang/guides/bonus-power" element={<React.Suspense fallback={null}><BonusPowerGuide /></React.Suspense>} />
+          <Route path="/:lang/guides/marketplace-arbitrage" element={<React.Suspense fallback={null}><MarketplaceArbitrageGuide /></React.Suspense>} />
+          <Route path="/:lang/guides/mining-power" element={<React.Suspense fallback={null}><MiningPowerGuide /></React.Suspense>} />
+          <Route path="/:lang/guides/calculation-logic" element={<React.Suspense fallback={null}><CalculationLogicGuide /></React.Suspense>} />
           <Route path="/:lang/privacy" element={<React.Suspense fallback={null}><PrivacyPage /></React.Suspense>} />
           <Route path="/:lang/faq" element={<React.Suspense fallback={null}><FaqPage /></React.Suspense>} />
           <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />

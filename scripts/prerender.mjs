@@ -148,7 +148,10 @@ function isInternalPage(href) {
 /* ------------------------------------------------------------------ */
 
 async function renderPage(browser, route, visited, queue, retries = 1) {
-  const page = await browser.newPage();
+  // "/" redirects by the saved language. Pages share localStorage within a context, so a
+  // parallel /id render could make "/" capture the Indonesian page; give "/" its own context.
+  const context = route === '/' ? await browser.createBrowserContext() : null;
+  const page = await (context ?? browser).newPage();
   page.setDefaultNavigationTimeout(30000);
 
   // Optimizasyon: Gereksiz kaynakları ve reklamları engelle
@@ -221,6 +224,14 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // localhost URL makes Chrome ask live visitors for "apps on device" access.
     const html = (await page.content()).replaceAll(`http://localhost:${PORT}`, '');
 
+    // A route that client-side redirects elsewhere (e.g. an unknown path -> "/") would bake
+    // another page's content and canonical under this URL; leave it to the SPA fallback instead.
+    const finalPath = normalise(new URL(page.url()).pathname);
+    if (route !== '/' && finalPath !== route) {
+      console.warn(`↪️  ${route} redirected to ${finalPath}, not written`);
+      return true;
+    }
+
     // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
     // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
     // language (English for crawlers), so its render is the /en page with canonical /en; nginx
@@ -243,6 +254,7 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     if (!page.isClosed()) {
       await page.close();
     }
+    await context?.close();
   }
 }
 
