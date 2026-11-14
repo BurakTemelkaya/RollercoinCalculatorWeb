@@ -32,6 +32,8 @@ const SEED_ROUTES = [
   '/',
   '/en',
   '/tr',
+  // Other languages: each home page links to its own sub-pages, so the crawl finds the rest
+  '/cs', '/de', '/es', '/fr', '/id', '/pt', '/ru', '/zh',
   '/en/events', '/tr/events',
   '/en/about', '/tr/about',
   '/en/privacy', '/tr/privacy',
