@@ -14,6 +14,7 @@ import { fetchSetRackList, GetRackSetListDto } from '../services/rackApi';
 import './RoomPowerSimulator.css';
 import AccountPowerBreakdown from './AccountPowerBreakdown';
 import { parseUsernameInput } from '../utils/usernameParser';
+import { useUsernameSuggestions } from '../hooks/useUsernameSuggestions';
 
 interface RoomPowerSimulatorProps {
     currentLeague: LeagueInfo;
@@ -49,6 +50,11 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
     const { cooldownRemaining, canFetch, setFetchStarted } = useApiCooldown();
 
     const [localUserName, setLocalUserName] = useState(globalUserName);
+    const usernameSuggest = useUsernameSuggestions(localUserName, link => {
+        setLocalUserName(link);
+        setGlobalUserName(link);
+        onClearUsernameError?.();
+    });
     const [simulatedRoom, setSimulatedRoom] = useState<RollercoinRoomResponse | null>(null);
     const [sandboxRoom, setSandboxRoom] = useState(createEmptyRoom);
     const [roomSource, setRoomSource] = useState<'account' | 'empty'>('account');
@@ -193,6 +199,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             <input
                                 type="text"
                                 value={localUserName}
+                                {...usernameSuggest.inputProps}
                                 onChange={(e) => {
                                     setLocalUserName(e.target.value);
                                     if (usernameError) onClearUsernameError?.();
@@ -206,6 +213,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                     onClearUsernameError?.();
                                 }}
                                 onBlur={() => {
+                                    usernameSuggest.close();
                                     const parsed = parseUsernameInput(localUserName);
                                     if (parsed) {
                                         setLocalUserName(parsed.username);
@@ -215,9 +223,11 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                                 placeholder={t('simulator.enterUsername')}
                                 className="power-value-input"
                                 onKeyDown={(e) => {
+                                    if (usernameSuggest.handleKeyDown(e)) return;
                                     if (e.key === 'Enter') handleFetchClick();
                                 }}
                             />
+                            {usernameSuggest.listbox}
                             <button
                                 className="fetch-btn"
                                 onClick={handleFetchClick}

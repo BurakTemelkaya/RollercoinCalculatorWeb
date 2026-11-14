@@ -1,0 +1,70 @@
+/* Username autocomplete list (portaled, placed by useUsernameSuggestions); matches the league picker */
+.username-suggestions {
+    position: fixed;
+    z-index: 9999;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    max-height: 300px;
+    overflow-y: auto;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+    text-align: left;
+}
+
+.username-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.username-suggestions::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.username-suggestions::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.username-suggestion {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    margin-bottom: 2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.username-suggestion:last-child {
+    margin-bottom: 0;
+}
+
+.username-suggestion.active {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.username-suggestion-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.username-suggestion.active .username-suggestion-name {
+    color: var(--accent-primary);
+}
+
+.username-suggestion-link {
+    font-size: 12px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

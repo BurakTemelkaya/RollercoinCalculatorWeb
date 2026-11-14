@@ -14,6 +14,7 @@ import { useApiCooldown } from '../hooks/useApiCooldown';
 import { ApiError } from '../services/apiClient';
 import RadixSelect from './RadixSelect';
 import { parseUsernameInput } from '../utils/usernameParser';
+import { useUsernameSuggestions } from '../hooks/useUsernameSuggestions';
 
 
 
@@ -164,6 +165,11 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
 
     // Use an uncontrolled local state for input to prevent whole-app rerenders on every keystroke
     const [localUserName, setLocalUserName] = useState(globalUserName);
+    const usernameSuggest = useUsernameSuggestions(localUserName, link => {
+        setLocalUserName(link);
+        setGlobalUserName(link);
+        onClearUsernameError?.();
+    });
     useEffect(() => {
         setLocalUserName(globalUserName);
     }, [globalUserName]);
@@ -432,6 +438,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                     type="text"
                                                     placeholder={t('input.usernamePlaceholder')}
                                                     value={localUserName}
+                                                    {...usernameSuggest.inputProps}
                                                     onChange={(e) => {
                                                         setLocalUserName(e.target.value);
                                                         if (usernameError) onClearUsernameError?.();
@@ -445,6 +452,7 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                         onClearUsernameError?.();
                                                     }}
                                                     onBlur={() => {
+                                                        usernameSuggest.close();
                                                         const parsed = parseUsernameInput(localUserName);
                                                         if (parsed) {
                                                             setLocalUserName(parsed.username);
@@ -453,12 +461,14 @@ const DataInputForm: React.FC<DataInputFormProps> = ({
                                                     }}
                                                     className="power-value-input"
                                                     onKeyDown={async (e) => {
+                                                        if (usernameSuggest.handleKeyDown(e)) return;
                                                         if (e.key === 'Enter') {
                                                             e.preventDefault();
                                                             await handleFetchAction();
                                                         }
                                                     }}
                                                 />
+                                                {usernameSuggest.listbox}
                                                 <button
                                                     type="button"
                                                     className="username-help-btn"

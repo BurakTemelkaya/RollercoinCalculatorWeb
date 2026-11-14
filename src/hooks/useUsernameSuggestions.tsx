@@ -1,0 +1,145 @@
+import { CSSProperties, KeyboardEvent, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { fetchUsernameSuggestions, UsernameSuggestion } from '../services/userApi';
+import { parseUsernameInput } from '../utils/usernameParser';
+import '../components/UsernameSuggestions.css';
+
+const MIN_QUERY_LENGTH = 2;
+const DEBOUNCE_MS = 250;
+
+/**
+ * Username autocomplete as an ARIA combobox. Spread `inputProps` on the input, call `handleKeyDown`
+ * first in its onKeyDown (true = the key was consumed), `close()` in its onBlur, and render `listbox`
+ * anywhere. Picking an option passes its profile link to `onSelect`, which is the value the user lookup needs.
+ */
+export function useUsernameSuggestions(value: string, onSelect: (profileLink: string) => void) {
+    const listId = useId();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [items, setItems] = useState<UsernameSuggestion[]>([]);
+    const [open, setOpen] = useState(false);
+    const [active, setActive] = useState(-1);
+    const [position, setPosition] = useState<CSSProperties>();
+
+    useEffect(() => {
+        const parsed = parseUsernameInput(value);
+        const query = parsed && !parsed.isProfileLink ? parsed.username : '';
+        if (query.length < MIN_QUERY_LENGTH) {
+            setItems([]);
+            return;
+        }
+        // Already a suggestion's value (right after picking one): skip the request
+        if (items.some(i => i.profileLink === query)) return;
+
+        const controller = new AbortController();
+        const timer = setTimeout(() => {
+            fetchUsernameSuggestions(query, controller.signal)
+                .then(result => {
+                    setItems(result);
+                    setActive(-1);
+                    setOpen(true);
+                })
+                .catch(() => { /* autocomplete is best-effort; typing still works */ });
+        }, DEBOUNCE_MS);
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- items is only read to skip a redundant fetch
+    }, [value]);
+
+    const expanded = open && items.length > 0;
+
+    // The list is portaled to <body> (the input sits in overflow:hidden cards), so it follows the input
+    useLayoutEffect(() => {
+        if (!expanded) return;
+        const place = () => {
+            const rect = inputRef.current?.getBoundingClientRect();
+            if (rect) setPosition({ top: rect.bottom + 6, left: rect.left, width: rect.width });
+        };
+        place();
+        window.addEventListener('scroll', place, true);
+        window.addEventListener('resize', place);
+        return () => {
+            window.removeEventListener('scroll', place, true);
+            window.removeEventListener('resize', place);
+        };
+    }, [expanded]);
+
+    const select = (item: UsernameSuggestion) => {
+        setOpen(false);
+        setActive(-1);
+        onSelect(item.profileLink);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): boolean => {
+        if (!expanded) {
+            if (e.key === 'ArrowDown' && items.length > 0) {
+                e.preventDefault();
+                setOpen(true);
+                setActive(0);
+                return true;
+            }
+            return false;
+        }
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                setActive(i => (i + 1) % items.length);
+                return true;
+            case 'ArrowUp':
+                e.preventDefault();
+                setActive(i => (i <= 0 ? items.length - 1 : i - 1));
+                return true;
+            case 'Enter':
+                if (active < 0) return false; // nothing highlighted: let Enter run the lookup
+                e.preventDefault();
+                select(items[active]);
+                return true;
+            case 'Escape':
+                e.preventDefault();
+                setOpen(false);
+                return true;
+            default:
+                return false;
+        }
+    };
+
+    const optionId = (index: number) => `${listId}-opt-${index}`;
+
+    const inputProps = {
+        ref: inputRef,
+        role: 'combobox' as const,
+        autoComplete: 'off',
+        'aria-autocomplete': 'list' as const,
+        'aria-expanded': expanded,
+        'aria-controls': listId,
+        'aria-activedescendant': expanded && active >= 0 ? optionId(active) : undefined,
+        onFocus: () => setOpen(true),
+    };
+
+    const listbox = expanded && position ? createPortal(
+        <ul id={listId} role="listbox" className="username-suggestions" style={position}>
+            {items.map((item, index) => (
+                <li
+                    key={item.profileLink}
+                    id={optionId(index)}
+                    role="option"
+                    aria-selected={index === active}
+                    className={`username-suggestion${index === active ? ' active' : ''}`}
+                    // Keep focus in the input so its blur doesn't close the list before the click lands
+                    onMouseDown={e => e.preventDefault()}
+                    onMouseEnter={() => setActive(index)}
+                    onClick={() => select(item)}
+                >
+                    <span className="username-suggestion-name">{item.name}</span>
+                    {item.name !== item.profileLink && (
+                        <span className="username-suggestion-link">/p/{item.profileLink}</span>
+                    )}
+                </li>
+            ))}
+        </ul>,
+        document.body,
+    ) : null;
+
+    return { inputProps, handleKeyDown, close: () => setOpen(false), listbox };
+}
