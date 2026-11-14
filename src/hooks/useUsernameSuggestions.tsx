@@ -53,12 +53,19 @@ export function useUsernameSuggestions(value: string, onSelect: (profileLink: st
     const shown = items.filter(i => i.profileLink !== value.trim());
     const expanded = open && shown.length > 0;
 
-    // The list is portaled to <body> (the input sits in overflow:hidden cards), so it follows the input
+    // The list is portaled to <body> (the input sits in overflow:hidden cards). It is placed in page
+    // coordinates so window scrolling moves it natively with the input; JS only re-places it on
+    // resize or when an inner scroll container moves the input.
     useLayoutEffect(() => {
         if (!expanded) return;
         const place = () => {
             const rect = inputRef.current?.getBoundingClientRect();
-            if (rect) setPosition({ top: rect.bottom + 6, left: rect.left, width: rect.width });
+            if (!rect) return;
+            // body is position:relative, so it is the list's containing block
+            const body = document.body.getBoundingClientRect();
+            const top = rect.bottom - body.top + 6;
+            const left = rect.left - body.left;
+            setPosition(p => (p?.top === top && p.left === left && p.width === rect.width ? p : { top, left, width: rect.width }));
         };
         place();
         window.addEventListener('scroll', place, true);
