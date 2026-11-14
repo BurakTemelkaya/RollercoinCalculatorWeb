@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY package*.json ./
+# Prerender runs on chrome-headless-shell; skip full Chrome (~445 MB) in the npm layer
+ENV PUPPETEER_CHROME_SKIP_DOWNLOAD=true
 RUN npm install
 
 COPY . .
