@@ -98,6 +98,14 @@ interface RoomSimulatorProps {
     currentLeagueId: string;
 }
 
+const ROOM_IMPORT_TAKEN_KEY = 'rollercoin_web_room_import_taken';
+const readRoomImportTaken = (): ImportedMinerQuantity[] => {
+    try {
+        const taken: unknown = JSON.parse(localStorage.getItem(ROOM_IMPORT_TAKEN_KEY) || '[]');
+        return Array.isArray(taken) ? taken.filter(item => typeof item?.id === 'string' && Number.isSafeInteger(item?.quantity)) : [];
+    } catch { return []; }
+};
+
 export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, leagues, currentLeagueId, isActive = true }) => {
     const { t } = useTranslation();
     const rackBonusHelpId = useId();
@@ -112,6 +120,26 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
     const [initialRoom] = useState<RollercoinRoomResponse>(JSON.parse(JSON.stringify(room)));
     const [history, setHistory] = useState<{ room: RollercoinRoomResponse; consumed?: ImportedMinerQuantity[] }[]>([]);
+    // The simulated room is not saved, so a refresh or resync drops miners taken from the import list.
+    // Track what this simulation took and give it back when a new simulation starts.
+    // A remount over a still-running simulation (e.g. switching back from the empty account) keeps the record.
+    const simulationAlive = useRef(room.miners.some(miner => /^(import|auto)_/.test(miner._id)));
+    const carriedTaken = useRef<ImportedMinerQuantity[]>(simulationAlive.current ? readRoomImportTaken() : []);
+    useEffect(() => {
+        if (simulationAlive.current) return;
+        const taken = readRoomImportTaken();
+        try {
+            localStorage.removeItem(ROOM_IMPORT_TAKEN_KEY);
+            if (taken.length) saveImportedMiners(adjustImportedQuantities(readSavedImportedMiners(), taken, 1));
+        } catch { /* A list edited meanwhile keeps its own quantities. */ }
+    }, []);
+    useEffect(() => {
+        const taken = [...carriedTaken.current, ...history.flatMap(entry => entry.consumed ?? [])];
+        try {
+            if (taken.length) localStorage.setItem(ROOM_IMPORT_TAKEN_KEY, JSON.stringify(taken));
+            else localStorage.removeItem(ROOM_IMPORT_TAKEN_KEY);
+        } catch { /* Continue without the safety net if storage is unavailable. */ }
+    }, [history]);
     const [operationEntries, setOperationEntries] = useState(() => readRoomOperations(userId));
     const operationEntriesRef = useRef(operationEntries);
     const [operationStorageError, setOperationStorageError] = useState(false);

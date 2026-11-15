@@ -80,12 +80,11 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         setLocalUserName(globalUserName);
     }, [globalUserName]);
 
+    // Each fetched room starts a new simulation: the room simulator remounts with fresh history.
+    const [roomGeneration, setRoomGeneration] = useState(0);
     useEffect(() => {
-        if (fetchedRoom) {
-            setSimulatedRoom(fetchedRoom);
-        } else {
-            setSimulatedRoom(null);
-        }
+        setSimulatedRoom(fetchedRoom ?? null);
+        setRoomGeneration(generation => generation + 1);
     }, [fetchedRoom]);
 
     const handleFetchClick = async () => {
@@ -344,7 +343,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                         </div>
 
                         <RoomSimulator
-                            key={isEmptyAccount ? `sandbox-${sandboxGeneration}` : fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}
+                            key={isEmptyAccount ? `sandbox-${sandboxGeneration}` : `${fetchedUser?.userProfileResponseDto?.avatar_Id || 'default'}-${roomGeneration}`}
                             room={activeRoom}
                             onChange={isEmptyAccount ? setSandboxRoom : setSimulatedRoom}
                             userId={isEmptyAccount ? undefined : fetchedUser?.userProfileResponseDto?.avatar_Id}
