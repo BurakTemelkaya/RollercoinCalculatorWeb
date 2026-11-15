@@ -1383,7 +1383,12 @@
     "filterLeague": "Filtrovat podle ligy",
     "allCountries": "Všechny země",
     "allLeagues": "Všechny ligy",
-    "noResults": "Těmto filtrům neodpovídá žádný účet."
+    "noResults": "Těmto filtrům neodpovídá žádný účet.",
+    "change24h": "Změna za 24 h",
+    "change24hHint": "Rozdíl mezi posledními dvěma denními záznamy výkonu v Rollercoinu",
+    "gameRank": "Pořadí ve hře",
+    "gameRankHint": "Celkové pořadí v Rollercoinu, ne pozice v tomto žebříčku",
+    "you": "Ty"
   },
   "puzzle": {
     "nav": "Puzzle",

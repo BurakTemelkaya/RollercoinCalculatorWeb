@@ -1439,7 +1439,12 @@
     "filterLeague": "Filter by league",
     "allCountries": "All countries",
     "allLeagues": "All leagues",
-    "noResults": "No accounts match these filters."
+    "noResults": "No accounts match these filters.",
+    "change24h": "24h change",
+    "change24hHint": "Difference between Rollercoin's last two daily power records",
+    "gameRank": "Game rank",
+    "gameRankHint": "Overall rank in Rollercoin, not the position on this leaderboard",
+    "you": "You"
   },
   "puzzle": {
     "nav": "Puzzle",

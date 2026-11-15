@@ -1354,7 +1354,12 @@
     "filterLeague": "Filter menurut liga",
     "allCountries": "Semua negara",
     "allLeagues": "Semua liga",
-    "noResults": "Tidak ada akun yang cocok dengan filter ini."
+    "noResults": "Tidak ada akun yang cocok dengan filter ini.",
+    "change24h": "Perubahan 24 jam",
+    "change24hHint": "Selisih antara dua catatan daya harian terakhir Rollercoin",
+    "gameRank": "Peringkat game",
+    "gameRankHint": "Peringkat keseluruhan di Rollercoin, bukan posisi di papan peringkat ini",
+    "you": "Kamu"
   },
   "puzzle": {
     "nav": "Puzzle",

@@ -1354,7 +1354,12 @@
     "filterLeague": "按联赛筛选",
     "allCountries": "所有国家/地区",
     "allLeagues": "所有联赛",
-    "noResults": "没有符合这些筛选条件的账户。"
+    "noResults": "没有符合这些筛选条件的账户。",
+    "change24h": "24小时变化",
+    "change24hHint": "Rollercoin 最近两条每日算力记录之差",
+    "gameRank": "游戏排名",
+    "gameRankHint": "Rollercoin 中的总排名，而非本排行榜中的名次",
+    "you": "你"
   },
   "puzzle": {
     "nav": "Puzzle",
