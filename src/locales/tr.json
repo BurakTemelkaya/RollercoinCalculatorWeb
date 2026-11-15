@@ -1440,7 +1440,12 @@
     "filterLeague": "Lige göre filtrele",
     "allCountries": "Tüm ülkeler",
     "allLeagues": "Tüm ligler",
-    "noResults": "Bu filtrelere uyan hesap yok."
+    "noResults": "Bu filtrelere uyan hesap yok.",
+    "change24h": "24s değişim",
+    "change24hHint": "Rollercoin'in son iki günlük güç kaydı arasındaki fark",
+    "gameRank": "Oyun sırası",
+    "gameRankHint": "Rollercoin'deki genel sıra; bu sıralamadaki yer değil",
+    "you": "Sen"
   },
   "puzzle": {
     "nav": "Puzzle",

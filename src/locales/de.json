@@ -1393,7 +1393,12 @@
     "filterLeague": "Nach Liga filtern",
     "allCountries": "Alle Länder",
     "allLeagues": "Alle Ligen",
-    "noResults": "Keine Konten entsprechen diesen Filtern."
+    "noResults": "Keine Konten entsprechen diesen Filtern.",
+    "change24h": "24h-Änderung",
+    "change24hHint": "Unterschied zwischen den letzten beiden täglichen Power-Einträgen von Rollercoin",
+    "gameRank": "Spielrang",
+    "gameRankHint": "Gesamtrang in Rollercoin, nicht der Platz in dieser Rangliste",
+    "you": "Du"
   },
   "puzzle": {
     "nav": "Puzzle",
