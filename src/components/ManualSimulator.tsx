@@ -8,6 +8,7 @@ import { createManualPowerBaseline, calculateManualPower } from '../utils/simula
 import CdnImage from './CdnImage';
 import AccountPowerBreakdown from './AccountPowerBreakdown';
 import MinerImport from './MinerImport';
+import { adjustImportedQuantities, readSavedImportedMiners, saveImportedMiners } from '../utils/minerImport';
 import { parseUsernameInput } from '../utils/usernameParser';
 import { useUsernameSuggestions } from '../hooks/useUsernameSuggestions';
 
@@ -46,6 +47,8 @@ interface AddedMiner {
     bonus: number;
     rackBonus: number;
     fileName?: string;
+    /** Taken from the import list; removing it gives the copy back. */
+    imported?: boolean;
 }
 
 const formatPower = (gh: number) => {
@@ -257,12 +260,22 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
         addNotification(t('simulator.minerAdded', { name: fullName }), 'success');
     };
 
+    // Imported copies go back to the shared list, so it never has to be read again after a removal.
+    const returnToImportList = (miners: AddedMiner[]) => {
+        const copies = miners.filter(m => m.imported && m.minerId).map(m => ({ id: m.minerId!, quantity: 1 }));
+        if (!copies.length) return;
+        try { saveImportedMiners(adjustImportedQuantities(readSavedImportedMiners(), copies, 1)); }
+        catch { /* A list cleared or edited meanwhile keeps its own quantities. */ }
+    };
+
     const removeMiner = (id: string) => {
+        returnToImportList(addedMiners.filter(m => m.id === id));
         setAddedMiners(addedMiners.filter(m => m.id !== id));
     };
 
     const clearAllMiners = () => {
         if (window.confirm(t('simulator.clearAllConfirm', 'Tüm eklenen madencileri silmek istediğinize emin misiniz?'))) {
+            returnToImportList(addedMiners);
             setAddedMiners([]);
         }
     };
@@ -509,7 +522,7 @@ const ManualSimulator: React.FC<ManualSimulatorProps> = ({
                 <MinerImport addAllLabel={t('minerImport.addAllPower')} onAdd={items => setAddedMiners(previous => [...previous, ...items.flatMap(item =>
                     Array.from({ length: item.quantity }, () => ({ id: crypto.randomUUID(), minerId: item.id,
                         name: item.name, power: item.power, bonus: item.percent / 100,
-                        rackBonus: 0, fileName: item.miner?.fileName }))
+                        rackBonus: 0, fileName: item.miner?.fileName, imported: true }))
                 )])} />
                 <div className="ms-card">
                         <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem' }}><span className="section-icon">➕</span> {t('simulator.addMiner', 'Madenci Ekle')}</h3>

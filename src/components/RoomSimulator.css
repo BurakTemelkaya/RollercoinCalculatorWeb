@@ -2190,7 +2190,8 @@
         flex-direction: column;
         align-items: center;
         gap: 0;
-        padding: 24px 4px 160px;
+        /* The closed drawer covers all but ~10px of the bottom padding; match it on top. */
+        padding: 10px 4px 160px;
         overflow-x: visible;
     }
 
