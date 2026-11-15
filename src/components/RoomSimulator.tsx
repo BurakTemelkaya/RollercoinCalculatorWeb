@@ -140,7 +140,12 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             else localStorage.removeItem(ROOM_IMPORT_TAKEN_KEY);
         } catch { /* Continue without the safety net if storage is unavailable. */ }
     }, [history]);
-    const [operationEntries, setOperationEntries] = useState(() => readRoomOperations(userId));
+    // A new simulation discards the previous one, so its saved operations no longer describe this room.
+    const [operationEntries, setOperationEntries] = useState(() => {
+        if (simulationAlive.current) return readRoomOperations(userId);
+        try { localStorage.removeItem(roomOperationsKey(userId)); } catch { /* Nothing saved to clear. */ }
+        return [];
+    });
     const operationEntriesRef = useRef(operationEntries);
     const [operationStorageError, setOperationStorageError] = useState(false);
 
