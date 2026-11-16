@@ -19,9 +19,12 @@ interface Props {
     toolbarTarget: HTMLElement | null;
     leagues: LeagueInfo[];
     currentLeagueId: string;
+    /** How far RollerCoin's league power is above our room calculation for this account. */
+    leagueGapGh?: number;
+    todayMaxLeaguePowerGh?: number;
 }
 
-export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTarget, leagues, currentLeagueId }: Props) {
+export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTarget, leagues, currentLeagueId, leagueGapGh = 0, todayMaxLeaguePowerGh }: Props) {
     const { t } = useTranslation();
     const id = useId();
     const workerRef = useRef<Worker | null>(null);
@@ -46,13 +49,18 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
         else if (value === 'selectLeague') setSelectedLeagueId(currentLeagueId);
         setLimitMode(value);
     };
-    let maxPowerGh: number | undefined;
+    let limitGh: number | undefined;
     if (leagueMode) {
-        maxPowerGh = targetLeague ? getLeaguePowerCeilingGh(targetLeague, leagues) : NaN;
+        limitGh = targetLeague ? getLeaguePowerCeilingGh(targetLeague, leagues) : NaN;
     } else if (limitMode === 'custom') {
         const value = limitValue.trim() ? Number(limitValue.replace(',', '.')) : NaN;
-        maxPowerGh = toBaseUnit({ value, unit: limitUnit }) / 1e9;
+        limitGh = toBaseUnit({ value, unit: limitUnit }) / 1e9;
     }
+    // The game adds the gap on top of what we compute, so the layout must stay that far below the real limit.
+    const gapApplied = limitGh !== undefined && Number.isFinite(limitGh) && leagueGapGh > 0;
+    const maxPowerGh = gapApplied ? Math.max(0, limitGh! - leagueGapGh) : limitGh;
+    // The daily promotion check uses today's highest power, so a layout under the limit cannot undo an earlier peak.
+    const limitPassedToday = limitGh !== undefined && Number.isFinite(limitGh) && todayMaxLeaguePowerGh !== undefined && todayMaxLeaguePowerGh > limitGh;
     const invalidLimit = maxPowerGh !== undefined && (!Number.isFinite(maxPowerGh) || maxPowerGh < 0);
     const [job, setJob] = useState<{ room: RollercoinRoomResponse; sets?: GetRackSetListDto[]; maxPowerGh?: number; mode: AutoPlacementMode; keepPlaced: boolean; noMovePlaced: boolean; noRemovePlaced: boolean } | null>(null);
     const [result, setResult] = useState<AutoPlacementResult | null>(null);
@@ -179,6 +187,8 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
                 </select>
             </div>}
             {leagueMode && targetLeague && !invalidLimit && <span className="auto-placement-limit-note">{targetLeague.name}: {targetBoundary === undefined ? t('autoPlacement.noLeagueCeiling') : <>&lt; {power(targetBoundary)}</>}</span>}
+            {limitPassedToday && !invalidLimit && <span className="auto-placement-limit-note auto-placement-limit-passed" role="alert">{t('autoPlacement.limitPassedToday', { power: power(todayMaxLeaguePowerGh!) })}</span>}
+            {gapApplied && !invalidLimit && <span className="auto-placement-limit-note" title={t('autoPlacement.gapApplied', { gap: power(leagueGapGh) })}>−{power(leagueGapGh)}</span>}
             {invalidLimit && (limitValue !== '' || leagueMode) && <span className="auto-placement-limit-note" role="alert">{t(leagueMode ? 'autoPlacement.selectLeague' : 'autoPlacement.invalidLimit')}</span>}
             <button type="button" className="room-auto-placement-button" disabled={!running && (invalidLimit || !room.racks?.some(rack => rack.placement))}
                 onClick={running ? cancel : start} aria-controls={id} title={t(running ? 'autoPlacement.running' : maxPowerGh === undefined ? 'autoPlacement.help' : 'autoPlacement.limitHelp')}>
@@ -207,6 +217,8 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
                         : `${power(visibleResult.beforeObjective)} → ${power(visibleResult.afterObjective)}`}</>}
                 </p>
                 <p>{t(visibleResult.exact ? 'autoPlacement.exact' : 'autoPlacement.bounded')}</p>
+                {visibleResult.maxPowerGh !== undefined && leagueGapGh > 0 && <p>{t('autoPlacement.gapApplied', { gap: power(leagueGapGh) })}</p>}
+                <p className="auto-placement-apply-warning" role="note">{t('autoPlacement.applyGradually')}</p>
                 <ol className="room-auto-placement-changes">
                     {visibleResult.changes.map(change => <li key={change.minerId}>
                         <button type="button" disabled={!change.to}

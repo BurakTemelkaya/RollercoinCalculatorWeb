@@ -44,3 +44,5 @@
     .room-auto-placement-button { width: 100%; }
     .auto-placement-limit-mode { max-width: 100%; }
 }
+.room-auto-placement-report .auto-placement-apply-warning { padding: 6px 10px; border-left: 3px solid #f0ad4e; border-radius: 4px; background: #f0ad4e14; color: #f3c37a; }
+.room-auto-placement-toolbar .auto-placement-limit-passed { color: #ff9b9b; }

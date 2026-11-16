@@ -43,7 +43,10 @@
     "selectLeague": "选择联赛",
     "noLeagueCeiling": "无上限",
     "allowRemovingPlaced": "允许移除矿机",
-    "allowRemovingPlacedHelp": "开启后，已放置的矿机可退回库存，为更好的矿机腾出位置。关闭时，所有已放置的矿机都留在房间内。"
+    "allowRemovingPlacedHelp": "开启后，已放置的矿机可退回库存，为更好的矿机腾出位置。关闭时，所有已放置的矿机都留在房间内。",
+    "gapApplied": "RollerCoin 显示此账户的联赛算力比房间计算多约 {{gap}}，因此上限已相应降低。",
+    "applyGradually": "请在游戏中按此顺序逐个应用这些更改：先移除，再移动，最后添加。RollerCoin 每日检查时会看您当天的最高算力（不含临时算力），只要超过下一联赛门槛就会升级，因此每一步之间请等待联赛算力更新。",
+    "limitPassedToday": "您今天已达到 {{power}}，超过此上限。每日检查使用当天最高算力，因此您仍可能升级。"
   },
   "minerImport": {
     "apiMethod": "API 响应（JSON）",
@@ -581,7 +584,9 @@
     "selectMinerToReplace": "从库存中选择新矿机",
     "setMiner": "套装矿机",
     "notSellableMiner": "不可出售",
-    "sellableMiner": "可出售"
+    "sellableMiner": "可出售",
+    "previouslyHere": "此前在此",
+    "emptyCell": "空格"
   },
   "settings": {
     "showCoinPrices": "显示币种价格",

@@ -43,7 +43,10 @@
     "selectLeague": "Lig seçin",
     "noLeagueCeiling": "Üst sınır yok",
     "allowRemovingPlaced": "Miner kaldırmaya izin ver",
-    "allowRemovingPlacedHelp": "Açıkken yerleşmiş minerlar daha iyileri için envantere kaldırılabilir. Kapalıyken yerleşmiş her miner odada kalır."
+    "allowRemovingPlacedHelp": "Açıkken yerleşmiş minerlar daha iyileri için envantere kaldırılabilir. Kapalıyken yerleşmiş her miner odada kalır.",
+    "gapApplied": "RollerCoin bu hesap için oda hesabından yaklaşık {{gap}} daha fazla lig gücü gösteriyor; sınır bu kadar düşürüldü.",
+    "applyGradually": "Bu değişiklikleri oyunda tek tek ve bu sırayla uygulayın: önce çıkarın, sonra taşıyın, en son ekleyin. RollerCoin günlük kontrolde gün içindeki en yüksek gücünüze (geçici güç hariç) bakar; sonraki ligi bir an bile geçerseniz lig atlarsınız. Adımlar arasında lig gücünüzün güncellenmesini bekleyin.",
+    "limitPassedToday": "Bugün zaten {{power}} değerine ulaştınız, bu sınırın üstünde. RollerCoin günlük kontrolde günün en yüksek gücüne baktığı için yine de lig atlayabilirsiniz."
   },
   "minerImport": {
     "apiMethod": "API yanıtı (JSON)",
@@ -646,7 +649,9 @@
     "selectMinerToReplace": "Envanterden yeni madenciyi seçin",
     "setMiner": "Set madencisi",
     "notSellableMiner": "Satılamaz",
-    "sellableMiner": "Satılabilir"
+    "sellableMiner": "Satılabilir",
+    "previouslyHere": "Önceden burada",
+    "emptyCell": "Boş hücre"
   },
   "settings": {
     "showCoinPrices": "Coin fiyatlarını göster",

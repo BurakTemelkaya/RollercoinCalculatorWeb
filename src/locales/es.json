@@ -43,7 +43,10 @@
     "selectLeague": "Seleccionar liga",
     "noLeagueCeiling": "Sin límite superior",
     "allowRemovingPlaced": "Permitir quitar mineros",
-    "allowRemovingPlacedHelp": "Si está activado, los mineros colocados pueden volver al inventario para dejar sitio a otros mejores. Si no, todos los mineros colocados se quedan en la sala."
+    "allowRemovingPlacedHelp": "Si está activado, los mineros colocados pueden volver al inventario para dejar sitio a otros mejores. Si no, todos los mineros colocados se quedan en la sala.",
+    "gapApplied": "RollerCoin muestra unos {{gap}} más de poder de liga para esta cuenta que el cálculo de la sala, así que el límite se redujo en esa cantidad.",
+    "applyGradually": "Aplica estos cambios en el juego de uno en uno y en este orden: primero quitar, luego mover y al final añadir. RollerCoin te asciende en la revisión diaria si tu poder más alto del día (sin poder temporal) superó la siguiente liga, así que espera a que se actualice tu poder de liga entre pasos.",
+    "limitPassedToday": "Hoy ya alcanzaste {{power}}, por encima de este límite. La revisión diaria usa tu poder más alto del día, así que podrías ascender igualmente."
   },
   "minerImport": {
     "apiMethod": "Respuesta de la API (JSON)",
@@ -566,7 +569,9 @@
     "selectMinerToReplace": "Selecciona un nuevo minero del inventario",
     "setMiner": "Minero del conjunto",
     "notSellableMiner": "No vendible",
-    "sellableMiner": "Vendible"
+    "sellableMiner": "Vendible",
+    "previouslyHere": "Antes aquí",
+    "emptyCell": "Celda vacía"
   },
   "settings": {
     "showCoinPrices": "Mostrar precios de las monedas",

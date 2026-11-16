@@ -43,7 +43,10 @@
     "selectLeague": "Sélectionner une ligue",
     "noLeagueCeiling": "Aucun plafond",
     "allowRemovingPlaced": "Autoriser le retrait de mineurs",
-    "allowRemovingPlacedHelp": "Activé, les mineurs placés peuvent retourner dans l’inventaire pour laisser la place à de meilleurs. Sinon, chaque mineur placé reste dans la salle."
+    "allowRemovingPlacedHelp": "Activé, les mineurs placés peuvent retourner dans l’inventaire pour laisser la place à de meilleurs. Sinon, chaque mineur placé reste dans la salle.",
+    "gapApplied": "RollerCoin affiche environ {{gap}} de puissance de ligue en plus pour ce compte que le calcul de la salle ; la limite a donc été réduite d’autant.",
+    "applyGradually": "Appliquez ces changements dans le jeu un par un, dans cet ordre : retirer d’abord, puis déplacer, ajouter en dernier. RollerCoin vous promeut lors de la vérification quotidienne si votre puissance maximale du jour (hors puissance temporaire) a dépassé la ligue suivante ; attendez la mise à jour de votre puissance de ligue entre les étapes.",
+    "limitPassedToday": "Vous avez déjà atteint {{power}} aujourd’hui, au-dessus de cette limite. La vérification quotidienne utilise votre puissance maximale du jour, vous pourriez donc être promu malgré tout."
   },
   "minerImport": {
     "apiMethod": "Réponse de l’API (JSON)",
@@ -567,7 +570,9 @@
     "selectMinerToReplace": "Sélectionnez un nouveau mineur dans l'inventaire",
     "setMiner": "Mineur du set",
     "notSellableMiner": "Non vendable",
-    "sellableMiner": "Vendable"
+    "sellableMiner": "Vendable",
+    "previouslyHere": "Auparavant ici",
+    "emptyCell": "Case vide"
   },
   "settings": {
     "showCoinPrices": "Afficher les prix des cryptomonnaies",
