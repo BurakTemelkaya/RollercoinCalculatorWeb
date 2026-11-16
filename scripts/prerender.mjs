@@ -29,7 +29,6 @@ const CONCURRENCY = 8; // pages rendered in parallel
 /** Routes to begin crawling from. Extra pages found via <a> links are
  *  added to the queue automatically. */
 const SEED_ROUTES = [
-  '/',
   '/en',
   '/tr',
   // Other languages: each home page links to its own sub-pages, so the crawl finds the rest
@@ -148,10 +147,7 @@ function isInternalPage(href) {
 /* ------------------------------------------------------------------ */
 
 async function renderPage(browser, route, visited, queue, retries = 1) {
-  // "/" redirects by the saved language. Pages share localStorage within a context, so a
-  // parallel /id render could make "/" capture the Indonesian page; give "/" its own context.
-  const context = route === '/' ? await browser.createBrowserContext() : null;
-  const page = await (context ?? browser).newPage();
+  const page = await browser.newPage();
   page.setDefaultNavigationTimeout(30000);
 
   // Optimizasyon: Gereksiz kaynakları ve reklamları engelle
@@ -185,11 +181,6 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
   });
 
   try {
-    // "/" redirects by saved/browser language; pin English so root.html never depends on the
-    // build machine's locale or on another page's lang left in the shared localStorage.
-    if (route === '/') {
-      await page.evaluateOnNewDocument(() => localStorage.setItem('rollercoin_web_language', 'en'));
-    }
     const url = `http://localhost:${PORT}${route}`;
     // HTML'i hızlıca yükle (domcontentloaded)
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
@@ -224,21 +215,17 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     // localhost URL makes Chrome ask live visitors for "apps on device" access.
     const html = (await page.content()).replaceAll(`http://localhost:${PORT}`, '');
 
-    // A route that client-side redirects elsewhere (e.g. an unknown path -> "/") would bake
-    // another page's content and canonical under this URL; leave it to the SPA fallback instead.
+    // A route that client-side redirects elsewhere (e.g. an unknown path -> "/", or "/" itself,
+    // which nginx 301s to /en) would bake another page's content under this URL; skip it.
     const finalPath = normalise(new URL(page.url()).pathname);
-    if (route !== '/' && finalPath !== route) {
+    if (finalPath !== route) {
       console.warn(`↪️  ${route} redirected to ${finalPath}, not written`);
       return true;
     }
 
     // Never overwrite dist/index.html: nginx serves it as the fallback for every non-prerendered
-    // route (event, miner, blog pages), so it must stay the clean shell. "/" JS-redirects to a
-    // language (English for crawlers), so its render is the /en page with canonical /en; nginx
-    // serves it from root.html for "/" only.
-    const outputPath = route === '/'
-      ? path.join(DIST_DIR, 'root.html')
-      : path.join(DIST_DIR, route, 'index.html');
+    // route (event, miner, blog pages), so it must stay the clean shell ("/" is skipped above).
+    const outputPath = path.join(DIST_DIR, route, 'index.html');
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, html);
 
@@ -254,7 +241,6 @@ async function renderPage(browser, route, visited, queue, retries = 1) {
     if (!page.isClosed()) {
       await page.close();
     }
-    await context?.close();
   }
 }
 
