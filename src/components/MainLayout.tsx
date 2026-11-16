@@ -10,6 +10,7 @@ import { useDragScroll } from '../hooks/useDragScroll';
 import { GlobalAds } from './GlobalAds';
 import { AdSenseSlot } from './AdSenseSlot';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
+import { FIAT_OPTIONS, setFiatCurrency, useFiatCurrency } from '../utils/fiat';
 
 export const SUPPORTED_LANGUAGES: SelectOption[] = [
   { value: 'en', label: 'English', icon: 'https://flagcdn.com/w20/gb.png' },
@@ -47,6 +48,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const fiatCode = useFiatCurrency();
 
   // Extract lang from path part 1, fallback to i18n
   const langFromPath = location.pathname.split('/')[1];
@@ -264,16 +266,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </Link>
           </div>
 
-          <div className="sticky-nav-links desktop-only" ref={navLinksRef}>
-            <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
-            <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
-            <Link to={`/${i18n.language}/events?type=puzzle`} className="nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
-            <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
-            <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
-            <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
+          <div className="sticky-nav-scroll desktop-only">
+          <div className="sticky-nav-links" ref={navLinksRef}>
+            <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
             <Link to={`/${i18n.language}/blog`} className="nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
             <Link to={`/${i18n.language}/faq`} className="nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
-            <Link to={`/${i18n.language}/support`} className="nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
+            <Link to={`/${i18n.language}/hamsters`} className="nav-link hamster-nav-link" onClick={dismissHamstersNotice}>{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
+            <Link to={`/${i18n.language}/merges`} className="nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+            <Link to={`/${i18n.language}/events?type=puzzle`} className="nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
+            <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
+            <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
+          </div>
+            {/* Shown only on the side with hidden links (CSS reads the fade flags); keyboard users tab through the links instead */}
+            {[-1, 1].map(dir => (
+              <button key={dir} type="button" tabIndex={-1} aria-hidden="true"
+                className={`nav-scroll-arrow ${dir < 0 ? 'left' : 'right'}`}
+                onClick={() => navLinksRef.current?.scrollBy({ left: dir * 200, behavior: 'smooth' })}>
+                {dir < 0 ? '‹' : '›'}
+              </button>
+            ))}
           </div>
 
           <div className="header-actions">
@@ -284,6 +296,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 options={SUPPORTED_LANGUAGES}
                 placeholder="Language"
                 showSelectedIcon={true}
+              />
+              <RadixSelect
+                value={fiatCode}
+                onValueChange={setFiatCurrency}
+                options={FIAT_OPTIONS}
+                ariaLabel="Currency"
               />
             </div>
 
@@ -330,16 +348,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
         {/* Mobile menu dropdown */}
         <div className={`mobile-menu-dropdown ${isMobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-nav-content">
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events?type=puzzle`} className="mobile-nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
-            <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/blog`} className="mobile-nav-link">{NAV_ICONS.blog} {t('nav.blog')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/faq`} className="mobile-nav-link">{NAV_ICONS.faq} {t('nav.faq')}</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/support`} className="mobile-nav-link">{NAV_ICONS.support} {t('nav.support')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/guides`} className="mobile-nav-link">{NAV_ICONS.guides} {t('nav.guides')}</Link>
+            <Link onClick={() => { setIsMobileMenuOpen(false); dismissHamstersNotice(); }} to={`/${i18n.language}/hamsters`} className="mobile-nav-link hamster-nav-link">{NAV_ICONS.hamsters} {t('nav.hamsters')}{showHamstersNotice && <span className="hamster-nav-notice" aria-label={t('hamsters.newFeature')} />}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/merges`} className="mobile-nav-link">{NAV_ICONS.merges} {t('nav.merges')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events?type=puzzle`} className="mobile-nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <div className="mobile-auth-divider" />
             {isAuthenticated ? (
               <>

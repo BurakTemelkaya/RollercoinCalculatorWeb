@@ -5,6 +5,7 @@ import { LEAGUES, LeagueInfo, CURRENCY_MAP, LEAGUE_TIER_CONFIGS, getLeagueTierNa
 import { ApiLeagueData } from '../types/api';
 import { PowerUnit, HashPower, DEFAULT_MIN_WITHDRAW } from '../types';
 import { COIN_ICONS } from '../utils/constants';
+import { useFiatCurrency } from '../utils/fiat';
 import { formatCryptoAmount, formatUSD, getBlocksPerPeriod, isWithdrawableCoin, isGameToken, formatDuration } from '../utils/calculator';
 import { autoScalePower, formatHashPower, toBaseUnit } from '../utils/powerParser';
 import { getLeagueAnalysisCeilingGh, getLeagueMiningRate, getNextLeaguePower } from '../utils/leagueAnalysis';
@@ -56,6 +57,7 @@ const LeagueAnalysisModal: React.FC<LeagueAnalysisModalProps> = ({
     onSelectLeague,
 }) => {
     const { t } = useTranslation();
+    useFiatCurrency();
     const NONE_VALUE = '__none__';
     const [selectedCoin, setSelectedCoin] = useState<string>(NONE_VALUE);
     const [selectedTier, setSelectedTier] = useState<string>('all');

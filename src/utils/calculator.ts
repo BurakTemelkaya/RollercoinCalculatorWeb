@@ -1,6 +1,7 @@
 import { CoinData, EarningsResult, HashPower, Period, GAME_TOKENS, DEFAULT_MIN_WITHDRAW } from '../types';
 import { powerRatio, formatHashPower } from './powerParser';
 import { TFunction } from 'i18next';
+import { getFiat } from './fiat';
 
 // Default block time in minutes (9 minutes 56 seconds = 596 seconds)
 const DEFAULT_BLOCK_TIME_SECONDS = 596;
@@ -189,24 +190,18 @@ export function getCompactCryptoAmount(amount: number, currency: string): {
 }
 
 /**
- * Format USD amount
+ * Format a USD amount in the user's selected fiat currency (see utils/fiat).
  */
-export function formatUSD(amount: number): string {
-    if (amount === null || amount === undefined || !Number.isFinite(amount) || Number.isNaN(amount)) {
-        return '$0.00';
-    }
-
-    // User requested "100.51" format.
-    // If amount is very small (less than 1 cent), we can show it as < $0.01 or just 0.00 depending on interpretation.
-    // "en fazla 1 cent altını göstermemize gerek yok" -> We don't need to show below 1 cent.
-    // So simple standard currency format (2 decimals) should suffice.
-
+export function formatUSD(amount: number, fractionDigits = 2): string {
+    const { code, rate } = getFiat();
+    const value = Number.isFinite(amount) ? amount * rate : 0;
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(amount);
+        currency: code,
+        currencyDisplay: 'narrowSymbol',
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits
+    }).format(value);
 }
 
 /**
