@@ -32,6 +32,7 @@ Resmî oyun idle görselleri 160×160 PNG'dir; karakter tam sayı piksel ölçe�
 - Resmî idle'lar oyun pikselinin 4 katıdır. Resmî olmayan bir kaynak (GIF, blog görseli) kullanılıyorsa hedef boy, hamsterın 128×128 `sprite_walk.png` karesindeki görünür boy × 4 olarak hesaplanır; diğer hamsterlarla oran bu sayede oyundakiyle aynı kalır. Görünür alana veya göz kararına göre ölçek seçilmez.
 - Büyütme en yakın komşu ile yapılır; tam sayı kat uymuyorsa düzenli desen veren kesir (2,5 / 2,75 gibi) seçilir. `previewRegion` veya küçük tuval kırpımıyla boyut ayarlanmaz; böylece görsel yeni sekmede açıldığında da diğer hamsterlarla aynı görünür.
 - Önce Minaryganar'da (`https://api.minaryganar.com/assets/rollercoin/hamsters/pets/<slug>/lvlXX/`) resmî dosyalar aranır; varsa elle üretilmiş görsel yerine onlar kullanılır (`updateCuscuzAssets.cjs`, `updateChillzAssets.cjs`). Yeni hamsterlarda `idle.png` hareketli GIF olabilir; dosya başlığı kontrol edilip GIF ise karelere ayrılır.
+- Var olan bir görsel aynı adla değiştirildiğinde `src/utils/hamsterAssets.ts` içindeki `HAMSTER_ASSET_VERSION` artırılır. Cloudflare görselleri 30 gün önbellekte tutar; sürüm artmazsa canlıda eski görsel görünür (Chillz'de 16 Kasım 2026'da yaşandı).
 - Elle dönüştürme gerekiyorsa kaynak kareler `scripts/` altında saklanır ve betik bu kaynaktan yeniden üretir (çıktıyı yerinde tekrar dönüştürmez). Kontrol betiği boyutları 160 olarak doğrular.
 
 ## Haritalar
