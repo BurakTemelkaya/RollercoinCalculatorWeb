@@ -693,7 +693,8 @@
     "discountExpired": "已过期",
     "noDiscounts": "无有效折扣",
     "tokenDiscountGroup": "代币折扣",
-    "discountEndsIn": "结束时间: {{time}}"
+    "discountEndsIn": "结束时间: {{time}}",
+    "seoDescription": "{{name}} — Progression Event 奖励、倍数计算器和预算规划。"
   },
   "pagination": {
     "previous": "上一页",

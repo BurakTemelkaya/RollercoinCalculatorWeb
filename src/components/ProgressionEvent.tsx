@@ -1027,6 +1027,8 @@ export default function ProgressionEvent() {
     };
 
     const canonicalUrl = `https://rollercoincalculator.app/${lang}/event/${eventPathSegment(eventData)}`;
+    // Same text as the backend's link-preview tags (SeoController), so both stay in the page's language
+    const seoDescription = t('event.seoDescription', { name: eventData.name });
     const finalReward = eventData?.rewards && eventData.rewards.length > 0 ? eventData.rewards[eventData.rewards.length - 1] : null;
     const finalRewardDisplay = finalReward ? getRewardDisplay(finalReward, t) : null;
 
@@ -1035,16 +1037,16 @@ export default function ProgressionEvent() {
             {/* Dynamic SEO for Progression Event */}
             <>
                 <title>{`${eventData.name} | Rollercoin Calculator`}</title>
-                <meta name="description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta name="description" content={seoDescription} />
                 <link rel="canonical" href={canonicalUrl} />
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={`${eventData.name} | Rollercoin Calculator`} />
-                <meta property="og:description" content={`${eventData.name} — Progression Event rewards, multiplier calculator, and budget planner.`} />
+                <meta property="og:description" content={seoDescription} />
                 <meta property="og:image" content={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`} />
                 <meta property="og:url" content={canonicalUrl} />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={`${eventData.name} - Rollercoin Calculator`} />
-                <meta name="twitter:description" content={`Track rewards and optimize your strategy for the ${eventData.name} progression event in Rollercoin.`} />
+                <meta name="twitter:description" content={seoDescription} />
                 <meta name="twitter:image" content={`${getCdnBaseUrl()}/pe/${eventData.id}/progression-event-modal-bg.png`} />
             </>
             {/* Ad-Blocker Warning */}

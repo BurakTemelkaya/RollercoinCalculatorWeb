@@ -699,7 +699,8 @@
     "discountExpired": "Expirované",
     "noDiscounts": "Žádné aktivní slevy",
     "tokenDiscountGroup": "Slevy na tokeny",
-    "discountEndsIn": "Končí v: {{time}}"
+    "discountEndsIn": "Končí v: {{time}}",
+    "seoDescription": "{{name}} — Odměny Progression Eventu, kalkulačka násobitele a plánovač rozpočtu."
   },
   "pagination": {
     "previous": "Předchozí",

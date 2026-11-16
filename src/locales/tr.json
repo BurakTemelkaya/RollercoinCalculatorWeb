@@ -761,7 +761,8 @@
     "discountExpired": "Süresi Doldu",
     "noDiscounts": "Aktif indirim yok",
     "tokenDiscountGroup": "Token İndirimleri",
-    "discountEndsIn": "Kalan: {{time}}"
+    "discountEndsIn": "Kalan: {{time}}",
+    "seoDescription": "{{name}} — Progression Event ödülleri, çarpan hesaplayıcı ve bütçe planlayıcı."
   },
   "pagination": {
     "previous": "Önceki",

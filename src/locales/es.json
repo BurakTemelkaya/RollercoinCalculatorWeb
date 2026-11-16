@@ -678,7 +678,8 @@
     "discountExpired": "Expirado",
     "noDiscounts": "No hay descuentos activos",
     "tokenDiscountGroup": "Descuentos de Tokens",
-    "discountEndsIn": "Termina en: {{time}}"
+    "discountEndsIn": "Termina en: {{time}}",
+    "seoDescription": "{{name}} — Recompensas del Progression Event, calculadora de multiplicador y planificador de presupuesto."
   },
   "pagination": {
     "previous": "Anterior",

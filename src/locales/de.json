@@ -699,7 +699,8 @@
     "discountExpired": "Abgelaufen",
     "noDiscounts": "Keine aktiven Rabatte",
     "tokenDiscountGroup": "Token-Rabatte",
-    "discountEndsIn": "Endet in: {{time}}"
+    "discountEndsIn": "Endet in: {{time}}",
+    "seoDescription": "{{name}} — Progression-Event-Belohnungen, Multiplikator-Rechner und Budgetplaner."
   },
   "pagination": {
     "previous": "Zurück",

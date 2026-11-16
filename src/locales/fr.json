@@ -679,7 +679,8 @@
     "discountExpired": "Expiré",
     "noDiscounts": "Aucune réduction active",
     "tokenDiscountGroup": "Réductions de Jetons",
-    "discountEndsIn": "Se termine dans : {{time}}"
+    "discountEndsIn": "Se termine dans : {{time}}",
+    "seoDescription": "{{name}} — Récompenses du Progression Event, calculateur de multiplicateur et planificateur de budget."
   },
   "pagination": {
     "previous": "Précédent",

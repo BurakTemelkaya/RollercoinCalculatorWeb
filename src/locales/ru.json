@@ -693,7 +693,8 @@
     "discountExpired": "Истекло",
     "noDiscounts": "Нет активных скидок",
     "tokenDiscountGroup": "Скидки на Токены",
-    "discountEndsIn": "Осталось: {{time}}"
+    "discountEndsIn": "Осталось: {{time}}",
+    "seoDescription": "{{name}} — награды Progression Event, калькулятор множителя и планировщик бюджета."
   },
   "pagination": {
     "previous": "Назад",

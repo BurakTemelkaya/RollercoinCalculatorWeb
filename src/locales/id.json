@@ -693,7 +693,8 @@
     "discountExpired": "Berakhir",
     "noDiscounts": "Tidak ada diskon aktif",
     "tokenDiscountGroup": "Diskon Token",
-    "discountEndsIn": "Berakhir dalam: {{time}}"
+    "discountEndsIn": "Berakhir dalam: {{time}}",
+    "seoDescription": "{{name}} — Hadiah Progression Event, kalkulator pengali, dan perencana anggaran."
   },
   "pagination": {
     "previous": "Sebelumnya",
