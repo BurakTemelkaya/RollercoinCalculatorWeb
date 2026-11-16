@@ -20,8 +20,10 @@ export const MINER_IMPORT_CHANGE_EVENT = 'miner-import-changed';
 export type ImportedMinerQuantity = Pick<ImportedMiner, 'id' | 'quantity'>;
 
 export function isValidMinerFilename(value: unknown): value is string {
-    // RollerCoin file names may contain "/" (e.g. red/blue_protocol); ".." segments stay rejected.
-    return typeof value === 'string' && /^[\p{L}\p{M}\p{N}_.&()'’ /-]+$/u.test(value) && !value.split('/').some(part => !part || part === '..');
+    // RollerCoin names use any punctuation ("red/blue_protocol", "off_with_his_head!"); only block what breaks an image path:
+    // control characters, backslashes, URL delimiters, quotes and empty or ".." segments.
+    return typeof value === 'string' && value.length <= 200 && !/[\u0000-\u001f\u007f\\?#%"<>`]/.test(value)
+        && !value.split('/').some(part => !part.trim() || part === '..' || part === '.');
 }
 
 function record(value: unknown): Record<string, unknown> {
