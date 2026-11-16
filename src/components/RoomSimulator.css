@@ -274,6 +274,12 @@
     z-index: 5;
 }
 
+/* Each rack's miner layer is its own stacking context, so a tooltip sat under later racks' badges; lift the active rack. */
+.racks-grid .miners-block-wrapper:has(.miner-img-wrapper:hover),
+.racks-grid .miners-block-wrapper:has(.miner-img-wrapper.active-tooltip) {
+    z-index: 10000;
+}
+
 .miner-img-wrapper {
     position: absolute;
     pointer-events: auto;
