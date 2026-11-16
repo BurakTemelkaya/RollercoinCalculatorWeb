@@ -1,7 +1,10 @@
-.hamster-section-nav { display: flex; justify-content: center; gap: 10px; margin: 0 0 24px; }
-.hamster-section-nav a { display: flex; align-items: center; justify-content: center; gap: 9px; flex: 1; max-width: 220px; min-height: 46px; padding: 10px 16px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 10px; background: var(--bg-card, #1e2433); color: var(--text-secondary, #cbd5e1); font-size: 14px; font-weight: 750; text-decoration: none; text-align: center; }
-.hamster-section-nav a.active { border-color: var(--accent-primary, #6366f1); background: var(--accent-primary, #6366f1); color: #fff; }
-.hamster-section-nav a:hover { border-color: var(--accent-primary, #6366f1); }
+.hamster-section-nav-slot { margin: 0 0 24px; }
+.hamster-section-nav { display: flex; justify-content: center; gap: 10px; box-sizing: border-box; padding: 8px; border: 1px solid transparent; border-radius: 14px; z-index: 999; transition: background-color .2s, border-color .2s, box-shadow .2s; }
+.hamster-section-nav.is-pinned { border-color: var(--border-color, #262b3d); border-top-left-radius: 0; border-top-right-radius: 0; background: color-mix(in srgb, var(--bg-primary, #0b0e17) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 10px 24px rgba(0, 0, 0, .35); }
+.hamster-section-nav a { display: flex; align-items: center; justify-content: center; gap: 9px; flex: 1; max-width: 220px; min-height: 46px; padding: 10px 16px; border: 1px solid var(--border-color-hover, #343b52); border-radius: 10px; background: var(--bg-card, #1e2433); color: var(--text-secondary, #cbd5e1); font-size: 14px; font-weight: 750; text-decoration: none; text-align: center; transition: border-color .15s, background-color .15s, color .15s, box-shadow .15s; }
+.hamster-section-nav a.active { border-color: var(--accent-primary, #6366f1); background: linear-gradient(135deg, var(--accent-primary, #6366f1), #8b5cf6); color: #fff; box-shadow: 0 4px 16px rgba(99, 102, 241, .35); }
+.hamster-section-nav a:not(.active):hover { border-color: var(--accent-primary, #6366f1); color: var(--text-primary, #f8fafc); background: color-mix(in srgb, var(--accent-primary, #6366f1) 12%, var(--bg-card, #1e2433)); }
+@media (prefers-reduced-motion: reduce) { .hamster-section-nav, .hamster-section-nav a { transition: none; } }
 .hamster-section-nav a:focus-visible, .hamster-set-card-open:focus-visible, .hamster-set-member button:focus-visible { outline: 2px solid var(--accent-primary, #6366f1); outline-offset: 3px; }
 .hamster-section-icon { display: block; flex: none; width: 21px; height: 21px; background: currentColor; mask-repeat: no-repeat; mask-position: center; mask-size: contain; }
 .hamster-section-icon.icon-hamsters { mask-image: url('../assets/hamster-navigation/hamsters.svg'); }
@@ -63,7 +66,8 @@
 @media (min-width: 1400px) { .hamster-sets-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 900px) { .hamster-sets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) {
-  .hamster-section-nav { gap: 5px; margin-bottom: 18px; }
+  .hamster-section-nav-slot { margin-bottom: 18px; }
+  .hamster-section-nav { gap: 5px; padding: 6px; }
   .hamster-section-nav a { min-width: 0; min-height: 50px; padding: 7px 5px; gap: 4px; font-size: 11px; }
   .hamster-section-icon { width: 17px; height: 17px; }
   .hamster-sets-page { padding: 8px 12px 70px; box-sizing: border-box; }
