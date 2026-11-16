@@ -459,6 +459,40 @@ a:hover {
   mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
 }
 
+/* Wraps the scrolling links so the arrows stay put while the links move */
+.sticky-nav-scroll {
+  position: relative;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.nav-scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0 0 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nav-scroll-arrow.left { left: 0; }
+.nav-scroll-arrow.right { right: 0; }
+
+.sticky-nav-links[data-fade-left="true"] ~ .nav-scroll-arrow.left,
+.sticky-nav-links[data-fade-right="true"] ~ .nav-scroll-arrow.right {
+  display: flex;
+}
+
 /* Actions (lang + auth + hamburger) */
 .header-actions {
   flex: 1 1 0;

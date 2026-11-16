@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import { EarningsResult, DEFAULT_MIN_WITHDRAW } from '../types';
-import { formatDuration, formatCryptoAmount, isWithdrawableCoin } from '../utils/calculator';
+import { formatDuration, formatCryptoAmount, formatUSD, isWithdrawableCoin } from '../utils/calculator';
+import { useFiatCurrency } from '../utils/fiat';
 import { COIN_ICONS, GAME_TOKEN_COLORS } from '../utils/constants';
 import { PowerAllocations } from '../hooks/usePowerAllocations';
 
@@ -38,6 +39,7 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
     prices
 }) => {
     const { t } = useTranslation();
+    useFiatCurrency();
     const [editingCoin, setEditingCoin] = useState<string | null>(null);
     const [tempValue, setTempValue] = useState<string>('');
     const [showDate, setShowDate] = useState<boolean>(() => {
@@ -251,7 +253,7 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
                                 <label style={{ marginBottom: 0 }}>{t('withdraw.balanceLabel')}</label>
                                 {data.currentBalance > 0 && (
                                     <span className="balance-usd" style={{ fontSize: '0.85em', color: '#10b981' }}>
-                                        ≈ ${data.currentUsdValue.toFixed(2)}
+                                        ≈ {formatUSD(data.currentUsdValue)}
                                     </span>
                                 )}
                             </div>
@@ -332,7 +334,7 @@ const WithdrawTimer: React.FC<WithdrawTimerProps> = ({
                             <div className="stat">
                                 <span className="stat-label">{t('withdraw.stats.minValue')}</span>
                                 <span className="stat-value" style={{ color: '#10b981' }}>
-                                    ${data.usdValue.toFixed(2)}
+                                    {formatUSD(data.usdValue)}
                                 </span>
                             </div>
                             <div className="stat">

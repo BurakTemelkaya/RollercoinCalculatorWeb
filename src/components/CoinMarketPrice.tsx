@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { PriceChange24h } from '../services/priceApi';
+import { getFiat, useFiatCurrency } from '../utils/fiat';
 
 interface CoinMarketPriceProps {
     currency: string;
@@ -12,12 +13,14 @@ interface CoinMarketPriceProps {
 export default function CoinMarketPrice({ currency, price, change }: CoinMarketPriceProps) {
     const { t } = useTranslation();
     const tooltipId = useId();
+    useFiatCurrency();
+    const fiat = getFiat();
     const [anchor, setAnchor] = useState<DOMRect | null>(null);
     const validChange = change && Number.isFinite(change.previousPrice) && change.previousPrice > 0 &&
         Number.isFinite(change.changePercent) ? change : undefined;
     const direction = validChange ? Math.sign(validChange.changePercent) : 0;
-    const formatPrice = (value: number, detailed = false) => value.toLocaleString('en-US', {
-        style: 'currency', currency: 'USD',
+    const formatPrice = (usd: number, detailed = false, value = usd * fiat.rate) => value.toLocaleString('en-US', {
+        style: 'currency', currency: fiat.code, currencyDisplay: 'narrowSymbol',
         // Table shows a short price (full precision is in the tooltip).
         ...(detailed ? { minimumFractionDigits: 2, maximumFractionDigits: 8 }
             : value >= 1000 ? { maximumFractionDigits: 0 }

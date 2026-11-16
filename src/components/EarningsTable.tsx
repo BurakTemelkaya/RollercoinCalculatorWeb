@@ -12,6 +12,7 @@ import { LeagueInfo } from '../data/leagues';
 import { ApiLeagueData } from '../types/api';
 import RadixSelect from './RadixSelect';
 import CoinMarketPrice from './CoinMarketPrice';
+import { useFiatCurrency } from '../utils/fiat';
 import { PriceChange24h } from '../services/priceApi';
 
 const LeagueAnalysisModal = React.lazy(() => import('./LeagueAnalysisModal'));
@@ -71,6 +72,7 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
     onSelectLeaguePower,
 }) => {
     const { t } = useTranslation();
+    useFiatCurrency();
     const tablesRef = useRef<HTMLDivElement>(null);
     const [isCapturing, setIsCapturing] = useState(false);
     
@@ -319,8 +321,8 @@ const EarningsTable: React.FC<EarningsTableProps> = ({
         const formattedPercent = `${isPositive && percentDiff !== 0 ? '+' : ''}${percentDiff.toFixed(2)}%`;
         
         const isTinyChange = Math.abs(diff) < 0.005;
-        const oldStr = isTinyChange ? `$${oldValue.toFixed(4)}` : formatUSD(oldValue);
-        const newStr = isTinyChange ? `$${newValue.toFixed(4)}` : formatUSD(newValue);
+        const oldStr = isTinyChange ? formatUSD(oldValue, 4) : formatUSD(oldValue);
+        const newStr = isTinyChange ? formatUSD(newValue, 4) : formatUSD(newValue);
         
         const titleText = oldValue > 0 
             ? `${oldStr} \u2192 ${newStr} (${formattedPercent})` 
