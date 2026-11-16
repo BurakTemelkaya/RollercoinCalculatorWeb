@@ -21,9 +21,10 @@ interface Props {
     currentLeagueId: string;
     /** How far RollerCoin's league power is above our room calculation for this account. */
     leagueGapGh?: number;
+    todayMaxLeaguePowerGh?: number;
 }
 
-export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTarget, leagues, currentLeagueId, leagueGapGh = 0 }: Props) {
+export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTarget, leagues, currentLeagueId, leagueGapGh = 0, todayMaxLeaguePowerGh }: Props) {
     const { t } = useTranslation();
     const id = useId();
     const workerRef = useRef<Worker | null>(null);
@@ -58,6 +59,8 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
     // The game adds the gap on top of what we compute, so the layout must stay that far below the real limit.
     const gapApplied = limitGh !== undefined && Number.isFinite(limitGh) && leagueGapGh > 0;
     const maxPowerGh = gapApplied ? Math.max(0, limitGh! - leagueGapGh) : limitGh;
+    // The daily promotion check uses today's highest power, so a layout under the limit cannot undo an earlier peak.
+    const limitPassedToday = limitGh !== undefined && Number.isFinite(limitGh) && todayMaxLeaguePowerGh !== undefined && todayMaxLeaguePowerGh > limitGh;
     const invalidLimit = maxPowerGh !== undefined && (!Number.isFinite(maxPowerGh) || maxPowerGh < 0);
     const [job, setJob] = useState<{ room: RollercoinRoomResponse; sets?: GetRackSetListDto[]; maxPowerGh?: number; mode: AutoPlacementMode; keepPlaced: boolean; noMovePlaced: boolean; noRemovePlaced: boolean } | null>(null);
     const [result, setResult] = useState<AutoPlacementResult | null>(null);
@@ -184,6 +187,7 @@ export default function AutoPlacement({ room, sets, onApply, onLocate, toolbarTa
                 </select>
             </div>}
             {leagueMode && targetLeague && !invalidLimit && <span className="auto-placement-limit-note">{targetLeague.name}: {targetBoundary === undefined ? t('autoPlacement.noLeagueCeiling') : <>&lt; {power(targetBoundary)}</>}</span>}
+            {limitPassedToday && !invalidLimit && <span className="auto-placement-limit-note auto-placement-limit-passed" role="alert">{t('autoPlacement.limitPassedToday', { power: power(todayMaxLeaguePowerGh!) })}</span>}
             {gapApplied && !invalidLimit && <span className="auto-placement-limit-note" title={t('autoPlacement.gapApplied', { gap: power(leagueGapGh) })}>−{power(leagueGapGh)}</span>}
             {invalidLimit && (limitValue !== '' || leagueMode) && <span className="auto-placement-limit-note" role="alert">{t(leagueMode ? 'autoPlacement.selectLeague' : 'autoPlacement.invalidLimit')}</span>}
             <button type="button" className="room-auto-placement-button" disabled={!running && (invalidLimit || !room.racks?.some(rack => rack.placement))}

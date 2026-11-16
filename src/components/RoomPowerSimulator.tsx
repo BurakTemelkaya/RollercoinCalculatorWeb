@@ -355,6 +355,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             leagues={apiLeagues || LEAGUES}
                             currentLeagueId={currentLeague.id}
                             leagueGapGh={leagueGapGh}
+                            todayMaxLeaguePowerGh={dto?.max_Power}
                         />
 
                         {originalExactPower && Math.abs(powerDiffGh) > 0.001 && (

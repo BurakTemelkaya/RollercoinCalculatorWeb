@@ -45,7 +45,8 @@
     "allowRemovingPlaced": "Permitir remover mineradores",
     "allowRemovingPlacedHelp": "Ativado, mineradores posicionados podem voltar ao inventário para dar lugar a melhores. Caso contrário, todos permanecem na sala.",
     "gapApplied": "O RollerCoin mostra cerca de {{gap}} a mais de poder de liga para esta conta do que o cálculo da sala, então o limite foi reduzido nesse valor.",
-    "applyGradually": "Aplique estas mudanças no jogo uma de cada vez e espere o RollerCoin atualizar seu poder de liga antes da próxima."
+    "applyGradually": "Aplique estas mudanças no jogo uma de cada vez, nesta ordem: primeiro remover, depois mover e por último adicionar. O RollerCoin promove você na verificação diária se seu maior poder do dia (sem poder temporário) passou a próxima liga, então espere seu poder de liga atualizar entre os passos.",
+    "limitPassedToday": "Você já atingiu {{power}} hoje, acima deste limite. A verificação diária usa seu maior poder do dia, então você pode ser promovido mesmo assim."
   },
   "minerImport": {
     "apiMethod": "Resposta da API (JSON)",

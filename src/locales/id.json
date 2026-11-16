@@ -45,7 +45,8 @@
     "allowRemovingPlaced": "Izinkan melepas miner",
     "allowRemovingPlacedHelp": "Jika aktif, miner yang terpasang dapat kembali ke inventaris untuk memberi tempat bagi yang lebih baik. Jika tidak, semua miner terpasang tetap di ruangan.",
     "gapApplied": "RollerCoin menampilkan sekitar {{gap}} lebih banyak daya liga untuk akun ini dibanding perhitungan ruangan, jadi batas diturunkan sebesar itu.",
-    "applyGradually": "Terapkan perubahan ini di game satu per satu dan tunggu RollerCoin memperbarui daya liga Anda sebelum perubahan berikutnya."
+    "applyGradually": "Terapkan perubahan ini di game satu per satu dengan urutan ini: lepas dulu, lalu pindahkan, tambahkan terakhir. RollerCoin menaikkan liga saat pengecekan harian jika daya tertinggi Anda hari itu (tanpa daya sementara) melewati liga berikutnya, jadi tunggu daya liga Anda diperbarui di antara langkah.",
+    "limitPassedToday": "Hari ini Anda sudah mencapai {{power}}, di atas batas ini. Pengecekan harian memakai daya tertinggi hari itu, jadi Anda tetap bisa naik liga."
   },
   "minerImport": {
     "apiMethod": "Respons API (JSON)",

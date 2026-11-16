@@ -45,7 +45,8 @@
     "allowRemovingPlaced": "Allow removing miners",
     "allowRemovingPlacedHelp": "When enabled, placed miners may return to inventory to make room for better ones. Otherwise every placed miner stays in the room.",
     "gapApplied": "RollerCoin shows about {{gap}} more league power for this account than the room calculation, so the limit was lowered by that much.",
-    "applyGradually": "Apply these changes in the game one at a time and wait for RollerCoin to update your league power before the next one."
+    "applyGradually": "Apply these changes in the game one at a time, in this order: remove first, then move, add last. RollerCoin promotes you at its daily check if your highest power of the day (excluding temporary power) passed the next league, so wait for your league power to update between steps.",
+    "limitPassedToday": "You already reached {{power}} today, above this limit. RollerCoin's daily check uses your highest power of the day, so you may be promoted anyway."
   },
   "minerImport": {
     "apiMethod": "API response (JSON)",

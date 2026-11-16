@@ -224,6 +224,9 @@ export function optimizeRoomPlacement(room: RollercoinRoomResponse, inventory: I
             if (from?.user_rack_id !== to?.user_rack_id || from?.x !== to?.x || from?.y !== to?.y) changes.push({ minerId: miner._id, name: miner.name, from, to });
         }
         for (const miner of room.miners) if (!nextIds.has(miner._id)) changes.push({ minerId: miner._id, name: miner.name, from: miner.placement, to: null });
+        // RollerCoin promotes on the day's highest power, so the list is the safe order: remove, then move, then add.
+        const step = (change: AutoPlacementChange) => !change.to ? 0 : change.from ? 1 : 2;
+        changes.sort((a, b) => step(a) - step(b));
         const afterStats = calculateExactRoomPower(nextRoom, sets), afterPower = afterStats.totalLeaguePowerGh;
         return { room: nextRoom, inventory: nextInventory, stockChanges, changes, beforePower,
             afterPower, mode, beforeObjective, afterObjective: objective(afterStats), exact, limitSatisfied: withinLimit(afterPower), maxPowerGh };
