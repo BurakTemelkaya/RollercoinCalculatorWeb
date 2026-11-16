@@ -492,6 +492,12 @@
     z-index: 9999 !important;
 }
 
+.miner-tooltip-previous { display: grid; gap: 4px; margin-top: 4px; padding-top: 5px; border-top: 1px solid #ffffff26; }
+.miner-tooltip-previous-title, .miner-tooltip-previous-empty { color: #9aa3b8; }
+.miner-tooltip-previous-item { display: flex; align-items: center; gap: 6px; }
+.miner-tooltip-previous-item > span { display: grid; gap: 1px; }
+.miner-tooltip-previous-item small { color: #9aa3b8; }
+
 .miner-tooltip-down {
     bottom: auto;
     top: 100%;

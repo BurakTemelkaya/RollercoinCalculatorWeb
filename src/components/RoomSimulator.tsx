@@ -23,6 +23,7 @@ import SpriteSheetMiner from './SpriteSheetMiner';
 import { getCachedSpriteImage } from './spriteImageCache';
 import SharedRoomMinerCanvas from './SharedRoomMinerCanvas';
 import CdnImage from './CdnImage';
+import MinerThumb from './MinerThumb';
 import sellableIcon from '../assets/sellable.svg';
 import setRackIcon from '../assets/items/set-rack.png';
 import { getCdnBaseUrl } from '../config/api';
@@ -112,7 +113,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
     const [areRoomDetailsOpen, setAreRoomDetailsOpen] = useState(false);
     const [highlightSellableMiners, setHighlightSellableMiners] = useState(false);
     const [highlightDuplicateMiners, setHighlightDuplicateMiners] = useState(false);
-    const [autoPlacementMarks, setAutoPlacementMarks] = useState<{ room: RollercoinRoomResponse; ids: Set<string> } | null>(null);
     const [focusedMiner, setFocusedMiner] = useState<{ room: RollercoinRoomResponse; id: string } | null>(null);
     const [autoPlacementToolbar, setAutoPlacementToolbar] = useState<HTMLDivElement | null>(null);
     const [addRackTarget, setAddRackTarget] = useState<{ x: number, y: number } | null>(null);
@@ -1357,6 +1357,21 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
         };
     }, [room, dynamicSets, currentRoomRacks, currentRoomMiners, firstInstanceMinerIds, globalBasePower]);
 
+    // Placed miners that are new or moved since this simulation started, with what stood in their cells before.
+    const changedMiners = useMemo(() => {
+        const before = new Map(initialRoom.miners.map(miner => [miner._id, miner]));
+        const cell = (miner: ApiRoomMiner) => JSON.stringify(miner.placement && [miner.placement.user_rack_id, miner.placement.x, miner.placement.y]);
+        const changed = new Map<string, ApiRoomMiner[]>();
+        for (const miner of room.miners) {
+            const placement = miner.placement;
+            const original = before.get(miner._id);
+            if (!placement || (original && cell(original) === cell(miner))) continue;
+            changed.set(miner._id, initialRoom.miners.filter(old => old.placement?.user_rack_id === placement.user_rack_id && old.placement.y === placement.y
+                && old.placement.x < placement.x + miner.width && old.placement.x + old.width > placement.x));
+        }
+        return changed;
+    }, [room, initialRoom]);
+
     const placedMinerIds = useMemo(() => {
         const roomIds = new Set(room.rooms?.map(item => item._id));
         const rackIds = new Set(room.racks?.filter(rack => rack.placement && roomIds.has(rack.placement.user_room_id)).map(rack => rack._id));
@@ -1690,7 +1705,6 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
             <AutoPlacement room={room} sets={dynamicSets} leagues={leagues} currentLeagueId={currentLeagueId} toolbarTarget={autoPlacementToolbar} onApply={(result: AutoPlacementResult) => {
                 saveImportedMiners(result.inventory);
                 handleRoomChange(result.room, result.stockChanges, 'autoPlacement');
-                setAutoPlacementMarks({ room: result.room, ids: new Set(result.changes.filter(change => change.to).map(change => change.minerId)) });
                 setFocusedMiner(null);
             }} onLocate={focusMiner} />
             <RoomOperationHistory entries={operationEntries} storageError={operationStorageError} placedMinerIds={placedMinerIds} onLocate={focusMiner} />
@@ -1880,7 +1894,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                 return (
                                                     <div
                                                         key={miner._id}
-                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${usesSharedSprite ? 'shared-sprite-target' : ''} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''} ${autoPlacementMarks?.room === room && autoPlacementMarks.ids.has(miner._id) ? 'auto-placed' : ''} ${focusedMiner?.room === room && focusedMiner.id === miner._id ? 'auto-placed auto-placement-selected room-miner-focus' : ''}`}
+                                                        className={`miner-img-wrapper size-${mWidth} pos-${miner.placement?.x || 0} ${usesSharedSprite ? 'shared-sprite-target' : ''} ${activeTooltipId === miner._id ? 'active-tooltip' : ''} ${!isMobile && highlightSellableMiners && isSellable ? 'highlight-sellable' : ''} ${!isMobile && highlightDuplicateMiners && duplicateMinerKeys.has(`${miner.miner_id}_${miner.level || 0}`) ? 'highlight-duplicate' : ''} ${changedMiners.has(miner._id) ? 'auto-placed' : ''} ${focusedMiner?.room === room && focusedMiner.id === miner._id ? 'auto-placed auto-placement-selected room-miner-focus' : ''}`}
                                                         data-miner-instance-id={miner._id}
                                                         tabIndex={-1}
                                                         style={{ ...minerStyle, cursor: 'grab' }}
@@ -1985,6 +1999,16 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                                                                     <span style={{ color: '#d9534f', textDecoration: 'line-through' }}>{bonusValue.toFixed(2)}% {t('merge.copy')}</span>
                                                                 )}
                                                             </div>
+                                                            {changedMiners.has(miner._id) && <div className="miner-tooltip-previous">
+                                                                <div className="miner-tooltip-previous-title">{t('simulator.previouslyHere')}</div>
+                                                                {changedMiners.get(miner._id)!.length === 0
+                                                                    ? <div className="miner-tooltip-previous-empty">{t('simulator.emptyCell')}</div>
+                                                                    : changedMiners.get(miner._id)!.map(old => <div key={old._id} className="miner-tooltip-previous-item">
+                                                                        <MinerThumb filename={old.filename} level={old.level} />
+                                                                        <span><b>{old.name}{old.level > 0 ? ` · Lv ${old.level + 1}` : ''}</b>
+                                                                            <small>{formatPower(Number(old.power))} · +{(old.bonus_percent / 100).toFixed(2)}%</small></span>
+                                                                    </div>)}
+                                                            </div>}
                                                         </div>
                                                     </div>
                                                 );

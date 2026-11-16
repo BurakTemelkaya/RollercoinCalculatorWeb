@@ -646,7 +646,9 @@
     "selectMinerToReplace": "Envanterden yeni madenciyi seçin",
     "setMiner": "Set madencisi",
     "notSellableMiner": "Satılamaz",
-    "sellableMiner": "Satılabilir"
+    "sellableMiner": "Satılabilir",
+    "previouslyHere": "Önceden burada",
+    "emptyCell": "Boş hücre"
   },
   "settings": {
     "showCoinPrices": "Coin fiyatlarını göster",

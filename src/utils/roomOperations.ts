@@ -1,4 +1,5 @@
-import type { RollercoinRoomResponse } from '../types/room';
+import type { ApiRoomMiner, RollercoinRoomResponse } from '../types/room';
+import { isValidMinerFilename } from './minerImport';
 import type { GetRackSetListDto } from '../services/rackApi';
 import { calculateExactRoomPower } from './roomParser';
 
@@ -12,8 +13,10 @@ interface ChangeSummary {
     count: number;
     names: string[];
     otherNames: number;
-    miners?: { id: string; name: string }[];
+    miners?: OperationMiner[];
 }
+/** Display data is optional so entries saved before it was recorded still load. */
+export interface OperationMiner { id: string; name: string; filename?: string; level?: number; power?: number; bonus?: number }
 export interface RoomOperation {
     id: string;
     at: number;
@@ -35,10 +38,12 @@ export function serializeRoomOperations(entries: RoomOperation[]): string {
 export function createRoomOperation(before: RollercoinRoomResponse, after: RollercoinRoomResponse,
     sets?: GetRackSetListDto[], kind: OperationKind = 'change'): RoomOperation | null {
     const groups = new Map<string, { entity: ChangeSummary['entity']; kind: ChangeSummary['kind']; count: number; names: Set<string>; miners?: ChangeSummary['miners'] }>();
-    const add = (entity: ChangeSummary['entity'], kind: ChangeSummary['kind'], name: string, id: string) => {
+    const add = (entity: ChangeSummary['entity'], kind: ChangeSummary['kind'], name: string, id: string, item: unknown) => {
         const key = `${entity}:${kind}`;
         const group = groups.get(key) ?? { entity, kind, count: 0, names: new Set<string>(), ...(entity === 'miner' ? { miners: [] } : {}) };
-        group.miners?.push({ id, name: name.slice(0, 200) });
+        const miner = item as ApiRoomMiner;
+        group.miners?.push({ id, name: name.slice(0, 200), level: miner.level, power: miner.power, bonus: miner.bonus_percent,
+            ...(isValidMinerFilename(miner.filename) ? { filename: miner.filename } : {}) });
         group.count++; group.names.add(name.slice(0, 200)); groups.set(key, group);
     };
     const compare = <T extends { _id: string }>(entity: ChangeSummary['entity'], oldItems: T[], newItems: T[],
@@ -47,14 +52,14 @@ export function createRoomOperation(before: RollercoinRoomResponse, after: Rolle
         const newById = new Map(newItems.map(item => [item._id, item]));
         for (const item of oldItems) {
             const next = newById.get(item._id), previous = describe(item);
-            if (!next) add(entity, 'removed', previous.name, item._id);
+            if (!next) add(entity, 'removed', previous.name, item._id, item);
             else {
                 const current = describe(next);
-                if (previous.position !== current.position) add(entity, 'moved', current.name, item._id);
-                else if (previous.value !== current.value) add(entity, 'updated', current.name, item._id);
+                if (previous.position !== current.position) add(entity, 'moved', current.name, item._id, next);
+                else if (previous.value !== current.value) add(entity, 'updated', current.name, item._id, next);
             }
         }
-        for (const item of newItems) if (!oldById.has(item._id)) add(entity, 'added', describe(item).name, item._id);
+        for (const item of newItems) if (!oldById.has(item._id)) add(entity, 'added', describe(item).name, item._id, item);
     };
     compare('miner', before.miners, after.miners, m => ({ name: m.name,
         position: JSON.stringify(m.placement ? [m.placement.user_rack_id, m.placement.x, m.placement.y] : null),
@@ -92,7 +97,10 @@ export function parseRoomOperations(text: string): RoomOperation[] {
                 || (change.miners !== undefined && (change.entity !== 'miner' || !Array.isArray(change.miners)
                     || change.miners.length !== change.count || change.miners.some(miner => !miner
                         || typeof miner.id !== 'string' || !miner.id.length || miner.id.length > 100
-                        || typeof miner.name !== 'string' || miner.name.length > 200)
+                        || typeof miner.name !== 'string' || miner.name.length > 200
+                        || (miner.filename !== undefined && !isValidMinerFilename(miner.filename))
+                        || (miner.level !== undefined && (!Number.isSafeInteger(miner.level) || miner.level < 0))
+                        || [miner.power, miner.bonus].some(value => value !== undefined && (typeof value !== 'number' || !Number.isFinite(value) || value < 0)))
                     || new Set(change.miners.map(miner => miner.id)).size !== change.miners.length))))) return [];
         return entries as RoomOperation[];
     } catch { return []; }

@@ -11,10 +11,13 @@
 .room-operation-history ul li { margin: 4px 0; overflow-wrap: anywhere; }
 .room-operation-history ul li span { display: block; color: var(--text-secondary); }
 .room-operation-history .room-operation-miners { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 4px; }
-.room-operation-miners button { max-width: 100%; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 7px; background: transparent; color: var(--text-primary); font: inherit; overflow-wrap: anywhere; text-align: left; cursor: pointer; }
+.room-operation-miners button { display: flex; align-items: center; gap: 8px; max-width: 100%; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 7px; background: transparent; color: var(--text-primary); font: inherit; overflow-wrap: anywhere; text-align: left; cursor: pointer; }
 .room-operation-miners button:not(:disabled):hover { border-color: #03cbd1; background: #03cbd112; }
 .room-operation-miners button:disabled { color: var(--text-secondary); cursor: default; }
 .room-operation-miners small { font-size: 11px; }
 .room-operation-miners button:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
 .room-operation-history summary:focus-visible { outline: 2px solid #03e1e4; outline-offset: 2px; }
 @media (max-width: 600px) { .room-operation-history time, .room-operation-power { display: block; margin: 4px 0 0; } }
+.room-operation-history .room-operation-miners .room-operation-miner-text { display: grid; gap: 1px; color: inherit; }
+.room-operation-history .room-operation-miners .room-operation-miner-text small { color: var(--text-secondary); }
+.room-operation-history ul li .miner-thumb { display: inline-grid; }

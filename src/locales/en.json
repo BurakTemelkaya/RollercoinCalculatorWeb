@@ -645,7 +645,9 @@
     "selectMinerToReplace": "Select new miner from inventory",
     "setMiner": "Set miner",
     "notSellableMiner": "Not sellable",
-    "sellableMiner": "Sellable"
+    "sellableMiner": "Sellable",
+    "previouslyHere": "Previously here",
+    "emptyCell": "Empty cell"
   },
   "settings": {
     "showCoinPrices": "Show coin prices",

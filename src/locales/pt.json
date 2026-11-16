@@ -581,7 +581,9 @@
     "selectMinerToReplace": "Selecione o novo minerador do inventário",
     "setMiner": "Minerador do conjunto",
     "notSellableMiner": "Não vendível",
-    "sellableMiner": "Vendível"
+    "sellableMiner": "Vendível",
+    "previouslyHere": "Antes aqui",
+    "emptyCell": "Célula vazia"
   },
   "settings": {
     "showCoinPrices": "Mostrar preços das moedas",

@@ -584,7 +584,9 @@
     "selectMinerToReplace": "Vyberte nového těžaře z inventáře",
     "setMiner": "Miner sady",
     "notSellableMiner": "Neprodejný",
-    "sellableMiner": "Prodejný"
+    "sellableMiner": "Prodejný",
+    "previouslyHere": "Dříve zde",
+    "emptyCell": "Prázdná buňka"
   },
   "settings": {
     "showCoinPrices": "Zobrazit ceny mincí",

@@ -581,7 +581,9 @@
     "selectMinerToReplace": "Выберите нового майнера из инвентаря",
     "setMiner": "Майнер набора",
     "notSellableMiner": "Не продаётся",
-    "sellableMiner": "Продаваемый"
+    "sellableMiner": "Продаваемый",
+    "previouslyHere": "Ранее здесь",
+    "emptyCell": "Пустая ячейка"
   },
   "settings": {
     "showCoinPrices": "Показывать цены монет",

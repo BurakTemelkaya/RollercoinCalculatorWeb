@@ -584,7 +584,9 @@
     "selectMinerToReplace": "Neuen Miner aus dem Inventar auswählen",
     "setMiner": "Set-Miner",
     "notSellableMiner": "Nicht verkaufbar",
-    "sellableMiner": "Verkaufbar"
+    "sellableMiner": "Verkaufbar",
+    "previouslyHere": "Vorher hier",
+    "emptyCell": "Leere Zelle"
   },
   "settings": {
     "showCoinPrices": "Coin-Preise anzeigen",

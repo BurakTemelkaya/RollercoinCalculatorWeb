@@ -581,7 +581,9 @@
     "selectMinerToReplace": "Pilih penambang baru dari inventaris",
     "setMiner": "Miner set",
     "notSellableMiner": "Tidak dapat dijual",
-    "sellableMiner": "Dapat Dijual"
+    "sellableMiner": "Dapat Dijual",
+    "previouslyHere": "Sebelumnya di sini",
+    "emptyCell": "Sel kosong"
   },
   "settings": {
     "showCoinPrices": "Tampilkan harga koin",

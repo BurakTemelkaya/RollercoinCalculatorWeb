@@ -567,7 +567,9 @@
     "selectMinerToReplace": "Sélectionnez un nouveau mineur dans l'inventaire",
     "setMiner": "Mineur du set",
     "notSellableMiner": "Non vendable",
-    "sellableMiner": "Vendable"
+    "sellableMiner": "Vendable",
+    "previouslyHere": "Auparavant ici",
+    "emptyCell": "Case vide"
   },
   "settings": {
     "showCoinPrices": "Afficher les prix des cryptomonnaies",

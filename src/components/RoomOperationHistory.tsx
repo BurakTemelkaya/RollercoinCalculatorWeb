@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { RoomOperation } from '../utils/roomOperations';
 import { autoScalePower, formatHashPower } from '../utils/powerParser';
+import MinerThumb from './MinerThumb';
 import './RoomOperationHistory.css';
 
 export default function RoomOperationHistory({ entries, storageError, placedMinerIds, onLocate }: {
@@ -30,7 +31,12 @@ export default function RoomOperationHistory({ entries, storageError, placedMine
                                     <button key={miner.id} type="button" data-history-miner-id={miner.id}
                                         disabled={!placedMinerIds.has(miner.id)} onClick={() => onLocate(miner.id)}
                                         title={t(placedMinerIds.has(miner.id) ? 'roomHistory.locateMiner' : 'roomHistory.minerUnavailable')}>
-                                        {miner.name}{!placedMinerIds.has(miner.id) && <small> · {t('roomHistory.minerUnavailable')}</small>}
+                                        <MinerThumb filename={miner.filename} level={miner.level} />
+                                        <span className="room-operation-miner-text">
+                                            <span>{miner.name}{miner.level ? ` · Lv ${miner.level + 1}` : ''}</span>
+                                            {miner.power !== undefined && <small>{power(miner.power)}{miner.bonus ? ` · +${(miner.bonus / 100).toFixed(2)}%` : ''}</small>}
+                                            {!placedMinerIds.has(miner.id) && <small>{t('roomHistory.minerUnavailable')}</small>}
+                                        </span>
                                     </button>)}</span>
                                     : <span>{change.names.join(', ')}{change.otherNames > 0 && ` · ${t('roomHistory.otherNames', { count: change.otherNames })}`}</span>}
                             </li>)}

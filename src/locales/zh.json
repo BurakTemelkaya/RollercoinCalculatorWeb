@@ -581,7 +581,9 @@
     "selectMinerToReplace": "从库存中选择新矿机",
     "setMiner": "套装矿机",
     "notSellableMiner": "不可出售",
-    "sellableMiner": "可出售"
+    "sellableMiner": "可出售",
+    "previouslyHere": "此前在此",
+    "emptyCell": "空格"
   },
   "settings": {
     "showCoinPrices": "显示币种价格",
