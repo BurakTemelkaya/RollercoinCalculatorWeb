@@ -43,7 +43,9 @@
     "selectLeague": "Selecionar liga",
     "noLeagueCeiling": "Sem limite superior",
     "allowRemovingPlaced": "Permitir remover mineradores",
-    "allowRemovingPlacedHelp": "Ativado, mineradores posicionados podem voltar ao inventário para dar lugar a melhores. Caso contrário, todos permanecem na sala."
+    "allowRemovingPlacedHelp": "Ativado, mineradores posicionados podem voltar ao inventário para dar lugar a melhores. Caso contrário, todos permanecem na sala.",
+    "gapApplied": "O RollerCoin mostra cerca de {{gap}} a mais de poder de liga para esta conta do que o cálculo da sala, então o limite foi reduzido nesse valor.",
+    "applyGradually": "Aplique estas mudanças no jogo uma de cada vez e espere o RollerCoin atualizar seu poder de liga antes da próxima."
   },
   "minerImport": {
     "apiMethod": "Resposta da API (JSON)",

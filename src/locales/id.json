@@ -43,7 +43,9 @@
     "selectLeague": "Pilih liga",
     "noLeagueCeiling": "Tanpa batas atas",
     "allowRemovingPlaced": "Izinkan melepas miner",
-    "allowRemovingPlacedHelp": "Jika aktif, miner yang terpasang dapat kembali ke inventaris untuk memberi tempat bagi yang lebih baik. Jika tidak, semua miner terpasang tetap di ruangan."
+    "allowRemovingPlacedHelp": "Jika aktif, miner yang terpasang dapat kembali ke inventaris untuk memberi tempat bagi yang lebih baik. Jika tidak, semua miner terpasang tetap di ruangan.",
+    "gapApplied": "RollerCoin menampilkan sekitar {{gap}} lebih banyak daya liga untuk akun ini dibanding perhitungan ruangan, jadi batas diturunkan sebesar itu.",
+    "applyGradually": "Terapkan perubahan ini di game satu per satu dan tunggu RollerCoin memperbarui daya liga Anda sebelum perubahan berikutnya."
   },
   "minerImport": {
     "apiMethod": "Respons API (JSON)",

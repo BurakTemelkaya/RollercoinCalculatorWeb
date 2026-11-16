@@ -43,7 +43,9 @@
     "selectLeague": "选择联赛",
     "noLeagueCeiling": "无上限",
     "allowRemovingPlaced": "允许移除矿机",
-    "allowRemovingPlacedHelp": "开启后，已放置的矿机可退回库存，为更好的矿机腾出位置。关闭时，所有已放置的矿机都留在房间内。"
+    "allowRemovingPlacedHelp": "开启后，已放置的矿机可退回库存，为更好的矿机腾出位置。关闭时，所有已放置的矿机都留在房间内。",
+    "gapApplied": "RollerCoin 显示此账户的联赛算力比房间计算多约 {{gap}}，因此上限已相应降低。",
+    "applyGradually": "请在游戏中逐个应用这些更改，并在进行下一个之前等待 RollerCoin 更新您的联赛算力。"
   },
   "minerImport": {
     "apiMethod": "API 响应（JSON）",

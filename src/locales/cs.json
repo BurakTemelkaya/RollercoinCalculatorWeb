@@ -43,7 +43,9 @@
     "selectLeague": "Vyberte ligu",
     "noLeagueCeiling": "Bez horního limitu",
     "allowRemovingPlaced": "Povolit odebírání minerů",
-    "allowRemovingPlacedHelp": "Je-li zapnuto, umístění mineři se mohou vrátit do inventáře a uvolnit místo lepším. Jinak každý umístěný miner zůstane v místnosti."
+    "allowRemovingPlacedHelp": "Je-li zapnuto, umístění mineři se mohou vrátit do inventáře a uvolnit místo lepším. Jinak každý umístěný miner zůstane v místnosti.",
+    "gapApplied": "RollerCoin u tohoto účtu ukazuje asi o {{gap}} vyšší ligový výkon než výpočet místnosti, proto byl limit o tuto hodnotu snížen.",
+    "applyGradually": "Provádějte tyto změny ve hře jednu po druhé a před další počkejte, až RollerCoin aktualizuje váš ligový výkon."
   },
   "minerImport": {
     "apiMethod": "Odpověď API (JSON)",

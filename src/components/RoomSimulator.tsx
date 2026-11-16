@@ -97,6 +97,8 @@ interface RoomSimulatorProps {
     dynamicSets?: GetRackSetListDto[];
     leagues: LeagueInfo[];
     currentLeagueId: string;
+    /** Game league power minus our room calculation; auto placement stays this far below ceilings. */
+    leagueGapGh?: number;
 }
 
 const ROOM_IMPORT_TAKEN_KEY = 'rollercoin_web_room_import_taken';
@@ -107,7 +109,7 @@ const readRoomImportTaken = (): ImportedMinerQuantity[] => {
     } catch { return []; }
 };
 
-export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, leagues, currentLeagueId, isActive = true }) => {
+export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, onChange, userId, dynamicSets, leagues, currentLeagueId, leagueGapGh = 0, isActive = true }) => {
     const { t } = useTranslation();
     const rackBonusHelpId = useId();
     const [areRoomDetailsOpen, setAreRoomDetailsOpen] = useState(false);
@@ -1702,7 +1704,7 @@ export const RoomSimulator: React.FC<RoomSimulatorProps> = React.memo(({ room, o
                 </div>
             )}
 
-            <AutoPlacement room={room} sets={dynamicSets} leagues={leagues} currentLeagueId={currentLeagueId} toolbarTarget={autoPlacementToolbar} onApply={(result: AutoPlacementResult) => {
+            <AutoPlacement room={room} sets={dynamicSets} leagues={leagues} currentLeagueId={currentLeagueId} leagueGapGh={leagueGapGh} toolbarTarget={autoPlacementToolbar} onApply={(result: AutoPlacementResult) => {
                 saveImportedMiners(result.inventory);
                 handleRoomChange(result.room, result.stockChanges, 'autoPlacement');
                 setFocusedMiner(null);

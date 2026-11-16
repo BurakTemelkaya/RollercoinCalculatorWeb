@@ -43,7 +43,9 @@
     "selectLeague": "Liga auswählen",
     "noLeagueCeiling": "Keine Obergrenze",
     "allowRemovingPlaced": "Entfernen von Minern erlauben",
-    "allowRemovingPlacedHelp": "Wenn aktiv, können platzierte Miner ins Inventar zurückgehen, um Platz für bessere zu schaffen. Sonst bleibt jeder platzierte Miner im Raum."
+    "allowRemovingPlacedHelp": "Wenn aktiv, können platzierte Miner ins Inventar zurückgehen, um Platz für bessere zu schaffen. Sonst bleibt jeder platzierte Miner im Raum.",
+    "gapApplied": "RollerCoin zeigt für dieses Konto etwa {{gap}} mehr Ligaleistung als die Raumberechnung, daher wurde das Limit um diesen Betrag gesenkt.",
+    "applyGradually": "Übernimm diese Änderungen im Spiel einzeln und warte, bis RollerCoin deine Ligaleistung aktualisiert hat, bevor du die nächste machst."
   },
   "minerImport": {
     "apiMethod": "API-Antwort (JSON)",

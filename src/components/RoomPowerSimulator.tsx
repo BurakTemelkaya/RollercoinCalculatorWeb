@@ -125,6 +125,9 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
         [isEmptyAccount, fetchedRoom, dynamicSets]
     );
     const originalLeaguePowerGh = originalExactPower ? originalExactPower.totalLeaguePowerGh : 0;
+    // RollerCoin can count bonus we cannot derive from the room; auto placement keeps this much below a league ceiling.
+    const leagueGapGh = dto && originalExactPower ? Math.max(0, dto.current_Power - (dto.games || 0) - (dto.temp || 0) - (dto.freon || 0)
+        - (dto.hamster_expedition_bonus_power || 0) - originalLeaguePowerGh) : 0;
     const originalRoomBasePowerGh = originalExactPower ? originalExactPower.baseMinerPowerGh : 0;
     const originalLeague = getLeagueByPower(autoScalePower(originalLeaguePowerGh * 1e9), apiLeagues || LEAGUES);
 
@@ -351,6 +354,7 @@ const RoomPowerSimulator: React.FC<RoomPowerSimulatorProps> = ({
                             dynamicSets={dynamicSets}
                             leagues={apiLeagues || LEAGUES}
                             currentLeagueId={currentLeague.id}
+                            leagueGapGh={leagueGapGh}
                         />
 
                         {originalExactPower && Math.abs(powerDiffGh) > 0.001 && (
