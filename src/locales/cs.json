@@ -1394,7 +1394,17 @@
     "change24hHint": "Rozdíl mezi posledními dvěma denními záznamy výkonu v Rollercoinu",
     "gameRank": "Pořadí ve hře",
     "gameRankHint": "Celkové pořadí v Rollercoinu, ne pozice v tomto žebříčku",
-    "you": "Ty"
+    "you": "Ty",
+    "history": "Historie",
+    "historyEmpty": "Zatím žádná historie.",
+    "endOfDayPower": "Výkon na konci dne",
+    "averagePower": "Průměrný denní výkon",
+    "rankChangeHint": "Změna oproti předchozímu dni",
+    "myHistory": "Moje historie výkonu",
+    "myHistoryEmpty": "Propoj svůj účet Rollercoin v nastavení; denní historie se bude ukládat sem.",
+    "range90": "Posledních 90 dní",
+    "range365": "Posledních 365 dní",
+    "rangeChange": "Změna v tomto období"
   },
   "puzzle": {
     "nav": "Puzzle",

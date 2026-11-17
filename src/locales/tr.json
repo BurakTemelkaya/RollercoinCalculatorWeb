@@ -1451,7 +1451,17 @@
     "change24hHint": "Rollercoin'in son iki günlük güç kaydı arasındaki fark",
     "gameRank": "Oyun sırası",
     "gameRankHint": "Rollercoin'deki genel sıra; bu sıralamadaki yer değil",
-    "you": "Sen"
+    "you": "Sen",
+    "history": "Geçmiş",
+    "historyEmpty": "Henüz geçmiş verisi yok.",
+    "endOfDayPower": "Gün sonu güç",
+    "averagePower": "Günlük ortalama güç",
+    "rankChangeHint": "Önceki güne göre değişim",
+    "myHistory": "Güç geçmişim",
+    "myHistoryEmpty": "Rollercoin hesabını ayarlarından bağla; günlük geçmişin burada birikir.",
+    "range90": "Son 90 gün",
+    "range365": "Son 365 gün",
+    "rangeChange": "Bu aralıktaki değişim"
   },
   "puzzle": {
     "nav": "Puzzle",

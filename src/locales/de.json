@@ -1404,7 +1404,17 @@
     "change24hHint": "Unterschied zwischen den letzten beiden täglichen Power-Einträgen von Rollercoin",
     "gameRank": "Spielrang",
     "gameRankHint": "Gesamtrang in Rollercoin, nicht der Platz in dieser Rangliste",
-    "you": "Du"
+    "you": "Du",
+    "history": "Verlauf",
+    "historyEmpty": "Noch kein Verlauf.",
+    "endOfDayPower": "Power am Tagesende",
+    "averagePower": "Durchschnittliche Tagespower",
+    "rankChangeHint": "Änderung seit dem Vortag",
+    "myHistory": "Mein Power-Verlauf",
+    "myHistoryEmpty": "Verknüpfe dein Rollercoin-Konto in den Einstellungen; dein täglicher Verlauf sammelt sich hier.",
+    "range90": "Letzte 90 Tage",
+    "range365": "Letzte 365 Tage",
+    "rangeChange": "Änderung in diesem Zeitraum"
   },
   "puzzle": {
     "nav": "Puzzle",

@@ -22,6 +22,12 @@ export interface LeaderboardItem {
     powerChange: number | null;
     /** In-game global rank from Rollercoin's latest daily record (not the position on this site) */
     gameRank: number | null;
+    /** Change of the in-game rank vs the day before; positive = moved up */
+    gameRankChange: number | null;
+    /** 1-based position on this site under the current filters (by live power) */
+    position: number;
+    /** Change of the site position between Rollercoin's last two daily records; positive = moved up */
+    siteRankChange: number | null;
 }
 
 export async function getUserProfile(token: string): Promise<UserProfile> {
@@ -85,6 +91,36 @@ export interface LeaderboardPosition {
     /** 1-based position on this site's leaderboard with the same filters; null when the account is not listed */
     position: number | null;
     item: LeaderboardItem | null;
+}
+
+export interface LeaderboardHistoryPoint {
+    /** yyyy-MM-dd (UTC day) */
+    date: string;
+    /** Average of the 30-minute samples (GH/s) */
+    averagePower: number | null;
+    /** Rollercoin's end-of-day power record (GH/s) */
+    power: number | null;
+    /** In-game global rank */
+    rank: number | null;
+}
+
+/** The last N days (at most 365) or one calendar year; the API never returns more than a year at once. */
+export type HistoryRange = { days: number } | { year: number };
+
+const rangeQuery = (range: HistoryRange) => ('year' in range ? `year=${range.year}` : `days=${range.days}`);
+
+/** Daily history of an account on the leaderboard; empty for accounts that are not listed. */
+export async function getLeaderboardHistory(avatarId: string, range: HistoryRange): Promise<LeaderboardHistoryPoint[]> {
+    const response = await apiFetch(buildApiUrl(`/api/User/leaderboard/history/${encodeURIComponent(avatarId)}?${rangeQuery(range)}`));
+    return response.json();
+}
+
+/** The signed-in user's own history; works without joining the leaderboard. */
+export async function getMyLeaderboardHistory(token: string, range: HistoryRange): Promise<LeaderboardHistoryPoint[]> {
+    const response = await apiFetch(buildApiUrl(`/api/User/leaderboard/history/me?${rangeQuery(range)}`), {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.json();
 }
 
 export async function getMyLeaderboardPosition(token: string, filter: LeaderboardFilter): Promise<LeaderboardPosition> {

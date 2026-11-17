@@ -1365,7 +1365,17 @@
     "change24hHint": "Rollercoin 最近两条每日算力记录之差",
     "gameRank": "游戏排名",
     "gameRankHint": "Rollercoin 中的总排名，而非本排行榜中的名次",
-    "you": "你"
+    "you": "你",
+    "history": "历史",
+    "historyEmpty": "暂无历史数据。",
+    "endOfDayPower": "日终算力",
+    "averagePower": "每日平均算力",
+    "rankChangeHint": "与前一天相比的变化",
+    "myHistory": "我的算力历史",
+    "myHistoryEmpty": "在设置中关联你的 Rollercoin 账户，每日历史将在此累积。",
+    "range90": "最近 90 天",
+    "range365": "最近 365 天",
+    "rangeChange": "此区间的变化"
   },
   "puzzle": {
     "nav": "Puzzle",
