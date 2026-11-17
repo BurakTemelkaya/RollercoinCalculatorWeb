@@ -1365,7 +1365,17 @@
     "change24hHint": "Selisih antara dua catatan daya harian terakhir Rollercoin",
     "gameRank": "Peringkat game",
     "gameRankHint": "Peringkat keseluruhan di Rollercoin, bukan posisi di papan peringkat ini",
-    "you": "Kamu"
+    "you": "Kamu",
+    "history": "Riwayat",
+    "historyEmpty": "Belum ada riwayat.",
+    "endOfDayPower": "Daya akhir hari",
+    "averagePower": "Rata-rata daya harian",
+    "rankChangeHint": "Perubahan sejak hari sebelumnya",
+    "myHistory": "Riwayat daya saya",
+    "myHistoryEmpty": "Hubungkan akun Rollercoin di pengaturan; riwayat harianmu akan terkumpul di sini.",
+    "range90": "90 hari terakhir",
+    "range365": "365 hari terakhir",
+    "rangeChange": "Perubahan dalam rentang ini"
   },
   "puzzle": {
     "nav": "Puzzle",

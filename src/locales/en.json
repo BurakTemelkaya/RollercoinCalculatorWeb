@@ -1450,7 +1450,17 @@
     "change24hHint": "Difference between Rollercoin's last two daily power records",
     "gameRank": "Game rank",
     "gameRankHint": "Overall rank in Rollercoin, not the position on this leaderboard",
-    "you": "You"
+    "you": "You",
+    "history": "History",
+    "historyEmpty": "No history yet.",
+    "endOfDayPower": "End-of-day power",
+    "averagePower": "Daily average power",
+    "rankChangeHint": "Change since the previous day",
+    "myHistory": "My power history",
+    "myHistoryEmpty": "Link your Rollercoin account in your settings; your daily history builds up here.",
+    "range90": "Last 90 days",
+    "range365": "Last 365 days",
+    "rangeChange": "Change in this range"
   },
   "puzzle": {
     "nav": "Puzzle",
