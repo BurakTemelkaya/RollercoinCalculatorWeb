@@ -123,8 +123,8 @@
     "unavailable": "Not available"
   },
   "seo": {
-    "title": "Rollercoin Calculator | Earnings & Withdrawal Calculator",
-    "description": "Free Rollercoin earnings calculator. Calculate your daily, weekly, and monthly crypto mining rewards. BTC, ETH, DOGE, SOL and more."
+    "title": "RollerCoin Calculator – Earnings, Power & Withdrawal Tool",
+    "description": "Free RollerCoin calculator: enter your username or power to see daily, weekly and monthly earnings for BTC, ETH, SOL, DOGE and RLT with live prices."
   },
   "nav": {
     "guides": "Guides",
@@ -335,7 +335,7 @@
     "seoContent": "League Charts provide a historical overview of mining power and block payout trends for each league in RollerCoin. By analyzing these graphs, players can identify when network competition is increasing or decreasing, helping them make strategic decisions about which coins to mine. The chart plots two key metrics: Average Power (Gh/s) on the left axis showing total network hash rate over time, and Average Payout on the right axis showing block rewards in the selected cryptocurrency. Use the date range filters to zoom into specific time periods or view all-time data. This information is invaluable for long-term mining strategy optimization."
   },
   "app": {
-    "title": "Rollercoin Calculator",
+    "title": "RollerCoin Calculator",
     "powerWithUnit": "Power: {{power}} {{unit}}/s",
     "powerBadge": "Power",
     "footerText": "Data is based on manual input. Visit rollercoin.com for current values.",
