@@ -349,3 +349,53 @@
     font-size: 24px;
     color: #f59e0b;
 }
+
+/* One-line material summaries; parts expand into the market book */
+.requirements-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.req-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.req-line-img {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+}
+
+.req-line-img img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+}
+
+.req-line-text {
+    flex: 1;
+    min-width: 0;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.req-line-text strong {
+    color: #06b6d4;
+}
+
+.req-line-price {
+    color: #f59e0b;
+    font-weight: 600;
+    white-space: nowrap;
+}

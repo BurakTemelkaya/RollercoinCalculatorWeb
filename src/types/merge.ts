@@ -40,6 +40,8 @@ export interface MergeListItem {
     /** null or absent means the status is unknown */
     resultItemIsCanBeSoldOnMp?: boolean | null;
     resultItemIsInSet?: boolean | null;
+    /** mutation_components requirements only; absent on older API responses */
+    requiredParts?: MergeRequiredItem[];
 }
 
 /** A required item for a merge recipe */

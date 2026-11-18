@@ -1,0 +1,106 @@
+/* Market depth book, styled after Rollercoin's own marketplace order list */
+.mmt {
+    font-size: 13px;
+    min-width: 0;
+}
+
+.mmt-summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary, #cbd5e1);
+    font-weight: 600;
+    user-select: none;
+}
+
+.mmt-summary::-webkit-details-marker {
+    display: none;
+}
+
+.mmt-summary::before {
+    content: '▸';
+    font-size: 11px;
+    opacity: 0.7;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+}
+
+.mmt[open] > .mmt-summary::before {
+    transform: rotate(90deg);
+}
+
+.mmt-static {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary, #cbd5e1);
+    font-weight: 600;
+    padding-left: 19px;
+}
+
+.mmt-book {
+    margin-top: 10px;
+    padding: 12px 16px 6px;
+    background: #1d1b3a;
+    border: 1px solid rgba(139, 125, 255, 0.18);
+    border-radius: 8px;
+}
+
+.mmt-head {
+    color: #a5a3c9;
+    padding: 0 14px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mmt-head strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.mmt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+.mmt-table th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    color: #8b89b3;
+    padding: 10px 14px 6px;
+}
+
+.mmt-table th:last-child,
+.mmt-table td:last-child {
+    text-align: right;
+}
+
+.mmt-table td {
+    padding: 9px 14px;
+    color: #e2e1f5;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+}
+
+/* Tiers the order consumes */
+.mmt-hit td {
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.mmt-hit td:first-child {
+    box-shadow: inset 3px 0 0 #10b981;
+}
+
+.mmt-taken {
+    color: #34d399;
+    font-weight: 700;
+}
+
+.mmt-missing {
+    margin-top: 8px;
+    color: #efbd50;
+    font-weight: 600;
+}

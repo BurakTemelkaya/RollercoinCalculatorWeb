@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { fetchMergesByMinerSlug } from '../services/mergeApi';
+import { fetchComponentPrices, type ComponentPrice } from '../services/componentApi';
+import { priceMergePart } from '../utils/marketDepth';
+import MergeMarketTiers from './MergeMarketTiers';
 import type { MergeDetail } from '../types/merge';
 import { forgeBatchParts } from '../utils/forgeAnalysis';
 import { autoScalePower } from '../utils/powerParser';
@@ -134,7 +137,7 @@ export default function MergeMinerLevelsPage() {
     const [error, setError] = useState<string | null>(null);
 
     // State for toggling level 1 parts market cost visibility
-    const [showLevel1Cost, setShowLevel1Cost] = useState(false);
+    const [showLevel1Cost, setShowLevel1Cost] = useState(true);
     const [targetLevel, setTargetLevel] = useState<number | 'all'>('all');
 
     // Forge Level
@@ -186,23 +189,28 @@ export default function MergeMinerLevelsPage() {
         loadData();
     }, [minerSlug, t, lang, navigate]);
 
-    // Calculate cost logic
+    const [marketPrices, setMarketPrices] = useState<ComponentPrice[]>([]);
+    useEffect(() => {
+        let active = true;
+        fetchComponentPrices({ fresh: true })
+            .then(prices => { if (active && Array.isArray(prices)) setMarketPrices(prices); })
+            .catch(() => {});
+        return () => { active = false; };
+    }, []);
+
+    type RequiredItem = MergeDetail['requiredItems'][number];
+    const findMarket = (item: RequiredItem) => {
+        const name = getPartDisplayName(item.itemName, item.level).toLowerCase();
+        return marketPrices.find(price => price.level === item.level && getPartDisplayName(price.name, price.level).toLowerCase() === name);
+    };
+    const getPartCost = (item: RequiredItem, quantity: number) =>
+        priceMergePart(findMarket(item), item.price, quantity, customPartPrices[getPartDisplayName(item.itemName, item.level)]);
+    const isCostCounted = (item: RequiredItem) => item.type === 'mutation_components' && (item.level !== 0 || showLevel1Cost);
+
     const calcLevelCost = (detail: MergeDetail): { partsCost: number, totalCost: number } => {
         const partsCost = detail.requiredItems
-            .filter(item => item.type === 'mutation_components')
-            .reduce((sum, item) => {
-                // Ignore Level 1 parts (level 0 in API) if toggle is off
-                if (item.level === 0 && !showLevel1Cost) {
-                    return sum;
-                }
-                const defaultPrice = item.price ? item.price / 1e6 : 0;
-                const displayName = getPartDisplayName(item.itemName, item.level);
-                const customPrice = customPartPrices[displayName];
-                const unitPriceRlt = customPrice !== undefined ? customPrice : defaultPrice;
-                const discountedCount = forgeBatchParts(item.count, 1, forgeLevel);
-                return sum + (discountedCount * (unitPriceRlt * 1e6));
-            }, 0);
-
+            .filter(isCostCounted)
+            .reduce((sum, item) => sum + getPartCost(item, forgeBatchParts(item.count, 1, forgeLevel)).total, 0);
         const feeCost = applyForgeDiscount(detail.amount, forgeLevel);
         return { partsCost, totalCost: partsCost + feeCost };
     };
@@ -210,16 +218,7 @@ export default function MergeMinerLevelsPage() {
     const availableLevels = [...new Set(data.map(d => d.resultItemLevel + 1))].sort((a, b) => a - b);
     const filteredData = targetLevel === 'all' ? data : data.filter(d => (d.resultItemLevel + 1) <= targetLevel);
 
-    let grandTotalPartsCost = 0;
-    let grandTotalFee = 0;
-    let grandTotalCost = 0;
-
-    filteredData.forEach(detail => {
-        const { partsCost, totalCost } = calcLevelCost(detail);
-        grandTotalPartsCost += partsCost;
-        grandTotalFee += applyForgeDiscount(detail.amount, forgeLevel);
-        grandTotalCost += totalCost;
-    });
+    const grandTotalFee = filteredData.reduce((sum, detail) => sum + applyForgeDiscount(detail.amount, forgeLevel), 0);
 
     const aggregatedItems = new Map<string, any>();
     
@@ -262,6 +261,9 @@ export default function MergeMinerLevelsPage() {
     const grandTotalItems = Array.from(aggregatedItems.values());
     const totalMiners = grandTotalItems.filter(item => item.isMiner);
     const totalParts = grandTotalItems.filter(item => !item.isMiner);
+    // Quote the combined quantity once so cheap tiers aren't counted for every level
+    const grandTotalPartsCost = totalParts.reduce((sum, item) => sum + getPartCost(item, item.totalCount).total, 0);
+    const grandTotalCost = grandTotalPartsCost + grandTotalFee;
 
     return (
         <div className="merge-container">
@@ -403,58 +405,48 @@ export default function MergeMinerLevelsPage() {
 
                                         <div className="miner-level-requirements">
                                             <h4 className="requirements-title">{t('merge.requiredItems')}</h4>
-                                            <div className="requirements-grid">
+                                            <div className="requirements-lines">
                                                 {detail.requiredItems.map((item, idx) => {
                                                     const isMiner = item.type === 'miners';
                                                     const isMutationComponent = item.type === 'mutation_components';
                                                     const reqMinerLevel = isMiner ? (item.level > 0 ? item.level : Math.max(0, detail.resultItemLevel - 1)) + 1 : 0;
                                                     const displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
-
                                                     const discountedCount = isMutationComponent ? forgeBatchParts(item.count, 1, forgeLevel) : item.count;
+                                                    const unit = isMutationComponent ? getPartCost(item, discountedCount).unit : null;
 
-
-                                                    let imgSrc: string | null = null;
-                                                    if (isMiner && item.fileName) {
-                                                        imgSrc = getMinerImageUrl(item.fileName, item.imageVersion || undefined);
-                                                    } else if (isMutationComponent) {
-                                                        imgSrc = getMutationComponentImage(item.itemName, item.level);
-                                                    }
-
-                                                    return (
-                                                        <div key={`${item.itemId}-${idx}`} className="req-item-card">
-                                                            <div className="req-item-img-wrap">
-                                                                {isMiner && <MinerStatusBadges isCanBeSoldOnMp={item.isCanBeSoldOnMp} isInSet={item.isInSet} />}
-                                                                {isMiner && reqMinerLevel > 1 && (
-                                                                    <img
-                                                                        src={getLevelIconUrl(reqMinerLevel)}
-                                                                        alt={`Level ${reqMinerLevel}`}
-                                                                        className="req-item-badge"
-                                                                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                                    const line = (
+                                                        <span className="req-line">
+                                                            <span className="req-line-img">
+                                                                {isMiner && item.fileName ? (
+                                                                    <CdnImage
+                                                                        type="miner"
+                                                                        itemId={item.fileName.split('.')[0]}
+                                                                        fallbackUrl={getMinerImageUrl(item.fileName, item.imageVersion || undefined)}
+                                                                        alt={displayName}
                                                                     />
-                                                                )}
-                                                                {imgSrc ? (
-                                                                    isMiner ? (
-                                                                        <CdnImage
-                                                                            type="miner"
-                                                                            itemId={item.fileName?.split('.')[0] || ''}
-                                                                            fallbackUrl={imgSrc}
-                                                                            alt={displayName}
-                                                                            className="req-item-img"
-                                                                        />
-                                                                    ) : (
-                                                                        <img src={imgSrc} alt={displayName} className="req-item-img" />
-                                                                    )
+                                                                ) : isMutationComponent ? (
+                                                                    <img src={getMutationComponentImage(item.itemName, item.level) ?? undefined} alt={displayName} />
                                                                 ) : (
-                                                                    <span className="req-item-fallback">{isMiner ? '⛏️' : '🔩'}</span>
+                                                                    <span>{isMiner ? '⛏️' : '🔩'}</span>
                                                                 )}
-                                                            </div>
-                                                            <div className="req-item-info">
-                                                                <span className="req-item-name">{displayName}</span>
-                                                                <div className="req-item-bottom">
-                                                                    <span className="req-item-qty">x{discountedCount}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                            </span>
+                                                            <span className="req-line-text">
+                                                                <strong>{discountedCount}×</strong> {displayName}
+                                                                {unit !== null && <span className="req-line-price"> · {formatRltAmount(unit * 1e6)} RLT</span>}
+                                                            </span>
+                                                        </span>
+                                                    );
+
+                                                    if (!isMutationComponent) return <div key={`${item.itemId}-${idx}`} className="mmt mmt-static">{line}</div>;
+                                                    const market = findMarket(item);
+                                                    return (
+                                                        <MergeMarketTiers
+                                                            key={`${item.itemId}-${idx}`}
+                                                            summary={line}
+                                                            quantity={discountedCount}
+                                                            offers={market?.componentPrices}
+                                                            totalCount={market?.totalCount}
+                                                        />
                                                     );
                                                 })}
                                             </div>

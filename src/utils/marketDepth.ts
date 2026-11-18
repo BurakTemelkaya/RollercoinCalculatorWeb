@@ -22,3 +22,11 @@ export function quoteMarket(offers: MarketOffer[] | undefined, quantity: number)
     const filled = quantity - remaining;
     return { complete:remaining===0 && Number.isSafeInteger(total), total, average:filled ? total/filled : 0, filled, missing:remaining, estimatedQuantity, knownQuantity, fills };
 }
+/** Price `quantity` parts: custom RLT price wins, then the market book, then the flat API price. Totals are raw (×1e6). */
+export function priceMergePart(market: { price?: number; componentPrices?: MarketOffer[] } | undefined, apiPrice: number | null | undefined, quantity: number, customRlt?: number) {
+    if (customRlt !== undefined) return { total: customRlt * 1e6 * quantity, unit: customRlt as number | null, estimated: false };
+    const quote = quoteMarket(market?.componentPrices, quantity);
+    if (quantity > 0 && quote.complete) return { total: quote.total, unit: quote.average / 1e6 as number | null, estimated: quote.estimatedQuantity > 0 };
+    const fallbackPrice = market?.price || apiPrice || 0;
+    return { total: fallbackPrice * quantity, unit: fallbackPrice ? fallbackPrice / 1e6 : null, estimated: quantity > 0 };
+}

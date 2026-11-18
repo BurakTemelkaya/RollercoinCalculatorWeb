@@ -12,6 +12,8 @@ import { apiGet, apiFetch } from './apiClient';
 /** A single component price entry from the API */
 export interface ComponentPrice {
     componentPrices?: { id: string; price: number; quantity: number; createdDate: string }[];
+    /** Total units on sale (Rollercoin "items on sale"); absent until the backend sends it */
+    totalCount?: number;
     id: string;
     name: string;       // "Fan" | "Wire" | "Hashboard"
     level: number;      // 0=Common, 1=Uncommon, 2=Rare, 3=Epic, 4=Legendary
