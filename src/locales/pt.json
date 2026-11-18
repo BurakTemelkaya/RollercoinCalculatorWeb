@@ -1399,5 +1399,18 @@
       "other": "Outros"
     },
     "noEvent": "Ainda não há nenhum puzzle event."
+  },
+  "promo": {
+    "button": "Código promocional",
+    "title": "Inserir código promocional",
+    "description": "Digite seu código e receba o link direto para resgatá-lo no RollerCoin.",
+    "placeholder": "Digite o código",
+    "submit": "Resgatar",
+    "recent": "Inseridos recentemente",
+    "clear": "Limpar",
+    "remove": "Remover",
+    "close": "Fechar",
+    "normalize": "Remover espaços e converter para minúsculas",
+    "stripSpecial": "Remover caracteres especiais não permitidos em URLs"
   }
 }

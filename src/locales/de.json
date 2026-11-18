@@ -1438,5 +1438,18 @@
       "other": "Sonstiges"
     },
     "noEvent": "Es gibt noch kein Puzzle Event."
+  },
+  "promo": {
+    "button": "Promo-Code",
+    "title": "Promo-Code eingeben",
+    "description": "Gib deinen Code ein und erhalte den direkten Link zum Einlösen auf RollerCoin.",
+    "placeholder": "Promo-Code eingeben",
+    "submit": "Einlösen",
+    "recent": "Zuletzt eingegeben",
+    "clear": "Leeren",
+    "remove": "Entfernen",
+    "close": "Schließen",
+    "normalize": "Leerzeichen entfernen und in Kleinbuchstaben umwandeln",
+    "stripSpecial": "In URLs unzulässige Sonderzeichen entfernen"
   }
 }

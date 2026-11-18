@@ -1428,5 +1428,18 @@
       "other": "Ostatní"
     },
     "noEvent": "Zatím není žádný puzzle event."
+  },
+  "promo": {
+    "button": "Promo kód",
+    "title": "Zadat promo kód",
+    "description": "Napište svůj kód a získejte přímý odkaz k jeho uplatnění v RollerCoinu.",
+    "placeholder": "Napište promo kód",
+    "submit": "Uplatnit",
+    "recent": "Naposledy zadané",
+    "clear": "Vymazat",
+    "remove": "Odebrat",
+    "close": "Zavřít",
+    "normalize": "Odstranit mezery a převést na malá písmena",
+    "stripSpecial": "Odstranit speciální znaky nepovolené v URL"
   }
 }
