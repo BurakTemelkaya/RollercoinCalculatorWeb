@@ -10,12 +10,12 @@
   height: 52px;
   min-width: 52px;
   padding: 0 15px;
-  border: 1px solid rgba(251, 191, 36, 0.45);
+  border: 1px solid var(--border-color-hover);
   border-radius: 26px;
-  background: linear-gradient(180deg, #1f2a44, #141b2d);
-  color: #fbbf24;
+  background: var(--bg-card);
+  color: var(--accent-secondary);
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(251, 191, 36, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(99, 102, 241, 0.4);
   transition: gap 0.25s ease, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
   animation: promo-pulse 2.8s ease-out 1s 3;
 }
@@ -34,8 +34,8 @@
 .promo-fab:hover,
 .promo-fab:focus-visible {
   gap: 8px;
-  border-color: #fbbf24;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(251, 191, 36, 0.35);
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), var(--shadow-glow);
   transform: translateY(-2px);
   outline: none;
 }
@@ -46,9 +46,9 @@
 }
 
 @keyframes promo-pulse {
-  0% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(251, 191, 36, 0.5); }
-  70% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 14px rgba(251, 191, 36, 0); }
-  100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(251, 191, 36, 0); }
+  0% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(99, 102, 241, 0.5); }
+  70% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 14px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(99, 102, 241, 0); }
 }
 
 /* Dialog */
@@ -56,9 +56,9 @@
   width: min(440px, calc(100vw - 32px));
   margin: auto;
   padding: 0;
-  border: 1px solid rgba(251, 191, 36, 0.35);
+  border: 1px solid var(--border-color-hover);
   border-radius: 18px;
-  background: linear-gradient(180deg, #17213a, #0f1626);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
@@ -93,8 +93,8 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: rgba(251, 191, 36, 0.12);
-  color: #fbbf24;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-secondary);
 }
 
 .promo-dialog-header h2 {
@@ -120,7 +120,7 @@
 
 .promo-dialog-close:hover {
   color: var(--text-primary);
-  border-color: #fbbf24;
+  border-color: var(--accent-primary);
 }
 
 .promo-dialog-desc {
@@ -138,9 +138,9 @@
 .promo-input {
   width: 100%;
   padding: 13px 15px;
-  border: 1px solid rgba(251, 191, 36, 0.35);
+  border: 1px solid var(--border-color-hover);
   border-radius: 12px;
-  background: rgba(5, 10, 22, 0.6);
+  background: var(--bg-primary);
   color: var(--text-primary);
   font-size: 1rem;
   font-family: inherit;
@@ -148,8 +148,8 @@
 
 .promo-input:focus {
   outline: none;
-  border-color: #fbbf24;
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.18);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
 .promo-normalize {
@@ -165,7 +165,7 @@
 .promo-normalize input {
   width: 16px;
   height: 16px;
-  accent-color: #f59e0b;
+  accent-color: var(--accent-primary);
   cursor: pointer;
 }
 
@@ -173,19 +173,19 @@
   padding: 13px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(180deg, #fcd34d, #f59e0b);
-  color: #1a1204;
+  background: var(--accent-gradient);
+  color: #fff;
   font-weight: 800;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 4px 0 #b45309;
+  box-shadow: var(--shadow-md);
   transition: transform 0.1s, filter 0.2s;
 }
 
-.promo-submit:hover:not(:disabled) { filter: brightness(1.08); }
-.promo-submit:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #b45309; }
+.promo-submit:hover:not(:disabled) { box-shadow: var(--shadow-glow); }
+.promo-submit:active:not(:disabled) { transform: translateY(1px); }
 .promo-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Recent codes */
@@ -231,15 +231,15 @@
   display: flex;
   align-items: center;
   max-width: 100%;
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.35);
   border-radius: 999px;
-  background: rgba(251, 191, 36, 0.08);
+  background: rgba(99, 102, 241, 0.12);
   overflow: hidden;
 }
 
 .promo-recent li a {
   padding: 5px 4px 5px 12px;
-  color: #fcd34d;
+  color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
