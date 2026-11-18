@@ -1,6 +1,6 @@
 import MergeMarketTiers from './MergeMarketTiers';
 import { fetchComponentPrices, type ComponentPrice } from '../services/componentApi';
-import { quoteMarket } from '../utils/marketDepth';
+import { priceMergePart } from '../utils/marketDepth';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -498,7 +498,7 @@ export default function MergePage() {
     };
 
     // Close on ESC
-    const [showLevel1Cost, setShowLevel1Cost] = useState(false);
+    const [showLevel1Cost, setShowLevel1Cost] = useState(true);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -511,36 +511,29 @@ export default function MergePage() {
     }, [selectedMerge]);
 
     // Calculate total parts cost for a detail (applies forge discount to part counts)
+    // Part prices feed both the list cards and the detail modal; refreshed every minute like the backend scraper
     const [mergeMarketPrices, setMergeMarketPrices] = useState<ComponentPrice[]>([]);
-    const hasSelectedMerge = selectedMerge !== null;
     useEffect(() => {
-        if (!hasSelectedMerge) return;
         let active = true;
-        setMergeMarketPrices([]);
-        fetchComponentPrices({ fresh: true })
+        const load = () => fetchComponentPrices({ fresh: true })
             .then(prices => {
                 if (active && Array.isArray(prices)) setMergeMarketPrices(prices);
             })
             .catch(() => {});
-        return () => { active = false; };
-    }, [hasSelectedMerge]);
+        load();
+        const timer = setInterval(load, 60_000);
+        return () => { active = false; clearInterval(timer); };
+    }, []);
 
-    const getPartCost = (item: MergeDetail['requiredItems'][number], quantity: number) => {
-        const name = getPartDisplayName(item.itemName, item.level);
-        const custom = customPartPrices[name];
-        if (custom !== undefined) return { total: custom * 1e6 * quantity, unit: custom, estimated: false };
-        const market = mergeMarketPrices.find(price =>
-            price.level === item.level && getPartDisplayName(price.name, price.level).toLowerCase() === name.toLowerCase()
-        );
-        const quote = quoteMarket(market?.componentPrices, quantity);
-        const fallbackPrice = market?.price || item.price || 0;
-        if (quantity > 0 && quote.complete) {
-            return { total: quote.total, unit: quote.average / 1e6, estimated: quote.estimatedQuantity > 0 };
-        }
-        return { total: fallbackPrice * quantity, unit: fallbackPrice ? fallbackPrice / 1e6 : null, estimated: quantity > 0 };
+    const findMarket = (item: MergeDetail['requiredItems'][number]) => {
+        const name = getPartDisplayName(item.itemName, item.level).toLowerCase();
+        return mergeMarketPrices.find(price => price.level === item.level && getPartDisplayName(price.name, price.level).toLowerCase() === name);
     };
 
-    const calcPartsCost = (detail: MergeDetail, count: number) => detail.requiredItems.reduce((sum, item) => {
+    const getPartCost = (item: MergeDetail['requiredItems'][number], quantity: number) =>
+        priceMergePart(findMarket(item), item.price, quantity, customPartPrices[getPartDisplayName(item.itemName, item.level)]);
+
+    const calcPartsCost = (items: MergeDetail['requiredItems'], count: number) => items.reduce((sum, item) => {
         if (item.type !== 'mutation_components' || (item.level === 0 && !showLevel1Cost)) return sum;
         // Discount applies to the whole batch, rounded like Rollercoin (23 × 0.95 → 22)
         const quantity = forgeBatchParts(item.count, count, forgeLevel);
@@ -964,6 +957,15 @@ export default function MergePage() {
                                                         </span>
                                                     </div>
                                                 )}
+                                                {item.requiredParts && (
+                                                    <div className="merge-card-stat">
+                                                        <span>{t('merge.totalCost')}</span>
+                                                        <span className="merge-card-stat-value merge-card-cost" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                            <img src={rltImg} alt="RLT" width="14" height="14" />
+                                                            {formatRltAmount(applyForgeDiscount(item.amount, forgeLevel) + calcPartsCost(item.requiredParts, 1))} RLT
+                                                        </span>
+                                                    </div>
+                                                )}
                                                 <div className="merge-card-power-bonus">
                                                     {item.resultItemPower > 0 && (
                                                         <span className="merge-req-stat-pill">
@@ -1271,7 +1273,7 @@ export default function MergePage() {
                                                 )}
                                             </div>
                                             <div className="merge-req-info">
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                                <div className="merge-req-name-row">
                                                     <span className="merge-req-name">{displayName}</span>
                                                     {isMiner && (item.power != null && item.power > 0 || item.percent != null && item.percent > 0) && (
                                                         <div className="merge-req-miner-stats" style={{ margin: 0 }}>
@@ -1294,12 +1296,12 @@ export default function MergePage() {
                                                     {isMiner ? 'Miner' : t('merge.component')}
                                                 </span>
                                             </div>
-                                            <div className="merge-req-counts" style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+                                            <div className="merge-req-counts">
                                                 <span className="merge-req-stat-pill merge-req-stat-qty">×{effectiveCount}{((isMutationComponent && forgeLevel > 1) || mergeCount > 1) && <span style={{ fontSize: '10px', opacity: 0.8, marginLeft: '4px' }}>({item.count}{isMutationComponent && forgeLevel > 1 ? ` -${FORGE_DISCOUNTS[forgeLevel] * 100}%` : ''}{mergeCount > 1 ? ` ×${mergeCount}` : ''})</span>}</span>
                                                 {unitPriceRlt !== null ? (
                                                     <>
                                                         <span className="merge-req-stat-pill merge-req-stat-rlt" style={{ color: '#f59e0b' }}>
-                                                            {t('merge.unitPrice')}{partCost?.estimated ? ' (tahmini)' : ''}: {editingPartPrice === displayName ? (
+                                                            {t('merge.unitPrice')}{partCost?.estimated ? ` (${t('merge.estimated')})` : ''}: {editingPartPrice === displayName ? (
                                                                 <input
                                                                     autoFocus
                                                                     value={tempPartPrice}
@@ -1329,7 +1331,7 @@ export default function MergePage() {
                                                                         }}
                                                                         style={{ cursor: 'pointer', borderBottom: '1px dashed currentColor', display: 'flex', alignItems: 'center', gap: '4px' }}
                                                                     >
-                                                                        {unitPriceRlt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} RLT
+                                                                        {formatRltAmount(unitPriceRlt * 1e6)} RLT
                                                                         <span style={{ fontSize: '10px', opacity: 0.8 }}>✏️</span>
                                                                     </span>
                                                                     {customPrice !== undefined && (
@@ -1371,7 +1373,7 @@ export default function MergePage() {
                                                     </span>
                                                 ) : null}
                                             </div>
-                                            {isMutationComponent && <MergeMarketTiers quantity={effectiveCount} offers={mergeMarketPrices.find(price => price.level === item.level && getPartDisplayName(price.name, price.level).toLowerCase() === displayName.toLowerCase())?.componentPrices} />}
+                                            {isMutationComponent && (() => { const market = findMarket(item); return <MergeMarketTiers open quantity={effectiveCount} offers={market?.componentPrices} totalCount={market?.totalCount} />; })()}
                                             {isMutationComponent && item.level === 0 && (
                                                 <div className="merge-case-alternative">
                                                     {getCaseImage(item.itemName) ? (
@@ -1395,7 +1397,7 @@ export default function MergePage() {
 
                             {/* Total Parts Cost & Merge Fee */}
                             {(() => {
-                                const partsCost = calcPartsCost(selectedMerge, mergeCount);
+                                const partsCost = calcPartsCost(selectedMerge.requiredItems, mergeCount);
                                 const feeCost = applyForgeDiscount(selectedMerge.amount, forgeLevel) * mergeCount;
                                 return (
                                     <div className="merge-total-summary-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 191, 36, 0.04))', padding: '14px 16px', borderRadius: '10px', marginTop: '12px', border: '1px solid rgba(245, 158, 11, 0.15)' }}>

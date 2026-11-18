@@ -666,17 +666,31 @@
 }
 
 .merge-required-item {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
     align-items: center;
     text-align: left;
-    gap: 16px;
-    padding: 20px;
+    gap: 10px 16px;
+    padding: 16px 20px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-md, 10px);
     transition: background 0.2s;
-    flex-wrap: wrap;
+}
+
+/* Image spans the name + pills rows; tiers and case alternative take the full width */
+.merge-required-item > .merge-req-img-wrap {
+    grid-row: span 2;
+}
+
+.merge-required-item > .merge-req-info,
+.merge-required-item > .merge-req-counts {
+    grid-column: 2;
+}
+
+.merge-required-item > .mmt,
+.merge-required-item > .merge-case-alternative {
+    grid-column: 1 / -1;
 }
 
 .merge-required-item:hover {
@@ -750,6 +764,7 @@
     font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
+    overflow-wrap: anywhere;
 }
 
 .merge-req-type {
@@ -820,32 +835,20 @@
 
 .merge-req-counts {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    min-width: 0;
 }
 
 @media (max-width: 640px) {
     .merge-required-item {
-        flex-direction: column;
-        text-align: center;
+        grid-template-columns: 64px minmax(0, 1fr);
+        padding: 14px;
     }
-    .merge-req-info {
-        align-items: center;
-    }
-    .merge-req-name-row {
-        justify-content: center;
-    }
-    .merge-req-miner-stats {
-        justify-content: center;
-    }
-    .merge-req-counts {
-        align-items: center;
-        margin-top: 8px;
-        padding-top: 12px;
-        width: 100%;
-        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    .merge-req-img-wrap {
+        width: 64px;
+        height: 56px;
     }
 }
 
@@ -1013,9 +1016,6 @@
         justify-content: center;
     }
 
-    .merge-req-counts {
-        align-items: center;
-    }
 }
 
 /* ========================================================================= */
