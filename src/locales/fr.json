@@ -1377,5 +1377,18 @@
       "other": "Autres"
     },
     "noEvent": "Il n'y a pas encore de puzzle event."
+  },
+  "promo": {
+    "button": "Code promo",
+    "title": "Saisir un code promo",
+    "description": "Saisissez votre code et obtenez le lien direct pour l’utiliser sur RollerCoin.",
+    "placeholder": "Saisissez le code promo",
+    "submit": "Utiliser",
+    "recent": "Saisis récemment",
+    "clear": "Effacer",
+    "remove": "Retirer",
+    "close": "Fermer",
+    "normalize": "Supprimer les espaces et convertir en minuscules",
+    "stripSpecial": "Supprimer les caractères spéciaux interdits dans les URL"
   }
 }

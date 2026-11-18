@@ -1484,5 +1484,18 @@
       "other": "Other"
     },
     "noEvent": "There is no puzzle event yet."
+  },
+  "promo": {
+    "button": "Promo code",
+    "title": "Enter promo code",
+    "description": "Type your code and get the direct link to redeem it on RollerCoin.",
+    "placeholder": "Type promo code",
+    "submit": "Redeem",
+    "recent": "Recently entered",
+    "clear": "Clear",
+    "remove": "Remove",
+    "close": "Close",
+    "normalize": "Remove spaces and convert to lowercase",
+    "stripSpecial": "Remove special characters not allowed in URLs"
   }
 }

@@ -1399,5 +1399,18 @@
       "other": "其他"
     },
     "noEvent": "目前还没有 puzzle event。"
+  },
+  "promo": {
+    "button": "兑换码",
+    "title": "输入兑换码",
+    "description": "输入你的兑换码，获取在 RollerCoin 上兑换的直接链接。",
+    "placeholder": "输入兑换码",
+    "submit": "兑换",
+    "recent": "最近输入",
+    "clear": "清除",
+    "remove": "移除",
+    "close": "关闭",
+    "normalize": "删除空格并转换为小写",
+    "stripSpecial": "删除 URL 中不允许的特殊字符"
   }
 }

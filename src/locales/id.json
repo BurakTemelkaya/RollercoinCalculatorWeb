@@ -1399,5 +1399,18 @@
       "other": "Lainnya"
     },
     "noEvent": "Belum ada puzzle event."
+  },
+  "promo": {
+    "button": "Kode promo",
+    "title": "Masukkan kode promo",
+    "description": "Ketik kode Anda dan dapatkan tautan langsung untuk menukarkannya di RollerCoin.",
+    "placeholder": "Ketik kode promo",
+    "submit": "Tukarkan",
+    "recent": "Baru dimasukkan",
+    "clear": "Hapus semua",
+    "remove": "Hapus",
+    "close": "Tutup",
+    "normalize": "Hapus spasi dan ubah ke huruf kecil",
+    "stripSpecial": "Hapus karakter khusus yang tidak diizinkan di URL"
   }
 }

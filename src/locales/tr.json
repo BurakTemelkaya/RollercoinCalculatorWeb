@@ -1485,5 +1485,18 @@
       "other": "Diğer"
     },
     "noEvent": "Henüz bir puzzle event yok."
+  },
+  "promo": {
+    "button": "Promosyon kodu",
+    "title": "Promosyon kodu gir",
+    "description": "Kodunuzu yazın ve RollerCoin'de kullanmak için doğrudan bağlantıyı alın.",
+    "placeholder": "Promosyon kodu yazın",
+    "submit": "Kullan",
+    "recent": "Son girilenler",
+    "clear": "Temizle",
+    "remove": "Kaldır",
+    "close": "Kapat",
+    "normalize": "Boşlukları kaldır ve küçük harfe çevir",
+    "stripSpecial": "URL'de bulunamayan özel karakterleri kaldır"
   }
 }
