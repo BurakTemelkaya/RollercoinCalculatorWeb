@@ -22,9 +22,9 @@ const AboutPageTR = () => {
       </div>
 
       <article className="static-content">
-        <h1>Hakkımızda: Ticari Değil, Oyuncu Odaklı Bir Proje</h1>
+        <h1>Hakkımızda: Oyuncu Odaklı Bir Proje</h1>
         
-        <p>Merhaba, ben <strong>Burak Temelkaya</strong>. Yakın dönemin en popüler oyna-kazan (play-to-earn) ekosistemlerinden biri olan RollerCoin'de, oyuncuların en büyük sorununun "karlılık analizi" olduğunu fark ettim. Piyasada bulunan birçok araç ya güncel verilerden yoksundu ya da fazlasıyla reklam panosuna dönüşmüş, kullanıcı deneyimini hiçe sayan ticari projelere evrilmişti.</p>
+        <p>Merhaba, ben <strong>Burak Temelkaya</strong>. Yakın dönemin en popüler oyna-kazan (play-to-earn) ekosistemlerinden biri olan RollerCoin'de, oyuncuların en büyük sorununun "karlılık analizi" olduğunu fark ettim. Piyasada bulunan birçok araç güncel verilerden yoksundu.</p>
         
         <p>İşte bu temel problemden yola çıkarak geliştirdiğim <strong>RollerCoin Kazanç Hesaplayıcı</strong> (rollercoincalculator.app), tamamen oyuncu verimliliğine odaklanmış, açık fikirli ve topluluk destekli bir girişimdir.</p>
 
@@ -32,7 +32,7 @@ const AboutPageTR = () => {
         <ul>
           <li><strong>Bağımsızlık:</strong> Bu platform, resmi RollerCoin ekibi ile hiçbir organik veya ticari bağı bulunmayan tamamen bağımsız bir üçüncü taraf geliştirici projesidir.</li>
           <li><strong>Maksimum Doğruluk:</strong> Veriler doğrudan RollerCoin'in kendi sunduğu lig (league) parametreleri ve Binance canlı API'si üzerinden eşzamanlı çekilerek hesaplanır. Manipülasyona ve tahmine yer yoktur.</li>
-          <li><strong>Kullanıcı Odaklı Deneyim:</strong> Reklam panoları, hesaplayıcının çalışmasını ve okunabilirliğini engellemeyecek ölçüde düzenlenir. Temel amaç, bir oyuncunun sayfaya girdiği ilk saniyede net kazanç verilerine ulaşmasını sağlamaktır.</li>
+          <li><strong>Kullanıcı Odaklı Deneyim:</strong> Temel amaç, bir oyuncunun sayfaya girdiği ilk saniyede net kazanç verilerine ulaşmasını sağlamaktır.</li>
           <li><strong>Gelişime Açıklık:</strong> Yeni eklenen coinler, lig güncellemeleri veya oyun içi dinamik (bonus mekanikleri) değişimleri anında sisteme entegre edilir.</li>
         </ul>
 
@@ -70,9 +70,9 @@ const AboutPageEN = () => {
       </div>
 
       <article className="static-content">
-        <h1>About Us: A Player-Focused Project, Not a Commercial One</h1>
+        <h1>About Us: A Player-Focused Project</h1>
         
-        <p>Hello, I'm <strong>Burak Temelkaya</strong>. I realized that the biggest problem for players in RollerCoin, one of the most popular play-to-earn ecosystems recently, was "profitability analysis." Many tools available on the market either lacked up-to-date data or had turned into excessive ad billboards, evolving into commercial projects that completely disregarded user experience.</p>
+        <p>Hello, I'm <strong>Burak Temelkaya</strong>. I realized that the biggest problem for players in RollerCoin, one of the most popular play-to-earn ecosystems recently, was "profitability analysis." Many tools available on the market lacked up-to-date data.</p>
         
         <p>Starting from this fundamental problem, the <strong>RollerCoin Profit Calculator</strong> (rollercoincalculator.app) is an independent, open-minded, and community-supported initiative entirely focused on player efficiency.</p>
 
@@ -80,7 +80,7 @@ const AboutPageEN = () => {
         <ul>
           <li><strong>Independence:</strong> This platform is a fully independent third-party developer project with no organic or commercial ties to the official RollerCoin team.</li>
           <li><strong>Maximum Accuracy:</strong> Data is calculated instantly by fetching the league parameters directly provided by RollerCoin and live quotes from the Binance API. There is absolutely no room for manipulation or guesswork.</li>
-          <li><strong>User-Centric Experience:</strong> Ad boards are strictly arranged in a way that does not prevent the calculator's operation or readability. The primary goal is to ensure a player accesses clear profit data the very first second they enter the page.</li>
+          <li><strong>User-Centric Experience:</strong> The primary goal is to ensure a player accesses clear profit data the very first second they enter the page.</li>
           <li><strong>Openness to Development:</strong> Newly added coins, league updates, or in-game dynamic (bonus mechanic) changes are immediately integrated into the system.</li>
         </ul>
 

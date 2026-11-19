@@ -9,7 +9,7 @@ const PrivacyPageTR = () => {
     <div className="static-page-container">
       <>
         <title>Gizlilik Politikası - RollerCoin Kazanç Hesaplayıcı</title>
-        <meta name="description" content="rollercoincalculator.app veritabanı tutmaz. Sadece Analytics ve Google AdSense standart çerezlerini kullanır. Verileriniz güvendedir." />
+        <meta name="description" content="rollercoincalculator.app hangi verileri işler: hesap bilgileri, yerel depolama, Google Analytics ve Google AdSense reklam ortakları." />
         <link rel="canonical" href={`https://rollercoincalculator.app/${lang}/privacy`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`https://rollercoincalculator.app/${lang}/privacy`} />
@@ -24,12 +24,14 @@ const PrivacyPageTR = () => {
 
       <article className="static-content">
         <h1>Gizlilik Politikası (Privacy Policy)</h1>
-        <p className="static-meta">Son Güncelleme: Mayıs 2026</p>
+        <p className="static-meta">Son Güncelleme: Kasım 2026</p>
 
         <p><strong>RollerCoin Kazanç Hesaplayıcı</strong> (rollercoincalculator.app) olarak önceliğimiz, şeffaflık ve kullanıcı gizliliğinin korunmasıdır. Araçlarımızı kullanırken verilerinizin nasıl (veya nasıl işlenmediği) hakkında tam bir açıklığa sahip olmanız gerektiğine inanıyoruz.</p>
 
-        <h2>1. Veri Toplama ve Veritabanı Politikası</h2>
-        <p>Platformumuz <strong>herhangi bir veritabanına sahip değildir.</strong> Forma girdiğiniz hash gücü, hedef coin oranları, hesaplama süresi gibi veriler hiçbir sunucuda kaydedilmez, depolanmaz ve işlenmez. Tüm hesaplamalar tamamen sizin kullandığınız internet tarayıcınızın belleğinde (işlemci üzerinde) anlık olarak "Client-Side" çalışır. Oyuncu güvenliği açısından bu, en yüksek standarttır.</p>
+        <h2>1. Topladığımız Veriler</h2>
+        <p><strong>Hesaplamalar:</strong> Forma girdiğiniz hash gücü, hedef coin oranları ve hesaplama süresi gibi veriler sunucularımızda saklanmaz. Hesaplamalar tarayıcınızda çalışır. RollerCoin kullanıcı adınızı girdiğinizde, profil verilerinizi getirmek için kullanıcı adınız sunucumuz üzerinden RollerCoin'e iletilir.</p>
+        <p style={{ marginTop: '12px' }}><strong>Hesap oluşturursanız:</strong> Kayıt isteğe bağlıdır. Hesap açtığınızda e-posta adresiniz, kullanıcı adınız ve şifrenizin şifrelenmiş (hash) hali veritabanımızda saklanır. Bildirim tercihleriniz ve yazdığınız blog yorumları da hesabınızla birlikte tutulur. E-posta adresiniz yalnızca hesap işlemleri ve açtığınız bildirimler için kullanılır, üçüncü taraflarla paylaşılmaz.</p>
+        <p style={{ marginTop: '12px' }}><strong>Sunucu kayıtları:</strong> Güvenlik ve hata ayıklama amacıyla sunucularımız, isteklerin IP adresini ve zamanını içeren teknik kayıtlar tutabilir.</p>
 
         <h2>2. Çerezler (Cookies) ve Yerel Depolama (Local Storage)</h2>
         <p>Sistemin her girdiğinizde verilerinizi sıfırlamaması için tarayıcınızın <strong>LocalStorage</strong> (Yerel Depolama) özelliğini kullanırız. Önceki girişleriniz (hangi ligde olduğunuz, seçtiğiniz dil vb.) sadece kendi cihazınızda şifrelenmeden tutulur. Bizim sunucularımıza gönderilmez.</p>
@@ -40,6 +42,7 @@ const PrivacyPageTR = () => {
         <h2>4. Reklam Ağları (Google AdSense)</h2>
         <p>Sunucu giderlerimizi karşılayabilmek adına <strong>Google AdSense</strong> gibi üçüncü taraf reklam ve yayıncı ağları entegre edilmiştir. Reklam partnerlerimiz, size kişiselleştirilmiş reklamlar sunabilmek amacıyla veya tarayıcı gezintilerinize dayanan standart çerezleri (cookies) ve web işaretçilerini (web beacons) kullanabilirler. Bu çerez yönetimi tamamen bizim dışımızda, ilgili kurumların global gizlilik anlaşmaları uyarınca idare edilir.</p>
         <p style={{ marginTop: '12px' }}><strong>Üçüncü taraf reklam sunucuları veya reklam ağları,</strong> tarayıcınıza doğrudan reklam gönderdiğinde, otomatik olarak IP adresinizi alırlar. Reklamların etkinliğini ölçmek ve/veya size gösterilen reklam içeriğini kişiselleştirmek için çerezler, JavaScript veya Web Beacon'lar gibi diğer teknolojileri de kullanabilirler.</p>
+        <p style={{ marginTop: '12px' }}><strong>IP adresi paylaşımı:</strong> Google, reklam isteklerinde IP adresinizin tamamını reklam gösterimi, konum bazlı hedefleme ve sahtekârlık önleme amacıyla reklam teklifi veren iş ortaklarıyla paylaşabilir. Avrupa Ekonomik Alanı, Birleşik Krallık ve İsviçre'deki ziyaretçilerden reklam çerezleri için sitemizde gösterilen onay penceresiyle izin istenir.</p>
         <p style={{ marginTop: '12px' }}><strong>Kişiselleştirilmiş reklamları devre dışı bırakmak için</strong> <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>Google Reklam Ayarları</a> sayfasını ziyaret edebilirsiniz. Ayrıca <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>DAA opt-out</a> sayfasından diğer reklam ağlarının çerezlerini de yönetebilirsiniz.</p>
         <p style={{ marginTop: '12px' }}>Google'ın gizlilik uygulamaları hakkında daha fazla bilgi almak için <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>Google Gizlilik Politikası</a>'nı inceleyebilirsiniz.</p>
 
@@ -77,12 +80,14 @@ const PrivacyPageEN = () => {
 
       <article className="static-content">
         <h1>Privacy Policy</h1>
-        <p className="static-meta">Last Updated: May 2026</p>
+        <p className="static-meta">Last Updated: November 2026</p>
 
         <p>At <strong>RollerCoin Profit Calculator</strong> (rollercoincalculator.app), our priority is transparency and the protection of user privacy. We believe you should have full clarity about how your data is (or isn't) processed while using our tools.</p>
 
-        <h2>1. Data Collection and Database Policy</h2>
-        <p>Our platform <strong>does not possess any database.</strong> The data you input into the forms, such as hash power, target coin ratios, and calculation durations, are never saved, stored, or processed on any server. All calculations run strictly "Client-Side" on the memory (processor) of the internet browser you are using. In terms of player security, this is the highest standard possible.</p>
+        <h2>1. Data We Collect</h2>
+        <p><strong>Calculations:</strong> The data you enter into the forms, such as hash power, target coin ratios and calculation durations, is not stored on our servers. Calculations run in your browser. When you enter your RollerCoin username, it is sent through our server to RollerCoin to fetch your profile data.</p>
+        <p style={{ marginTop: '12px' }}><strong>If you create an account:</strong> Registration is optional. When you sign up, your email address, username and a hashed version of your password are stored in our database. Your notification preferences and any blog comments you write are kept with your account. Your email address is used only for account actions and the notifications you turn on, and is not shared with third parties.</p>
+        <p style={{ marginTop: '12px' }}><strong>Server logs:</strong> For security and debugging, our servers may keep technical logs that include the IP address and time of requests.</p>
 
         <h2>2. Cookies and Local Storage</h2>
         <p>To prevent the system from resetting your data every time you enter, we utilize your browser's <strong>LocalStorage</strong> feature. Your previous inputs (which league you are in, the language you selected, etc.) are kept unencrypted strictly on your own device. This data is never sent to our servers.</p>
@@ -93,6 +98,7 @@ const PrivacyPageEN = () => {
         <h2>4. Advertising Networks (Google AdSense)</h2>
         <p>To cover our server expenses, third-party advertising and publisher networks such as <strong>Google AdSense</strong> have been integrated. Our advertising partners may use standard cookies and web beacons based on your browsing behavior in order to present personalized ads to you. This cookie management is handled entirely outside of our control and operates under the global privacy agreements of the respective organizations.</p>
         <p style={{ marginTop: '12px' }}><strong>Third-party ad servers or ad networks</strong> use technologies like cookies, JavaScript, or Web Beacons that are sent directly to your browser when they serve advertisements. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see.</p>
+        <p style={{ marginTop: '12px' }}><strong>IP address sharing:</strong> In ad requests, Google may share your full IP address with partners that bid on ads, for ad delivery, location-based targeting and fraud prevention. Visitors in the European Economic Area, the United Kingdom and Switzerland are asked for consent to advertising cookies through the consent message shown on our site.</p>
         <p style={{ marginTop: '12px' }}><strong>To opt out of personalized advertising,</strong> you can visit the <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>Google Ads Settings</a> page. You may also manage cookies from other ad networks via the <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>DAA opt-out</a> page.</p>
         <p style={{ marginTop: '12px' }}>For more information on Google's privacy practices, please review the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)' }}>Google Privacy Policy</a>.</p>
 
