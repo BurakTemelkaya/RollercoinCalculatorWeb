@@ -3491,6 +3491,24 @@ a:hover {
   }
 }
 
+/* below 400px long amounts like "0.003139 BNB" outgrow their column: shrink to 10px at 360, 8.8px at 320 */
+@media (max-width: 399px) {
+  .earning-crypto,
+  .table-container.fit-default-columns .earning-crypto {
+    font-size: clamp(8.8px, calc(10px + (100vw - 360px) * 0.03), 11px) !important;
+  }
+
+  .table-container.fit-default-columns .earnings-table th:nth-child(n + 2),
+  .table-container.fit-default-columns .earnings-table td:nth-child(n + 2) {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+
+  .table-container.fit-default-columns td.league-power {
+    font-size: clamp(9px, calc(10px + (100vw - 360px) * 0.025), 10px);
+  }
+}
+
 /* Withdraw Timer Value Centering */
 .withdraw-stats .stat {
   align-items: center;
@@ -5447,6 +5465,14 @@ html body[data-scroll-locked] {
   overflow-y: scroll !important;
   padding-right: 0 !important;
   margin-right: 0 !important;
+}
+
+/* the forced scrollbar above takes ~12px from the right edge on narrow screens; phones overlay scrollbars anyway */
+@media (max-width: 768px) {
+  html,
+  body {
+    scrollbar-width: none;
+  }
 }
 
 /* ============================================
