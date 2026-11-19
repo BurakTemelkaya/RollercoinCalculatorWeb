@@ -605,6 +605,8 @@
     "receiveAllEmails": "Recibir Correos Electrónicos",
     "receiveAllEmailsDesc": "Habilitar o deshabilitar todas las notificaciones por correo electrónico a nivel global.",
     "allEmailsDisabledWarning": "Se ha dado de baja completamente de todos los correos electrónicos. Para cambiar su configuración de correo electrónico individual, necesita volver a activar las notificaciones por correo electrónico.",
+    "emailBouncedWarning": "Los correos a tu dirección vuelven sin entregarse (puede que la dirección no exista o que la bandeja esté llena), así que dejamos de enviar correos de notificación. Los correos de restablecimiento de contraseña se siguen enviando.",
+    "resumeEmails": "Reanudar correos",
     "enableAllEmails": "Activar Correos Electrónicos",
     "generalMailEnabledMsg": "Notificaciones por correo electrónico reactivadas.",
     "generalMailDisabledMsg": "Todas las notificaciones por correo electrónico deshabilitadas.",

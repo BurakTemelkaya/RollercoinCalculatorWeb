@@ -104,6 +104,26 @@ export async function updateGeneralMailNotificationStatus(token: string): Promis
 }
 
 /**
+ * True when notification emails were stopped because they kept bouncing.
+ */
+export async function getEmailUndeliverable(token: string): Promise<boolean> {
+    const response = await apiFetch(buildApiUrl('/api/NotificationPrefence/email-undeliverable'), {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return response.json();
+}
+
+/**
+ * Restarts notification emails stopped by bounces.
+ */
+export async function resumeEmailDelivery(token: string): Promise<void> {
+    await apiFetch(buildApiUrl('/api/NotificationPrefence/resume-email-delivery'), {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+}
+
+/**
  * Unsubscribes from emails using a token.
  * Does not require authorization header.
  */

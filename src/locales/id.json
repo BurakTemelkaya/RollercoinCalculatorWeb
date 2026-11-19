@@ -620,6 +620,8 @@
     "receiveAllEmails": "Terima Email",
     "receiveAllEmailsDesc": "Aktifkan atau nonaktifkan semua notifikasi email secara global.",
     "allEmailsDisabledWarning": "Anda telah sepenuhnya berhenti berlangganan dari semua email. Untuk mengubah pengaturan email individual Anda, Anda perlu mengaktifkan kembali notifikasi email.",
+    "emailBouncedWarning": "Email ke alamat Anda terus kembali tidak terkirim (alamat mungkin tidak ada atau kotak masuk penuh), jadi kami menghentikan email notifikasi. Email reset kata sandi tetap dikirim.",
+    "resumeEmails": "Lanjutkan email",
     "enableAllEmails": "Aktifkan Email",
     "generalMailEnabledMsg": "Notifikasi email diaktifkan kembali.",
     "generalMailDisabledMsg": "Semua notifikasi email dinonaktifkan.",

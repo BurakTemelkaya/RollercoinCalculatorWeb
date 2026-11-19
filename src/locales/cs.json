@@ -623,6 +623,8 @@
     "receiveAllEmails": "Přijímat e-maily",
     "receiveAllEmailsDesc": "Globálně povolit nebo zakázat všechny e-mailové notifikace.",
     "allEmailsDisabledWarning": "Úplně jste se odhlásili ze všech e-mailů. Chcete-li změnit jednotlivá nastavení e-mailů, musíte znovu zapnout e-mailová oznámení.",
+    "emailBouncedWarning": "E-maily na vaši adresu se opakovaně vracejí jako nedoručené (adresa možná neexistuje nebo je schránka plná), proto jsme přestali posílat e-mailová oznámení. E-maily pro obnovení hesla se odesílají dál.",
+    "resumeEmails": "Obnovit e-maily",
     "enableAllEmails": "Zapnout e-maily",
     "generalMailEnabledMsg": "E-mailová upozornění znovu povolena.",
     "generalMailDisabledMsg": "Všechna e-mailová upozornění jsou vypnuta.",

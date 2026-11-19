@@ -685,6 +685,8 @@
     "receiveAllEmails": "E-postaları Al",
     "receiveAllEmailsDesc": "Tüm e-posta bildirimlerini genel olarak etkinleştirin veya devre dışı bırakın.",
     "allEmailsDisabledWarning": "E-posta almayı tamamen kapattınız. Diğer ayarları değiştirmesi için geri açmanız gerekir.",
+    "emailBouncedWarning": "Adresinize gönderilen mailler teslim edilemeden geri dönüyor (adres mevcut olmayabilir ya da gelen kutusu dolu olabilir), bu yüzden bildirim maillerini durdurduk. Parola sıfırlama mailleri gönderilmeye devam eder.",
+    "resumeEmails": "Mailleri yeniden başlat",
     "enableAllEmails": "E-postaları Aç",
     "generalMailEnabledMsg": "E-posta bildirimleri tekrar açıldı.",
     "generalMailDisabledMsg": "Tüm e-posta bildirimleri kapatıldı.",

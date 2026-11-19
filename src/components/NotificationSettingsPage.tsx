@@ -8,6 +8,8 @@ import {
     createPushSubscription,
     getGeneralNotificationPreference,
     updateGeneralMailNotificationStatus,
+    getEmailUndeliverable,
+    resumeEmailDelivery,
     CreateNotificationPreferenceDto
 } from '../services/notificationApi';
 import { RollercoinProfileCard } from './RollercoinProfile';
@@ -42,6 +44,7 @@ export default function NotificationSettingsPage() {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [browserPermission, setBrowserPermission] = useState<string>('Notification' in window ? Notification.permission : 'denied');
     const [generalMailEnabled, setGeneralMailEnabled] = useState(true);
+    const [emailUndeliverable, setEmailUndeliverable] = useState(false);
 
     useEffect(() => {
         const loadPreferences = async () => {
@@ -64,6 +67,8 @@ export default function NotificationSettingsPage() {
 
                 const isGeneralEnabled = await getGeneralNotificationPreference(token);
                 setGeneralMailEnabled(isGeneralEnabled);
+                // Optional info: a failure here must not break the page
+                setEmailUndeliverable(await getEmailUndeliverable(token).catch(() => false));
             } catch (err) {
                 console.error('Failed to load preferences:', err);
                 setError(t('settings.loadError', 'Failed to load settings.'));
@@ -184,6 +189,8 @@ export default function NotificationSettingsPage() {
             await updateGeneralMailNotificationStatus(token);
             const isGeneralEnabled = await getGeneralNotificationPreference(token);
             setGeneralMailEnabled(isGeneralEnabled);
+            // Turning email on also clears a bounce stop on the backend
+            if (isGeneralEnabled) setEmailUndeliverable(false);
             
             // Re-fetch preferences to make sure they match DB
             const data = await getNotificationPreferences(token);
@@ -203,6 +210,19 @@ export default function NotificationSettingsPage() {
             setError(t('settings.generalMailUpdateError', 'Failed to update email settings.'));
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleResumeEmail = async () => {
+        const token = await getValidToken();
+        if (!token) return;
+        setError(null);
+        try {
+            await resumeEmailDelivery(token);
+            setEmailUndeliverable(false);
+            setSuccessMessage(t('settings.generalMailEnabledMsg', 'Email notifications re-enabled.'));
+        } catch {
+            setError(t('settings.generalMailUpdateError', 'Failed to update email settings.'));
         }
     };
 
@@ -308,6 +328,16 @@ export default function NotificationSettingsPage() {
                                 {!generalMailEnabled && (
                                     <div style={{ color: '#f87171', fontSize: '0.9rem', padding: '12px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
                                         {t('settings.allEmailsDisabledWarning', 'You have completely unsubscribed from all emails. To change your individual email settings, you need to turn email notifications back on.')}
+                                    </div>
+                                )}
+                                {generalMailEnabled && emailUndeliverable && (
+                                    <div role="alert" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', color: '#fbbf24', fontSize: '0.9rem', padding: '12px', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.25)' }}>
+                                        <span style={{ flex: '1 1 260px' }}>
+                                            {t('settings.emailBouncedWarning', 'Emails to your address keep coming back undelivered (the address may not exist or the inbox may be full), so we stopped sending notification emails. Password reset emails are still sent.')}
+                                        </span>
+                                        <button type="button" className="auth-submit-btn" onClick={handleResumeEmail} style={{ width: 'auto', padding: '8px 16px', margin: 0 }}>
+                                            {t('settings.resumeEmails', 'Resume emails')}
+                                        </button>
                                     </div>
                                 )}
                             </div>

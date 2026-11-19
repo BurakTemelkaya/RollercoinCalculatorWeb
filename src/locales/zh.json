@@ -620,6 +620,8 @@
     "receiveAllEmails": "接收电子邮件",
     "receiveAllEmailsDesc": "全局启用或禁用所有电子邮件通知。",
     "allEmailsDisabledWarning": "您已完全退订所有电子邮件。要更改您的个人电子邮件设置，您需要重新打开电子邮件通知。",
+    "emailBouncedWarning": "发送到您地址的邮件不断被退回（地址可能不存在或邮箱已满），因此我们已停止发送通知邮件。密码重置邮件仍会照常发送。",
+    "resumeEmails": "恢复邮件",
     "enableAllEmails": "打开电子邮件",
     "generalMailEnabledMsg": "电子邮件通知已重新启用。",
     "generalMailDisabledMsg": "所有电子邮件通知已禁用。",

@@ -620,6 +620,8 @@
     "receiveAllEmails": "Receber E-mails",
     "receiveAllEmailsDesc": "Ative ou desative todas as notificações por e-mail globalmente.",
     "allEmailsDisabledWarning": "Você cancelou a inscrição de todos os e-mails completamente. Para alterar suas configurações de e-mail individuais, você precisa ativar as notificações por e-mail novamente.",
+    "emailBouncedWarning": "Os e-mails para o seu endereço continuam voltando sem entrega (o endereço pode não existir ou a caixa pode estar cheia), por isso paramos de enviar e-mails de notificação. E-mails de redefinição de senha continuam sendo enviados.",
+    "resumeEmails": "Retomar e-mails",
     "enableAllEmails": "Ativar E-mails",
     "generalMailEnabledMsg": "Notificações por e-mail reativadas.",
     "generalMailDisabledMsg": "Todas as notificações por e-mail desativadas.",

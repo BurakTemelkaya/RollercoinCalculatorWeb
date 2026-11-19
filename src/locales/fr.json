@@ -606,6 +606,8 @@
     "receiveAllEmails": "Recevoir des E-mails",
     "receiveAllEmailsDesc": "Activer ou désactiver toutes les notifications par e-mail au niveau global.",
     "allEmailsDisabledWarning": "Vous vous êtes complètement désabonné de tous les e-mails. Pour modifier vos paramètres d'e-mail individuels, vous devez réactiver les notifications par e-mail.",
+    "emailBouncedWarning": "Les e-mails envoyés à votre adresse reviennent non distribués (l'adresse n'existe peut-être pas ou la boîte est pleine), nous avons donc arrêté les e-mails de notification. Les e-mails de réinitialisation du mot de passe sont toujours envoyés.",
+    "resumeEmails": "Reprendre les e-mails",
     "enableAllEmails": "Activer les E-mails",
     "generalMailEnabledMsg": "Notifications par e-mail réactivées.",
     "generalMailDisabledMsg": "Toutes les notifications par e-mail sont désactivées.",

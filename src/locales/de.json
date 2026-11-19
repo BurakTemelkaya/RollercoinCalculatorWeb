@@ -623,6 +623,8 @@
     "receiveAllEmails": "E-Mails erhalten",
     "receiveAllEmailsDesc": "Aktivieren oder deaktivieren Sie alle E-Mail-Benachrichtigungen global.",
     "allEmailsDisabledWarning": "Sie haben sich komplett von allen E-Mails abgemeldet. Um Ihre individuellen E-Mail-Einstellungen zu ändern, müssen Sie E-Mail-Benachrichtigungen wieder aktivieren.",
+    "emailBouncedWarning": "E-Mails an Ihre Adresse kommen immer wieder unzustellbar zurück (die Adresse existiert evtl. nicht oder das Postfach ist voll), daher haben wir Benachrichtigungs-E-Mails gestoppt. E-Mails zum Zurücksetzen des Passworts werden weiterhin gesendet.",
+    "resumeEmails": "E-Mails wieder aktivieren",
     "enableAllEmails": "E-Mails einschalten",
     "generalMailEnabledMsg": "E-Mail-Benachrichtigungen wieder aktiviert.",
     "generalMailDisabledMsg": "Alle E-Mail-Benachrichtigungen deaktiviert.",
