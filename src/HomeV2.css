@@ -1,0 +1,65 @@
+/* V2 only: the classic homepage and calculator styles keep their existing palette. */
+#root:has(.v2-blank-page) { padding-left:0; padding-right:0; }
+.v2-blank-page { --v2-bg:#0c101d; --v2-text:#e8edef; --v2-muted:#9da3b9; --v2-purple:#8056e9; min-height:100dvh; background:var(--v2-bg); color:var(--v2-text); }
+.v2-blank-header { position:relative; z-index:1200; min-height:76px; display:flex; align-items:center; flex-wrap:wrap; gap:16px; padding:12px 28px; border-bottom:1px solid #24263a; background:#0d111c; }
+.v2-brand-logo { order:-1; flex-shrink:0; display:block; }
+.v2-brand-logo img { width:52px; height:52px; object-fit:contain; display:block; }
+.v2-blank-header > span { font-size:12px; font-weight:700; letter-spacing:1px; color:#c5b9ff; }
+.v2-blank-header .v2-home-link { margin-left:auto; color:#969db4; font-size:11px; text-decoration:none; }
+.v2-blank-canvas { min-height:calc(100dvh - 77px); background-color:var(--v2-bg); background-image:linear-gradient(180deg,rgba(12,16,29,.1),#0c101d),url('./assets/v2/mining-room-background.png'); background-size:100% 960px,100% auto; background-position:center top; background-repeat:no-repeat; }
+.v2-input-panel { max-width:1050px; margin:0 auto; padding:24px; }
+.v2-input-panel .app { padding:0; }
+/* The panel's only visual override is its requested decorative background. */
+.v2-input-panel .data-input-section { background-color:#18080f; background-image:url('./assets/v2/panel-burgundy-gold.png'); background-size:cover; background-position:center; }
+.v2-input-panel .data-input-section > .section-header,.v2-input-panel .data-input-section > .section-header:hover { background:transparent; }
+.v2-platform-intro { text-align:center; padding:5px 12px 23px; max-width:820px; margin:0 auto; }
+.v2-platform-intro > span { color:#c4ae7e; font-size:9px; font-weight:650; letter-spacing:2.6px; }
+.v2-platform-intro h1 { color:#e6e4ef; font-size:23px; line-height:1.4; font-weight:650; letter-spacing:-.45px; margin:9px 0 7px; }
+.v2-platform-intro em { font-style:normal; color:#d4b67a; }
+.v2-platform-intro p { margin:0; font-size:11px; color:var(--v2-muted); letter-spacing:.4px; }
+.v2-blank-page .sponsor-placeholder { background:rgba(19,22,39,.9); border-style:solid; border-color:#4e3c6966; box-shadow:inset 0 1px #bfa3e80a; }
+.v2-blank-page .sponsor-promote { background:rgba(23,25,42,.93); }
+.v2-overflow { position:relative; flex-shrink:0; }
+.v2-overflow-trigger { width:39px; height:36px; display:grid; place-items:center; border:1px solid #39344c; border-radius:8px; background:#181a2b; color:#c9b8ec; font-size:25px; line-height:1; cursor:pointer; padding:0 0 8px; }
+.v2-overflow-trigger:hover,.v2-overflow-trigger[aria-expanded=true] { border-color:#8a68c0; background:#262039; }
+.v2-overflow-trigger:focus-visible,.v2-overflow-panel a:focus-visible { outline:2px solid #bba4e6; outline-offset:3px; }
+.v2-overflow-panel { position:absolute; left:0; top:calc(100% + 12px); min-width:235px; max-width:calc(100vw - 40px); display:flex; flex-direction:column; padding:9px; border:1px solid #4f3c69; border-radius:10px; background:#151827; box-shadow:0 12px 30px #00000044; }
+.v2-overflow-panel > span { font-size:8px; letter-spacing:1.5px; color:#847595; padding:7px 10px 9px; }
+.v2-overflow-panel a { display:block; padding:10px; font-size:12px; color:#c6c3d7; text-decoration:none; border-radius:6px; white-space:nowrap; }
+.v2-overflow-panel a:hover { background:#2a213c; color:#eee6fb; }
+@media(min-width:1400px) { .v2-blank-canvas { background-size:100% 1040px,100% auto; } }
+@media(max-width:600px) { .v2-blank-header { padding:10px 16px; gap:10px; } .v2-blank-header .v2-home-link { font-size:10px; } .v2-input-panel { padding:18px 12px; } .v2-platform-intro { padding:2px 4px 19px; } .v2-platform-intro h1 { font-size:19px; } .v2-platform-intro p { font-size:9px; } .v2-blank-canvas { background-size:100% 650px,auto 650px; } }
+@media(prefers-reduced-motion:reduce) { .v2-blank-page * { scroll-behavior:auto; } }
+
+/* V2 panel toning: visual overrides only, no sizing or behaviour changes. */
+.v2-input-panel .data-input-section { --v2-control:#18101f; --v2-control-border:#604157; --v2-action:#8752dc; --v2-action-hover:#9a68e9; --v2-control-text:#f4edf9; border-color:#ae7bc977; box-shadow:0 4px 18px #16071955,0 0 0 1px #ae7bc91a; }
+.v2-input-panel .data-input-section .fetch-mode-selector { background:#190e21; border-color:#66455f; box-shadow:inset 0 1px #ffffff08; }
+.v2-input-panel .data-input-section .mode-tab-bg { background:var(--v2-action); box-shadow:0 3px 10px #4b1c7638; border-color:#b68bea; }
+.v2-input-panel .data-input-section .mode-tab { color:#b5a4bf; }
+.v2-input-panel .data-input-section .mode-tab.active { color:#fff7ff; }
+.v2-input-panel .data-input-section .fetch-btn:not(:disabled),.v2-input-panel .data-input-section .show-reward-change-btn { background:var(--v2-action); border-color:#b28be4; color:var(--v2-control-text); box-shadow:0 3px 12px #56288445,inset 0 1px #dcc6f72e; }
+.v2-input-panel .data-input-section .fetch-btn:not(:disabled):hover,.v2-input-panel .data-input-section .show-reward-change-btn:hover { background:var(--v2-action-hover); box-shadow:0 4px 14px #7235a644; }
+.v2-input-panel .data-input-section .fetch-btn:disabled { background:#26182d; border-color:#54364e; color:#9d85a7; opacity:.7; box-shadow:none; }
+.v2-input-panel .data-input-section .power-value-input,.v2-input-panel .data-input-section .custom-dropdown-trigger,.v2-input-panel .data-input-section .power-unit-select { background:var(--v2-control); border-color:var(--v2-control-border); color:var(--v2-control-text); }
+.v2-input-panel .data-input-section .custom-dropdown-trigger.disabled { background:#1a111e; border-color:#58364c; color:#b2a0bb; }
+.v2-input-panel .data-input-section .power-value-input::placeholder { color:#9c84a8; }
+.v2-input-panel .data-input-section .power-value-input:focus { border-color:#bc89df; box-shadow:0 0 0 2px #ab71ce25; }
+.v2-input-panel .data-input-section .input-group > label { color:#c7aecf; }
+.v2-input-panel .data-input-section .auto-toggle-inline { background:#2a1933; border-color:#765076; color:#d9c2e5; }
+.v2-input-panel .data-input-section .auto-toggle-inline:hover { background:#35203f; }
+.v2-input-panel .data-input-section .auto-toggle-inline input { accent-color:#aa71e3; }
+.v2-input-panel .data-input-section .username-help-btn { color:#dabce9; background:#302039; border-color:#67456e; }
+/* Readable burgundy glass controls, matching the panel artwork. */
+.v2-input-panel .data-input-section { --v2-control:#130f19; --v2-control-border:#70515b; --v2-action:#8251c5; --v2-action-hover:#9668d5; border-color:#bd996465; background-image:linear-gradient(110deg,#0c0b1233,#130c1844),url('./assets/v2/panel-burgundy-gold.png'); box-shadow:0 5px 20px #08050a55,inset 0 1px #e5bd7018; }
+.v2-input-panel .data-input-section > .section-header { border-bottom-color:#cda96c25; }
+.v2-input-panel .data-input-section .section-header h2 { color:#f0e3d3; letter-spacing:.4px; }
+.v2-input-panel .data-input-section .fetch-mode-selector { background:#140f1bdc; border-color:#9b77545c; border-radius:9px; }
+.v2-input-panel .data-input-section .mode-tab-bg { background:#7348ad; box-shadow:inset 0 1px #d0a9ed26,0 2px 8px #0003; }
+.v2-input-panel .data-input-section .mode-tab { color:#c0b4c7; }.v2-input-panel .data-input-section .mode-tab.active { color:#fff7ed; }
+.v2-input-panel .data-input-section .power-value-input,.v2-input-panel .data-input-section .custom-dropdown-trigger,.v2-input-panel .data-input-section .power-unit-select { background:#120f18ed; border-color:#89694d80; color:#eee3d7; box-shadow:inset 0 1px 5px #0003; }
+.v2-input-panel .data-input-section .power-value-input::placeholder { color:#a89aaf; }.v2-input-panel .data-input-section .power-value-input:focus { border-color:#d0af77; box-shadow:0 0 0 2px #d0af771c; }
+.v2-input-panel .data-input-section .custom-dropdown-trigger.disabled { background:#17121acc; border-color:#765c4b60; color:#aea3b3; }
+.v2-input-panel .data-input-section .input-group>label { color:#d7bd96; }
+.v2-input-panel .data-input-section .auto-toggle-inline { background:#251b2bdc; border-color:#ad865e80; color:#e3cba6; }.v2-input-panel .data-input-section .auto-toggle-inline:hover { background:#33233b; }
+.v2-input-panel .data-input-section .show-reward-change-btn { background:#624386; border-color:#ad87c277; box-shadow:inset 0 1px #ffffff13; color:#eee2f8; }.v2-input-panel .data-input-section .show-reward-change-btn:hover { background:#755294; box-shadow:0 3px 10px #0003; }
+.v2-input-panel .data-input-section .username-help-btn { background:#302238; border-color:#9f7b6680; color:#d5bb94; }

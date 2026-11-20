@@ -1,0 +1,15 @@
+.publisher-titles{border:1px solid #39334e;border-radius:16px;padding:24px;background:#111624;color:#e8edef}
+.publisher-titles header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.publisher-titles header span{color:#b6a4dd;font-size:10px;letter-spacing:1.5px}
+.publisher-titles h2{margin:6px 0;font-size:21px}.publisher-titles h3{margin:10px 0;font-size:16px}
+.publisher-title-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.publisher-title-grid article{padding:20px;border:1px solid #343047;border-radius:12px;background:#191b2c;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.publisher-title-symbol{color:#bca2f0;font-size:25px}.publisher-title-grid p{margin:0;color:#bac2d2;font-size:13px;line-height:1.6}
+.publisher-title-grid small{color:#a8afc4;line-height:1.6}.publisher-title-grid .publisher-title-gold{border-color:#6c5835}.publisher-title-gold .publisher-title-symbol{color:#e5bd70}
+.publisher-titles a{color:#c7b4ed;font-size:12px}.publisher-titles button{border:1px solid #756096;background:#352849;color:#f3eafa;border-radius:7px;padding:9px 12px;cursor:pointer}
+.publisher-title-grid button,.publisher-title-grid a{margin-top:auto}.publisher-title-application{margin-top:18px;padding:18px;background:#0c101d;border-radius:10px}
+.publisher-title-application form{max-width:650px;display:grid;gap:14px}.publisher-title-application label{display:grid;gap:7px;font-size:13px}
+.publisher-title-application input,.publisher-title-application textarea{width:100%;box-sizing:border-box;padding:11px;background:#191b2c;color:#e8edef;border:1px solid #57506a;border-radius:7px;font:inherit}
+.publisher-title-application [role=status]{padding:14px;border:1px solid #6c5835;border-radius:8px;overflow-wrap:anywhere}.publisher-title-footnote{color:#a8afc4;font-size:11px;line-height:1.7;margin:18px 0 0}
+.publisher-titles :focus-visible{outline:2px solid #e5bd70;outline-offset:3px}
+@media(max-width:700px){.publisher-title-grid{grid-template-columns:1fr}.publisher-titles{padding:16px}.publisher-titles header{align-items:flex-start;flex-direction:column}}
