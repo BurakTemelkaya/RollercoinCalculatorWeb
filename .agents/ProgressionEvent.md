@@ -9,6 +9,7 @@ Progression Event ödüllerinin görselleri şu öncelik sırasına göre çöz�
 | **Mystery Box** | `static.rollercoin.com` CDN → Lokal fallback | API'deki `media.box_image_url` önce denenir, yoksa `title` eşleşmesiyle lokal resim |
 | **Utility Item** | `static.rollercoin.com` CDN → Lokal fallback | API'deki `media.preview_url` önce denenir, yoksa `speedupImg` fallback |
 | **Mutation Component** | Lokal (`assets/items/`) | İsim + rarity eşleşmesi ile lokal resim (API'de görsel URL yok) |
+| **Yeni/tanınmayan tipler (ör. `gym_equipment`)** | Kendi CDN'imiz (`rewards/`) → `static.rollercoin.com` | Backend `DownloadProgressionEventImageJob` görseli puzzle ile aynı kuralla (`PuzzleRewardImage`, yol dosya adına çevrilir) indirir; API `cdnImagePath` verir |
 | **Power/Battery/XP/Money** | Lokal (`assets/items/` ve `assets/coins/`) | Sabit ikon dosyaları |
 
 **Önemli Notlar:**

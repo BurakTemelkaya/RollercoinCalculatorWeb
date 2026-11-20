@@ -77,6 +77,7 @@ function convertApiReward(apiReward: ApiReward): ProgressionReward {
         description: emptyText,
         range_count: { min: 0, max: 0 },
         item_media_url: apiReward.itemPreviewUrl ?? null,
+        cdn_image_path: apiReward.cdnImagePath ?? null,
         single_piece_url: apiReward.boxImageUrl ?? null,
         box_image_url: apiReward.itemBoxUrl ?? null,
         cover_image_url: apiReward.itemCoverUrl ?? null,

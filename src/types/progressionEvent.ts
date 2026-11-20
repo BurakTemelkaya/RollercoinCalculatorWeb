@@ -41,6 +41,7 @@ export interface ApiReward {
   ttlTime: number;
   itemName: string | null;
   itemPreviewUrl: string | null;
+  cdnImagePath?: string | null;
   boxImageUrl: string | null;
   itemBoxUrl: string | null;
   itemCoverUrl: string | null;

@@ -370,7 +370,13 @@ function getRewardDisplay(
         case 'hat':
             return { text: reward.title.en || t('event.rewardTypes.hat'), subText: '' };
         default:
-            return { text: reward.title.en || reward.type, subText: '' };
+            // Types this page doesn't know yet (e.g. gym_equipment): the backend's mirrored copy, Rollercoin's as fallback
+            return {
+                text: `${reward.title.en || reward.type} x${reward.amount}`,
+                subText: '',
+                imageUrl: reward.cdn_image_path ? `${getCdnBaseUrl()}/${reward.cdn_image_path}` : (reward.item_media_url ? getCdnUrl(reward.item_media_url) : undefined),
+                rcImageUrl: reward.item_media_url ? getCdnUrl(reward.item_media_url) : undefined,
+            };
     }
 }
 
