@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { updateRollercoinToken } from '../../services/adminApi';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../DashboardLayout';
+import RollercoinLoginPanel from './RollercoinLoginPanel';
 import '../BlogPage.css';
 
 export default function AdminRollercoinToken() {
@@ -53,7 +54,9 @@ export default function AdminRollercoinToken() {
           <h1 style={{ marginTop: 0, marginBottom: '1rem', color: '#e2e8f0', fontSize: '1.5rem' }}>
             {t('admin.rollercoinTokenUpdate', 'Rollercoin Token Update')}
           </h1>
-          
+
+          <RollercoinLoginPanel />
+
           <div style={{
             padding: '16px',
             marginBottom: '24px',
