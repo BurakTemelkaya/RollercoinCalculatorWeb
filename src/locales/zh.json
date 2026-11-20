@@ -467,6 +467,8 @@
     "targetTitle": "目标挖掘 (要添加的算力)",
     "targetDesc": "分配算力。",
     "allAdded": "已全部添加",
+    "addAllEqual": "全部平均添加",
+    "removeAll": "全部移除",
     "currentStats": "当前统计",
     "minersPower": "矿机算力",
     "rackPower": "机架算力",

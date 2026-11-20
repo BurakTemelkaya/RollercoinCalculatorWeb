@@ -543,6 +543,8 @@
     "targetTitle": "Target Mining (Power to Add)",
     "targetDesc": "Allocate your total power to your new target coins to simulate your future earnings.",
     "allAdded": "All Added",
+    "addAllEqual": "Add all equally",
+    "removeAll": "Remove all",
     "currentStats": "Current Stats",
     "minersPower": "Miners Power",
     "rackPower": "Rack Power (Flat/Bonus)",

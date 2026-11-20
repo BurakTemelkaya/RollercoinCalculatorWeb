@@ -544,6 +544,8 @@
     "targetTitle": "Hedeflenen Kazım (Eklenecek Güç)",
     "targetDesc": "Olası yeni stratejinizde gücünüzü bölüştürmek istediğiniz coinleri ve yüzdelerini ayarlayın.",
     "allAdded": "Tümü Eklendi",
+    "addAllEqual": "Tümünü eşit ekle",
+    "removeAll": "Tümünü kaldır",
     "currentStats": "Mevcut İstatistikler",
     "minersPower": "Madenci Gücü",
     "rackPower": "Raf Gücü (Bonus)",

@@ -484,6 +484,8 @@
     "targetTitle": "Ziel-Mining (Hinzuzufügende Macht)",
     "targetDesc": "Weisen Sie Ihre Gesamtmacht Ihren neuen Zielmünzen zu, um Ihre zukünftigen Einnahmen zu simulieren.",
     "allAdded": "Alles hinzugefügt",
+    "addAllEqual": "Alle gleichmäßig hinzufügen",
+    "removeAll": "Alle entfernen",
     "currentStats": "Aktuelle Statistiken",
     "minersPower": "Miner-Macht",
     "rackPower": "Rack-Macht (Flach/Bonus)",

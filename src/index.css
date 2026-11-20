@@ -5029,6 +5029,36 @@ a:hover {
   cursor: not-allowed;
 }
 
+.sim-bulk-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: -4px 0 16px;
+}
+
+.sim-bulk-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.sim-bulk-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+}
+
+.sim-bulk-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .sim-list {
   display: flex;
   flex-direction: column;

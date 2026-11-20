@@ -468,6 +468,8 @@
     "targetTitle": "Cible (Puissance à Ajouter)",
     "targetDesc": "Allouez votre puissance à vos nouvelles cibles.",
     "allAdded": "Tout a été ajouté",
+    "addAllEqual": "Tout ajouter à parts égales",
+    "removeAll": "Tout retirer",
     "currentStats": "Statistiques Actuelles",
     "minersPower": "Puissance Mineurs",
     "rackPower": "Puissance Racks",

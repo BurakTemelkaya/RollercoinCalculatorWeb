@@ -484,6 +484,8 @@
     "targetTitle": "Cílový těžební výkon (možnost přidání)",
     "targetDesc": "Přidělte svou celkovou sílu svým novým cílovým mincím, abyste simulovali své budoucí výdělky.",
     "allAdded": "Vše přidáno",
+    "addAllEqual": "Přidat vše rovnoměrně",
+    "removeAll": "Odebrat vše",
     "currentStats": "Aktuální statistiky",
     "minersPower": "Síla horníků",
     "rackPower": "Rack Power (základní/bonusová)",

@@ -467,6 +467,8 @@
     "targetTitle": "Alvo (Poder para Adicionar)",
     "targetDesc": "Aloque seu poder para novas metas.",
     "allAdded": "Tudo Adicionado",
+    "addAllEqual": "Adicionar todas igualmente",
+    "removeAll": "Remover todas",
     "currentStats": "Estatísticas Atuais",
     "minersPower": "Poder Mineradores",
     "rackPower": "Poder Rack",

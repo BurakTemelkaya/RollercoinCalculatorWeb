@@ -467,6 +467,8 @@
     "targetTitle": "Target (Kekuatan yang Ditambah)",
     "targetDesc": "Alokasikan kekuatan ke target baru.",
     "allAdded": "Semua Ditambahkan",
+    "addAllEqual": "Tambah semua merata",
+    "removeAll": "Hapus semua",
     "currentStats": "Statistik",
     "minersPower": "Kekuatan Penambang",
     "rackPower": "Kekuatan Rak",

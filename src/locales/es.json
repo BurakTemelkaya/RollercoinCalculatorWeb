@@ -459,6 +459,8 @@
     "targetTitle": "Minado Objetivo (Poder a Añadir)",
     "targetDesc": "Asigna tu poder total a tus nuevas monedas objetivo para simular tus futuras ganancias.",
     "allAdded": "Todo Añadido",
+    "addAllEqual": "Añadir todas por igual",
+    "removeAll": "Quitar todas",
     "currentStats": "Estadísticas Actuales",
     "minersPower": "Poder Mineros",
     "rackPower": "Poder Estantes",
