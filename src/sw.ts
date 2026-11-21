@@ -51,7 +51,8 @@ registerRoute(
 // --- Push Notification Logic ---
 self.addEventListener('push', (event) => {
   let title = 'Rollercoin Calculator'
-  const options: NotificationOptions & { data?: { url: string } } = {
+  // `image` (big picture) is supported by Chrome/Edge but missing from TS's NotificationOptions
+  const options: NotificationOptions & { data?: { url: string }; image?: string } = {
     body: 'You have a new notification.',
     icon: '/icon.png',
     badge: '/icon.png',
@@ -63,6 +64,7 @@ self.addEventListener('push', (event) => {
       title = data.title || title
       if (data.body) options.body = data.body
       if (data.icon) options.icon = data.icon
+      if (data.image) options.image = data.image
       if (data.url) options.data = { url: data.url }
     } catch {
       options.body = event.data.text()
