@@ -1112,13 +1112,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
                       />
                       <LeaguePowerPartition league={(rawApiData || []).find(l => String(l.id) === String(league.id)) || (rawApiData && rawApiData[0]) || null} />
                       </>}
-                      {earnings.length === 0 && (
-                        <div className="empty-state calculator-empty-state" role="status">
-                          <div className="empty-icon" aria-hidden="true">📊</div>
-                          <p>{t('table.noDataTitle')}</p>
-                          <p className="helper-text">{t('calculatorEmpty.earnings')}</p>
-                        </div>
-                      )}
+                      {/* Veri yokken boş kutu gösterilmez; altındaki yayıncı bölümü doğrudan görünür */}
                     </div>
                     <div className={`tab-panel${collapsedTabs.has('simulator') ? ' collapsed' : ''}`}>
                       <React.Suspense fallback={<div className="tab-loading-placeholder"><span className="spinner"></span></div>}>

@@ -56,6 +56,8 @@ Onaylı yayıncının isim, açıklama, dil, logo ve link değişiklikleri doğr
 
 Deneme ve ödemeler süreyi uzatır: bitiş tarihi ileride ise o tarihten, değilse şimdiden itibaren. Deneme sürerken onaylanan 1 aylık ödeme kalan denemenin üstüne 30 gün ekler.
 
+Hatırlatma: `CreatorExpiryReminderJob` (her saat :45, yalnızca Production) bitişten 2 gün önce "süren bitiyor", bitince (en geç 3 gün içinde) "süren bitti" maili + push gönderir; ücretsiz (complimentary) kayıtlara gitmez. Her bildirim `ExpiryReminderSentFor` / `ExpiredNoticeSentFor` ile bir ActiveUntil için bir kez gider; ödeme onaylanıp süre uzayınca yeniden gönderilir. Metinler `notifications.*.yaml` içindeki `Creator*` anahtarları; mail `EnergyAlertMail.html` şablonunu kullanır.
+
 ## Kapak görseli ve kart tasarımı
 
 - Yayıncı isteğe bağlı bir kapak (arka plan) görseli yükler: `POST /me/cover`, en fazla 2 MB, aynı imza kontrolü; `CoverUrl`. Kaldırmak için kayıtta `removeCover`. Onaylı profilde kapak değişikliği de admin onayına gider (bekleyen değişiklikte eski/yeni yan yana gösterilir).
