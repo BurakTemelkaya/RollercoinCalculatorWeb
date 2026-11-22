@@ -139,7 +139,8 @@
     "userPanel": "用户后台",
     "myBlogs": "我的博客",
     "notificationSettings": "通知设置",
-    "leaderboard": "排行榜"
+    "leaderboard": "排行榜",
+    "creators": "创作者"
   },
   "lpp": {
     "title": "联赛算力分配",
@@ -632,7 +633,9 @@
     "energyRenewal": "算力下降提醒",
     "energyRenewalDesc": "每 30 分钟检查一次。当您的 Rollercoin 算力因能量未续充而持续下降时，每天最多提醒一次，最多 3 天。需要在上方填写您的 Rollercoin 用户名。",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "新的 Rollercoin puzzle event 开始时接收通知。默认关闭。"
+    "puzzleEventDesc": "新的 Rollercoin puzzle event 开始时接收通知。默认关闭。",
+    "creatorApplication": "创作者申请（管理员）",
+    "creatorApplicationDesc": "仅管理员可见。当有内容创作者申请、提交付款或使用同一频道尝试第二次免费试用时发送。"
   },
   "event": {
     "loading": "加载中...",
@@ -703,7 +706,8 @@
     "noDiscounts": "无有效折扣",
     "tokenDiscountGroup": "代币折扣",
     "discountEndsIn": "结束时间: {{time}}",
-    "seoDescription": "{{name}} — Progression Event 奖励、倍数计算器和预算规划。"
+    "seoDescription": "{{name}} — Progression Event 奖励、倍数计算器和预算规划。",
+    "videosTab": "视频"
   },
   "pagination": {
     "previous": "上一页",
@@ -1033,7 +1037,8 @@
     "tokenRequiredError": "请输入 Access Token 和 Refresh Token。",
     "tokenSuccess": "令牌更新成功！",
     "tokenFail": "令牌更新失败。",
-    "updateTokens": "更新令牌"
+    "updateTokens": "更新令牌",
+    "manageCreators": "创作者"
   },
   "rewardChange": {
     "title": "区块奖励变更",
@@ -1416,5 +1421,170 @@
     "close": "关闭",
     "normalize": "删除空格并转换为小写",
     "stripSpecial": "删除 URL 中不允许的特殊字符"
+  },
+  "creators": {
+    "myCreator": "创作者面板",
+    "centerTitle": "内容创作者",
+    "sponsoredEyebrow": "赞助创作者",
+    "centerSubtitle": "发现 Rollercoin 内容创作者，关注他们的频道。",
+    "languages": "内容语言",
+    "allLanguages": "全部",
+    "noCreatorsYet": "目前还没有上线的创作者。来做第一个吧！",
+    "forCreators": "面向内容创作者",
+    "applyTitle": "让成千上万的 Rollercoin 玩家看到你的频道",
+    "applyNow": "申请",
+    "sponsorsTitle": "社区内容创作者",
+    "viewAll": "查看全部",
+    "becomeCreator": "成为创作者",
+    "emptySponsors": "想在这里推广你的频道吗？如果你制作 Rollercoin 内容，欢迎申请。",
+    "eventVideosTitle": "关于本活动的视频",
+    "addYourVideo": "添加你的视频",
+    "noEventVideos": "本活动暂无视频。如果你是创作者，可以在面板中添加你的视频。",
+    "duplicateBlocked": "该频道已用另一个账号注册过。不提供免费试用；你的申请已被封禁，并已通知管理员。",
+    "saved": "你的资料已保存。",
+    "applied": "已收到申请。管理员批准后即会上线。",
+    "paymentSent": "已收到付款通知。管理员核实后将延长你的时长。",
+    "videoAdded": "视频已添加。",
+    "deleteVideoConfirm": "删除此视频？",
+    "videoDeleted": "视频已删除。",
+    "notApplied": "你还没有申请。填写表单；获批后你的频道将作为赞助商显示在网站上。",
+    "statusPending": "你的申请正在等待管理员批准。",
+    "statusRejected": "你的申请被拒绝。修改资料后再次保存即可重新审核。",
+    "statusDuplicate": "该频道已用另一个账号注册并使用过免费试用。不会再提供试用；需付费才能上线。",
+    "statusBlocked": "你的创作者资料已被封禁。请联系网站管理员。",
+    "statusComplimentary": "你的资料已上线（免费）。",
+    "statusLive": "你的资料已上线。到期：{{date}}",
+    "statusExpired": "你的时长已到期，资料已隐藏。付款并通知后即可重新上线。",
+    "profile": "资料",
+    "application": "申请",
+    "displayName": "频道 / 创作者名称",
+    "description": "简短介绍",
+    "contentLanguages": "你创作内容所用的语言",
+    "linksHint": "至少需要一个频道链接。若同一频道从第二个账号申请，将不提供试用并封禁申请。",
+    "save": "保存",
+    "submitApplication": "提交申请",
+    "payment": "付款",
+    "paymentHelp": "月费为 ${{price}}。请用加密货币将该金额发送到下方任一地址，然后提交交易哈希（TX）。每个经核实的月份增加 30 天。",
+    "noWallets": "尚未设置收款地址。请联系网站管理员。",
+    "copy": "复制",
+    "coin": "币种",
+    "network": "网络",
+    "amount": "金额",
+    "txHash": "交易哈希（TX ID）",
+    "notifyPayment": "提交付款",
+    "date": "日期",
+    "status": "状态",
+    "pending": "待处理",
+    "paymentApproved": "已批准（+{{months}} 个月）",
+    "rejected": "已拒绝",
+    "eventVideos": "活动视频",
+    "eventVideosHelp": "在你的资料上线期间，你的视频（YouTube、Shorts、TikTok、Twitch、Kick 等）会显示在对应的 Progression 或 Puzzle 活动页面上。访客看到的是网站语言的标题。每个活动最多 3 个视频。",
+    "eventType": "活动类型",
+    "event": "活动",
+    "videoUrl": "视频链接",
+    "addVideo": "添加视频",
+    "delete": "删除",
+    "coinNetwork": "币种 / 网络",
+    "otherCoin": "其他（手动输入）",
+    "logo": "标志 / 头像",
+    "uploadLogo": "上传标志",
+    "logoHint": "PNG、JPG、WEBP 或 GIF，最大 1 MB。如果不选择标志，将自动使用你频道的头像。",
+    "logoTooBig": "标志最大为 1 MB。",
+    "socialLogo": "从社交媒体获取",
+    "cancel": "取消",
+    "socialLogoNotFound": "未在你的频道页面找到头像。你可以以文件形式上传标志。",
+    "socialLogoNeedsLink": "请先输入频道链接。",
+    "logoPendingUpload": "保存时将上传此文件。",
+    "logoPendingSocial": "此图片来自 {{source}}；保存时将存储到我们的服务器。",
+    "cardPreview": "在网站上的显示效果",
+    "changesSent": "你的修改已提交审核。批准前网站上仍显示旧资料。",
+    "changesPending": "你的资料修改正在等待管理员批准。在此之前网站上仍显示旧资料；你可以继续编辑。",
+    "editNeedsReview": "资料修改（名称、标志、链接、介绍、语言）需经管理员批准后才会上线。",
+    "adminNote": "管理员备注",
+    "txHelpTitle": "什么是 TX（交易哈希）？在哪里找到？",
+    "txHelpWhat": "TX 或 TXID 是你的加密货币转账在区块链上的唯一编号。我们用它来核实付款确实以正确金额到达我们的地址。",
+    "txHelpExchange": "从交易所发送（Binance、OKX、Bybit 等）：钱包 → 交易/提现记录 → 对应的提现 → 复制“TxID”一行。",
+    "txHelpWallet": "从钱包应用发送（Trust Wallet、MetaMask 等）：点击该交易 → 复制“交易哈希”/“Transaction ID”，或区块浏览器链接中的长代码。",
+    "txHelpInternal": "交易所内部转账（如 Binance Pay、“内部转账”）不会写入区块链，也没有 TX；请通过上面选择的网络以提现方式付款。",
+    "txHelpExample": "通常由 64 个字母和数字组成，部分网络以 0x 开头（0x3f9a…c21e）。如果几分钟内没有出现，请稍等后再查看。",
+    "searchEvent": "搜索活动",
+    "searchEventPlaceholder": "活动名称...",
+    "noEventMatch": "没有匹配的活动",
+    "fetchTitle": "获取标题",
+    "fetching": "获取中...",
+    "titleNotFound": "无法从此链接获取标题；你可以自己填写。",
+    "titleSameAll": "该平台没有提供翻译后的标题；所有语言已填入相同标题，可按需修改。",
+    "titleFetched": "已从平台获取标题。",
+    "titleIn": "标题（{{lang}}）",
+    "openOnPlatform": "在平台上打开",
+    "close": "关闭",
+    "liveNow": "直播中",
+    "liveOn": "正在 {{platform}} 直播",
+    "profileNotFound": "未找到创作者",
+    "profileNotFoundText": "该创作者的资料目前未上线。",
+    "allCreators": "全部创作者",
+    "socialAccounts": "社交媒体账号",
+    "latestVideos": "最新视频",
+    "openChannel": "打开频道",
+    "eventVideosTitleProfile": "活动视频",
+    "benefit": {
+      "calculator": {
+        "title": "显示在计算器下方",
+        "text": "你的频道会以赞助卡片的形式出现在网站访问量最高的页面上。"
+      },
+      "language": {
+        "title": "按语言优先展示",
+        "text": "当你的内容语言与访客的网站语言一致时，你的卡片会优先显示。"
+      },
+      "events": {
+        "title": "活动视频",
+        "text": "把视频添加到 Progression 和 Puzzle 活动页面，可直接在网站内播放。"
+      },
+      "live": {
+        "title": "直播标识",
+        "text": "当你在 YouTube、Twitch、Kick 或 TikTok 直播时，卡片上会显示“直播中”标识。"
+      },
+      "profile": {
+        "title": "个人主页",
+        "text": "你的所有账号、最新 YouTube 视频和活动视频集中在一个页面。"
+      },
+      "socials": {
+        "title": "8 个平台链接",
+        "text": "YouTube、Twitch、Kick、X、TikTok、Instagram、Telegram 和 Discord，并配有各自的标志。"
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "申请",
+        "text": "填写频道信息、标志和内容语言。"
+      },
+      "approve": {
+        "title": "批准与试用",
+        "text": "获批后，前 {{days}} 天免费上线。"
+      },
+      "pay": {
+        "title": "用加密货币续费",
+        "text": "付款后提交交易哈希（TX）；每个月增加 30 天。"
+      }
+    },
+    "applySubtitle": "如果你制作 Rollercoin 内容，让你的频道、视频和直播触达合适的观众。",
+    "planName": "创作者套餐",
+    "perMonth": "月",
+    "trialBadge": "前 {{days}} 天免费",
+    "planCrypto": "使用加密货币支付 · USDT、BTC、ETH 等",
+    "viewProfile": "查看主页",
+    "directoryEyebrow": "社区之声",
+    "searchCreator": "搜索创作者",
+    "searchCreatorPlaceholder": "频道或创作者名称",
+    "platformFilter": "平台",
+    "allLanguagesShort": "所有语言",
+    "noMatch": "没有符合搜索的创作者。",
+    "cover": "封面（背景）图",
+    "uploadCover": "上传封面",
+    "changeCover": "更换封面",
+    "removeCover": "移除",
+    "coverPending": "保存时将上传此图片。",
+    "coverHint": "可选。宽幅图片效果最佳（例如 1200×400），最大 2 MB。不上传时，卡片会显示网站配色的渐变。",
+    "coverTooBig": "封面图最大为 2 MB。"
   }
 }

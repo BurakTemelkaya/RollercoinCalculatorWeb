@@ -139,7 +139,8 @@
     "userPanel": "Panel Pengguna",
     "myBlogs": "Blog Saya",
     "notificationSettings": "Pengaturan Notifikasi",
-    "leaderboard": "Papan Peringkat"
+    "leaderboard": "Papan Peringkat",
+    "creators": "Kreator"
   },
   "lpp": {
     "title": "Pembagian Kekuatan Liga",
@@ -632,7 +633,9 @@
     "energyRenewal": "Peringatan penurunan power",
     "energyRenewalDesc": "Diperiksa setiap 30 menit. Selama power Rollercoin Anda terus turun karena energi belum diperbarui, Anda mendapat paling banyak satu peringatan per hari, hingga 3 hari. Memerlukan username Rollercoin Anda di atas.",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "Dapatkan notifikasi saat puzzle event Rollercoin baru dimulai. Nonaktif secara default."
+    "puzzleEventDesc": "Dapatkan notifikasi saat puzzle event Rollercoin baru dimulai. Nonaktif secara default.",
+    "creatorApplication": "Pendaftaran kreator (admin)",
+    "creatorApplicationDesc": "Hanya terlihat oleh admin. Dikirim saat kreator konten mendaftar, melaporkan pembayaran, atau mencoba uji coba gratis kedua dengan channel yang sama."
   },
   "event": {
     "loading": "Memuat...",
@@ -703,7 +706,8 @@
     "noDiscounts": "Tidak ada diskon aktif",
     "tokenDiscountGroup": "Diskon Token",
     "discountEndsIn": "Berakhir dalam: {{time}}",
-    "seoDescription": "{{name}} — Hadiah Progression Event, kalkulator pengali, dan perencana anggaran."
+    "seoDescription": "{{name}} — Hadiah Progression Event, kalkulator pengali, dan perencana anggaran.",
+    "videosTab": "Video"
   },
   "pagination": {
     "previous": "Sebelumnya",
@@ -1033,7 +1037,8 @@
     "tokenRequiredError": "Silakan masukkan Access Token dan Refresh Token.",
     "tokenSuccess": "Token berhasil diperbarui!",
     "tokenFail": "Pembaruan token gagal.",
-    "updateTokens": "Perbarui Token"
+    "updateTokens": "Perbarui Token",
+    "manageCreators": "Kreator"
   },
   "rewardChange": {
     "title": "Perubahan Hadiah Blok",
@@ -1416,5 +1421,170 @@
     "close": "Tutup",
     "normalize": "Hapus spasi dan ubah ke huruf kecil",
     "stripSpecial": "Hapus karakter khusus yang tidak diizinkan di URL"
+  },
+  "creators": {
+    "myCreator": "Panel Kreator",
+    "centerTitle": "Kreator Konten",
+    "sponsoredEyebrow": "Kreator sponsor",
+    "centerSubtitle": "Temukan kreator konten Rollercoin dan ikuti channel mereka.",
+    "languages": "Bahasa konten",
+    "allLanguages": "Semua",
+    "noCreatorsYet": "Belum ada kreator yang tayang. Jadilah yang pertama!",
+    "forCreators": "Untuk kreator konten",
+    "applyTitle": "Tampilkan channelmu ke ribuan pemain Rollercoin",
+    "applyNow": "Daftar",
+    "sponsorsTitle": "Kreator konten komunitas",
+    "viewAll": "Lihat semua",
+    "becomeCreator": "Jadi kreator",
+    "emptySponsors": "Ingin mempromosikan channelmu di sini? Jika kamu membuat konten Rollercoin, daftarlah.",
+    "eventVideosTitle": "Video tentang event ini",
+    "addYourVideo": "Tambahkan videomu",
+    "noEventVideos": "Belum ada video untuk event ini. Jika kamu kreator, tambahkan videomu dari panel.",
+    "duplicateBlocked": "Channel ini sudah terdaftar dengan akun lain. Tidak ada uji coba gratis; pendaftaranmu diblokir dan admin sudah diberi tahu.",
+    "saved": "Profilmu sudah disimpan.",
+    "applied": "Pendaftaran diterima. Akan tayang setelah disetujui admin.",
+    "paymentSent": "Laporan pembayaran diterima. Masa aktifmu diperpanjang setelah admin memverifikasinya.",
+    "videoAdded": "Video ditambahkan.",
+    "deleteVideoConfirm": "Hapus video ini?",
+    "videoDeleted": "Video dihapus.",
+    "notApplied": "Kamu belum mendaftar. Isi formulirnya; setelah disetujui, channelmu tampil sebagai sponsor di situs.",
+    "statusPending": "Pendaftaranmu menunggu persetujuan admin.",
+    "statusRejected": "Pendaftaranmu ditolak. Perbaiki profil lalu simpan lagi agar ditinjau ulang.",
+    "statusDuplicate": "Channel ini sudah terdaftar dengan akun lain dan sudah memakai uji coba gratis. Tidak ada uji coba kedua; kamu perlu membayar agar tayang.",
+    "statusBlocked": "Profil kreatormu diblokir. Hubungi admin situs.",
+    "statusComplimentary": "Profilmu tayang (gratis).",
+    "statusLive": "Profilmu tayang. Berakhir: {{date}}",
+    "statusExpired": "Masa aktifmu habis dan profilmu disembunyikan. Bayar dan laporkan agar tayang lagi.",
+    "profile": "Profil",
+    "application": "Pendaftaran",
+    "displayName": "Nama channel / kreator",
+    "description": "Deskripsi singkat",
+    "contentLanguages": "Bahasa kontenmu",
+    "linksHint": "Minimal satu link channel diperlukan. Jika channel yang sama mendaftar dari akun kedua, tidak ada uji coba gratis dan pendaftaran diblokir.",
+    "save": "Simpan",
+    "submitApplication": "Kirim pendaftaran",
+    "payment": "Pembayaran",
+    "paymentHelp": "Biaya bulanan ${{price}}. Kirim jumlah itu dalam kripto ke salah satu alamat di bawah, lalu laporkan hash transaksinya (TX). Setiap bulan yang terverifikasi menambah 30 hari.",
+    "noWallets": "Alamat pembayaran belum diatur. Hubungi admin situs.",
+    "copy": "Salin",
+    "coin": "Koin",
+    "network": "Jaringan",
+    "amount": "Jumlah",
+    "txHash": "Hash transaksi (TX ID)",
+    "notifyPayment": "Laporkan pembayaran",
+    "date": "Tanggal",
+    "status": "Status",
+    "pending": "Menunggu",
+    "paymentApproved": "Disetujui (+{{months}} bulan)",
+    "rejected": "Ditolak",
+    "eventVideos": "Video event",
+    "eventVideosHelp": "Videomu (YouTube, Shorts, TikTok, Twitch, Kick, dll.) tampil di halaman event Progression atau Puzzle yang sesuai selama profilmu tayang. Pengunjung melihat judul dalam bahasa situs. Maksimal 3 video per event.",
+    "eventType": "Jenis event",
+    "event": "Event",
+    "videoUrl": "Link video",
+    "addVideo": "Tambah video",
+    "delete": "Hapus",
+    "coinNetwork": "Koin / jaringan",
+    "otherCoin": "Lainnya (ketik sendiri)",
+    "logo": "Logo / foto profil",
+    "uploadLogo": "Unggah logo",
+    "logoHint": "PNG, JPG, WEBP, atau GIF, maks. 1 MB. Jika tidak memilih logo, foto profil channelmu dipakai otomatis.",
+    "logoTooBig": "Logo maksimal 1 MB.",
+    "socialLogo": "Ambil dari media sosial",
+    "cancel": "Batal",
+    "socialLogoNotFound": "Foto profil tidak ditemukan di halaman channelmu. Kamu bisa mengunggah logo sebagai file.",
+    "socialLogoNeedsLink": "Masukkan link channel terlebih dahulu.",
+    "logoPendingUpload": "File ini diunggah saat kamu menyimpan.",
+    "logoPendingSocial": "Gambar ini berasal dari {{source}}; disimpan di server kami saat kamu menyimpan.",
+    "cardPreview": "Tampilannya di situs",
+    "changesSent": "Perubahanmu dikirim untuk ditinjau. Sampai disetujui, data lamamu tetap tampil di situs.",
+    "changesPending": "Perubahan profilmu menunggu persetujuan admin. Sementara itu data lamamu tetap tampil; kamu masih bisa mengedit.",
+    "editNeedsReview": "Perubahan profil (nama, logo, link, deskripsi, bahasa) baru tayang setelah disetujui admin.",
+    "adminNote": "Catatan admin",
+    "txHelpTitle": "Apa itu TX (hash transaksi) dan di mana menemukannya?",
+    "txHelpWhat": "TX atau TXID adalah ID unik transfer kriptomu di blockchain. Kami memakainya untuk memastikan pembayaran benar-benar masuk ke alamat kami dengan jumlah yang tepat.",
+    "txHelpExchange": "Dikirim dari exchange (Binance, OKX, Bybit, dll.): Dompet → Riwayat transaksi/penarikan → penarikan tersebut → salin baris \"TxID\".",
+    "txHelpWallet": "Dikirim dari aplikasi dompet (Trust Wallet, MetaMask, dll.): ketuk transaksinya → salin \"Hash transaksi\" / \"Transaction ID\", atau kode panjang di link explorer-nya.",
+    "txHelpInternal": "Transfer internal exchange (mis. Binance Pay, \"transfer internal\") tidak tercatat di blockchain dan tidak punya TX; kirim pembayaran sebagai penarikan lewat jaringan yang kamu pilih di atas.",
+    "txHelpExample": "Biasanya terdiri dari 64 huruf dan angka, di beberapa jaringan diawali 0x (0x3f9a…c21e). Jika belum muncul dalam beberapa menit, tunggu sebentar lalu cek lagi.",
+    "searchEvent": "Cari event",
+    "searchEventPlaceholder": "Nama event...",
+    "noEventMatch": "Tidak ada event yang cocok",
+    "fetchTitle": "Ambil judul",
+    "fetching": "Mengambil...",
+    "titleNotFound": "Judul tidak bisa diambil dari link ini; kamu bisa mengetiknya sendiri.",
+    "titleSameAll": "Platform tidak memberikan judul terjemahan; judul yang sama diisi untuk semua bahasa, ubah jika perlu.",
+    "titleFetched": "Judul diambil dari platform.",
+    "titleIn": "Judul ({{lang}})",
+    "openOnPlatform": "Buka di platform",
+    "close": "Tutup",
+    "liveNow": "LIVE",
+    "liveOn": "Live di {{platform}}",
+    "profileNotFound": "Kreator tidak ditemukan",
+    "profileNotFoundText": "Profil kreator ini sedang tidak tayang.",
+    "allCreators": "Semua kreator",
+    "socialAccounts": "Akun media sosial",
+    "latestVideos": "Video terbaru",
+    "openChannel": "Buka channel",
+    "eventVideosTitleProfile": "Video event",
+    "benefit": {
+      "calculator": {
+        "title": "Di bawah kalkulator",
+        "text": "Channelmu tampil sebagai kartu sponsor di halaman yang paling sering dipakai."
+      },
+      "language": {
+        "title": "Diutamakan sesuai bahasamu",
+        "text": "Jika bahasa kontenmu sama dengan bahasa situs pengunjung, kartumu tampil lebih dulu."
+      },
+      "events": {
+        "title": "Video event",
+        "text": "Tambahkan videomu ke halaman event Progression dan Puzzle; diputar langsung di situs."
+      },
+      "live": {
+        "title": "Lencana live",
+        "text": "Saat kamu siaran di YouTube, Twitch, Kick, atau TikTok, kartumu menampilkan lencana LIVE."
+      },
+      "profile": {
+        "title": "Halaman profil",
+        "text": "Semua akunmu, video YouTube terbaru, dan video event dalam satu halaman."
+      },
+      "socials": {
+        "title": "8 link platform",
+        "text": "YouTube, Twitch, Kick, X, TikTok, Instagram, Telegram, dan Discord, lengkap dengan logonya."
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "Daftar",
+        "text": "Isi detail channel, logo, dan bahasa kontenmu."
+      },
+      "approve": {
+        "title": "Persetujuan dan uji coba",
+        "text": "Setelah disetujui, kamu tayang gratis selama {{days}} hari pertama."
+      },
+      "pay": {
+        "title": "Lanjutkan dengan kripto",
+        "text": "Kirim pembayaran dan laporkan hash transaksinya (TX); setiap bulan menambah 30 hari."
+      }
+    },
+    "applySubtitle": "Jika kamu membuat konten Rollercoin, bawa channel, video, dan siaran langsungmu ke penonton yang tepat.",
+    "planName": "Paket kreator",
+    "perMonth": "bulan",
+    "trialBadge": "{{days}} hari pertama gratis",
+    "planCrypto": "Dibayar dengan kripto · USDT, BTC, ETH, dan lainnya",
+    "viewProfile": "Lihat profil",
+    "directoryEyebrow": "Suara komunitas",
+    "searchCreator": "Cari kreator",
+    "searchCreatorPlaceholder": "Nama channel atau kreator",
+    "platformFilter": "Platform",
+    "allLanguagesShort": "Semua bahasa",
+    "noMatch": "Tidak ada kreator yang cocok dengan pencarianmu.",
+    "cover": "Gambar sampul (latar)",
+    "uploadCover": "Unggah sampul",
+    "changeCover": "Ganti sampul",
+    "removeCover": "Hapus",
+    "coverPending": "Gambar ini diunggah saat kamu menyimpan.",
+    "coverHint": "Opsional. Gambar lebar paling cocok (mis. 1200×400), maks. 2 MB. Tanpa sampul, kartumu menampilkan gradasi warna situs.",
+    "coverTooBig": "Gambar sampul maksimal 2 MB."
   }
 }

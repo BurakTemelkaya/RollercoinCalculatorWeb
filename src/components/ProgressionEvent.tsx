@@ -54,8 +54,11 @@ import rstImg from '../assets/coins/rst.svg';
 import rltImg from '../assets/coins/rlt.svg';
 import diamondChestImg from '../assets/items/diamond_mine_chest_abbb269d-2d0d-4773-8c76-93e300db4614.png';
 import sellableIcon from '../assets/sellable.svg';
+import { EventCreatorVideos } from './creators/CreatorShared';
+import { VideoEventType } from '../services/contentCreatorApi';
 
-type EventTab = 'rewards' | 'multiplier';
+type EventTab = 'rewards' | 'multiplier' | 'videos';
+const EVENT_TAB_INDEX: Record<EventTab, number> = { rewards: 0, multiplier: 1, videos: 2 };
 
 
 // Removed fixed RLT_PRICE constant
@@ -424,7 +427,7 @@ export default function ProgressionEvent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<EventTab>('rewards');
-    const [collapsedTabs, setCollapsedTabs] = useState<Set<EventTab>>(new Set(['multiplier']));
+    const [collapsedTabs, setCollapsedTabs] = useState<Set<EventTab>>(new Set(['multiplier', 'videos']));
     const [adBlockWarning, setAdBlockWarning] = useState(false);
     const [currencyDiscounts, setCurrencyDiscounts] = useState<CurrencyDiscount[]>([]);
 
@@ -1176,10 +1179,10 @@ export default function ProgressionEvent() {
                 {/* Main Content */}
                 <div className="pe-main">
                     {/* Sub-tabs */}
-                    <div className="main-tabs main-tabs-2" style={{ marginBottom: '16px' }}>
+                    <div className="main-tabs" style={{ marginBottom: '16px' }}>
                         <div
                             className="main-tabs-bg"
-                            style={{ transform: `translateX(calc(${activeTab === 'rewards' ? 0 : 1} * (100% + var(--tab-gap))))` }}
+                            style={{ transform: `translateX(calc(${EVENT_TAB_INDEX[activeTab]} * (100% + var(--tab-gap))))` }}
                         />
                         <button
                             className={`main-tab ${activeTab === 'rewards' ? 'active' : ''}`}
@@ -1193,13 +1196,19 @@ export default function ProgressionEvent() {
                         >
                             {t('event.multiplierTab')}
                         </button>
+                        <button
+                            className={`main-tab ${activeTab === 'videos' ? 'active' : ''}`}
+                            onClick={() => handleTabChange('videos')}
+                        >
+                            {t('event.videosTab', 'Videolar')}
+                        </button>
                     </div>
 
                     {/* Tab Slider Content */}
                     <div className="tab-slider-viewport" style={{ marginTop: '4px' }}>
                         <div
                             className="tab-slider-track"
-                            style={{ transform: activeTab === 'rewards' ? 'translateX(0)' : 'translateX(-100%)' }}
+                            style={{ transform: `translateX(-${EVENT_TAB_INDEX[activeTab] * 100}%)` }}
                         >
                             {/* Rewards Table */}
                             <div className={`tab-panel ${activeTab === 'rewards' ? 'active' : ''}${collapsedTabs.has('rewards') ? ' collapsed' : ''}`}>
@@ -1732,6 +1741,9 @@ export default function ProgressionEvent() {
                                         )}
                                     </div>
                                 </div>
+                            </div>
+                            <div className={`tab-panel ${activeTab === 'videos' ? 'active' : ''}${collapsedTabs.has('videos') ? ' collapsed' : ''}`}>
+                                {activeTab === 'videos' && <EventCreatorVideos eventType={VideoEventType.Progression} eventId={eventData?.id} showEmpty />}
                             </div>
                         </div>
                     </div>

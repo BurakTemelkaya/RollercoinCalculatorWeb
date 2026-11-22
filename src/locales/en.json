@@ -139,7 +139,8 @@
     "userPanel": "User Panel",
     "myBlogs": "My Blogs",
     "notificationSettings": "Notification Settings",
-    "leaderboard": "Leaderboard"
+    "leaderboard": "Leaderboard",
+    "creators": "Creators"
   },
   "hamsters": {
     "title": "Hamsters",
@@ -696,7 +697,9 @@
     "energyRenewal": "Power decrease alert",
     "energyRenewalDesc": "Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "Get notified when a new Rollercoin puzzle event starts. Off by default."
+    "puzzleEventDesc": "Get notified when a new Rollercoin puzzle event starts. Off by default.",
+    "creatorApplication": "Content creator applications (admin)",
+    "creatorApplicationDesc": "Only admins see this. Sent when a content creator applies, reports a payment, or tries a second free trial with the same channel."
   },
   "event": {
     "loading": "Loading event data...",
@@ -770,7 +773,8 @@
     "noDiscounts": "No active discounts",
     "tokenDiscountGroup": "Token Discounts",
     "discountEndsIn": "Ends in: {{time}}",
-    "seoDescription": "{{name}} — Progression Event rewards, multiplier calculator, and budget planner."
+    "seoDescription": "{{name}} — Progression Event rewards, multiplier calculator, and budget planner.",
+    "videosTab": "Videos"
   },
   "pagination": {
     "previous": "Previous",
@@ -1177,7 +1181,8 @@
     "allFrames": "All Frames",
     "appCodeOnly": "App Code Only",
     "showRawJson": "Show Raw JSON",
-    "hideRawJson": "Hide JSON"
+    "hideRawJson": "Hide JSON",
+    "manageCreators": "Creators"
   },
   "rewardChange": {
     "title": "Block Reward Change",
@@ -1501,5 +1506,170 @@
     "close": "Close",
     "normalize": "Remove spaces and convert to lowercase",
     "stripSpecial": "Remove special characters not allowed in URLs"
+  },
+  "creators": {
+    "myCreator": "Creator Panel",
+    "centerTitle": "Content Creators",
+    "sponsoredEyebrow": "Sponsor creators",
+    "centerSubtitle": "Discover Rollercoin content creators and follow their channels.",
+    "languages": "Content languages",
+    "allLanguages": "All",
+    "noCreatorsYet": "No creators are live yet. Be the first!",
+    "forCreators": "For content creators",
+    "applyTitle": "Show your channel to thousands of Rollercoin players",
+    "applyNow": "Apply",
+    "sponsorsTitle": "Community content creators",
+    "viewAll": "View all",
+    "becomeCreator": "Become a creator",
+    "emptySponsors": "Want to promote your channel here? If you make Rollercoin content, apply.",
+    "eventVideosTitle": "Videos about this event",
+    "addYourVideo": "Add your video",
+    "noEventVideos": "No videos for this event yet. If you are a creator, add yours from your panel.",
+    "duplicateBlocked": "This channel was already registered with another account. No free trial is given; your application was blocked and the admin was notified.",
+    "saved": "Your profile was saved.",
+    "applied": "Application received. It goes live after admin approval.",
+    "paymentSent": "Payment report received. Your time is extended once the admin verifies it.",
+    "videoAdded": "Video added.",
+    "deleteVideoConfirm": "Delete this video?",
+    "videoDeleted": "Video deleted.",
+    "notApplied": "You have not applied yet. Fill in the form; once approved, your channel appears on the site as a sponsor.",
+    "statusPending": "Your application is waiting for admin approval.",
+    "statusRejected": "Your application was rejected. Fix your profile and save it again to be reviewed again.",
+    "statusDuplicate": "This channel was already registered with another account and used its free trial. No second free trial is given; you need to pay to go live.",
+    "statusBlocked": "Your creator profile is blocked. Contact the site admin.",
+    "statusComplimentary": "Your profile is live (free).",
+    "statusLive": "Your profile is live. Ends: {{date}}",
+    "statusExpired": "Your time has ended and your profile is hidden. Pay and report it to go live again.",
+    "profile": "Profile",
+    "application": "Application",
+    "displayName": "Channel / creator name",
+    "description": "Short description",
+    "contentLanguages": "Languages you create content in",
+    "linksHint": "At least one channel link is required. If the same channel applies from a second account, no free trial is given and the application is blocked.",
+    "save": "Save",
+    "submitApplication": "Submit application",
+    "payment": "Payment",
+    "paymentHelp": "The monthly fee is ${{price}}. Send that amount in crypto to one of the addresses below, then report the transaction hash (TX). Each verified month adds 30 days.",
+    "noWallets": "No payment address has been set yet. Contact the site admin.",
+    "copy": "Copy",
+    "coin": "Coin",
+    "network": "Network",
+    "amount": "Amount",
+    "txHash": "Transaction hash (TX ID)",
+    "notifyPayment": "Report payment",
+    "date": "Date",
+    "status": "Status",
+    "pending": "Pending",
+    "paymentApproved": "Approved (+{{months}} months)",
+    "rejected": "Rejected",
+    "eventVideos": "Event videos",
+    "eventVideosHelp": "Your videos (YouTube, Shorts, TikTok, Twitch, Kick, etc.) are shown on the matching Progression or Puzzle event page while your profile is live. Visitors see the title in the site language. Up to 3 videos per event.",
+    "eventType": "Event type",
+    "event": "Event",
+    "videoUrl": "Video link",
+    "addVideo": "Add video",
+    "delete": "Delete",
+    "coinNetwork": "Coin / network",
+    "otherCoin": "Other (type it)",
+    "logo": "Logo / profile picture",
+    "uploadLogo": "Upload logo",
+    "logoHint": "PNG, JPG, WEBP or GIF, up to 1 MB. If you do not pick a logo, your channel profile picture is used automatically.",
+    "logoTooBig": "Logo can be at most 1 MB.",
+    "socialLogo": "Get from social media",
+    "cancel": "Cancel",
+    "socialLogoNotFound": "No profile picture was found on your channel pages. You can upload your logo as a file.",
+    "socialLogoNeedsLink": "Enter a channel link first.",
+    "logoPendingUpload": "This file is uploaded when you save.",
+    "logoPendingSocial": "This picture comes from {{source}}; it is stored on our server when you save.",
+    "cardPreview": "How it will look on the site",
+    "changesSent": "Your changes were sent for review. Until they are approved, your old details stay on the site.",
+    "changesPending": "Your profile changes are waiting for admin approval. Until then your old details stay on the site; you can keep editing.",
+    "editNeedsReview": "Changes to your profile (name, logo, links, description, languages) go live only after admin approval.",
+    "adminNote": "Admin note",
+    "txHelpTitle": "What is a TX (transaction hash) and where do I find it?",
+    "txHelpWhat": "A TX or TXID is the unique ID of your crypto transfer on the blockchain. We use it to check that the payment really reached our address with the right amount.",
+    "txHelpExchange": "Sent from an exchange (Binance, OKX, Bybit, etc.): Wallet → Transaction/Withdrawal history → the withdrawal → copy the \"TxID\" line.",
+    "txHelpWallet": "Sent from a wallet app (Trust Wallet, MetaMask, etc.): tap the transaction → copy the \"Transaction hash\" / \"Transaction ID\", or the long code in its explorer link.",
+    "txHelpInternal": "Internal exchange transfers (e.g. Binance Pay, \"internal transfer\") are not written to the chain and have no TX; send the payment as a withdrawal on the network you selected above.",
+    "txHelpExample": "It usually looks like 64 letters and digits, on some networks starting with 0x (0x3f9a…c21e). If it does not show up within a few minutes, wait a bit and check again.",
+    "searchEvent": "Search event",
+    "searchEventPlaceholder": "Event name...",
+    "noEventMatch": "No matching event",
+    "fetchTitle": "Get title",
+    "fetching": "Fetching...",
+    "titleNotFound": "Could not get a title from this link; you can type it yourself.",
+    "titleSameAll": "The platform has no translated title; the same title was filled in for every language, edit if you like.",
+    "titleFetched": "Title fetched from the platform.",
+    "titleIn": "Title ({{lang}})",
+    "openOnPlatform": "Open on platform",
+    "close": "Close",
+    "liveNow": "LIVE",
+    "liveOn": "Live on {{platform}}",
+    "profileNotFound": "Creator not found",
+    "profileNotFoundText": "This creator’s profile is not live right now.",
+    "allCreators": "All creators",
+    "socialAccounts": "Social media accounts",
+    "latestVideos": "Latest videos",
+    "openChannel": "Open channel",
+    "eventVideosTitleProfile": "Event videos",
+    "benefit": {
+      "calculator": {
+        "title": "Below the calculator",
+        "text": "Your channel shows as a sponsor card on the most used page of the site."
+      },
+      "language": {
+        "title": "Boosted in your language",
+        "text": "When your content language matches the visitor’s site language, your card comes first."
+      },
+      "events": {
+        "title": "Event videos",
+        "text": "Add your videos to Progression and Puzzle event pages; they play right on the site."
+      },
+      "live": {
+        "title": "Live badge",
+        "text": "While you stream on YouTube, Twitch, Kick or TikTok, your card shows a LIVE badge."
+      },
+      "profile": {
+        "title": "Profile page",
+        "text": "All your accounts, latest YouTube videos and event videos on one page."
+      },
+      "socials": {
+        "title": "8 platform links",
+        "text": "YouTube, Twitch, Kick, X, TikTok, Instagram, Telegram and Discord, with their logos."
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "Apply",
+        "text": "Enter your channel details, logo and content languages."
+      },
+      "approve": {
+        "title": "Approval and trial",
+        "text": "Once approved, you go live free for the first {{days}} days."
+      },
+      "pay": {
+        "title": "Continue with crypto",
+        "text": "Send the payment and report its transaction hash (TX); each month adds 30 days."
+      }
+    },
+    "applySubtitle": "If you make Rollercoin content, bring your channel, videos and live streams to the right audience.",
+    "planName": "Creator plan",
+    "perMonth": "month",
+    "trialBadge": "First {{days}} days free",
+    "planCrypto": "Paid in crypto · USDT, BTC, ETH and more",
+    "viewProfile": "View profile",
+    "directoryEyebrow": "Voices of the community",
+    "searchCreator": "Search creators",
+    "searchCreatorPlaceholder": "Channel or creator name",
+    "platformFilter": "Platform",
+    "allLanguagesShort": "All languages",
+    "noMatch": "No creator matches your search.",
+    "cover": "Cover (background) image",
+    "uploadCover": "Upload cover",
+    "changeCover": "Change cover",
+    "removeCover": "Remove",
+    "coverPending": "This image is uploaded when you save.",
+    "coverHint": "Optional. A wide image works best (e.g. 1200×400), up to 2 MB. Without one, your card shows a gradient in the site colours.",
+    "coverTooBig": "The cover image can be at most 2 MB."
   }
 }

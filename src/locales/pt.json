@@ -139,7 +139,8 @@
     "userPanel": "Painel do Usuário",
     "myBlogs": "Meus Blogs",
     "notificationSettings": "Configurações de Notificação",
-    "leaderboard": "Ranking"
+    "leaderboard": "Ranking",
+    "creators": "Criadores"
   },
   "lpp": {
     "title": "Divisão de Poder da Liga",
@@ -632,7 +633,9 @@
     "energyRenewal": "Alerta de queda de poder",
     "energyRenewalDesc": "Verificado a cada 30 minutos. Enquanto seu poder no Rollercoin continuar caindo porque sua energia não foi renovada, você recebe no máximo um alerta por dia, por até 3 dias. Requer seu usuário do Rollercoin acima.",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "Receba um aviso quando um novo puzzle event do Rollercoin começar. Desativado por padrão."
+    "puzzleEventDesc": "Receba um aviso quando um novo puzzle event do Rollercoin começar. Desativado por padrão.",
+    "creatorApplication": "Inscrições de criadores (admin)",
+    "creatorApplicationDesc": "Visível apenas para administradores. Enviado quando um criador se inscreve, informa um pagamento ou tenta um segundo teste grátis com o mesmo canal."
   },
   "event": {
     "loading": "Carregando...",
@@ -703,7 +706,8 @@
     "noDiscounts": "Sem descontos ativos",
     "tokenDiscountGroup": "Descontos de Tokens",
     "discountEndsIn": "Termina em: {{time}}",
-    "seoDescription": "{{name}} — Recompensas do Progression Event, calculadora de multiplicador e planejador de orçamento."
+    "seoDescription": "{{name}} — Recompensas do Progression Event, calculadora de multiplicador e planejador de orçamento.",
+    "videosTab": "Vídeos"
   },
   "pagination": {
     "previous": "Anterior",
@@ -1033,7 +1037,8 @@
     "tokenRequiredError": "Por favor, insira o Access Token e o Refresh Token.",
     "tokenSuccess": "Token atualizado com sucesso!",
     "tokenFail": "Falha na atualização do token.",
-    "updateTokens": "Atualizar Tokens"
+    "updateTokens": "Atualizar Tokens",
+    "manageCreators": "Criadores"
   },
   "rewardChange": {
     "title": "Mudança de Recompensa de Bloco",
@@ -1416,5 +1421,170 @@
     "close": "Fechar",
     "normalize": "Remover espaços e converter para minúsculas",
     "stripSpecial": "Remover caracteres especiais não permitidos em URLs"
+  },
+  "creators": {
+    "myCreator": "Painel do criador",
+    "centerTitle": "Criadores de conteúdo",
+    "sponsoredEyebrow": "Criadores patrocinadores",
+    "centerSubtitle": "Descubra criadores de conteúdo de Rollercoin e siga seus canais.",
+    "languages": "Idiomas do conteúdo",
+    "allLanguages": "Todos",
+    "noCreatorsYet": "Ainda não há criadores no ar. Seja o primeiro!",
+    "forCreators": "Para criadores de conteúdo",
+    "applyTitle": "Mostre seu canal a milhares de jogadores de Rollercoin",
+    "applyNow": "Inscrever-se",
+    "sponsorsTitle": "Criadores de conteúdo da comunidade",
+    "viewAll": "Ver todos",
+    "becomeCreator": "Torne-se criador",
+    "emptySponsors": "Quer divulgar seu canal aqui? Se você cria conteúdo de Rollercoin, inscreva-se.",
+    "eventVideosTitle": "Vídeos sobre este evento",
+    "addYourVideo": "Adicione seu vídeo",
+    "noEventVideos": "Ainda não há vídeos para este evento. Se você é criador, adicione o seu pelo painel.",
+    "duplicateBlocked": "Este canal já foi registrado com outra conta. Não há teste grátis; sua inscrição foi bloqueada e o administrador foi avisado.",
+    "saved": "Seu perfil foi salvo.",
+    "applied": "Inscrição recebida. Ela vai ao ar após a aprovação do administrador.",
+    "paymentSent": "Aviso de pagamento recebido. Seu tempo será estendido assim que o administrador verificar.",
+    "videoAdded": "Vídeo adicionado.",
+    "deleteVideoConfirm": "Excluir este vídeo?",
+    "videoDeleted": "Vídeo excluído.",
+    "notApplied": "Você ainda não se inscreveu. Preencha o formulário; após a aprovação, seu canal aparece como patrocinador no site.",
+    "statusPending": "Sua inscrição aguarda a aprovação do administrador.",
+    "statusRejected": "Sua inscrição foi recusada. Corrija seu perfil e salve novamente para nova análise.",
+    "statusDuplicate": "Este canal já foi registrado com outra conta e usou o teste grátis. Não há segundo teste; você precisa pagar para ir ao ar.",
+    "statusBlocked": "Seu perfil de criador está bloqueado. Fale com o administrador do site.",
+    "statusComplimentary": "Seu perfil está no ar (grátis).",
+    "statusLive": "Seu perfil está no ar. Termina em: {{date}}",
+    "statusExpired": "Seu tempo acabou e seu perfil está oculto. Pague e avise para voltar ao ar.",
+    "profile": "Perfil",
+    "application": "Inscrição",
+    "displayName": "Nome do canal / criador",
+    "description": "Descrição curta",
+    "contentLanguages": "Idiomas em que você cria conteúdo",
+    "linksHint": "É necessário pelo menos um link de canal. Se o mesmo canal se inscrever por uma segunda conta, não há teste grátis e a inscrição é bloqueada.",
+    "save": "Salvar",
+    "submitApplication": "Enviar inscrição",
+    "payment": "Pagamento",
+    "paymentHelp": "A mensalidade é ${{price}}. Envie esse valor em cripto para um dos endereços abaixo e depois informe o hash da transação (TX). Cada mês verificado adiciona 30 dias.",
+    "noWallets": "Ainda não há endereço de pagamento definido. Fale com o administrador do site.",
+    "copy": "Copiar",
+    "coin": "Moeda",
+    "network": "Rede",
+    "amount": "Valor",
+    "txHash": "Hash da transação (TX ID)",
+    "notifyPayment": "Informar pagamento",
+    "date": "Data",
+    "status": "Status",
+    "pending": "Pendente",
+    "paymentApproved": "Aprovado (+{{months}} meses)",
+    "rejected": "Recusado",
+    "eventVideos": "Vídeos de eventos",
+    "eventVideosHelp": "Seus vídeos (YouTube, Shorts, TikTok, Twitch, Kick etc.) aparecem na página do evento Progression ou Puzzle correspondente enquanto seu perfil estiver no ar. Os visitantes veem o título no idioma do site. Até 3 vídeos por evento.",
+    "eventType": "Tipo de evento",
+    "event": "Evento",
+    "videoUrl": "Link do vídeo",
+    "addVideo": "Adicionar vídeo",
+    "delete": "Excluir",
+    "coinNetwork": "Moeda / rede",
+    "otherCoin": "Outra (digitar)",
+    "logo": "Logo / foto de perfil",
+    "uploadLogo": "Enviar logo",
+    "logoHint": "PNG, JPG, WEBP ou GIF, até 1 MB. Se você não escolher um logo, a foto de perfil do seu canal é usada automaticamente.",
+    "logoTooBig": "O logo pode ter no máximo 1 MB.",
+    "socialLogo": "Buscar nas redes sociais",
+    "cancel": "Cancelar",
+    "socialLogoNotFound": "Nenhuma foto de perfil foi encontrada nas páginas do seu canal. Você pode enviar seu logo como arquivo.",
+    "socialLogoNeedsLink": "Primeiro informe um link de canal.",
+    "logoPendingUpload": "Este arquivo será enviado ao salvar.",
+    "logoPendingSocial": "Esta imagem vem de {{source}}; ela será guardada no nosso servidor ao salvar.",
+    "cardPreview": "Assim vai aparecer no site",
+    "changesSent": "Suas alterações foram enviadas para análise. Até a aprovação, seus dados antigos continuam no site.",
+    "changesPending": "As alterações do seu perfil aguardam a aprovação do administrador. Enquanto isso, seus dados antigos continuam no site; você pode continuar editando.",
+    "editNeedsReview": "Alterações no seu perfil (nome, logo, links, descrição, idiomas) só vão ao ar após a aprovação do administrador.",
+    "adminNote": "Nota do administrador",
+    "txHelpTitle": "O que é um TX (hash da transação) e onde encontro?",
+    "txHelpWhat": "Um TX ou TXID é o identificador único da sua transferência cripto na blockchain. Com ele verificamos se o pagamento realmente chegou ao nosso endereço com o valor certo.",
+    "txHelpExchange": "Enviado de uma corretora (Binance, OKX, Bybit etc.): Carteira → Histórico de transações/saques → o saque → copie a linha “TxID”.",
+    "txHelpWallet": "Enviado de um app de carteira (Trust Wallet, MetaMask etc.): toque na transação → copie o “Hash da transação” / “Transaction ID”, ou o código longo do link do explorador.",
+    "txHelpInternal": "Transferências internas da corretora (ex.: Binance Pay, “transferência interna”) não são gravadas na blockchain e não têm TX; envie o pagamento como saque pela rede escolhida acima.",
+    "txHelpExample": "Normalmente tem 64 letras e números e, em algumas redes, começa com 0x (0x3f9a…c21e). Se não aparecer em alguns minutos, espere um pouco e verifique de novo.",
+    "searchEvent": "Buscar evento",
+    "searchEventPlaceholder": "Nome do evento...",
+    "noEventMatch": "Nenhum evento encontrado",
+    "fetchTitle": "Buscar título",
+    "fetching": "Buscando...",
+    "titleNotFound": "Não foi possível obter um título deste link; você pode digitá-lo.",
+    "titleSameAll": "A plataforma não fornece título traduzido; o mesmo título foi preenchido em todos os idiomas, edite se quiser.",
+    "titleFetched": "Título obtido da plataforma.",
+    "titleIn": "Título ({{lang}})",
+    "openOnPlatform": "Abrir na plataforma",
+    "close": "Fechar",
+    "liveNow": "AO VIVO",
+    "liveOn": "Ao vivo no {{platform}}",
+    "profileNotFound": "Criador não encontrado",
+    "profileNotFoundText": "O perfil deste criador não está no ar agora.",
+    "allCreators": "Todos os criadores",
+    "socialAccounts": "Redes sociais",
+    "latestVideos": "Vídeos recentes",
+    "openChannel": "Abrir canal",
+    "eventVideosTitleProfile": "Vídeos de eventos",
+    "benefit": {
+      "calculator": {
+        "title": "Abaixo da calculadora",
+        "text": "Seu canal aparece como cartão de patrocinador na página mais usada do site."
+      },
+      "language": {
+        "title": "Destaque no seu idioma",
+        "text": "Quando o idioma do seu conteúdo coincide com o do visitante, seu cartão aparece primeiro."
+      },
+      "events": {
+        "title": "Vídeos de eventos",
+        "text": "Adicione seus vídeos às páginas de eventos Progression e Puzzle; eles tocam no próprio site."
+      },
+      "live": {
+        "title": "Selo ao vivo",
+        "text": "Enquanto você transmite no YouTube, Twitch, Kick ou TikTok, seu cartão mostra o selo AO VIVO."
+      },
+      "profile": {
+        "title": "Página de perfil",
+        "text": "Todas as suas contas, seus vídeos recentes do YouTube e seus vídeos de eventos em uma página."
+      },
+      "socials": {
+        "title": "8 links de plataformas",
+        "text": "YouTube, Twitch, Kick, X, TikTok, Instagram, Telegram e Discord, com seus logos."
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "Inscreva-se",
+        "text": "Informe os dados do canal, seu logo e os idiomas do seu conteúdo."
+      },
+      "approve": {
+        "title": "Aprovação e teste",
+        "text": "Após a aprovação, você fica no ar grátis nos primeiros {{days}} dias."
+      },
+      "pay": {
+        "title": "Continue com cripto",
+        "text": "Envie o pagamento e informe o hash da transação (TX); cada mês adiciona 30 dias."
+      }
+    },
+    "applySubtitle": "Se você cria conteúdo de Rollercoin, leve seu canal, seus vídeos e suas lives ao público certo.",
+    "planName": "Plano de criador",
+    "perMonth": "mês",
+    "trialBadge": "Primeiros {{days}} dias grátis",
+    "planCrypto": "Pagamento em cripto · USDT, BTC, ETH e mais",
+    "viewProfile": "Ver perfil",
+    "directoryEyebrow": "As vozes da comunidade",
+    "searchCreator": "Buscar criadores",
+    "searchCreatorPlaceholder": "Nome do canal ou do criador",
+    "platformFilter": "Plataforma",
+    "allLanguagesShort": "Todos os idiomas",
+    "noMatch": "Nenhum criador corresponde à sua busca.",
+    "cover": "Imagem de capa (fundo)",
+    "uploadCover": "Enviar capa",
+    "changeCover": "Trocar capa",
+    "removeCover": "Remover",
+    "coverPending": "Esta imagem será enviada ao salvar.",
+    "coverHint": "Opcional. Uma imagem larga funciona melhor (ex.: 1200×400), até 2 MB. Sem ela, seu cartão mostra um degradê nas cores do site.",
+    "coverTooBig": "A imagem de capa pode ter no máximo 2 MB."
   }
 }

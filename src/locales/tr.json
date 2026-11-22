@@ -139,7 +139,8 @@
     "userPanel": "Kullanıcı Paneli",
     "myBlogs": "Bloglarım",
     "notificationSettings": "Bildirim Ayarları",
-    "leaderboard": "Sıralama"
+    "leaderboard": "Sıralama",
+    "creators": "Yayıncılar"
   },
   "hamsters": {
     "title": "Hamsterlar",
@@ -697,7 +698,9 @@
     "energyRenewal": "Güç düşüşü uyarısı",
     "energyRenewalDesc": "30 dakikada bir kontrol edilir. Enerjiniz yenilenmediği için Rollercoin gücünüz düşmeye devam ettikçe günde en fazla bir kez, en fazla 3 gün uyarı alırsınız. Yukarıda Rollercoin kullanıcı adınızı girmeniz gerekir.",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "Yeni bir Rollercoin puzzle event başladığında bildirim alın. Varsayılan olarak kapalıdır."
+    "puzzleEventDesc": "Yeni bir Rollercoin puzzle event başladığında bildirim alın. Varsayılan olarak kapalıdır.",
+    "creatorApplication": "Yayıncı başvuruları (admin)",
+    "creatorApplicationDesc": "Yalnızca adminler görür. Yeni yayıncı başvurusu, ödeme bildirimi ya da aynı kanalla ikinci ücretsiz deneme girişiminde gönderilir."
   },
   "event": {
     "loading": "Etkinlik verileri yükleniyor...",
@@ -771,7 +774,8 @@
     "noDiscounts": "Aktif indirim yok",
     "tokenDiscountGroup": "Token İndirimleri",
     "discountEndsIn": "Kalan: {{time}}",
-    "seoDescription": "{{name}} — Progression Event ödülleri, çarpan hesaplayıcı ve bütçe planlayıcı."
+    "seoDescription": "{{name}} — Progression Event ödülleri, çarpan hesaplayıcı ve bütçe planlayıcı.",
+    "videosTab": "Videolar"
   },
   "pagination": {
     "previous": "Önceki",
@@ -1178,7 +1182,8 @@
     "allFrames": "Tüm Çağrılar",
     "appCodeOnly": "Yalnızca Uygulama Kodu",
     "showRawJson": "Ham JSON",
-    "hideRawJson": "JSON Gizle"
+    "hideRawJson": "JSON Gizle",
+    "manageCreators": "Yayıncılar"
   },
   "rewardChange": {
     "title": "Blok Ödülü Değişikliği",
@@ -1502,5 +1507,170 @@
     "close": "Kapat",
     "normalize": "Boşlukları kaldır ve küçük harfe çevir",
     "stripSpecial": "URL'de bulunamayan özel karakterleri kaldır"
+  },
+  "creators": {
+    "myCreator": "Yayıncı Paneli",
+    "centerTitle": "Yayıncılar",
+    "sponsoredEyebrow": "Sponsor yayıncılar",
+    "centerSubtitle": "Rollercoin içerik üreticilerini keşfet, kanallarını takip et.",
+    "languages": "İçerik dilleri",
+    "allLanguages": "Tümü",
+    "noCreatorsYet": "Henüz yayında yayıncı yok. İlk sen ol!",
+    "forCreators": "İçerik üreticileri için",
+    "applyTitle": "Kanalını binlerce Rollercoin oyuncusuna göster",
+    "applyNow": "Başvur",
+    "sponsorsTitle": "Topluluğun içerik üreticileri",
+    "viewAll": "Tümünü gör",
+    "becomeCreator": "Yayıncı ol",
+    "emptySponsors": "Kanalını burada tanıtmak ister misin? Rollercoin içeriği üretiyorsan başvur.",
+    "eventVideosTitle": "Bu etkinlik hakkında videolar",
+    "addYourVideo": "Videonu ekle",
+    "noEventVideos": "Bu etkinlik için henüz video yok. Yayıncıysan videonu panelinden ekleyebilirsin.",
+    "duplicateBlocked": "Bu kanal daha önce başka bir hesapla kayıt olmuş. Ücretsiz deneme verilmez; başvurun engellendi ve yöneticiye bildirildi.",
+    "saved": "Profilin kaydedildi.",
+    "applied": "Başvurun alındı. Admin onayından sonra yayına alınacak.",
+    "paymentSent": "Ödeme bildirimin alındı. Admin kontrol edip onaylayınca süren uzayacak.",
+    "videoAdded": "Video eklendi.",
+    "deleteVideoConfirm": "Bu video silinsin mi?",
+    "videoDeleted": "Video silindi.",
+    "notApplied": "Henüz başvurmadın. Formu doldurup gönder; onaylandıktan sonra kanalın sitede sponsor olarak görünür.",
+    "statusPending": "Başvurun admin onayı bekliyor.",
+    "statusRejected": "Başvurun reddedildi. Profilini düzeltip tekrar kaydedersen yeniden incelenir.",
+    "statusDuplicate": "Bu kanal daha önce başka bir hesapla kayıt oldu ve ücretsiz deneme hakkını kullandı. Tekrar ücretsiz deneme verilmez; yayına alınmak için ödeme yapman gerekir.",
+    "statusBlocked": "Yayıncı profilin engellendi. Site yöneticisiyle iletişime geç.",
+    "statusComplimentary": "Profilin yayında (ücretsiz).",
+    "statusLive": "Profilin yayında. Bitiş: {{date}}",
+    "statusExpired": "Süren doldu; profilin şu an görünmüyor. Ödeme yapıp bildirerek yeniden yayına alabilirsin.",
+    "profile": "Profil",
+    "application": "Başvuru",
+    "displayName": "Kanal / yayıncı adı",
+    "description": "Kısa açıklama",
+    "contentLanguages": "İçerik ürettiğin diller",
+    "linksHint": "En az bir kanal linki gerekli. Aynı kanalla ikinci bir hesaptan başvurulursa ücretsiz deneme verilmez ve başvuru engellenir.",
+    "save": "Kaydet",
+    "submitApplication": "Başvuruyu gönder",
+    "payment": "Ödeme",
+    "paymentHelp": "Aylık ücret {{price}}$. Aşağıdaki adreslerden birine bu tutarda kripto gönder, ardından işlem hash'ini (TX) bildir. Admin kontrol edince her ay için 30 gün eklenir.",
+    "noWallets": "Ödeme adresi henüz tanımlanmadı. Site yöneticisiyle iletişime geç.",
+    "copy": "Kopyala",
+    "coin": "Coin",
+    "network": "Ağ",
+    "amount": "Tutar",
+    "txHash": "İşlem hash (TX ID)",
+    "notifyPayment": "Ödemeyi bildir",
+    "date": "Tarih",
+    "status": "Durum",
+    "pending": "Bekliyor",
+    "paymentApproved": "Onaylandı (+{{months}} ay)",
+    "rejected": "Reddedildi",
+    "eventVideos": "Etkinlik videoları",
+    "eventVideosHelp": "Videoların (YouTube, Shorts, TikTok, Twitch, Kick vb.) ilgili Progression veya Puzzle event sayfasında, profilin yayındayken gösterilir. Ziyaretçi, sitenin dilindeki başlığı görür. Etkinlik başına en fazla 3 video.",
+    "eventType": "Etkinlik türü",
+    "event": "Etkinlik",
+    "videoUrl": "Video linki",
+    "addVideo": "Video ekle",
+    "delete": "Sil",
+    "coinNetwork": "Coin / ağ",
+    "otherCoin": "Diğer (elle gir)",
+    "logo": "Logo / profil resmi",
+    "uploadLogo": "Logo yükle",
+    "logoHint": "PNG, JPG, WEBP veya GIF, en fazla 1 MB. Logo seçmezsen kanal sayfandaki profil resmi otomatik alınır.",
+    "logoTooBig": "Logo en fazla 1 MB olabilir.",
+    "socialLogo": "Sosyal medyadan al",
+    "cancel": "Vazgeç",
+    "socialLogoNotFound": "Kanal sayfalarında profil resmi bulunamadı. Logonu dosya olarak yükleyebilirsin.",
+    "socialLogoNeedsLink": "Önce bir kanal linki gir.",
+    "logoPendingUpload": "Bu dosya kaydettiğinde yüklenecek.",
+    "logoPendingSocial": "Bu resim {{source}} sayfandan alındı; kaydettiğinde sunucumuza kaydedilecek.",
+    "cardPreview": "Sitede böyle görünecek",
+    "changesSent": "Değişikliklerin onaya gönderildi. Onaylanana kadar sitede eski bilgilerin görünür.",
+    "changesPending": "Profil değişikliklerin admin onayı bekliyor. Onaylanana kadar sitede eski bilgilerin görünür; bu sırada düzenlemeye devam edebilirsin.",
+    "editNeedsReview": "Profilinde yaptığın değişiklikler (isim, logo, linkler, açıklama, diller) yayına girmeden önce admin onayından geçer.",
+    "adminNote": "Yönetici notu",
+    "txHelpTitle": "TX (işlem hash) nedir, nereden bulurum?",
+    "txHelpWhat": "TX ya da TXID, gönderdiğin kripto transferinin blok zincirindeki benzersiz kimliğidir. Bununla ödemenin gerçekten bizim adresimize, doğru tutarda geldiğini kontrol ederiz.",
+    "txHelpExchange": "Borsadan gönderdiysen (Binance, OKX, Bybit vb.): Cüzdan → İşlem/Çekim geçmişi → ilgili çekim → \"TxID\" satırını kopyala.",
+    "txHelpWallet": "Cüzdan uygulamasından gönderdiysen (Trust Wallet, MetaMask vb.): işleme dokun → \"İşlem hash\" / \"Transaction ID\" değerini ya da gezgin (explorer) linkindeki uzun kodu kopyala.",
+    "txHelpInternal": "Borsa içi transfer (ör. Binance Pay, \"dahili transfer\") zincire yazılmaz ve TX vermez; ödemeyi mutlaka yukarıda seçtiğin ağ üzerinden çekim olarak gönder.",
+    "txHelpExample": "Örnek görünüm: 64 karakterlik harf ve rakamlardan oluşur, bazı ağlarda başında 0x vardır (0x3f9a…c21e). İşlem birkaç dakika içinde oluşmazsa biraz bekleyip tekrar bak.",
+    "searchEvent": "Etkinlik ara",
+    "searchEventPlaceholder": "Etkinlik adı...",
+    "noEventMatch": "Eşleşen etkinlik yok",
+    "fetchTitle": "Başlığı getir",
+    "fetching": "Getiriliyor...",
+    "titleNotFound": "Bu linkten başlık alınamadı; başlığı kendin yazabilirsin.",
+    "titleSameAll": "Platform başlığın çevirisini vermedi; tüm dillere aynı başlık yazıldı, istersen düzenle.",
+    "titleFetched": "Başlık platformdan alındı.",
+    "titleIn": "Başlık ({{lang}})",
+    "openOnPlatform": "Platformda aç",
+    "close": "Kapat",
+    "liveNow": "CANLI",
+    "liveOn": "{{platform}} üzerinde canlı",
+    "profileNotFound": "Yayıncı bulunamadı",
+    "profileNotFoundText": "Bu yayıncının profili şu an yayında değil.",
+    "allCreators": "Tüm yayıncılar",
+    "socialAccounts": "Sosyal medya hesapları",
+    "latestVideos": "Son videolar",
+    "openChannel": "Kanala git",
+    "eventVideosTitleProfile": "Etkinlik videoları",
+    "benefit": {
+      "calculator": {
+        "title": "Hesaplayıcının altında",
+        "text": "Kanalın, sitenin en çok kullanılan sayfasında sponsor kartıyla görünür."
+      },
+      "language": {
+        "title": "Doğru dilde öne çıkma",
+        "text": "İçerik dilin, ziyaretçinin site diliyle eşleşince kartın önce gösterilir."
+      },
+      "events": {
+        "title": "Etkinlik videoları",
+        "text": "Progression ve Puzzle event sayfalarına videolarını ekle; site içinde izlensin."
+      },
+      "live": {
+        "title": "Canlı yayın rozeti",
+        "text": "YouTube, Twitch, Kick veya TikTok’ta yayındayken kartında CANLI rozeti çıkar."
+      },
+      "profile": {
+        "title": "Profil sayfası",
+        "text": "Tüm hesapların, son YouTube videoların ve etkinlik videoların tek sayfada."
+      },
+      "socials": {
+        "title": "8 platform bağlantısı",
+        "text": "YouTube, Twitch, Kick, X, TikTok, Instagram, Telegram ve Discord logolarıyla."
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "Başvur",
+        "text": "Kanal bilgilerini, logonu ve içerik dillerini gir."
+      },
+      "approve": {
+        "title": "Onay ve deneme",
+        "text": "Başvurun onaylanınca ilk {{days}} gün ücretsiz yayına girersin."
+      },
+      "pay": {
+        "title": "Kripto ile devam et",
+        "text": "Ödemeyi gönderip işlem hash’ini (TX) bildir; her ay 30 gün eklenir."
+      }
+    },
+    "applySubtitle": "Rollercoin hakkında içerik üretiyorsan kanalını, videolarını ve canlı yayınlarını doğru kitleye ulaştır.",
+    "planName": "Yayıncı paketi",
+    "perMonth": "ay",
+    "trialBadge": "İlk {{days}} gün ücretsiz",
+    "planCrypto": "Kripto ile ödenir · USDT, BTC, ETH ve daha fazlası",
+    "viewProfile": "Profili gör",
+    "directoryEyebrow": "Topluluğun sesleri",
+    "searchCreator": "Yayıncı ara",
+    "searchCreatorPlaceholder": "Kanal veya yayıncı adı",
+    "platformFilter": "Platform",
+    "allLanguagesShort": "Tüm diller",
+    "noMatch": "Aramana uyan yayıncı yok.",
+    "cover": "Kapak (arka plan) görseli",
+    "uploadCover": "Kapak yükle",
+    "changeCover": "Kapağı değiştir",
+    "removeCover": "Kaldır",
+    "coverPending": "Bu görsel kaydettiğinde yüklenecek.",
+    "coverHint": "İsteğe bağlı. Yatay görsel önerilir (ör. 1200×400), en fazla 2 MB. Yüklemezsen kartında sitenin renklerinde bir degrade görünür.",
+    "coverTooBig": "Kapak görseli en fazla 2 MB olabilir."
   }
 }

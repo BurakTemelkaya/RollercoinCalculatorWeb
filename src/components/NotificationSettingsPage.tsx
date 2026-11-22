@@ -361,6 +361,8 @@ export default function NotificationSettingsPage() {
                                                 ? t('settings.energyRenewal', 'Power decrease alert')
                                             : pref.notificationType === 'RollerCoinToken'
                                                 ? t('settings.rollercoinToken', 'RollerCoin session alert (admin)')
+                                            : pref.notificationType === 'CreatorApplication'
+                                                ? t('settings.creatorApplication', 'Content creator applications (admin)')
                                                 : pref.notificationType}
                                     </h3>
                                     {pref.notificationType === 'Puzzle' && (
@@ -371,6 +373,11 @@ export default function NotificationSettingsPage() {
                                     {pref.notificationType === 'EnergyRenewal' && (
                                         <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
                                             {t('settings.energyRenewalDesc', 'Checked every 30 minutes. While your Rollercoin power keeps decreasing because your energy was not renewed, you get at most one alert per day, for up to 3 days. Requires your Rollercoin username above.')}
+                                        </p>
+                                    )}
+                                    {pref.notificationType === 'CreatorApplication' && (
+                                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
+                                            {t('settings.creatorApplicationDesc', 'Only admins see this. Sent when a content creator applies, reports a payment, or tries a second free trial with the same channel.')}
                                         </p>
                                     )}
                                     {pref.notificationType === 'RollerCoinToken' && (

@@ -7,6 +7,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { getCdnBaseUrl } from '../config/api';
 import type { ProgressionReward, RewardType } from '../types/progressionEvent';
 import { RewardTile } from './ProgressionEvent';
+import { EventCreatorVideos } from './creators/CreatorShared';
+import { VideoEventType } from '../services/contentCreatorApi';
 import './PuzzleEvent.css';
 
 /** Task types Rollercoin uses; each gets its own group. Anything new falls into "other". */
@@ -245,6 +247,8 @@ export default function PuzzleEvent() {
                     </div>
                 </section>
             </div>
+
+            <EventCreatorVideos eventType={VideoEventType.Puzzle} eventId={data.id} showEmpty />
         </div>
     );
 }

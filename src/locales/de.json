@@ -139,7 +139,8 @@
     "userPanel": "Benutzer-Panel",
     "myBlogs": "Meine Blogs",
     "notificationSettings": "Benachrichtigungseinstellungen",
-    "leaderboard": "Rangliste"
+    "leaderboard": "Rangliste",
+    "creators": "Creator"
   },
   "lpp": {
     "title": "Liga-Machtverteilung",
@@ -635,7 +636,9 @@
     "energyRenewal": "Warnung bei Leistungsabfall",
     "energyRenewalDesc": "Wird alle 30 Minuten geprüft. Solange deine Rollercoin-Leistung sinkt, weil deine Energie nicht erneuert wurde, erhältst du höchstens eine Warnung pro Tag, maximal 3 Tage lang. Erfordert oben deinen Rollercoin-Benutzernamen.",
     "puzzleEvent": "Puzzle Event",
-    "puzzleEventDesc": "Lass dich benachrichtigen, wenn ein neues Rollercoin Puzzle Event startet. Standardmäßig aus."
+    "puzzleEventDesc": "Lass dich benachrichtigen, wenn ein neues Rollercoin Puzzle Event startet. Standardmäßig aus.",
+    "creatorApplication": "Creator-Bewerbungen (Admin)",
+    "creatorApplicationDesc": "Nur für Admins sichtbar. Wird gesendet, wenn sich ein Content Creator bewirbt, eine Zahlung meldet oder mit demselben Kanal eine zweite kostenlose Testphase versucht."
   },
   "event": {
     "loading": "Eventdaten werden geladen...",
@@ -709,7 +712,8 @@
     "noDiscounts": "Keine aktiven Rabatte",
     "tokenDiscountGroup": "Token-Rabatte",
     "discountEndsIn": "Endet in: {{time}}",
-    "seoDescription": "{{name}} — Progression-Event-Belohnungen, Multiplikator-Rechner und Budgetplaner."
+    "seoDescription": "{{name}} — Progression-Event-Belohnungen, Multiplikator-Rechner und Budgetplaner.",
+    "videosTab": "Videos"
   },
   "pagination": {
     "previous": "Zurück",
@@ -1455,5 +1459,173 @@
     "close": "Schließen",
     "normalize": "Leerzeichen entfernen und in Kleinbuchstaben umwandeln",
     "stripSpecial": "In URLs unzulässige Sonderzeichen entfernen"
+  },
+  "creators": {
+    "myCreator": "Creator-Panel",
+    "centerTitle": "Content Creator",
+    "sponsoredEyebrow": "Sponsor-Creator",
+    "centerSubtitle": "Entdecke Rollercoin-Content-Creator und folge ihren Kanälen.",
+    "languages": "Inhaltssprachen",
+    "allLanguages": "Alle",
+    "noCreatorsYet": "Noch keine Creator online. Sei der Erste!",
+    "forCreators": "Für Content Creator",
+    "applyTitle": "Zeig deinen Kanal tausenden Rollercoin-Spielern",
+    "applyNow": "Bewerben",
+    "sponsorsTitle": "Content Creator der Community",
+    "viewAll": "Alle anzeigen",
+    "becomeCreator": "Creator werden",
+    "emptySponsors": "Möchtest du deinen Kanal hier vorstellen? Wenn du Rollercoin-Inhalte machst, bewirb dich.",
+    "eventVideosTitle": "Videos zu diesem Event",
+    "addYourVideo": "Dein Video hinzufügen",
+    "noEventVideos": "Noch keine Videos zu diesem Event. Als Creator kannst du deins im Panel hinzufügen.",
+    "duplicateBlocked": "Dieser Kanal wurde bereits mit einem anderen Konto registriert. Es gibt keine kostenlose Testphase; deine Bewerbung wurde gesperrt und der Admin benachrichtigt.",
+    "saved": "Dein Profil wurde gespeichert.",
+    "applied": "Bewerbung erhalten. Sie geht nach der Freigabe durch den Admin online.",
+    "paymentSent": "Zahlungsmeldung erhalten. Deine Laufzeit wird verlängert, sobald der Admin sie prüft.",
+    "videoAdded": "Video hinzugefügt.",
+    "deleteVideoConfirm": "Dieses Video löschen?",
+    "videoDeleted": "Video gelöscht.",
+    "notApplied": "Du hast dich noch nicht beworben. Fülle das Formular aus; nach der Freigabe erscheint dein Kanal als Sponsor auf der Seite.",
+    "statusPending": "Deine Bewerbung wartet auf die Freigabe durch den Admin.",
+    "statusRejected": "Deine Bewerbung wurde abgelehnt. Korrigiere dein Profil und speichere es erneut, um es erneut prüfen zu lassen.",
+    "statusDuplicate": "Dieser Kanal wurde bereits mit einem anderen Konto registriert und hat seine kostenlose Testphase genutzt. Eine zweite gibt es nicht; um online zu gehen, musst du bezahlen.",
+    "statusBlocked": "Dein Creator-Profil ist gesperrt. Kontaktiere den Admin der Seite.",
+    "statusComplimentary": "Dein Profil ist online (kostenlos).",
+    "statusLive": "Dein Profil ist online. Endet: {{date}}",
+    "statusExpired": "Deine Laufzeit ist abgelaufen und dein Profil ist ausgeblendet. Bezahle und melde es, um wieder online zu gehen.",
+    "profile": "Profil",
+    "application": "Bewerbung",
+    "displayName": "Kanal- / Creator-Name",
+    "description": "Kurzbeschreibung",
+    "contentLanguages": "Sprachen deiner Inhalte",
+    "linksHint": "Mindestens ein Kanallink ist erforderlich. Bewirbt sich derselbe Kanal von einem zweiten Konto, gibt es keine Testphase und die Bewerbung wird gesperrt.",
+    "save": "Speichern",
+    "submitApplication": "Bewerbung absenden",
+    "payment": "Zahlung",
+    "paymentHelp": "Die Monatsgebühr beträgt ${{price}}. Sende diesen Betrag in Krypto an eine der Adressen unten und melde dann den Transaktions-Hash (TX). Jeder bestätigte Monat fügt 30 Tage hinzu.",
+    "noWallets": "Es wurde noch keine Zahlungsadresse festgelegt. Kontaktiere den Admin der Seite.",
+    "copy": "Kopieren",
+    "coin": "Coin",
+    "network": "Netzwerk",
+    "amount": "Betrag",
+    "txHash": "Transaktions-Hash (TX ID)",
+    "notifyPayment": "Zahlung melden",
+    "date": "Datum",
+    "status": "Status",
+    "pending": "Ausstehend",
+    "paymentApproved": "Bestätigt (+{{months}} Monate)",
+    "rejected": "Abgelehnt",
+    "eventVideos": "Event-Videos",
+    "eventVideosHelp": "Deine Videos (YouTube, Shorts, TikTok, Twitch, Kick usw.) werden auf der passenden Progression- oder Puzzle-Event-Seite angezeigt, solange dein Profil online ist. Besucher sehen den Titel in der Sprache der Seite. Bis zu 3 Videos pro Event.",
+    "eventType": "Event-Typ",
+    "event": "Event",
+    "videoUrl": "Video-Link",
+    "addVideo": "Video hinzufügen",
+    "delete": "Löschen",
+    "coinNetwork": "Coin / Netzwerk",
+    "otherCoin": "Andere (selbst eingeben)",
+    "logo": "Logo / Profilbild",
+    "uploadLogo": "Logo hochladen",
+    "logoHint": "PNG, JPG, WEBP oder GIF, bis 1 MB. Wählst du kein Logo, wird dein Kanal-Profilbild automatisch verwendet.",
+    "logoTooBig": "Das Logo darf höchstens 1 MB groß sein.",
+    "socialLogo": "Aus Social Media holen",
+    "cancel": "Abbrechen",
+    "socialLogoNotFound": "Auf deinen Kanalseiten wurde kein Profilbild gefunden. Du kannst dein Logo als Datei hochladen.",
+    "socialLogoNeedsLink": "Gib zuerst einen Kanallink ein.",
+    "logoPendingUpload": "Diese Datei wird beim Speichern hochgeladen.",
+    "logoPendingSocial": "Dieses Bild stammt von {{source}}; es wird beim Speichern auf unserem Server gespeichert.",
+    "cardPreview": "So sieht es auf der Seite aus",
+    "changesSent": "Deine Änderungen wurden zur Prüfung gesendet. Bis zur Freigabe bleiben deine alten Angaben auf der Seite.",
+    "changesPending": "Deine Profiländerungen warten auf die Freigabe durch den Admin. Bis dahin bleiben deine alten Angaben auf der Seite; du kannst weiter bearbeiten.",
+    "editNeedsReview": "Änderungen an deinem Profil (Name, Logo, Links, Beschreibung, Sprachen) gehen erst nach Freigabe durch den Admin online.",
+    "adminNote": "Hinweis vom Admin",
+    "txHelpTitle": "Was ist ein TX (Transaktions-Hash) und wo finde ich ihn?",
+    "txHelpWhat": "Ein TX oder TXID ist die eindeutige ID deiner Krypto-Überweisung auf der Blockchain. Damit prüfen wir, dass die Zahlung wirklich mit dem richtigen Betrag an unserer Adresse angekommen ist.",
+    "txHelpExchange": "Von einer Börse gesendet (Binance, OKX, Bybit usw.): Wallet → Transaktions-/Auszahlungsverlauf → die Auszahlung → die Zeile „TxID“ kopieren.",
+    "txHelpWallet": "Aus einer Wallet-App gesendet (Trust Wallet, MetaMask usw.): Transaktion antippen → „Transaktions-Hash“ / „Transaction ID“ oder den langen Code im Explorer-Link kopieren.",
+    "txHelpInternal": "Interne Börsenüberweisungen (z. B. Binance Pay, „interne Überweisung“) werden nicht in die Blockchain geschrieben und haben keinen TX; sende die Zahlung als Auszahlung über das oben gewählte Netzwerk.",
+    "txHelpExample": "Er besteht meist aus 64 Buchstaben und Ziffern, in manchen Netzwerken mit 0x am Anfang (0x3f9a…c21e). Wenn er nach ein paar Minuten nicht erscheint, warte kurz und schau erneut.",
+    "searchEvent": "Event suchen",
+    "searchEventPlaceholder": "Event-Name...",
+    "noEventMatch": "Kein passendes Event",
+    "fetchTitle": "Titel holen",
+    "fetching": "Wird geholt...",
+    "titleNotFound": "Aus diesem Link konnte kein Titel geholt werden; du kannst ihn selbst eingeben.",
+    "titleSameAll": "Die Plattform liefert keinen übersetzten Titel; derselbe Titel wurde für alle Sprachen eingetragen, bearbeite ihn bei Bedarf.",
+    "titleFetched": "Titel von der Plattform geholt.",
+    "titleIn": "Titel ({{lang}})",
+    "openOnPlatform": "Auf der Plattform öffnen",
+    "close": "Schließen",
+    "liveNow": "LIVE",
+    "liveOn": "Live auf {{platform}}",
+    "profileNotFound": "Creator nicht gefunden",
+    "profileNotFoundText": "Das Profil dieses Creators ist gerade nicht online.",
+    "allCreators": "Alle Creator",
+    "socialAccounts": "Social-Media-Konten",
+    "latestVideos": "Neueste Videos",
+    "openChannel": "Kanal öffnen",
+    "eventVideosTitleProfile": "Event-Videos",
+    "benefit": {
+      "calculator": {
+        "title": "Unter dem Rechner",
+        "text": "Dein Kanal erscheint als Sponsor-Karte auf der meistgenutzten Seite der Website."
+      },
+      "language": {
+        "title": "Hervorgehoben in deiner Sprache",
+        "text": "Stimmt deine Inhaltssprache mit der Seitensprache des Besuchers überein, wird deine Karte zuerst gezeigt."
+      },
+      "events": {
+        "title": "Event-Videos",
+        "text": "Füge deine Videos zu Progression- und Puzzle-Event-Seiten hinzu; sie laufen direkt auf der Seite."
+      },
+      "live": {
+        "title": "Live-Abzeichen",
+        "text": "Während du auf YouTube, Twitch, Kick oder TikTok streamst, zeigt deine Karte ein LIVE-Abzeichen."
+      },
+      "profile": {
+        "title": "Profilseite",
+        "text": "Alle deine Konten, neuesten YouTube-Videos und Event-Videos auf einer Seite."
+      },
+      "socials": {
+        "title": "8 Plattform-Links",
+        "text": "YouTube, Twitch, Kick, X, TikTok, Instagram, Telegram und Discord, mit ihren Logos."
+      }
+    },
+    "step": {
+      "apply": {
+        "title": "Bewerben",
+        "text": "Gib deine Kanaldaten, dein Logo und deine Inhaltssprachen ein."
+      },
+      "approve": {
+        "title": "Freigabe und Testphase",
+        "text": "Nach der Freigabe bist du die ersten {{days}} Tage kostenlos online."
+      },
+      "pay": {
+        "title": "Mit Krypto weitermachen",
+        "text": "Sende die Zahlung und melde den Transaktions-Hash (TX); jeder Monat fügt 30 Tage hinzu."
+      }
+    },
+    "applySubtitle": "Wenn du Rollercoin-Inhalte machst, bring deinen Kanal, deine Videos und Livestreams zum richtigen Publikum.",
+    "planName": "Creator-Paket",
+    "perMonth": "Monat",
+    "trialBadge": "Erste {{days}} Tage kostenlos",
+    "planCrypto": "Zahlung in Krypto · USDT, BTC, ETH und mehr",
+    "viewProfile": "Profil ansehen",
+    "directoryEyebrow": "Stimmen der Community",
+    "searchCreator": "Creator suchen",
+    "searchCreatorPlaceholder": "Kanal- oder Creator-Name",
+    "platformFilter": "Plattform",
+    "allLanguagesShort": "Alle Sprachen",
+    "noMatch": "Kein Creator passt zu deiner Suche.",
+    "cover": "Titelbild (Hintergrund)",
+    "uploadCover": "Titelbild hochladen",
+    "changeCover": "Titelbild ändern",
+    "removeCover": "Entfernen",
+    "coverPending": "Dieses Bild wird beim Speichern hochgeladen.",
+    "coverHint": "Optional. Ein breites Bild eignet sich am besten (z. B. 1200×400), bis 2 MB. Ohne Bild zeigt deine Karte einen Farbverlauf in den Farben der Seite.",
+    "coverTooBig": "Das Titelbild darf höchstens 2 MB groß sein."
+  },
+  "admin": {
+    "manageCreators": "Creator"
   }
 }

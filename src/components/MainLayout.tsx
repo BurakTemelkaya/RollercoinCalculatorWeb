@@ -277,6 +277,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <Link to={`/${i18n.language}/events?type=puzzle`} className="nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
             <Link to={`/${i18n.language}/events`} className="nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
             <Link to={`/${i18n.language}/leaderboard`} className="nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
+            <Link to={`/${i18n.language}/creators`} className="nav-link">{NAV_ICONS.creators} {t('nav.creators', 'Yayıncılar')}</Link>
             <Link to={`/${i18n.language}/charts`} className="nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
           </div>
             {/* Shown only on the side with hidden links (CSS reads the fade flags); keyboard users tab through the links instead */}
@@ -358,6 +359,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events?type=puzzle`} className="mobile-nav-link">{NAV_ICONS.puzzle} {t('puzzle.nav')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/events`} className="mobile-nav-link">{NAV_ICONS.events} {t('nav.events')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/leaderboard`} className="mobile-nav-link">{NAV_ICONS.leaderboard} {t('nav.leaderboard', 'Leaderboard')}</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/creators`} className="mobile-nav-link">{NAV_ICONS.creators} {t('nav.creators', 'Yayıncılar')}</Link>
             <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/charts`} className="mobile-nav-link">{NAV_ICONS.charts} {t('nav.charts')}</Link>
             <div className="mobile-auth-divider" />
             {isAuthenticated ? (

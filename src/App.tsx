@@ -90,6 +90,11 @@ const NotificationSettingsPage = lazyWithRetry(() => import('./components/Notifi
 const RewardChangeModal = lazyWithRetry(() => import('./components/RewardChangeModal'));
 const UnsubscribePage = lazyWithRetry(() => import('./components/UnsubscribePage'));
 const LeaderboardPage = lazyWithRetry(() => import('./components/LeaderboardPage'));
+const CreatorCenterPage = lazyWithRetry(() => import('./components/creators/CreatorCenterPage'));
+const CreatorProfilePage = lazyWithRetry(() => import('./components/creators/CreatorProfilePage'));
+const MyCreatorPage = lazyWithRetry(() => import('./components/creators/MyCreatorPage'));
+const AdminCreatorList = lazyWithRetry(() => import('./components/admin/AdminCreatorList'));
+const CreatorSponsors = lazyWithRetry(() => import('./components/creators/CreatorShared').then(m => ({ default: m.CreatorSponsors })));
 
 import SeoArticle from './components/SeoArticle';
 import MainLayout from './components/MainLayout';
@@ -1174,6 +1179,7 @@ function CalculatorArea({ isEventPage = false }: { isEventPage?: boolean }) {
               </div>
             </div>
 
+            <React.Suspense fallback={null}><CreatorSponsors /></React.Suspense>
 
             <SeoArticle />
           </>
@@ -1230,6 +1236,8 @@ function App() {
           <Route path="/:lang/support" element={<React.Suspense fallback={null}><SupportPage /></React.Suspense>} />
           <Route path="/:lang/charts" element={<React.Suspense fallback={null}><LeagueChart /></React.Suspense>} />
           <Route path="/:lang/leaderboard" element={<React.Suspense fallback={null}><LeaderboardPage /></React.Suspense>} />
+          <Route path="/:lang/creators" element={<React.Suspense fallback={null}><CreatorCenterPage /></React.Suspense>} />
+          <Route path="/:lang/creators/:creatorId" element={<React.Suspense fallback={null}><CreatorProfilePage /></React.Suspense>} />
           <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
           <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />
@@ -1248,6 +1256,7 @@ function App() {
         {/* Dashboard Routes without MainLayout */}
         <Route path="/:lang/change-password" element={<React.Suspense fallback={null}><ProtectedRoute><ChangePasswordPage /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/notification-settings" element={<React.Suspense fallback={null}><ProtectedRoute><NotificationSettingsPage /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/my-creator" element={<React.Suspense fallback={null}><ProtectedRoute><MyCreatorPage /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/my-blogs" element={<React.Suspense fallback={null}><ProtectedRoute><UserBlogList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/my-blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/my-blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute><BlogEditor /></ProtectedRoute></React.Suspense>} />
@@ -1257,6 +1266,7 @@ function App() {
         <Route path="/:lang/admin/comments" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCommentList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/reviews" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminReviewList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/rollercoin-account" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminRollercoinToken /></ProtectedRoute></React.Suspense>} />
+        <Route path="/:lang/admin/creators" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminCreatorList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/users" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><AdminUserList /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/blogs/new" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
         <Route path="/:lang/admin/blogs/edit/:slug" element={<React.Suspense fallback={null}><ProtectedRoute requireAdmin={true}><BlogEditor /></ProtectedRoute></React.Suspense>} />
