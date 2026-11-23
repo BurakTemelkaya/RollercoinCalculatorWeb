@@ -140,7 +140,10 @@
     "myBlogs": "Meine Blogs",
     "notificationSettings": "Benachrichtigungseinstellungen",
     "leaderboard": "Rangliste",
-    "creators": "Creator"
+    "creators": "Creator",
+    "achievements": "Erfolge",
+    "progressionEvent": "Progression-Event",
+    "puzzleEvent": "Puzzle-Event"
   },
   "lpp": {
     "title": "Liga-Machtverteilung",
@@ -1627,5 +1630,38 @@
   },
   "admin": {
     "manageCreators": "Creator"
+  },
+  "achievements": {
+    "title": "RollerCoin-Erfolge",
+    "description": "Alle RollerCoin-Erfolge mit jeder Stufe, jedem Ziel und jeder Belohnung: RST, RLT, Batterien und Merge-Miner. Suchen, filtern und sortieren.",
+    "statAchievements": "Erfolge",
+    "statLevels": "Stufen",
+    "statTotal": "gesamt {{currency}}",
+    "statMiners": "Miner-Belohnungen",
+    "search": "Suche",
+    "searchPlaceholder": "Erfolg oder Miner suchen...",
+    "reward": "Belohnung",
+    "allRewards": "Alle Belohnungen",
+    "miner": "Miner",
+    "battery": "Batterie",
+    "sort": "Sortieren",
+    "sort_order": "Spielreihenfolge",
+    "sort_name": "Name A–Z",
+    "sort_rst": "Meiste RST",
+    "sort_rlt": "Meiste RLT",
+    "sort_miner": "Stärkster Miner",
+    "category": "Kategorie",
+    "results": "Ergebnisse",
+    "empty": "Keine Erfolge passen zu deinen Filtern.",
+    "cat_all": "Alle",
+    "cat_hamsters": "Hamster",
+    "cat_quests": "Quests",
+    "cat_crypto_exchange": "Krypto-Börse",
+    "cat_games": "Spiele",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Miner",
+    "cat_crafting": "Crafting",
+    "cat_currency": "Währung",
+    "viewMerge": "Alle Merge-Stufen ansehen"
   }
 }

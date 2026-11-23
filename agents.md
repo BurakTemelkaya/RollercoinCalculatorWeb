@@ -45,4 +45,7 @@ Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zek
 9. **[İçerik Üreticileri (Sponsor Yayıncılar)](file:///.agents/ContentCreators.md)**
    - Başvuru, ücretsiz deneme, kripto ödeme onayı, tekrar deneme engeli, event videoları
 
+10. **[Achievements (Başarımlar)](file:///.agents/Achievements.md)**
+   - Statik başarım verisi, JSON formatı ve Rollercoin'den yenileme adımları
+
 Yapay zeka asistanları bu index dosyasını kullanarak projenin ilgili bölümleri hakkında daha hızlı ve spesifik bilgi edinebilir.

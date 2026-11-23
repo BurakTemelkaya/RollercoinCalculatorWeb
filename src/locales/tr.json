@@ -140,7 +140,10 @@
     "myBlogs": "Bloglarım",
     "notificationSettings": "Bildirim Ayarları",
     "leaderboard": "Sıralama",
-    "creators": "Yayıncılar"
+    "creators": "Yayıncılar",
+    "achievements": "Başarımlar",
+    "progressionEvent": "Progression Event",
+    "puzzleEvent": "Puzzle Event"
   },
   "hamsters": {
     "title": "Hamsterlar",
@@ -1672,5 +1675,38 @@
     "coverPending": "Bu görsel kaydettiğinde yüklenecek.",
     "coverHint": "İsteğe bağlı. Yatay görsel önerilir (ör. 1200×400), en fazla 2 MB. Yüklemezsen kartında sitenin renklerinde bir degrade görünür.",
     "coverTooBig": "Kapak görseli en fazla 2 MB olabilir."
+  },
+  "achievements": {
+    "title": "RollerCoin Başarımları",
+    "description": "Tüm RollerCoin başarımları; her seviye, hedef ve ödülüyle: RST, RLT, batarya ve merge minerlar. Ara, filtrele ve sırala.",
+    "statAchievements": "başarım",
+    "statLevels": "seviye",
+    "statTotal": "toplam {{currency}}",
+    "statMiners": "miner ödülü",
+    "search": "Ara",
+    "searchPlaceholder": "Başarım veya miner ara...",
+    "reward": "Ödül",
+    "allRewards": "Tüm ödüller",
+    "miner": "Miner",
+    "battery": "Batarya",
+    "sort": "Sırala",
+    "sort_order": "Oyun sırası",
+    "sort_name": "Ada göre A–Z",
+    "sort_rst": "En çok RST",
+    "sort_rlt": "En çok RLT",
+    "sort_miner": "En güçlü miner",
+    "category": "Kategori",
+    "results": "sonuç",
+    "empty": "Filtrelere uyan başarım yok.",
+    "cat_all": "Tümü",
+    "cat_hamsters": "Hamsterlar",
+    "cat_quests": "Görevler",
+    "cat_crypto_exchange": "Kripto Takas",
+    "cat_games": "Oyunlar",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Minerlar",
+    "cat_crafting": "Crafting",
+    "cat_currency": "Para",
+    "viewMerge": "Tüm merge seviyelerini gör"
   }
 }

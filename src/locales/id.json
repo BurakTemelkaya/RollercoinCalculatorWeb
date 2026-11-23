@@ -140,7 +140,10 @@
     "myBlogs": "Blog Saya",
     "notificationSettings": "Pengaturan Notifikasi",
     "leaderboard": "Papan Peringkat",
-    "creators": "Kreator"
+    "creators": "Kreator",
+    "achievements": "Pencapaian",
+    "progressionEvent": "Event Progression",
+    "puzzleEvent": "Event Puzzle"
   },
   "lpp": {
     "title": "Pembagian Kekuatan Liga",
@@ -1586,5 +1589,38 @@
     "coverPending": "Gambar ini diunggah saat kamu menyimpan.",
     "coverHint": "Opsional. Gambar lebar paling cocok (mis. 1200×400), maks. 2 MB. Tanpa sampul, kartumu menampilkan gradasi warna situs.",
     "coverTooBig": "Gambar sampul maksimal 2 MB."
+  },
+  "achievements": {
+    "title": "Pencapaian RollerCoin",
+    "description": "Semua pencapaian RollerCoin dengan setiap level, target, dan hadiah: RST, RLT, baterai, dan miner merge. Cari, saring, dan urutkan.",
+    "statAchievements": "pencapaian",
+    "statLevels": "level",
+    "statTotal": "total {{currency}}",
+    "statMiners": "hadiah miner",
+    "search": "Cari",
+    "searchPlaceholder": "Cari pencapaian atau miner...",
+    "reward": "Hadiah",
+    "allRewards": "Semua hadiah",
+    "miner": "Miner",
+    "battery": "Baterai",
+    "sort": "Urutkan",
+    "sort_order": "Urutan game",
+    "sort_name": "Nama A–Z",
+    "sort_rst": "RST terbanyak",
+    "sort_rlt": "RLT terbanyak",
+    "sort_miner": "Miner terkuat",
+    "category": "Kategori",
+    "results": "hasil",
+    "empty": "Tidak ada pencapaian yang cocok dengan filter.",
+    "cat_all": "Semua",
+    "cat_hamsters": "Hamster",
+    "cat_quests": "Misi",
+    "cat_crypto_exchange": "Bursa Kripto",
+    "cat_games": "Game",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Miner",
+    "cat_crafting": "Crafting",
+    "cat_currency": "Mata uang",
+    "viewMerge": "Lihat semua level merge"
   }
 }

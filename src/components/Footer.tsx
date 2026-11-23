@@ -60,6 +60,8 @@ export default function Footer() {
         <div className="footer-links">
           <Link to={`/${lang}/about`}>{t('pages.about.title')}</Link>
           <span className="separator">·</span>
+          <Link to={`/${lang}/faq`}>{t('nav.faq')}</Link>
+          <span className="separator">·</span>
           <Link to={`/${lang}/privacy`}>{t('pages.privacy.title')}</Link>
         </div>
 

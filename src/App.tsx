@@ -82,6 +82,7 @@ const MergePage = lazyWithRetry(() => import('./components/MergePage'));
 const HamstersPage = lazyWithRetry(() => import('./components/HamstersPage'));
 const HamsterExpeditionsPage = lazyWithRetry(() => import('./components/HamsterExpeditionsPage'));
 const HamsterSetsPage = lazyWithRetry(() => import('./components/HamsterSetsPage'));
+const AchievementsPage = lazyWithRetry(() => import('./components/AchievementsPage'));
 const MergeMinerLevelsPage = lazyWithRetry(() => import('./components/MergeMinerLevelsPage'));
 const DailyBonusQuestHistory = lazyWithRetry(() => import('./components/DailyBonusQuestHistory'));
 const ProtectedRoute = lazyWithRetry(() => import('./components/auth/ProtectedRoute'));
@@ -1232,6 +1233,7 @@ function App() {
           <Route path="/:lang/leaderboard" element={<React.Suspense fallback={null}><LeaderboardPage /></React.Suspense>} />
           <Route path="/:lang/creators" element={<React.Suspense fallback={null}><CreatorCenterPage /></React.Suspense>} />
           <Route path="/:lang/creators/:creatorId" element={<React.Suspense fallback={null}><CreatorProfilePage /></React.Suspense>} />
+          <Route path="/:lang/achievements" element={<React.Suspense fallback={null}><AchievementsPage /></React.Suspense>} />
           <Route path="/:lang/merges" element={<React.Suspense fallback={null}><MergePage /></React.Suspense>} />
           <Route path="/:lang/hamsters" element={<React.Suspense fallback={null}><HamstersPage /></React.Suspense>} />
           <Route path="/:lang/hamsters/expeditions" element={<React.Suspense fallback={null}><HamsterExpeditionsPage /></React.Suspense>} />

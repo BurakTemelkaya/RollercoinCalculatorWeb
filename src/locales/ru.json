@@ -140,7 +140,10 @@
     "myBlogs": "Мои Блоги",
     "notificationSettings": "Настройки уведомлений",
     "leaderboard": "Рейтинг",
-    "creators": "Авторы"
+    "creators": "Авторы",
+    "achievements": "Достижения",
+    "progressionEvent": "Прогрессивный ивент",
+    "puzzleEvent": "Пазл-ивент"
   },
   "lpp": {
     "title": "Распределение мощности лиги",
@@ -1586,5 +1589,38 @@
     "coverPending": "Это изображение загрузится при сохранении.",
     "coverHint": "Необязательно. Лучше всего подходит широкое изображение (например, 1200×400), до 2 МБ. Без обложки на карточке будет градиент в цветах сайта.",
     "coverTooBig": "Обложка должна быть не больше 2 МБ."
+  },
+  "achievements": {
+    "title": "Достижения RollerCoin",
+    "description": "Все достижения RollerCoin с каждым уровнем, целью и наградой: RST, RLT, батареи и merge-майнеры. Поиск, фильтры и сортировка.",
+    "statAchievements": "достижений",
+    "statLevels": "уровней",
+    "statTotal": "всего {{currency}}",
+    "statMiners": "майнеров в наградах",
+    "search": "Поиск",
+    "searchPlaceholder": "Найти достижение или майнер...",
+    "reward": "Награда",
+    "allRewards": "Все награды",
+    "miner": "Майнер",
+    "battery": "Батарея",
+    "sort": "Сортировка",
+    "sort_order": "Порядок в игре",
+    "sort_name": "Название А–Я",
+    "sort_rst": "Больше RST",
+    "sort_rlt": "Больше RLT",
+    "sort_miner": "Самый мощный майнер",
+    "category": "Категория",
+    "results": "результатов",
+    "empty": "Нет достижений по выбранным фильтрам.",
+    "cat_all": "Все",
+    "cat_hamsters": "Хомяки",
+    "cat_quests": "Задания",
+    "cat_crypto_exchange": "Криптообмен",
+    "cat_games": "Игры",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Майнеры",
+    "cat_crafting": "Крафт",
+    "cat_currency": "Валюта",
+    "viewMerge": "Все уровни merge"
   }
 }

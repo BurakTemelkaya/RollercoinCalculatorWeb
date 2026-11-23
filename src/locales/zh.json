@@ -140,7 +140,10 @@
     "myBlogs": "我的博客",
     "notificationSettings": "通知设置",
     "leaderboard": "排行榜",
-    "creators": "创作者"
+    "creators": "创作者",
+    "achievements": "成就",
+    "progressionEvent": "进度活动",
+    "puzzleEvent": "拼图活动"
   },
   "lpp": {
     "title": "联赛算力分配",
@@ -1586,5 +1589,38 @@
     "coverPending": "保存时将上传此图片。",
     "coverHint": "可选。宽幅图片效果最佳（例如 1200×400），最大 2 MB。不上传时，卡片会显示网站配色的渐变。",
     "coverTooBig": "封面图最大为 2 MB。"
+  },
+  "achievements": {
+    "title": "RollerCoin 成就",
+    "description": "所有 RollerCoin 成就及每个等级的目标和奖励：RST、RLT、电池和合成矿机。可搜索、筛选和排序。",
+    "statAchievements": "个成就",
+    "statLevels": "个等级",
+    "statTotal": "{{currency}} 总计",
+    "statMiners": "个矿机奖励",
+    "search": "搜索",
+    "searchPlaceholder": "搜索成就或矿机...",
+    "reward": "奖励",
+    "allRewards": "全部奖励",
+    "miner": "矿机",
+    "battery": "电池",
+    "sort": "排序",
+    "sort_order": "游戏顺序",
+    "sort_name": "名称 A–Z",
+    "sort_rst": "RST 最多",
+    "sort_rlt": "RLT 最多",
+    "sort_miner": "最强矿机",
+    "category": "类别",
+    "results": "个结果",
+    "empty": "没有符合筛选条件的成就。",
+    "cat_all": "全部",
+    "cat_hamsters": "仓鼠",
+    "cat_quests": "任务",
+    "cat_crypto_exchange": "加密兑换",
+    "cat_games": "游戏",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "矿机",
+    "cat_crafting": "制作",
+    "cat_currency": "货币",
+    "viewMerge": "查看所有合成等级"
   }
 }

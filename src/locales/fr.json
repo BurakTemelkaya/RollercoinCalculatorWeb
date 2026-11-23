@@ -140,7 +140,10 @@
     "myBlogs": "Mes Blogs",
     "notificationSettings": "Paramètres de notification",
     "leaderboard": "Classement",
-    "creators": "Créateurs"
+    "creators": "Créateurs",
+    "achievements": "Succès",
+    "progressionEvent": "Événement de progression",
+    "puzzleEvent": "Événement puzzle"
   },
   "lpp": {
     "title": "Répartition de la Puissance",
@@ -1564,5 +1567,38 @@
     "coverPending": "Cette image sera importée à l’enregistrement.",
     "coverHint": "Facultatif. Une image large convient le mieux (ex. 1200×400), 2 Mo max. Sans image, ta carte affiche un dégradé aux couleurs du site.",
     "coverTooBig": "L’image de couverture ne peut pas dépasser 2 Mo."
+  },
+  "achievements": {
+    "title": "Succès RollerCoin",
+    "description": "Tous les succès RollerCoin avec chaque niveau, objectif et récompense : RST, RLT, batteries et mineurs fusionnés. Recherchez, filtrez et triez.",
+    "statAchievements": "succès",
+    "statLevels": "niveaux",
+    "statTotal": "total {{currency}}",
+    "statMiners": "mineurs en récompense",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher un succès ou un mineur...",
+    "reward": "Récompense",
+    "allRewards": "Toutes les récompenses",
+    "miner": "Mineur",
+    "battery": "Batterie",
+    "sort": "Trier",
+    "sort_order": "Ordre du jeu",
+    "sort_name": "Nom A–Z",
+    "sort_rst": "Plus de RST",
+    "sort_rlt": "Plus de RLT",
+    "sort_miner": "Mineur le plus puissant",
+    "category": "Catégorie",
+    "results": "résultats",
+    "empty": "Aucun succès ne correspond à vos filtres.",
+    "cat_all": "Tous",
+    "cat_hamsters": "Hamsters",
+    "cat_quests": "Quêtes",
+    "cat_crypto_exchange": "Échange crypto",
+    "cat_games": "Jeux",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Mineurs",
+    "cat_crafting": "Fabrication",
+    "cat_currency": "Devise",
+    "viewMerge": "Voir tous les niveaux de fusion"
   }
 }

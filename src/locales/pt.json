@@ -140,7 +140,10 @@
     "myBlogs": "Meus Blogs",
     "notificationSettings": "Configurações de Notificação",
     "leaderboard": "Ranking",
-    "creators": "Criadores"
+    "creators": "Criadores",
+    "achievements": "Conquistas",
+    "progressionEvent": "Evento de progressão",
+    "puzzleEvent": "Evento puzzle"
   },
   "lpp": {
     "title": "Divisão de Poder da Liga",
@@ -1586,5 +1589,38 @@
     "coverPending": "Esta imagem será enviada ao salvar.",
     "coverHint": "Opcional. Uma imagem larga funciona melhor (ex.: 1200×400), até 2 MB. Sem ela, seu cartão mostra um degradê nas cores do site.",
     "coverTooBig": "A imagem de capa pode ter no máximo 2 MB."
+  },
+  "achievements": {
+    "title": "Conquistas do RollerCoin",
+    "description": "Todas as conquistas do RollerCoin com cada nível, meta e recompensa: RST, RLT, baterias e mineradores merge. Pesquise, filtre e ordene.",
+    "statAchievements": "conquistas",
+    "statLevels": "níveis",
+    "statTotal": "total {{currency}}",
+    "statMiners": "mineradores de recompensa",
+    "search": "Pesquisar",
+    "searchPlaceholder": "Pesquisar conquista ou minerador...",
+    "reward": "Recompensa",
+    "allRewards": "Todas as recompensas",
+    "miner": "Minerador",
+    "battery": "Bateria",
+    "sort": "Ordenar",
+    "sort_order": "Ordem do jogo",
+    "sort_name": "Nome A–Z",
+    "sort_rst": "Mais RST",
+    "sort_rlt": "Mais RLT",
+    "sort_miner": "Minerador mais forte",
+    "category": "Categoria",
+    "results": "resultados",
+    "empty": "Nenhuma conquista corresponde aos filtros.",
+    "cat_all": "Todas",
+    "cat_hamsters": "Hamsters",
+    "cat_quests": "Missões",
+    "cat_crypto_exchange": "Troca cripto",
+    "cat_games": "Jogos",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Mineradores",
+    "cat_crafting": "Fabricação",
+    "cat_currency": "Moeda",
+    "viewMerge": "Ver todos os níveis de merge"
   }
 }

@@ -140,7 +140,10 @@
     "myBlogs": "My Blogs",
     "notificationSettings": "Notification Settings",
     "leaderboard": "Leaderboard",
-    "creators": "Creators"
+    "creators": "Creators",
+    "achievements": "Achievements",
+    "progressionEvent": "Progression Event",
+    "puzzleEvent": "Puzzle Event"
   },
   "hamsters": {
     "title": "Hamsters",
@@ -1671,5 +1674,38 @@
     "coverPending": "This image is uploaded when you save.",
     "coverHint": "Optional. A wide image works best (e.g. 1200×400), up to 2 MB. Without one, your card shows a gradient in the site colours.",
     "coverTooBig": "The cover image can be at most 2 MB."
+  },
+  "achievements": {
+    "title": "RollerCoin Achievements",
+    "description": "All RollerCoin achievements with every level, goal and reward: RST, RLT, batteries and merge miners. Search, filter and sort.",
+    "statAchievements": "achievements",
+    "statLevels": "levels",
+    "statTotal": "total {{currency}}",
+    "statMiners": "miner rewards",
+    "search": "Search",
+    "searchPlaceholder": "Search achievement or miner...",
+    "reward": "Reward",
+    "allRewards": "All rewards",
+    "miner": "Miner",
+    "battery": "Battery",
+    "sort": "Sort",
+    "sort_order": "Game order",
+    "sort_name": "Name A–Z",
+    "sort_rst": "Most RST",
+    "sort_rlt": "Most RLT",
+    "sort_miner": "Strongest miner",
+    "category": "Category",
+    "results": "results",
+    "empty": "No achievements match your filters.",
+    "cat_all": "All",
+    "cat_hamsters": "Hamsters",
+    "cat_quests": "Quests",
+    "cat_crypto_exchange": "Crypto Exchange",
+    "cat_games": "Games",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Miners",
+    "cat_crafting": "Crafting",
+    "cat_currency": "Currency",
+    "viewMerge": "View all merge levels"
   }
 }

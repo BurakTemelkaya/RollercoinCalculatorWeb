@@ -2398,6 +2398,23 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/hamsters"/>
   </url>
   <url>
+    <loc>https://rollercoincalculator.app/en/achievements</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rollercoincalculator.app/en/achievements"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://rollercoincalculator.app/tr/achievements"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://rollercoincalculator.app/cs/achievements"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://rollercoincalculator.app/de/achievements"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://rollercoincalculator.app/es/achievements"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://rollercoincalculator.app/fr/achievements"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rollercoincalculator.app/id/achievements"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://rollercoincalculator.app/pt/achievements"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://rollercoincalculator.app/ru/achievements"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://rollercoincalculator.app/zh/achievements"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rollercoincalculator.app/en/achievements"/>
+  </url>
+  <url>
     <loc>https://rollercoincalculator.app/tr/hamsters</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>

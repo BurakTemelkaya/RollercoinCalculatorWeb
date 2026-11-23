@@ -140,7 +140,10 @@
     "myBlogs": "Mé blogy",
     "notificationSettings": "Nastavení oznámení",
     "leaderboard": "Žebříček",
-    "creators": "Tvůrci"
+    "creators": "Tvůrci",
+    "achievements": "Úspěchy",
+    "progressionEvent": "Progression Event",
+    "puzzleEvent": "Puzzle Event"
   },
   "lpp": {
     "title": "Rozdělení síly ligy",
@@ -1615,5 +1618,38 @@
     "coverPending": "Tento obrázek se nahraje při uložení.",
     "coverHint": "Volitelné. Nejlépe funguje široký obrázek (např. 1200×400), max. 2 MB. Bez něj karta zobrazí přechod v barvách webu.",
     "coverTooBig": "Úvodní obrázek může mít nejvýše 2 MB."
+  },
+  "achievements": {
+    "title": "Úspěchy RollerCoin",
+    "description": "Všechny úspěchy RollerCoin s každou úrovní, cílem a odměnou: RST, RLT, baterie a merge minery. Hledejte, filtrujte a řaďte.",
+    "statAchievements": "úspěchů",
+    "statLevels": "úrovní",
+    "statTotal": "celkem {{currency}}",
+    "statMiners": "minerů v odměnách",
+    "search": "Hledat",
+    "searchPlaceholder": "Hledat úspěch nebo miner...",
+    "reward": "Odměna",
+    "allRewards": "Všechny odměny",
+    "miner": "Miner",
+    "battery": "Baterie",
+    "sort": "Řadit",
+    "sort_order": "Pořadí ve hře",
+    "sort_name": "Název A–Z",
+    "sort_rst": "Nejvíce RST",
+    "sort_rlt": "Nejvíce RLT",
+    "sort_miner": "Nejsilnější miner",
+    "category": "Kategorie",
+    "results": "výsledků",
+    "empty": "Filtrům neodpovídá žádný úspěch.",
+    "cat_all": "Vše",
+    "cat_hamsters": "Křečci",
+    "cat_quests": "Úkoly",
+    "cat_crypto_exchange": "Krypto směnárna",
+    "cat_games": "Hry",
+    "cat_taskwall": "Taskwall",
+    "cat_miners": "Minery",
+    "cat_crafting": "Výroba",
+    "cat_currency": "Měna",
+    "viewMerge": "Zobrazit všechny úrovně merge"
   }
 }
