@@ -63,6 +63,7 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
         with:
           host: ${{ secrets.VDS_IP }}
+          command_timeout: 30m  # room for waiting on the other deploy and pull retries
           username: ${{ secrets.VDS_USER }} 
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: REPO_OWNER, GH_PAT
@@ -77,19 +78,25 @@ jobs:
             # Dinamik imaj ismini .env dosyasına yazdır (Küçük harf garantisi)
             echo "IMAGE_TAG=ghcr.io/$REPO_OWNER/rollercoin-frontend:latest" > .env
             
-            # GHCR downloads from the VDS sometimes reset mid-layer; docker resumes
-            # finished layers, so a few retries are enough.
-            for attempt in 1 2 3 4 5; do
+            # Backend and frontend deploy to the same VDS: run them one at a time, otherwise one's
+            # image prune deletes the other's layers mid-extract ("failed to Lchown ... no such file").
+            exec 9>/tmp/rollercoin-deploy.lock
+            flock -w 900 9
+
+            # GHCR downloads from the VDS (over IPv6) sometimes reset mid-layer. Docker resolves the
+            # registry itself, so a pull can't be pinned to IPv4 here; finished layers are kept, so
+            # retrying with a growing wait gets through.
+            for attempt in 1 2 3 4 5 6 7 8; do
               docker pull ghcr.io/$REPO_OWNER/rollercoin-frontend:latest && break
-              [ "$attempt" -eq 5 ] && exit 1
-              echo "docker pull failed (attempt $attempt), retrying in 10s"
-              sleep 10
+              [ "$attempt" -eq 8 ] && exit 1
+              echo "docker pull failed (attempt $attempt), retrying in $((attempt * 10))s"
+              sleep $((attempt * 10))
             done
             
             # Sadece frontend servisini ayağa kaldır
             docker compose up -d --force-recreate rollercoin_frontend
             
-            # Cleanup is optional and can collide with the backend deploy.
+            # Cleanup is optional; the lock above keeps it away from the backend deploy's pull.
             if ! docker image prune -f; then
               echo "Warning: Docker image cleanup failed; deployment commands completed." >&2
             fi

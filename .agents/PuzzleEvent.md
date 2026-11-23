@@ -76,3 +76,9 @@ Banner (`HeaderImg`), tahta arka planı (`BackgroundImg`) ve parça ikonu (`Rewa
 - API, Rollercoin adreslerinin yanında kopyaların yolunu da döner: `headerImgPath`, `backgroundImgPath`, `rewardIconPath` (liste ucunda `headerImgPath`).
 - Sayfa ve Etkinlikler listesindeki kart önce kendi kopyamızı kullanır, yüklenemezse Rollercoin adresine düşer. Tahta arka planı CSS olduğu için iki adres üst üste katman olarak verilir.
 - Bildirim maili banner için Rollercoin adresini kullanmaya devam eder.
+
+## Link önizleme resmi
+
+- nginx `/{lang}/puzzle/{slug}` sayfalarına SSI ile `api/Seo/head/{lang}/puzzle/{slug}` başlığını koyar (title, description, og:image).
+- og:image = `api/Seo/puzzle-image/{lang}/{slug}.png`: backend (`ProgressionEventShareImageRenderer.RenderPuzzle`) banner + en iyi 8 ödülü (önce güce göre miner'lar) çizer, `cdn/puzzle/{id}/share-{lang}.png` olarak saklar; ödüller değişince silinip yeniden çizilir.
+- Aynı resim puzzle web push bildiriminde de kullanılır.

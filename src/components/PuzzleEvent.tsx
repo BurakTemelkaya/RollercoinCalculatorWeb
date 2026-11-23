@@ -145,7 +145,8 @@ export default function PuzzleEvent() {
             <meta property="og:title" content={pageTitle} />
             <meta property="og:description" content={t('puzzle.metaDesc')} />
             <meta property="og:url" content={pageUrl} />
-            <meta property="og:image" content={ownImage(data?.headerImgPath) ?? data?.headerImg ?? 'https://rollercoincalculator.app/icon.png'} />
+            {/* Same preview image nginx puts in the server-rendered head (drawn by the backend per language) */}
+            <meta property="og:image" content={pageSegment ? `https://api.rollercoincalculator.app/api/Seo/puzzle-image/${lang}/${encodeURIComponent(pageSegment)}.png` : 'https://rollercoincalculator.app/icon.png'} />
         </>
     );
 
