@@ -7,7 +7,7 @@ import {
     adminReviewCreatorChanges, adminReviewPayment, adminSaveCreatorSettings, adminUpdateCreator, deleteCreatorVideo, getAdminCreators, getCreatorPricing,
     parseUtc,
 } from '../../services/contentCreatorApi';
-import { PLATFORM_LABELS } from '../creators/CreatorShared';
+import { CreatorAvatar, PLATFORM_LABELS, languageFlag } from '../creators/CreatorShared';
 import { PlatformIcon } from '../creators/PlatformIcon';
 import { CoinNetworkSelect, TxLink } from '../creators/CryptoPayment';
 import '../creators/Creators.css';
@@ -15,6 +15,14 @@ import '../creators/Creators.css';
 const STATUS_LABELS: Record<number, string> = { 0: 'Bekliyor', 1: 'Onaylı', 2: 'Reddedildi', 3: 'Engelli' };
 const formatDate = (value?: string | null) => (value ? parseUtc(value).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' }) : '-');
 const errorText = (err: unknown) => (err instanceof Error ? err.message : String(err));
+// Bitişe kalan gün; geçmişse "süresi doldu" rozeti
+const remainingDays = (value?: string | null) => {
+    if (!value) return null;
+    const days = Math.ceil((parseUtc(value).getTime() - Date.now()) / 86_400_000);
+    return days > 0
+        ? <span className={`creator-badge creator-badge--${days <= 2 ? 0 : 1}`}>{days} gün kaldı</span>
+        : <span className="creator-badge creator-badge--2">süresi doldu</span>;
+};
 
 type Draft = { status: number; isComplimentary: boolean; addDays: number; adminNote: string };
 
@@ -106,13 +114,19 @@ export default function AdminCreatorList() {
                 {loading ? <span className="spinner" /> : visible.length === 0 ? <p className="creator-empty">Kayıt yok.</p> : visible.map(c => {
                     const draft = drafts[c.id];
                     return (
-                        <div className="creator-panel-block" key={c.id}>
-                            <div className="creator-row-actions" style={{ justifyContent: 'space-between', marginBottom: 12 }}>
-                                <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                                    {c.avatarUrl && <img className="creator-avatar" src={c.avatarUrl} alt="" width={32} height={32} />}
-                                    {c.displayName} <span className={`creator-badge creator-badge--${c.status}`}>{STATUS_LABELS[c.status]}</span> {c.isLive && <span className="creator-badge creator-badge--1">Yayında</span>}</h2>
-                                <span className="creator-empty" style={{ fontSize: '0.8rem' }}>{c.userEmail} · Başvuru: {formatDate(c.createdDate)}</span>
-                            </div>
+                        <div className="creator-panel-block creator-admin-card" key={c.id}>
+                            <header className="creator-admin-head">
+                                <CreatorAvatar creator={c} size={52} />
+                                <div className="creator-admin-title">
+                                    <h2>
+                                        {c.displayName}
+                                        <span className={`creator-badge creator-badge--${c.status}`}>{STATUS_LABELS[c.status]}</span>
+                                        {c.isLive && <span className="creator-badge creator-badge--1">Yayında</span>}
+                                        {c.isComplimentary && <span className="creator-badge creator-badge--free">Ücretsiz</span>}
+                                    </h2>
+                                    <span className="creator-admin-meta">{c.userEmail} · Başvuru: {formatDate(c.createdDate)}</span>
+                                </div>
+                            </header>
 
                             {c.isDuplicate && (
                                 <div className="creator-alert creator-alert--error">
@@ -123,38 +137,62 @@ export default function AdminCreatorList() {
                             {c.pendingChanges && <PendingChangesReview creator={c} busy={busy} onReview={(approve, note) =>
                                 run(() => adminReviewCreatorChanges(accessToken!, c.id, { approve, adminNote: note }), approve ? 'Değişiklikler yayına alındı.' : 'Değişiklikler reddedildi.')} />}
 
-                            {c.description && <p className="creator-desc">{c.description}</p>}
-                            <div className="creator-links" style={{ margin: '8px 0' }}>
-                                {CREATOR_LINK_KEYS.filter(k => c[k]).map(k => <a key={k} href={c[k]!} target="_blank" rel="noopener noreferrer" className="creator-pill"><PlatformIcon platform={k} size={14} />{PLATFORM_LABELS[k]}</a>)}
-                                <span className="creator-empty" style={{ fontSize: '0.8rem' }}>Diller: {c.languages.join(', ')}</span>
-                            </div>
-                            <p className="creator-empty" style={{ fontSize: '0.85rem' }}>
-                                Bitiş: {c.isComplimentary ? 'Ücretsiz (süresiz)' : formatDate(c.activeUntil)} · Deneme kullanıldı: {c.trialUsed ? 'Evet' : 'Hayır'}
-                            </p>
-
-                            <div className="creator-form" style={{ alignItems: 'end' }}>
-                                <label className="creator-field">Durum
-                                    <select value={draft.status} onChange={e => setDraft(c.id, { status: Number(e.target.value) })}>
-                                        {Object.entries(STATUS_LABELS).map(([v, label]) => <option key={v} value={v}>{label}</option>)}
-                                    </select>
-                                </label>
-                                <label className="creator-field">Elle gün ekle
-                                    <input type="number" min={0} max={3650} value={draft.addDays} onChange={e => setDraft(c.id, { addDays: Number(e.target.value) })} />
-                                </label>
-                                <label className="creator-field" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                    <input type="checkbox" checked={draft.isComplimentary} onChange={e => setDraft(c.id, { isComplimentary: e.target.checked })} />
-                                    Ücretsiz kullansın (süresiz)
-                                </label>
-                                <label className="creator-field creator-field--wide">Not (yayıncı görür)
-                                    <input maxLength={500} value={draft.adminNote} onChange={e => setDraft(c.id, { adminNote: e.target.value })} />
-                                </label>
-                                <div>
-                                    <button className="creator-btn" disabled={busy} onClick={() => run(() => adminUpdateCreator(accessToken!, c.id, draft), `${c.displayName} güncellendi.`)}>Kaydet</button>
+                            <div className="creator-admin-body">
+                                <div className="creator-admin-info">
+                                    {c.description && <p className="creator-desc">{c.description}</p>}
+                                    <div>
+                                        <span className="creator-admin-label">Kanallar</span>
+                                        <div className="creator-links">
+                                            {CREATOR_LINK_KEYS.filter(k => c[k]).map(k => <a key={k} href={c[k]!} target="_blank" rel="noopener noreferrer" className="creator-pill"><PlatformIcon platform={k} size={14} />{PLATFORM_LABELS[k]}</a>)}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className="creator-admin-label">İçerik dilleri</span>
+                                        <div className="creator-links">
+                                            {c.languages.map(code => {
+                                                const flag = languageFlag(code);
+                                                return (
+                                                    <span key={code} className="creator-pill creator-lang-label">
+                                                        {flag?.icon && <img src={flag.icon} alt="" width={18} height={13} />}
+                                                        {flag?.label ?? code.toUpperCase()}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
+                                <dl className="creator-admin-stats">
+                                    <div><dt>Bitiş</dt><dd>{c.isComplimentary ? 'Süresiz' : formatDate(c.activeUntil)}{!c.isComplimentary && remainingDays(c.activeUntil)}</dd></div>
+                                    <div><dt>Ücretsiz deneme</dt><dd>{c.trialUsed ? 'Kullanıldı' : 'Kullanılmadı'}</dd></div>
+                                    <div><dt>Ödemeler</dt><dd>{c.payments.filter(p => p.status === PaymentStatus.Approved).length} onaylı{c.payments.some(p => p.status === PaymentStatus.Pending) && <span className="creator-badge creator-badge--0">bekleyen var</span>}</dd></div>
+                                </dl>
                             </div>
-                            {c.status !== CreatorStatus.Approved && draft.status === CreatorStatus.Approved && !c.trialUsed && !c.isDuplicate && (
-                                <p className="creator-alert creator-alert--info" style={{ marginTop: 12 }}>Onaylayınca {settings.trialDays} gün ücretsiz deneme başlar.</p>
-                            )}
+
+                            <form className="creator-admin-manage" onSubmit={e => { e.preventDefault(); run(() => adminUpdateCreator(accessToken!, c.id, draft), `${c.displayName} güncellendi.`); }}>
+                                <div className="creator-admin-controls">
+                                    <label className="creator-field">Durum
+                                        <select value={draft.status} onChange={e => setDraft(c.id, { status: Number(e.target.value) })}>
+                                            {Object.entries(STATUS_LABELS).map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+                                        </select>
+                                    </label>
+                                    <label className="creator-field">Elle gün ekle
+                                        <input type="number" min={0} max={3650} value={draft.addDays} onChange={e => setDraft(c.id, { addDays: Number(e.target.value) })} />
+                                    </label>
+                                    <label className="creator-admin-check">
+                                        <input type="checkbox" checked={draft.isComplimentary} onChange={e => setDraft(c.id, { isComplimentary: e.target.checked })} />
+                                        Ücretsiz kullansın (süresiz)
+                                    </label>
+                                </div>
+                                <label className="creator-field">Not (yayıncı panelde görür, mail ile de gönderilir)
+                                    <textarea rows={2} maxLength={500} value={draft.adminNote} placeholder="Örn. Discord adresin hatalı görünüyor." onChange={e => setDraft(c.id, { adminNote: e.target.value })} />
+                                </label>
+                                <div className="creator-admin-actions">
+                                    {c.status !== CreatorStatus.Approved && draft.status === CreatorStatus.Approved && !c.trialUsed && !c.isDuplicate
+                                        ? <span className="creator-admin-hint">Onaylayınca {settings.trialDays} gün ücretsiz deneme başlar.</span>
+                                        : <span />}
+                                    <button className="creator-btn" disabled={busy}>Kaydet</button>
+                                </div>
+                            </form>
 
                             {c.payments.length > 0 && (
                                 <div style={{ overflowX: 'auto', marginTop: 16 }}>

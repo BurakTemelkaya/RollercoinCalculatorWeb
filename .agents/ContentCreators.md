@@ -58,6 +58,8 @@ Deneme ve ödemeler süreyi uzatır: bitiş tarihi ileride ise o tarihten, deği
 
 Hatırlatma: `CreatorExpiryReminderJob` (her saat :45, yalnızca Production) bitişten 2 gün önce "süren bitiyor", bitince (en geç 3 gün içinde) "süren bitti" maili + push gönderir; ücretsiz (complimentary) kayıtlara gitmez. Her bildirim `ExpiryReminderSentFor` / `ExpiredNoticeSentFor` ile bir ActiveUntil için bir kez gider; ödeme onaylanıp süre uzayınca yeniden gönderilir. Metinler `notifications.*.yaml` içindeki `Creator*` anahtarları; mail `EnergyAlertMail.html` şablonunu kullanır.
 
+Admin kararları (`CreatorNotifier`): başvuru onay/red/engel, not ya da süre değişikliği, ödeme onay/red ve profil değişikliği onay/red yayıncıya kendi dilinde mail + push olarak gider; admin notu mailde "Yönetici notu" olarak yer alır. Aynı ayarları değişiklik olmadan kaydetmek mail atmaz. Adminlere giden uyarılar (`AdminAlertService`) da aynı HTML şablonla gönderilir.
+
 ## Kapak görseli ve kart tasarımı
 
 - Yayıncı isteğe bağlı bir kapak (arka plan) görseli yükler: `POST /me/cover`, en fazla 2 MB, aynı imza kontrolü; `CoverUrl`. Kaldırmak için kayıtta `removeCover`. Onaylı profilde kapak değişikliği de admin onayına gider (bekleyen değişiklikte eski/yeni yan yana gösterilir).
