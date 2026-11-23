@@ -345,3 +345,65 @@
     font-size: 0.9rem;
   }
 }
+
+/* Reward totals: the progression event's sidebar card, shown here as a row of stat tiles */
+.pz-totals .pe-info-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 14px;
+}
+
+.pz-totals .pe-info-row {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-md, 10px);
+}
+
+.pz-totals .pe-info-row:last-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pz-totals .pe-info-row span:first-child,
+.pz-totals .pe-info-value {
+  padding: 0;
+  background: none;
+  border: none;
+  backdrop-filter: none;
+}
+
+.pz-totals .pe-info-row span:first-child {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pz-totals .pe-info-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .pz-totals .pe-info-table {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .pz-totals .pe-info-value {
+    font-size: 1.05rem;
+  }
+}
+
+.pz-totals .pe-info-icon {
+  width: 18px;
+  height: 18px;
+}

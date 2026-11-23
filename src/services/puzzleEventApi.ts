@@ -19,6 +19,8 @@ export interface PuzzleReward {
     bonus: number | null;   // percent * 100
     minerLevel: number | null;
     imageVersion: number | null;
+    /** Miners only: whether it can be sold on the marketplace (null = unknown) */
+    isCanBeSoldOnMp?: boolean | null;
     /** Board only: how many grid columns the tile spans */
     cells: number;
     sort: number;

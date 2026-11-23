@@ -52,6 +52,10 @@ import hashboardCaseImg from '../assets/items/hashboard_case_1116df97-ed73-4baf-
 import fansCaseImg from '../assets/items/fans_case_7bfde88d-fc4c-414f-a539-2ee2673ad216.png';
 import rstImg from '../assets/coins/rst.svg';
 import rltImg from '../assets/coins/rlt.svg';
+// Rollercoin's own reward icons (miner power, temporary power, miner bonus)
+import minerPowerIcon from '../assets/items/miner_power.svg';
+import tempPowerIcon from '../assets/items/temp_power.svg';
+import bonusIcon from '../assets/items/bonus.svg';
 import diamondChestImg from '../assets/items/diamond_mine_chest_abbb269d-2d0d-4773-8c76-93e300db4614.png';
 import sellableIcon from '../assets/sellable.svg';
 import { EventCreatorVideos } from './creators/CreatorShared';
@@ -392,6 +396,7 @@ export function RewardTile({ reward, lang, className = '' }: { reward: Progressi
     const ownImage = reward.cdn_image_path ? `${getCdnBaseUrl()}/${reward.cdn_image_path}` : undefined;
     const rollercoinImage = reward.item_media_url ? getCdnUrl(reward.item_media_url) : display.rcImageUrl;
     const image = display.localImage ?? ownImage ?? display.imageUrl ?? rollercoinImage;
+    const sellable = reward.type === 'miner' ? (reward.item as MinerItem | undefined)?.is_can_be_sold_on_mp : null;
     return (
         <RewardLink display={display} lang={lang} className={`reward-tile ${className}`}>
             <span className="reward-tile-img">
@@ -409,10 +414,79 @@ export function RewardTile({ reward, lang, className = '' }: { reward: Progressi
                         }}
                     />
                 )}
+                {typeof sellable === 'boolean' && (
+                    <img
+                        className={`pe-sellable-badge ${sellable ? 'pe-sellable-badge--available' : 'pe-sellable-badge--unavailable'}`}
+                        src={sellableIcon}
+                        alt={sellable ? 'Sellable' : 'Not sellable'}
+                        title={sellable ? t('simulator.sellableMiner', 'Satılabilir') : 'Satılamaz'}
+                    />
+                )}
             </span>
             <span className="reward-tile-name">{display.text}</span>
             {display.subText && <span className="reward-tile-sub">{display.subText}</span>}
         </RewardLink>
+    );
+}
+
+/** Sum of every reward in an event (miners, temporary power, event pass XP, coins); shared with the puzzle event page. */
+export function RewardTotalsCard({ rewards, className = '' }: { rewards: ProgressionReward[]; className?: string }) {
+    const { t } = useTranslation();
+    let totalMinerPower = 0;
+    let totalBonus = 0;
+    let tempPower = 0;
+    let seasonExp = 0;
+    const money: Record<string, number> = { RST: 0 };
+
+    for (const reward of rewards) {
+        switch (reward.type) {
+            case 'miner': {
+                const miner = reward.item as MinerItem | undefined;
+                if (miner) {
+                    totalMinerPower += miner.power * reward.amount;
+                    totalBonus += miner.bonus * reward.amount;
+                }
+                break;
+            }
+            case 'power':
+                tempPower += reward.amount;
+                break;
+            case 'season_pass_xp':
+                seasonExp += reward.amount;
+                break;
+            case 'money':
+                if (reward.currency) money[reward.currency] = (money[reward.currency] ?? 0) + reward.amount / 1e6;
+                break;
+        }
+    }
+
+    const rows: { icon?: string; label: string; value: string }[] = [
+        { icon: minerPowerIcon, label: t('event.minersPower'), value: formatPower(totalMinerPower) },
+        { icon: bonusIcon, label: t('event.minersBonus'), value: `${(totalBonus / 100).toFixed(2)}%` },
+        { icon: tempPowerIcon, label: t('event.tempPower'), value: formatPower(tempPower) },
+        { icon: xpImg, label: t('event.seasonExp'), value: `${seasonExp} EXP` },
+        ...Object.entries(money).map(([currency, amount]) => ({
+            icon: currency === 'RST' ? rstImg : currency === 'RLT' ? rltImg : undefined,
+            label: currency,
+            value: `${Number(amount.toFixed(6))} ${currency}`,
+        })),
+    ];
+
+    return (
+        <div className={`pe-info-card ${className}`}>
+            <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
+            <div className="pe-info-table">
+                {rows.map(row => (
+                    <div className="pe-info-row" key={row.label}>
+                        <span className="pe-info-label">
+                            {row.icon && <img className="pe-info-icon" src={row.icon} alt="" />}
+                            {row.label}
+                        </span>
+                        <span className="pe-info-value pe-highlight">{row.value}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -602,44 +676,6 @@ export default function ProgressionEvent() {
             observer.disconnect();
         };
     }, []);
-
-    // Calculate total event rewards summary
-    const eventSummary = useMemo(() => {
-        if (!eventData) return null;
-
-        const rewards = eventData.rewards;
-        let totalMinerPower = 0;
-        let totalBonus = 0;
-        let tempPower = 0;
-        let seasonExp = 0;
-        let rstAmount = 0;
-
-        for (const reward of rewards) {
-            switch (reward.type) {
-                case 'miner': {
-                    const miner = reward.item as MinerItem | undefined;
-                    if (miner) {
-                        totalMinerPower += miner.power * reward.amount;
-                        totalBonus += miner.bonus * reward.amount;
-                    }
-                    break;
-                }
-                case 'power':
-                    tempPower += reward.amount;
-                    break;
-                case 'season_pass_xp':
-                    seasonExp += reward.amount;
-                    break;
-                case 'money':
-                    if (reward.currency === 'RST') {
-                        rstAmount += reward.amount / 1e6;
-                    }
-                    break;
-            }
-        }
-
-        return { totalMinerPower, totalBonus, tempPower, seasonExp, rstAmount };
-    }, [eventData]);
 
     const dynamicConstants = useMemo(() => {
         const base: Record<string, number> = { ...EVENT_CONSTANTS };
@@ -925,34 +961,7 @@ export default function ProgressionEvent() {
                 </div>
             </div>
 
-            {/* Total Event Rewards */}
-            {eventSummary && (
-                <div className="pe-info-card">
-                    <h3 className="pe-info-title">{t('event.totalRewards')}</h3>
-                    <div className="pe-info-table">
-                        <div className="pe-info-row">
-                            <span>{t('event.minersPower')}</span>
-                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.totalMinerPower)}</span>
-                        </div>
-                        <div className="pe-info-row">
-                            <span>{t('event.minersBonus')}</span>
-                            <span className="pe-info-value pe-highlight">{(eventSummary.totalBonus / 100).toFixed(2)}%</span>
-                        </div>
-                        <div className="pe-info-row">
-                            <span>{t('event.tempPower')}</span>
-                            <span className="pe-info-value pe-highlight">{formatPower(eventSummary.tempPower)}</span>
-                        </div>
-                        <div className="pe-info-row">
-                            <span>{t('event.seasonExp')}</span>
-                            <span className="pe-info-value pe-highlight">{eventSummary.seasonExp} EXP</span>
-                        </div>
-                        <div className="pe-info-row">
-                            <span>RST</span>
-                            <span className="pe-info-value pe-highlight">{eventSummary.rstAmount} RST</span>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {eventData && <RewardTotalsCard rewards={eventData.rewards} />}
         </>
     );
 

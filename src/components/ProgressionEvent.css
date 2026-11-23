@@ -1754,3 +1754,17 @@
     color: #03e1e4;
     text-decoration: underline;
 }
+
+/* Reward totals: Rollercoin's icon beside each label */
+.pe-info-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pe-info-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}

@@ -6,7 +6,7 @@ import { getNotificationPreferences } from '../services/notificationApi';
 import { useAuth } from '../contexts/AuthContext';
 import { getCdnBaseUrl } from '../config/api';
 import type { ProgressionReward, RewardType } from '../types/progressionEvent';
-import { RewardTile } from './ProgressionEvent';
+import { RewardTile, RewardTotalsCard } from './ProgressionEvent';
 import { EventCreatorVideos } from './creators/CreatorShared';
 import { VideoEventType } from '../services/contentCreatorApi';
 import './PuzzleEvent.css';
@@ -64,7 +64,7 @@ function toProgressionReward(r: PuzzleReward): ProgressionReward {
             filename: r.fileName,
             image_version: r.imageVersion ?? undefined,
             frames_data: { frame_width: 0, frame_height: 0 },
-            is_can_be_sold_on_mp: null,
+            is_can_be_sold_on_mp: r.isCanBeSoldOnMp ?? null,
             bonus: r.bonus ?? 0,
             is_in_set: null,
         } : undefined,
@@ -183,6 +183,8 @@ export default function PuzzleEvent() {
                     )}
                 </div>
             </header>
+
+            <RewardTotalsCard className="pz-totals" rewards={[...data.levels.flatMap(l => l.rewards), ...data.board].map(toProgressionReward)} />
 
             {data.levels.length > 0 && (
                 <section className="pz-card">
