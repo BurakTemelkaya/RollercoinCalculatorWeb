@@ -187,10 +187,24 @@ export default function AdminCreatorList() {
                                     <textarea rows={2} maxLength={500} value={draft.adminNote} placeholder="Örn. Discord adresin hatalı görünüyor." onChange={e => setDraft(c.id, { adminNote: e.target.value })} />
                                 </label>
                                 <div className="creator-admin-actions">
-                                    {c.status !== CreatorStatus.Approved && draft.status === CreatorStatus.Approved && !c.trialUsed && !c.isDuplicate
-                                        ? <span className="creator-admin-hint">Onaylayınca {settings.trialDays} gün ücretsiz deneme başlar.</span>
-                                        : <span />}
-                                    <button className="creator-btn" disabled={busy}>Kaydet</button>
+                                    {draft.status !== CreatorStatus.Approved
+                                        ? <span className="creator-admin-hint creator-admin-hint--warn">Durum "Onaylı" olmadan yayıncı sitede görünmez{draft.isComplimentary ? '; ücretsiz seçeneği tek başına onaylamaz' : ''}.</span>
+                                        : c.status !== CreatorStatus.Approved && !c.trialUsed && !c.isDuplicate && !draft.isComplimentary
+                                            ? <span className="creator-admin-hint">Onaylayınca {settings.trialDays} gün ücretsiz deneme başlar.</span>
+                                            : <span />}
+                                    <div className="creator-row-actions">
+                                        {c.status !== CreatorStatus.Approved && (
+                                            <>
+                                                {c.status === CreatorStatus.Pending && (
+                                                    <button type="button" className="creator-btn creator-btn--danger" disabled={busy}
+                                                        onClick={() => run(() => adminUpdateCreator(accessToken!, c.id, { ...draft, status: CreatorStatus.Rejected }), `${c.displayName} reddedildi.`)}>Reddet</button>
+                                                )}
+                                                <button type="button" className="creator-btn creator-btn--ok" disabled={busy}
+                                                    onClick={() => run(() => adminUpdateCreator(accessToken!, c.id, { ...draft, status: CreatorStatus.Approved }), `${c.displayName} onaylandı ve yayında.`)}>Onayla</button>
+                                            </>
+                                        )}
+                                        <button className="creator-btn" disabled={busy}>Kaydet</button>
+                                    </div>
                                 </div>
                             </form>
 

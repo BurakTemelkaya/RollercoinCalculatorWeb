@@ -519,6 +519,7 @@
 .creator-admin-manage textarea { resize: vertical; min-height: 44px; font-family: inherit; }
 .creator-admin-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .creator-admin-hint { font-size: 0.82rem; color: #93c5fd; }
+.creator-admin-hint--warn { color: #fbbf24; }
 
 @media (max-width: 720px) {
   .creator-admin-body { grid-template-columns: 1fr; }

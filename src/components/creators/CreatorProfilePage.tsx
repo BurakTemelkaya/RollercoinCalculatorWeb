@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     CREATOR_LINK_KEYS, CreatorLinkKey, CreatorProfile, LivePlatform, VideoEventType, YouTubeFeedItem,
-    getCreatorProfile, getCreatorYouTubeFeed, parseUtc, videoThumbnail, videoTitle,
+    creatorSlug, getCreatorProfile, getCreatorYouTubeFeed, parseUtc, resolveCreatorId, videoThumbnail, videoTitle,
 } from '../../services/contentCreatorApi';
 import { CreatorAvatar, LiveBadge, PLATFORM_LABELS, languageFlag, useCreatorLiveStatus } from './CreatorShared';
 import { PlatformIcon } from './PlatformIcon';
@@ -26,7 +26,8 @@ function handleOf(url: string): string {
 /** Yayıncı profili: sosyal medya hesapları, canlı yayın, son YouTube videoları ve etkinlik videoları. */
 export default function CreatorProfilePage() {
     const { t, i18n } = useTranslation();
-    const { lang = i18n.language, creatorId = '' } = useParams<{ lang: string; creatorId: string }>();
+    const { lang = i18n.language, creatorId: slugOrId = '' } = useParams<{ lang: string; creatorId: string }>();
+    const [creatorId, setCreatorId] = useState('');
     const [profile, setProfile] = useState<CreatorProfile | null>(null);
     const [notFound, setNotFound] = useState(false);
     const [feed, setFeed] = useState<YouTubeFeedItem[]>([]);
@@ -35,11 +36,27 @@ export default function CreatorProfilePage() {
     const live: LivePlatform[] = liveStatus[creatorId] ?? [];
 
     useEffect(() => {
+        let cancelled = false;
         setProfile(null);
         setNotFound(false);
-        getCreatorProfile(creatorId).then(setProfile).catch(() => setNotFound(true));
-        getCreatorYouTubeFeed(creatorId).then(setFeed).catch(() => setFeed([]));
-    }, [creatorId]);
+        setFeed([]);
+        resolveCreatorId(slugOrId).then(id => {
+            if (cancelled) return;
+            if (!id) { setNotFound(true); return; }
+            setCreatorId(id);
+            getCreatorProfile(id).then(p => {
+                if (cancelled) return;
+                setProfile(p);
+                // Eski (kimlikli) linkler isimli adrese taşınır; router'a gitmeden, sayfa yeniden yüklenmesin diye
+                const slug = creatorSlug(p.creator);
+                if (slug !== slugOrId) window.history.replaceState(window.history.state, '', `/${lang}/creators/${encodeURIComponent(slug)}`);
+            }).catch(() => { if (!cancelled) setNotFound(true); });
+            getCreatorYouTubeFeed(id).then(f => { if (!cancelled) setFeed(f); }).catch(() => {});
+        }).catch(() => { if (!cancelled) setNotFound(true); });
+        return () => { cancelled = true; };
+        // lang değişince yeniden yüklemeye gerek yok
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [slugOrId]);
 
     // Sayfada canlı yayın doğrudan oynatılır: gömülebilen ilk platform (YouTube, Twitch, Kick)
     const liveEmbed = useMemo(() => {
@@ -154,7 +171,7 @@ export default function CreatorProfilePage() {
                                     </div>
                                     <div className="creator-video-body">
                                         <strong>{item.title}</strong>
-                                        <span className="creator-video-author">{formatDate(item.published)}</span>
+                                        {item.published && <span className="creator-video-author">{formatDate(item.published)}</span>}
                                     </div>
                                 </a>
                             );

@@ -112,7 +112,25 @@ export const getLiveCreators = () => apiGet<PublicCreator[]>(buildApiUrl(base));
 export interface LivePlatform { platform: 'YouTube' | 'Twitch' | 'Kick' | 'TikTok'; url: string }
 export interface CreatorProfileVideo extends CreatorVideo { eventName?: string | null; eventSlug?: string | null }
 export interface CreatorProfile { creator: PublicCreator; videos: CreatorProfileVideo[] }
-export interface YouTubeFeedItem { videoId: string; title: string; published: string }
+export interface YouTubeFeedItem { videoId: string; title: string; published: string | null }
+
+const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Profil linkindeki isim: "Sinan Can Emirzeoğlu" → "sinan-can-emirzeoglu"; harf kalmazsa kimlik. */
+export function creatorSlug(creator: { id: string; displayName: string }): string {
+    const slug = creator.displayName.toLocaleLowerCase('tr').replace(/ı/g, 'i')
+        .normalize('NFKD').replace(/\p{M}/gu, '')
+        .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '');
+    return slug || creator.id;
+}
+
+/** Linkteki isim ya da (eski linklerde) kimlik → yayıncı kimliği; bulunamazsa null.
+ *  shortcut: aynı isimli iki yayıncıda ilki açılır; çakışma olursa linke kısa kimlik eklenmeli. */
+export async function resolveCreatorId(slugOrId: string): Promise<string | null> {
+    if (GUID.test(slugOrId)) return slugOrId;
+    const wanted = slugOrId.toLocaleLowerCase('tr');
+    return (await getLiveCreators()).find(c => creatorSlug(c) === wanted)?.id ?? null;
+}
 
 export const getCreatorProfile = (id: string) => apiGet<CreatorProfile>(buildApiUrl(`${base}/${encodeURIComponent(id)}`));
 export const getCreatorYouTubeFeed = (id: string) => apiGet<YouTubeFeedItem[]>(buildApiUrl(`${base}/${encodeURIComponent(id)}/youtube`));

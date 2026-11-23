@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '../MainLayout';
 import {
     CREATOR_LINK_KEYS, CreatorLinkKey, EventCreatorVideo, LivePlatform, PublicCreator,
-    getCreatorLiveStatus, getEventCreatorVideos, getLiveCreators, orderCreatorsForLanguage, videoThumbnail, videoTitle,
+    creatorSlug, getCreatorLiveStatus, getEventCreatorVideos, getLiveCreators, orderCreatorsForLanguage, videoThumbnail, videoTitle,
 } from '../../services/contentCreatorApi';
 import { VideoEmbed, VideoPlayerModal, videoEmbed } from './VideoPlayer';
 import { PlatformIcon } from './PlatformIcon';
@@ -75,7 +75,7 @@ export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; li
     const { lang = i18n.language } = useParams<{ lang: string }>();
     const [coverBroken, setCoverBroken] = useState(false);
     // Önizleme kartının (yayıncı panelinde) profil sayfası yok
-    const profileUrl = creator.id === 'preview' ? null : `/${lang}/creators/${creator.id}`;
+    const profileUrl = creator.id === 'preview' ? null : `/${lang}/creators/${encodeURIComponent(creatorSlug(creator))}`;
     const links = CREATOR_LINK_KEYS.filter(key => creator[key]);
     const name = <h3 className="creator-name">{creator.displayName}</h3>;
     return (

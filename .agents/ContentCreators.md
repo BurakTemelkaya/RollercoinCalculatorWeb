@@ -25,7 +25,8 @@ Kanal linkleri normalize edilir (host'tan `www.`/`m.` atılır, `twitter.com →
 
 ## Profil sayfası ve canlı yayın
 
-- `/:lang/creators/:creatorId` (`CreatorProfilePage.tsx`): hesap kartları (logo + kullanıcı adı), canlıysa sayfada gömülü yayın, YouTube kanalının son 12 videosu (herkese açık RSS, `GET /{id}/youtube`, 1 saat önbellek; kanal kimliği sayfanın başındaki RSS bağlantısından okunur) ve yayıncının etkinlik videoları (etkinlik sayfasına linkli).
+- `/:lang/creators/:slug` (`CreatorProfilePage.tsx`): link yayıncı adından üretilir (`creatorSlug`, "Angaralı" → `angarali`) ve yayındaki yayıncı listesinden kimliğe çözülür (`resolveCreatorId`). Eski kimlikli linkler açılır ve adres isimli hale getirilir. Aynı isimli iki yayıncıda ilki açılır.
+- Profil: hesap kartları (logo + kullanıcı adı), canlıysa sayfada gömülü yayın, YouTube kanalının son 12 videosu (`GET /{id}/youtube`, 1 saat önbellek) ve yayıncının etkinlik videoları (etkinlik sayfasına linkli). Videolar önce herkese açık RSS'ten (tarihli), RSS boş/erişilemezse kanalın `/videos` sayfasındaki `lockupViewModel` kartlarından (tarihsiz) okunur; ikisi de boşsa log'a uyarı düşer. İstekler AB izin sayfasına düşmemek için `SOCS=CAI` çerezi taşır.
 - Canlı durumu `GET /live-status` (2 dk önbellek, en fazla 6 eşzamanlı istek), API anahtarı gerektirmeyen herkese açık sayfalardan: YouTube `/{kanal}/live` (`isLiveNow` + canonical watch), Twitch kanal sayfası (`isLiveBroadcast`), Kick `api/v2/channels/{slug}` (`livestream`), TikTok `/@kullanici/live` (`liveRoom.status == 2`). TikTok zaman zaman bot doğrulama sayfası döndürür; o zaman canlı görünmez. Instagram ve X canlı bilgisi giriş istemeden alınamaz. Twitch'in iç (web istemcisi) GQL kimliği kullanılmaz.
 - Kartlarda canlı yayıncılar öne alınır ve "CANLI" rozeti platform logolarıyla gösterilir; rozete tıklayınca gömülebilen yayın (YouTube, Twitch, Kick kanal oynatıcısı) site içinde açılır.
 - Platform logoları `PlatformIcon.tsx` (Simple Icons, CC0).
