@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import rawAchievements from '../data/achievements.json';
+import CdnImage from './CdnImage';
 import { autoScalePower } from '../utils/powerParser';
 import rltImg from '../assets/coins/rlt.svg';
 import rstImg from '../assets/coins/rst.svg';
@@ -15,6 +16,8 @@ interface Achievement { cat: string; type: string; levels: Level[] }
 
 const STATIC = 'https://static.rollercoin.com';
 const ACHIEVEMENTS = rawAchievements as Achievement[];
+// Icons are copied to public/achievements/{id}.png; Rollercoin's static host is only the fallback.
+const localIcon = (img: string) => `${import.meta.env.BASE_URL}achievements/${img.split('/').pop()?.split('?')[0]}`;
 const CATEGORIES = ['all', ...new Set(ACHIEVEMENTS.map(a => a.cat))];
 const REWARD_FILTERS = ['all', 'RST', 'RLT', 'miner', 'battery'] as const;
 const CATEGORY_ICONS: Record<string, string> = {
@@ -48,7 +51,7 @@ function RewardBadge({ reward }: { reward: Reward }) {
     const body = (
       <>
         <span className="ach-miner-thumb">
-          <img src={`${STATIC}/static/img/market/miners/${reward.f?.replace(/['’]/g, '')}.gif?v=1`} alt="" loading="lazy" />
+          <CdnImage type="miner" itemId={reward.f ?? ''} fallbackUrl={`${STATIC}/static/img/market/miners/${reward.f?.replace(/['’]/g, '')}.gif?v=1`} alt="" loading="lazy" />
           {(reward.lv ?? 0) > 1 && <img className="ach-miner-level" src={`/miner-levels/level_${reward.lv}.webp`} alt={`Level ${reward.lv}`} />}
         </span>
         <span className="ach-miner-info">
@@ -168,7 +171,8 @@ export default function AchievementsPage() {
                 return (
                   <article className="ach-card" key={a.type}>
                     <div className="ach-card-head">
-                      <img className="ach-icon" src={`${STATIC}${last.img}`} alt="" loading="lazy" />
+                      <img className="ach-icon" src={localIcon(last.img)} alt="" loading="lazy"
+                        onError={e => { if (!e.currentTarget.src.startsWith(STATIC)) e.currentTarget.src = `${STATIC}${last.img}`; }} />
                       <h4>{last.d}</h4>
                     </div>
                     <ol className="ach-levels">

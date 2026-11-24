@@ -4,6 +4,10 @@
 
 GitHub'a commit/push etmeden önce **her zaman `npm run build` çalıştırın** ve başarıyla bittiğini görün. Build başarısızsa commit etmeyin; önce hatayı düzeltin. `tsc --noEmit -p .` yeterli değildir: build'in kullandığı `tsc -b` uygulama kodunu daha sıkı denetler ve Docker/GitHub Actions build'i aynı komutla çalışır.
 
+## Zorunlu kural: görselleri kendimiz saklayalım
+
+Rollercoin'den gelen görselleri (ikon, miner, rack, ödül resimleri vb.) sayfaya doğrudan `static.rollercoin.com` adresinden bağlamayın. Önce **kendi CDN'imizde** (`getCdnBaseUrl()`, miner/rack için `CdnImage` bileşeni) ya da **frontend içinde** (`public/` veya `src/assets/`) saklayın; Rollercoin'in `static.rollercoin.com` adresini yalnızca **yedek (fallback)** olarak kullanın (`CdnImage` `fallbackUrl`'i ya da `<img onError>` ile). Yeni bir özellik Rollercoin görseli kullanıyorsa dosyaları projeye indirin veya CDN'e ekleyin.
+
 Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zeka entegrasyonu için parçalara ayrılmıştır. Aşağıdaki dosyalara giderek ilgili detayları bulabilirsiniz:
 
 1. **[Proje Genel Yapısı ve Kurulum](file:///.agents/ProjectOverview.md)**

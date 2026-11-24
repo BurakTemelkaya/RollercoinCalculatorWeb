@@ -15,4 +15,5 @@ Rollercoin'in `https://rollercoin.com/achievements` sayfası `GET /api/main/achi
 
 - Para ödülleri JSON'da **zaten 1e6'ya bölünmüş** durumda.
 - Açıklamalar API'de yalnızca `en`/`cn` olduğundan İngilizce gösterilir; arayüz metinleri `achievements.*` çeviri anahtarlarındadır.
-- Görseller `https://static.rollercoin.com` üzerinden (başarım ikonu `img`, miner `market/miners/{f}.gif`).
+- Başarım ikonları `public/achievements/{id}.png` içinde (sayfada gösterilen son seviye ikonları); dosya yoksa `https://static.rollercoin.com{img}` yedeğe düşer. Veri yenilenince yeni ikonları da bu klasöre indirin.
+- Miner ödülleri `CdnImage` ile önce kendi CDN'imizden (`miners/{f}.gif`), yoksa Rollercoin'den yüklenir.
