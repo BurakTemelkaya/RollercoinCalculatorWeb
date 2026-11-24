@@ -145,10 +145,56 @@ export function getCreatorLiveStatus(): Promise<Record<string, LivePlatform[]>> 
     }
     return liveStatusRequest;
 }
+// ---- İstatistik (yayıncı panelindeki görüntülenme / tıklama verisi) ----
+
+/** Bulunulan sayfa, dil öneki olmadan: "/tr/event/x" → "/event/x". */
+const pageWithoutLang = () => window.location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
+
+function trackCreator(id: string, kind: 0 | 1, target: string | null, page: string) {
+    if (id === 'preview') return;
+    // keepalive: link yeni sekmede/aynı sekmede açılırken istek yarıda kalmasın
+    fetch(buildApiUrl(`${base}/${encodeURIComponent(id)}/track`), {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind, target, page }),
+    }).catch(() => { });
+}
+
+/** Yayıncının bir linkine tıklandı: platform anahtarı ("youTubeUrl"...), "profile", "video" ya da "live". */
+export const trackCreatorClick = (id: string, target: string) => trackCreator(id, 1, target, pageWithoutLang());
+
+/** Profil açıldı. Kaynak: siteye bu profilden girildiyse dış site (referrer) ya da "direct", değilse "site". */
+export function trackCreatorView(id: string) {
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const landedHere = !nav || new URL(nav.name).pathname === window.location.pathname;
+    let source = 'site';
+    if (landedHere) {
+        try {
+            source = document.referrer ? (new URL(document.referrer).host === window.location.host ? 'site' : document.referrer) : 'direct';
+        } catch { source = 'direct'; }
+    }
+    trackCreator(id, 0, null, source);
+}
+
+export interface CreatorStatTotals { views: number; clicks: number; visitors: number }
+export interface CreatorStatRow { key: string; views: number; clicks: number }
+export interface CreatorStats {
+    days: number;
+    current: CreatorStatTotals;
+    previous: CreatorStatTotals;
+    daily: { date: string; views: number; clicks: number }[];
+    countries: CreatorStatRow[];
+    pages: CreatorStatRow[];
+    sources: CreatorStatRow[];
+    targets: CreatorStatRow[];
+    devices: CreatorStatRow[];
+}
+
 export const getCreatorPricing = () => apiGet<CreatorPricing>(buildApiUrl(`${base}/pricing`));
 export const getEventCreatorVideos = (eventType: number, eventId: string) =>
     apiGet<EventCreatorVideo[]>(buildApiUrl(`${base}/videos?eventType=${eventType}&eventId=${encodeURIComponent(eventId)}`));
 
+export const getMyCreatorStats = (token: string, days: number) => send<CreatorStats>(`/me/stats?days=${days}`, token, 'GET');
 export const getMyCreator = (token: string) => send<CreatorDetail | null>('/me', token, 'GET');
 export const saveMyCreator = (token: string, input: SaveCreatorInput) => send<CreatorDetail>('/me', token, 'POST', input);
 /** Kanal linklerinden alınacak logoyu kaydetmeden döndürür (data URL); bulunamazsa null. */

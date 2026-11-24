@@ -90,7 +90,7 @@ export default function CreatorVideoManager({ creator, token, busy, run, reload 
     return (
         <div className="creator-panel-block">
             <h2>{t('creators.eventVideos', 'Etkinlik videoları')}</h2>
-            <p className="creator-hint" style={{ margin: '0 0 16px', fontSize: '0.9rem' }}>{t('creators.eventVideosHelp', 'Videoların ilgili Progression veya Puzzle event sayfasında, profilin yayındayken gösterilir. Etkinlik başına en fazla 3 video.')}</p>
+            <p className="creator-hint" style={{ margin: '0 0 16px', fontSize: '0.9rem' }}>{t('creators.eventVideosHelp', 'Videoların (YouTube, TikTok, Twitch, X postları vb.) ilgili Progression veya Puzzle event sayfasında, profilin yayındayken gösterilir. Etkinlik başına en fazla 3 video.')}</p>
 
             <form className="creator-video-form" onSubmit={onSubmit}>
                 <div className="creator-video-form-row">
@@ -121,7 +121,7 @@ export default function CreatorVideoManager({ creator, token, busy, run, reload 
 
                 <div className="creator-video-form-row">
                     <label className="creator-field creator-field--grow">
-                        {t('creators.videoUrl', 'Video linki')} *
+                        {t('creators.videoUrl', 'Video / X post linki')} *
                         <input required type="url" placeholder="https://youtube.com/shorts/... · https://tiktok.com/... · https://twitch.tv/..." value={video.url}
                             onChange={e => setVideo({ ...video, url: e.target.value })} />
                     </label>

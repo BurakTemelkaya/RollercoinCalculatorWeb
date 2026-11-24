@@ -3,9 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     CREATOR_LINK_KEYS, CreatorLinkKey, CreatorProfile, LivePlatform, VideoEventType, YouTubeFeedItem,
-    creatorSlug, getCreatorProfile, getCreatorYouTubeFeed, parseUtc, resolveCreatorId, videoThumbnail, videoTitle,
+    creatorSlug, getCreatorProfile, getCreatorYouTubeFeed, parseUtc, resolveCreatorId, trackCreatorView, videoThumbnail, videoTitle,
 } from '../../services/contentCreatorApi';
-import { CreatorAvatar, LiveBadge, PLATFORM_LABELS, languageFlag, useCreatorLiveStatus } from './CreatorShared';
+import { CreatorAvatar, LiveBadge, PLATFORM_LABELS, languageFlag, trackClicksIn, useCreatorLiveStatus } from './CreatorShared';
 import { PlatformIcon } from './PlatformIcon';
 import { VideoEmbed, VideoPlayerModal, videoEmbed } from './VideoPlayer';
 import './Creators.css';
@@ -44,6 +44,7 @@ export default function CreatorProfilePage() {
             if (cancelled) return;
             if (!id) { setNotFound(true); return; }
             setCreatorId(id);
+            trackCreatorView(id); // adres isimliye çevrilmeden önce: siteye bu sayfadan mı girildi
             getCreatorProfile(id).then(p => {
                 if (cancelled) return;
                 setProfile(p);
@@ -92,7 +93,7 @@ export default function CreatorProfilePage() {
     const formatDate = (value: string) => parseUtc(value).toLocaleDateString(lang, { day: 'numeric', month: 'short', year: 'numeric' });
 
     return (
-        <div className="app">
+        <div className="app" {...trackClicksIn(creatorId)}>
             <title>{`${creator.displayName} | Rollercoin Calculator`}</title>
 
             <section className="creator-section creator-profile-head">
@@ -123,7 +124,7 @@ export default function CreatorProfilePage() {
                             <span className="creator-eyebrow creator-eyebrow--live">● {t('creators.liveNow', 'CANLI')}</span>
                             <h2>{t('creators.liveOn', { defaultValue: '{{platform}} üzerinde canlı', platform: liveEmbed.platform.platform })}</h2>
                         </div>
-                        <a href={liveEmbed.platform.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-btn creator-btn--ghost">{t('creators.openOnPlatform', 'Platformda aç')} ↗</a>
+                        <a href={liveEmbed.platform.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-btn creator-btn--ghost" data-track="live">{t('creators.openOnPlatform', 'Platformda aç')} ↗</a>
                     </div>
                     <div className="creator-player-frame" style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
                         <iframe src={liveEmbed.embed.src} title={creator.displayName} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
@@ -137,7 +138,7 @@ export default function CreatorProfilePage() {
                     {links.map(key => {
                         const isLive = live.some(p => (p.platform === 'YouTube' && key === 'youTubeUrl') || (p.platform === 'Twitch' && key === 'twitchUrl') || (p.platform === 'Kick' && key === 'kickUrl') || (p.platform === 'TikTok' && key === 'tikTokUrl'));
                         return (
-                            <a key={key} href={creator[key]!} target="_blank" rel="noopener noreferrer nofollow" className="creator-account">
+                            <a key={key} href={creator[key]!} target="_blank" rel="noopener noreferrer nofollow" className="creator-account" data-track={key}>
                                 <span className="creator-account-icon"><PlatformIcon platform={key} size={26} /></span>
                                 <span className="creator-account-body">
                                     <strong>{PLATFORM_LABELS[key]}{isLive && <span className="creator-account-live">● {t('creators.liveNow', 'CANLI')}</span>}</strong>
@@ -157,13 +158,13 @@ export default function CreatorProfilePage() {
                             <span className="creator-eyebrow">YouTube</span>
                             <h2>{t('creators.latestVideos', 'Son videolar')}</h2>
                         </div>
-                        {creator.youTubeUrl && <a href={creator.youTubeUrl} target="_blank" rel="noopener noreferrer nofollow" className="creator-btn creator-btn--ghost">{t('creators.openChannel', 'Kanala git')} ↗</a>}
+                        {creator.youTubeUrl && <a href={creator.youTubeUrl} target="_blank" rel="noopener noreferrer nofollow" className="creator-btn creator-btn--ghost" data-track="youTubeUrl">{t('creators.openChannel', 'Kanala git')} ↗</a>}
                     </div>
                     <div className="creator-video-grid">
                         {feed.map(item => {
                             const url = `https://www.youtube.com/watch?v=${item.videoId}`;
                             return (
-                                <a key={item.videoId} href={url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video"
+                                <a key={item.videoId} href={url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video" data-track="video"
                                     onClick={e => { if (!(e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) && play(url, item.title)) e.preventDefault(); }}>
                                     <div className="creator-video-thumb">
                                         <img src={`https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`} alt="" loading="lazy" />
@@ -190,7 +191,7 @@ export default function CreatorProfilePage() {
                             const eventPath = v.eventSlug ? `/${lang}/${v.eventType === VideoEventType.Puzzle ? 'puzzle' : 'event'}/${v.eventSlug}` : null;
                             return (
                                 <div key={v.id} className="creator-video">
-                                    <a href={v.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video-thumb"
+                                    <a href={v.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video-thumb" data-track="video"
                                         onClick={e => { if (!(e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) && play(v.url, title)) e.preventDefault(); }}>
                                         {thumb ? <img src={thumb} alt="" loading="lazy" /> : <span aria-hidden="true">▶</span>}
                                         {videoEmbed(v.url) && <span className="creator-video-play" aria-hidden="true">▶</span>}

@@ -12,6 +12,7 @@ import { CreatorCard, PLATFORM_LABELS } from './CreatorShared';
 import { CoinNetworkSelect, TxLink } from './CryptoPayment';
 import CreatorVideoManager from './CreatorVideoManager';
 import './Creators.css';
+import CreatorStatsPanel from './CreatorStatsPanel';
 
 const emptyForm: SaveCreatorInput = { displayName: '', description: '', languages: [] };
 
@@ -191,6 +192,8 @@ export default function MyCreatorPage() {
                             <div className="creator-alert creator-alert--info">{t('creators.editNeedsReview', 'Profilinde yaptığın değişiklikler (isim, logo, linkler, açıklama, diller) yayına girmeden önce admin onayından geçer.')}</div>
                         )}
                         {message && <div className={`creator-alert creator-alert--${message.type}`} role="status">{message.text}</div>}
+
+                        {creator?.status === CreatorStatus.Approved && <CreatorStatsPanel token={accessToken!} />}
 
                         <form className="creator-panel-block" onSubmit={onSave}>
                             <h2>{creator ? t('creators.profile', 'Profil') : t('creators.application', 'Başvuru')}</h2>

@@ -31,13 +31,22 @@ Kanal linkleri normalize edilir (host'tan `www.`/`m.` atılır, `twitter.com →
 - Kartlarda canlı yayıncılar öne alınır ve "CANLI" rozeti platform logolarıyla gösterilir; rozete tıklayınca gömülebilen yayın (YouTube, Twitch, Kick kanal oynatıcısı) site içinde açılır.
 - Platform logoları `PlatformIcon.tsx` (Simple Icons, CC0).
 
+## İstatistikler (yayıncı paneli)
+
+- `CreatorStatEvent` tablosu: profil görüntülenmesi (`View`) ve link tıklaması (`Click`); hedef (`youTubeUrl`... / `profile` / `video` / `live`), sayfa (dil öneki olmadan; görüntülenmede kaynak: `site`, `direct` ya da dış host), ülke (Cloudflare `CF-IPCountry`), mobil/masaüstü ve `Visitor` (gün + IP + yayıncı HMAC özeti; IP saklanmaz).
+- `POST /{id}/track` (anonim). Botlar, bilinmeyen hedefler ve onaysız yayıncılar yazılmaz; aynı ziyaretçinin aynı hedefi 30 dk içinde bir kez sayılır.
+- Web: `data-track` işaretli linkler `trackClicksIn` ile (orta tık dahil) yazılır; profil açılışı `trackCreatorView`.
+- `GET /me/stats?days=7|28|90|365`: toplamlar + önceki dönem, günlük seri, ülke / tıklanan link / sayfa / profil kaynağı / cihaz kırılımı. Panelde `CreatorStatsPanel` (yalnızca onaylı yayıncı).
+- Veri silinmez (saklama süresi yok).
+
 ## Etkinlik videoları
 
 - Yayıncı panelinde etkinlikler en yeniden eskiye sıralı (son 50 progression + 50 puzzle) ve adla aranabilir.
 - Başlık, yayıncının içerik dillerinin her biri için ayrı girilir (ilk dil zorunlu); ziyaretçi sitenin dilindeki başlığı, yoksa varsayılanı görür (`videoTitle`). `TitlesJson` saklar.
 - "Başlığı getir" (`POST /video-meta`): YouTube (shorts dahil) sayfası `hl` ile her dilde denenir, olmazsa oEmbed; TikTok oEmbed; diğerleri og:title. Platform çeviri vermezse aynı başlık tüm dillere yazılır, yayıncı düzenler. Boş olmayan alanlar ezilmez.
 - Kapak: YouTube'da `i.ytimg.com`, diğerlerinde kayıtta og:image (`ThumbnailUrl`, dış adres).
-- Site içi oynatma (`VideoPlayer.tsx`, `videoEmbed`): YouTube/Shorts (youtube-nocookie), TikTok, Twitch (klip, kayıtlı video, kanal; `parent` site host'u), Instagram gönderi/reels. Dikey videolar 9:16 açılır. X ve Kick gömülemediği için yeni sekmede açılır. Ctrl/orta tık her zaman yeni sekme.
+- X (Twitter) postları da eklenebilir: başlık `publish.twitter.com/oembed` post metninden (medya linkleri atılır, metin yoksa "yazar (X)"), kapak `jf.x.com/images/post/{id}.png`. Site içinde `platform.twitter.com/embed/Tweet.html` iframe'iyle açılır; yükseklik X'in `twttr.private.resize` mesajından alınır.
+- Site içi oynatma (`VideoPlayer.tsx`, `videoEmbed`): YouTube/Shorts (youtube-nocookie), TikTok, Twitch (klip, kayıtlı video, kanal; `parent` site host'u), Instagram gönderi/reels. Dikey videolar 9:16 açılır. Kick kayıtlı videoları gömülemediği için yeni sekmede açılır. Ctrl/orta tık her zaman yeni sekme.
 
 ## Logo
 

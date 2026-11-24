@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '../MainLayout';
 import {
     CREATOR_LINK_KEYS, CreatorLinkKey, EventCreatorVideo, LivePlatform, PublicCreator,
-    creatorSlug, getCreatorLiveStatus, getEventCreatorVideos, getLiveCreators, orderCreatorsForLanguage, videoThumbnail, videoTitle,
+    creatorSlug, getCreatorLiveStatus, getEventCreatorVideos, getLiveCreators, orderCreatorsForLanguage, trackCreatorClick, videoThumbnail, videoTitle,
 } from '../../services/contentCreatorApi';
 import { VideoEmbed, VideoPlayerModal, videoEmbed } from './VideoPlayer';
 import { PlatformIcon } from './PlatformIcon';
@@ -54,7 +54,7 @@ export function LiveBadge({ live, title }: { live: LivePlatform[]; title: string
             {live.map(p => {
                 const embed = videoEmbed(p.url);
                 return (
-                    <a key={p.platform} href={p.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-live-platform"
+                    <a key={p.platform} href={p.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-live-platform" data-track="live"
                         title={t('creators.liveOn', { defaultValue: '{{platform}} üzerinde canlı', platform: p.platform })}
                         onClick={embed ? e => {
                             if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
@@ -70,6 +70,15 @@ export function LiveBadge({ live, title }: { live: LivePlatform[]; title: string
     );
 }
 
+/** İçindeki data-track işaretli linklere yapılan tıklamaları (orta tık dahil) yayıncı istatistiğine yazar. */
+export function trackClicksIn(creatorId: string) {
+    const handler = (e: MouseEvent) => {
+        const target = (e.target as Element).closest<HTMLElement>('[data-track]')?.dataset.track;
+        if (target && (e.type === 'click' || e.button === 1)) trackCreatorClick(creatorId, target);
+    };
+    return { onClickCapture: handler, onAuxClickCapture: handler };
+}
+
 export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; live?: LivePlatform[] }) {
     const { t, i18n } = useTranslation();
     const { lang = i18n.language } = useParams<{ lang: string }>();
@@ -79,7 +88,7 @@ export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; li
     const links = CREATOR_LINK_KEYS.filter(key => creator[key]);
     const name = <h3 className="creator-name">{creator.displayName}</h3>;
     return (
-        <article className={`creator-card${live.length ? ' creator-card--live' : ''}`}>
+        <article className={`creator-card${live.length ? ' creator-card--live' : ''}`} {...trackClicksIn(creator.id)}>
             <div className="creator-card-cover">
                 {creator.coverUrl && !coverBroken && <img src={creator.coverUrl} alt="" loading="lazy" onError={() => setCoverBroken(true)} />}
                 <div className="creator-card-cover-badges">
@@ -88,9 +97,9 @@ export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; li
             </div>
             <div className="creator-card-content">
                 <div className="creator-card-avatar">
-                    {profileUrl ? <Link to={profileUrl} tabIndex={-1} aria-hidden="true"><CreatorAvatar creator={creator} size={80} /></Link> : <CreatorAvatar creator={creator} size={80} />}
+                    {profileUrl ? <Link to={profileUrl} tabIndex={-1} aria-hidden="true" data-track="profile"><CreatorAvatar creator={creator} size={80} /></Link> : <CreatorAvatar creator={creator} size={80} />}
                 </div>
-                {profileUrl ? <Link to={profileUrl} className="creator-name-link">{name}</Link> : name}
+                {profileUrl ? <Link to={profileUrl} className="creator-name-link" data-track="profile">{name}</Link> : name}
                 <div className="creator-langs">
                     {creator.languages.map(code => {
                         const flag = languageFlag(code);
@@ -102,7 +111,7 @@ export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; li
                 {creator.description && <p className="creator-desc">{creator.description}</p>}
                 <div className="creator-pills">
                     {links.map(key => (
-                        <a key={key} href={creator[key]!} target="_blank" rel="noopener noreferrer nofollow" className="creator-pill"
+                        <a key={key} href={creator[key]!} target="_blank" rel="noopener noreferrer nofollow" className="creator-pill" data-track={key}
                             aria-label={`${creator.displayName} ${PLATFORM_LABELS[key]}`}>
                             <PlatformIcon platform={key} size={15} />
                             <span>{PLATFORM_LABELS[key]}</span>
@@ -110,7 +119,7 @@ export function CreatorCard({ creator, live = [] }: { creator: PublicCreator; li
                     ))}
                 </div>
                 {profileUrl && (
-                    <Link to={profileUrl} className="creator-card-visit">
+                    <Link to={profileUrl} className="creator-card-visit" data-track="profile">
                         {t('creators.viewProfile', 'Profili gör')} <span aria-hidden="true">→</span>
                     </Link>
                 )}
@@ -192,7 +201,8 @@ export function EventCreatorVideos({ eventType, eventId, showEmpty = false }: { 
                             const thumb = videoThumbnail(video);
                             const embed = videoEmbed(video.url);
                             return (
-                                <a key={video.id} href={video.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video"
+                                <a key={video.id} href={video.url} target="_blank" rel="noopener noreferrer nofollow" className="creator-video" data-track="video"
+                                    {...trackClicksIn(video.creator.id)}
                                     onClick={embed ? e => {
                                         // Yeni sekme isteyen (ctrl/orta tık) kullanıcıya dokunma; normal tıkta site içinde oynat
                                         if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;

@@ -369,6 +369,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     {t('admin.title')}
                   </Link>
                 )}
+                <Link onClick={() => setIsMobileMenuOpen(false)} to={`/${i18n.language}/my-blogs`} className="mobile-nav-link">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                  {t('nav.userPanel')}
+                </Link>
                 <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="mobile-nav-link mobile-logout-btn">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="nav-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                   {t('auth.logout')} {user?.email ? `(${user.email.split('@')[0]})` : ''}
