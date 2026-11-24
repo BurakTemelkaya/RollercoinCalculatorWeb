@@ -38,6 +38,7 @@ Kanal linkleri normalize edilir (host'tan `www.`/`m.` atılır, `twitter.com →
 - Web: `data-track` işaretli linkler `trackClicksIn` ile (orta tık dahil) yazılır; profil açılışı `trackCreatorView`.
 - `GET /me/stats?days=7|28|90|365`: toplamlar + önceki dönem, günlük seri, ülke / tıklanan link / sayfa / profil kaynağı / cihaz kırılımı. Panelde `CreatorStatsPanel` (yalnızca onaylı yayıncı).
 - Veri silinmez (saklama süresi yok).
+- Admin: `GET /admin/stats?days=&creatorId=` (creatorId yoksa tüm yayıncılar + yayıncı kırılımı; tekil ziyaretçi yayıncı başına sayılıp toplanır). Admin yayıncı sayfası sekmeli: `?tab=` yok → Onay işlemleri, `stats` → İstatistikler, `settings` → Ödeme ayarları (deneme günü, aylık ücret, cüzdanlar).
 
 ## Etkinlik videoları
 

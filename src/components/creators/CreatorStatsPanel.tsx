@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CreatorStatRow, CreatorStats, getMyCreatorStats } from '../../services/contentCreatorApi';
+import { CreatorStatRow, CreatorStats, getAdminCreatorStats, getMyCreatorStats } from '../../services/contentCreatorApi';
 import { PLATFORM_LABELS } from './CreatorShared';
 import { PlatformIcon } from './PlatformIcon';
 import type { CreatorLinkKey } from '../../services/contentCreatorApi';
 
 const RANGES = [7, 28, 90, 365] as const;
 
-/** Yayıncı panelindeki istatistikler: profil görüntülenmeleri, link tıklamaları, ülke / sayfa / platform / cihaz kırılımı. */
-export default function CreatorStatsPanel({ token }: { token: string }) {
+/**
+ * Yayıncı panelindeki istatistikler: profil görüntülenmeleri, link tıklamaları, ülke / sayfa / platform / cihaz kırılımı.
+ * admin: bir yayıncının (creatorId) ya da tüm yayıncıların verisi; tümünde yayıncı kırılımı da gösterilir.
+ */
+export default function CreatorStatsPanel({ token, admin = false, creatorId = null }: { token: string; admin?: boolean; creatorId?: string | null }) {
     const { t, i18n } = useTranslation();
     const { lang = i18n.language } = useParams<{ lang: string }>();
     const [days, setDays] = useState<number>(28);
@@ -19,11 +22,12 @@ export default function CreatorStatsPanel({ token }: { token: string }) {
     useEffect(() => {
         let cancelled = false;
         setError(false);
-        getMyCreatorStats(token, days)
+        setStats(null);
+        (admin ? getAdminCreatorStats(token, days, creatorId) : getMyCreatorStats(token, days))
             .then(s => { if (!cancelled) setStats(s); })
             .catch(() => { if (!cancelled) setError(true); });
         return () => { cancelled = true; };
-    }, [token, days]);
+    }, [token, days, admin, creatorId]);
 
     const regionName = useMemo(() => {
         try { return new Intl.DisplayNames([lang], { type: 'region' }); } catch { return null; }
@@ -32,7 +36,7 @@ export default function CreatorStatsPanel({ token }: { token: string }) {
     const pageLabel = (path: string) => {
         if (path === '/') return t('creators.statsPageHome', 'Ana sayfa (hesaplayıcı)');
         if (path === '/creators') return t('creators.statsPageCreators', 'Yayıncılar sayfası');
-        if (path.startsWith('/creators/')) return t('creators.statsPageProfile', 'Profil sayfan');
+        if (path.startsWith('/creators/')) return admin ? 'Profil sayfası' : t('creators.statsPageProfile', 'Profil sayfan');
         const [, section, slug] = path.split('/');
         if (section === 'event' && slug) return `Progression · ${slug}`;
         if (section === 'puzzle' && slug) return `Puzzle · ${slug}`;
@@ -59,7 +63,7 @@ export default function CreatorStatsPanel({ token }: { token: string }) {
     return (
         <div className="creator-panel-block creator-stats">
             <div className="creator-stats-head">
-                <h2>{t('creators.statsTitle', 'İstatistikler')}</h2>
+                <h2>{admin ? (creatorId ? 'Yayıncı istatistikleri' : 'Tüm yayıncılar') : t('creators.statsTitle', 'İstatistikler')}</h2>
                 <div className="creator-stats-range" role="group" aria-label={t('creators.statsRange', 'Dönem')}>
                     {RANGES.map(r => (
                         <button key={r} type="button" className={r === days ? 'active' : ''} aria-pressed={r === days} onClick={() => setDays(r)}>
@@ -80,14 +84,18 @@ export default function CreatorStatsPanel({ token }: { token: string }) {
                     </div>
                     <p className="creator-hint" style={{ margin: '4px 0 16px' }}>
                         {t('creators.statsCompare', { defaultValue: 'Değişim, önceki {{count}} günle karşılaştırılır.', count: stats.days })}
+                        {admin && !creatorId && ' Tekil ziyaretçi her yayıncı için ayrı sayılır; toplam, yayıncıların toplamıdır.'}
                     </p>
 
                     {empty
-                        ? <p className="creator-empty">{t('creators.statsEmpty', 'Bu dönemde henüz görüntülenme ya da tıklama yok. Kartın sitede göründükçe veriler burada birikir.')}</p>
+                        ? <p className="creator-empty">{admin ? 'Bu dönemde görüntülenme ya da tıklama yok.' : t('creators.statsEmpty', 'Bu dönemde henüz görüntülenme ya da tıklama yok. Kartın sitede göründükçe veriler burada birikir.')}</p>
                         : (
                             <>
                                 <DailyChart stats={stats} lang={lang} labels={{ views: t('creators.statsViews', 'Profil görüntülenme'), clicks: t('creators.statsClicks', 'Link tıklaması') }} />
                                 <div className="creator-stats-grid">
+                                    {stats.creators?.length > 0 && (
+                                        <Breakdown title="Yayıncılar" rows={stats.creators} value={r => r.views + r.clicks} label={k => k} />
+                                    )}
                                     <Breakdown title={t('creators.statsCountries', 'Ülkeler')} rows={stats.countries} value={r => r.views + r.clicks} label={countryLabel} />
                                     <Breakdown title={t('creators.statsTargets', 'Tıklanan linkler')} rows={stats.targets} value={r => r.clicks} label={targetLabel} />
                                     <Breakdown title={t('creators.statsPages', 'Tıklandığı sayfalar')} rows={stats.pages} value={r => r.clicks} label={pageLabel} />

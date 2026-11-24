@@ -188,12 +188,16 @@ export interface CreatorStats {
     sources: CreatorStatRow[];
     targets: CreatorStatRow[];
     devices: CreatorStatRow[];
+    /** Yalnızca admin "tüm yayıncılar" görünümünde dolu. */
+    creators: CreatorStatRow[];
 }
 
 export const getCreatorPricing = () => apiGet<CreatorPricing>(buildApiUrl(`${base}/pricing`));
 export const getEventCreatorVideos = (eventType: number, eventId: string) =>
     apiGet<EventCreatorVideo[]>(buildApiUrl(`${base}/videos?eventType=${eventType}&eventId=${encodeURIComponent(eventId)}`));
 
+export const getAdminCreatorStats = (token: string, days: number, creatorId?: string | null) =>
+    send<CreatorStats>(`/admin/stats?days=${days}${creatorId ? `&creatorId=${encodeURIComponent(creatorId)}` : ''}`, token, 'GET');
 export const getMyCreatorStats = (token: string, days: number) => send<CreatorStats>(`/me/stats?days=${days}`, token, 'GET');
 export const getMyCreator = (token: string) => send<CreatorDetail | null>('/me', token, 'GET');
 export const saveMyCreator = (token: string, input: SaveCreatorInput) => send<CreatorDetail>('/me', token, 'POST', input);

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import DashboardLayout from '../DashboardLayout';
@@ -10,6 +11,7 @@ import {
 import { CreatorAvatar, PLATFORM_LABELS, languageFlag } from '../creators/CreatorShared';
 import { PlatformIcon } from '../creators/PlatformIcon';
 import { CoinNetworkSelect, TxLink } from '../creators/CryptoPayment';
+import CreatorStatsPanel from '../creators/CreatorStatsPanel';
 import '../creators/Creators.css';
 
 const STATUS_LABELS: Record<number, string> = { 0: 'Bekliyor', 1: 'Onaylı', 2: 'Reddedildi', 3: 'Engelli' };
@@ -24,6 +26,13 @@ const remainingDays = (value?: string | null) => {
         : <span className="creator-badge creator-badge--2">süresi doldu</span>;
 };
 
+const TABS = [
+    { key: 'review', label: 'Onay işlemleri' },
+    { key: 'stats', label: 'İstatistikler' },
+    { key: 'settings', label: 'Ödeme ayarları' },
+] as const;
+type Tab = typeof TABS[number]['key'];
+
 type Draft = { status: number; isComplimentary: boolean; addDays: number; adminNote: string };
 
 export default function AdminCreatorList() {
@@ -37,6 +46,16 @@ export default function AdminCreatorList() {
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
     const [filter, setFilter] = useState<'attention' | 'all'>('attention');
+    const [search, setSearch] = useState('');
+    const [statsCreator, setStatsCreator] = useState('');
+    // Sekme adreste tutulur: yenileyince ve link paylaşınca aynı sekme açılır
+    const [params, setParams] = useSearchParams();
+    const tab: Tab = TABS.some(x => x.key === params.get('tab')) ? params.get('tab') as Tab : 'review';
+    const setTab = (key: Tab) => setParams(prev => {
+        const next = new URLSearchParams(prev);
+        if (key === 'review') next.delete('tab'); else next.set('tab', key);
+        return next;
+    }, { replace: true });
 
     const load = async () => {
         const list = await getAdminCreators(accessToken!);
@@ -72,16 +91,47 @@ export default function AdminCreatorList() {
 
     const needsAttention = (c: CreatorDetail) =>
         c.status === CreatorStatus.Pending || c.isDuplicate || !!c.pendingChanges || c.payments.some(p => p.status === PaymentStatus.Pending);
-    const visible = filter === 'all' ? creators : creators.filter(needsAttention);
+    const query = search.trim().toLocaleLowerCase('tr');
+    const attentionCount = creators.filter(needsAttention).length;
+    const visible = (filter === 'all' ? creators : creators.filter(needsAttention))
+        .filter(c => !query || `${c.displayName} ${c.userEmail ?? ''}`.toLocaleLowerCase('tr').includes(query));
+    const summary = useMemo(() => [
+        { label: 'Bekleyen başvuru', value: creators.filter(c => c.status === CreatorStatus.Pending).length, tone: 'warn' },
+        { label: 'Bekleyen ödeme', value: creators.reduce((n, c) => n + c.payments.filter(p => p.status === PaymentStatus.Pending).length, 0), tone: 'warn' },
+        { label: 'Bekleyen değişiklik', value: creators.filter(c => c.pendingChanges).length, tone: 'warn' },
+        { label: 'Yayında', value: creators.filter(c => c.isLive).length, tone: 'ok' },
+    ], [creators]);
 
     return (
         <DashboardLayout title={t('admin.manageCreators', 'Yayıncılar')} isAdmin={true}>
             <div className="admin-content-card">
-                <h1 style={{ margin: '0 0 20px', fontSize: '1.5rem' }}>{t('admin.manageCreators', 'Yayıncılar')}</h1>
+                <header className="creator-admin-page-head">
+                    <h1>{t('admin.manageCreators', 'Yayıncılar')}</h1>
+                    <span className="creator-admin-meta">{creators.length} kayıt · aylık {settings.monthlyPriceUsd}$ · {settings.trialDays} gün deneme</span>
+                </header>
+                <div className="creator-admin-summary">
+                    {summary.map(x => (
+                        <div key={x.label} className={`creator-admin-summary-item${x.value > 0 ? ` creator-admin-summary-item--${x.tone}` : ''}`}>
+                            <strong>{x.value}</strong><span>{x.label}</span>
+                        </div>
+                    ))}
+                </div>
+
+                <nav className="creator-admin-tabs" role="tablist" aria-label="Yayıncı yönetimi">
+                    {TABS.map(x => (
+                        <button key={x.key} type="button" role="tab" aria-selected={tab === x.key} className={tab === x.key ? 'active' : ''} onClick={() => setTab(x.key)}>
+                            {x.label}
+                            {x.key === 'review' && attentionCount > 0 && <span className="creator-admin-tab-count">{attentionCount}</span>}
+                        </button>
+                    ))}
+                </nav>
                 {message && <div className={`creator-alert creator-alert--${message.type}`} role="status">{message.text}</div>}
 
-                <form className="creator-panel-block" onSubmit={e => { e.preventDefault(); run(() => adminSaveCreatorSettings(accessToken!, settings), 'Ayarlar kaydedildi.'); }}>
-                    <h2>Program ayarları</h2>
+                {tab === 'settings' && (
+                <form className="creator-admin-settings" onSubmit={e => { e.preventDefault(); run(() => adminSaveCreatorSettings(accessToken!, settings), 'Ayarlar kaydedildi.'); }}>
+                    <section className="creator-panel-block">
+                    <h2>Program</h2>
+                    <p className="creator-hint creator-admin-section-hint">Yeni onaylanan yayıncının ücretsiz deneme süresi ve aylık ücret.</p>
                     <div className="creator-form">
                         <label className="creator-field">Ücretsiz deneme (gün)
                             <input type="number" min={0} max={365} required value={settings.trialDays} onChange={e => setSettings({ ...settings, trialDays: Number(e.target.value) })} />
@@ -90,7 +140,11 @@ export default function AdminCreatorList() {
                             <input type="number" min={0} step="0.01" required value={settings.monthlyPriceUsd} onChange={e => setSettings({ ...settings, monthlyPriceUsd: Number(e.target.value) })} />
                         </label>
                     </div>
-                    <h3 style={{ fontSize: '0.95rem', margin: '16px 0 8px' }}>Ödeme cüzdanları</h3>
+                    </section>
+                    <section className="creator-panel-block">
+                    <h2>Ödeme cüzdanları</h2>
+                    <p className="creator-hint creator-admin-section-hint">Yayıncılar ödemeyi bu adreslerden birine gönderir; panelde coin/ağ seçeneği olarak görünür.</p>
+                    {settings.wallets.length === 0 && <p className="creator-empty">Henüz cüzdan yok.</p>}
                     {settings.wallets.map((w, i) => (
                         <div className="creator-wallet-row" key={i}>
                             <CoinNetworkSelect required value={w} onChange={v => setWallet(i, v)} />
@@ -102,16 +156,34 @@ export default function AdminCreatorList() {
                         <button type="button" className="creator-btn creator-btn--ghost" onClick={() => setSettings(s => ({ ...s, wallets: [...s.wallets, { coin: '', network: '', address: '' }] }))}>+ Cüzdan ekle</button>
                         <button className="creator-btn" disabled={busy}>Ayarları kaydet</button>
                     </div>
+                    </section>
                 </form>
+                )}
 
-                <div className="creator-row-actions" style={{ marginBottom: 16 }}>
-                    <button type="button" className={`creator-lang-pick${filter === 'attention' ? ' active' : ''}`} onClick={() => setFilter('attention')}>
-                        İşlem bekleyenler ({creators.filter(needsAttention).length})
-                    </button>
-                    <button type="button" className={`creator-lang-pick${filter === 'all' ? ' active' : ''}`} onClick={() => setFilter('all')}>Tümü ({creators.length})</button>
+                {tab === 'stats' && (
+                    <>
+                        <label className="creator-field creator-admin-stats-pick">Yayıncı
+                            <select value={statsCreator} onChange={e => setStatsCreator(e.target.value)}>
+                                <option value="">Tüm yayıncılar</option>
+                                {creators.filter(c => c.status === CreatorStatus.Approved).map(c => <option key={c.id} value={c.id}>{c.displayName}</option>)}
+                            </select>
+                        </label>
+                        <CreatorStatsPanel token={accessToken!} admin creatorId={statsCreator || null} />
+                    </>
+                )}
+
+                {tab === 'review' && (<>
+                <div className="creator-admin-toolbar">
+                    <div className="creator-stats-range" role="group" aria-label="Filtre">
+                        <button type="button" className={filter === 'attention' ? 'active' : ''} aria-pressed={filter === 'attention'} onClick={() => setFilter('attention')}>
+                            İşlem bekleyenler ({attentionCount})
+                        </button>
+                        <button type="button" className={filter === 'all' ? 'active' : ''} aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>Tümü ({creators.length})</button>
+                    </div>
+                    <input type="search" className="creator-admin-search" placeholder="İsim ya da e-posta ara" value={search} onChange={e => setSearch(e.target.value)} aria-label="Yayıncı ara" />
                 </div>
 
-                {loading ? <span className="spinner" /> : visible.length === 0 ? <p className="creator-empty">Kayıt yok.</p> : visible.map(c => {
+                {loading ? <span className="spinner" /> : visible.length === 0 ? <p className="creator-empty">{filter === 'attention' && !query ? 'İşlem bekleyen yayıncı yok.' : 'Kayıt yok.'}</p> : visible.map(c => {
                     const draft = drafts[c.id];
                     return (
                         <div className="creator-panel-block creator-admin-card" key={c.id}>
@@ -260,6 +332,7 @@ export default function AdminCreatorList() {
                         </div>
                     );
                 })}
+                </>)}
             </div>
         </DashboardLayout>
     );

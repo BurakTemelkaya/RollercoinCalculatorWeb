@@ -1400,9 +1400,136 @@
 
 @media (max-width: 600px) {
   .creator-stats-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .creator-stats-kpi { padding: 10px; }
+  .creator-panel-block.creator-stats { padding: 12px; }
+  .creator-stats-kpi { padding: 10px 8px; }
   .creator-stats-kpi strong { font-size: 1.3rem; }
   .creator-stats-kpi-label { font-size: 0.7rem; align-items: flex-start; overflow-wrap: anywhere; hyphens: auto; min-width: 0; }
-  .creator-stats-kpi-label i { flex-shrink: 0; margin-top: 3px; }
+  .creator-stats-kpi-label i { display: none; } /* dar kartta kelimeye yer; renkler grafik açıklamasında var */
   .creator-stats-chart, .creator-stats-card { padding: 12px; }
+}
+
+/* ---- Admin: yayıncı yönetimi ---- */
+.creator-admin-page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin-bottom: 16px;
+}
+
+.creator-admin-page-head h1 { margin: 0; font-size: 1.5rem; }
+
+.creator-admin-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.creator-admin-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.creator-admin-summary-item strong {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.creator-admin-summary-item span { font-size: 0.78rem; color: var(--text-muted); }
+.creator-admin-summary-item--warn { border-color: rgba(251, 191, 36, 0.45); }
+.creator-admin-summary-item--warn strong { color: #fbbf24; }
+.creator-admin-summary-item--ok strong { color: #34d399; }
+
+.creator-admin-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.creator-admin-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.creator-admin-tabs button:hover { color: var(--text-primary); }
+
+.creator-admin-tabs button.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-secondary);
+}
+
+.creator-admin-tab-count {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.18);
+  color: #fbbf24;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.creator-admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.creator-admin-search {
+  flex: 0 1 280px;
+  min-width: 0;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+}
+
+.creator-admin-stats-pick { max-width: 320px; margin-bottom: 16px; }
+
+.creator-admin-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.creator-admin-settings .creator-panel-block { margin-bottom: 0; }
+.creator-admin-settings .creator-form { grid-template-columns: 1fr; }
+.creator-admin-section-hint { display: block; margin: -8px 0 14px; }
+
+@media (max-width: 900px) {
+  .creator-admin-settings { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .creator-admin-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .creator-admin-tabs button { flex: 1 1 0; justify-content: center; padding: 10px 4px; font-size: 0.82rem; white-space: normal; text-align: center; }
+  .creator-admin-toolbar { flex-direction: column; align-items: stretch; }
+  .creator-admin-toolbar .creator-stats-range { align-self: flex-start; }
+  .creator-admin-search { flex-basis: auto; }
+  .creator-admin-stats-pick { max-width: none; }
 }
