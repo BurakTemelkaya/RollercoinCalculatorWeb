@@ -498,7 +498,8 @@ export default function MergePage() {
     };
 
     // Close on ESC
-    const [showLevel1Cost, setShowLevel1Cost] = useState(true);
+    const [showLevel1Cost, setShowLevel1Cost] = useState(() => localStorage.getItem('rollercoin_web_show_level1_cost') === 'true');
+    useEffect(() => { localStorage.setItem('rollercoin_web_show_level1_cost', String(showLevel1Cost)); }, [showLevel1Cost]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
