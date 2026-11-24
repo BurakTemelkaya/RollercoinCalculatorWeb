@@ -8,6 +8,15 @@ GitHub'a commit/push etmeden önce **her zaman `npm run build` çalıştırın**
 
 Rollercoin'den gelen görselleri (ikon, miner, rack, ödül resimleri vb.) sayfaya doğrudan `static.rollercoin.com` adresinden bağlamayın. Önce **kendi CDN'imizde** (`getCdnBaseUrl()`, miner/rack için `CdnImage` bileşeni) ya da **frontend içinde** (`public/` veya `src/assets/`) saklayın; Rollercoin'in `static.rollercoin.com` adresini yalnızca **yedek (fallback)** olarak kullanın (`CdnImage` `fallbackUrl`'i ya da `<img onError>` ile). Yeni bir özellik Rollercoin görseli kullanıyorsa dosyaları projeye indirin veya CDN'e ekleyin.
 
+## Zorunlu kural: tasarım değişikliklerinde mobil kontrol
+
+Görünümü etkileyen her değişiklikte (sayfa, bileşen, CSS, modal, menü) masaüstünün yanında **mobil görünümü de (375 px genişlik) kontrol edin**:
+- Yatay taşma olmamalı (`document.documentElement.scrollWidth` ekran genişliğini geçmemeli).
+- Metinler taşmamalı, kesilmemeli; butonlar ve linkler görünür ve tıklanabilir olmalı.
+- Modal/menü gibi katmanlar ekrana sığmalı ya da kaydırılabilmeli.
+
+Sorun varsa commit etmeden önce düzeltin.
+
 Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zeka entegrasyonu için parçalara ayrılmıştır. Aşağıdaki dosyalara giderek ilgili detayları bulabilirsiniz:
 
 1. **[Proje Genel Yapısı ve Kurulum](file:///.agents/ProjectOverview.md)**
