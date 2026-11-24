@@ -7,7 +7,6 @@ import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useLatestEventPath } from '../hooks/useLatestEventPath';
 import { useDragScroll } from '../hooks/useDragScroll';
-import { GlobalAds } from './GlobalAds';
 import PromoCodeButton from './PromoCodeButton';
 import { AdSenseSlot } from './AdSenseSlot';
 import { resolveTopAdNetwork } from '../utils/topAdNetwork';
@@ -391,7 +390,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Spacer to compensate for fixed navbar */}
       <div className="navbar-spacer" />
 
-      <GlobalAds adsBlocked={adsBlocked} country={country} />
       <PromoCodeButton />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '100%' }}>
