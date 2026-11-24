@@ -1397,3 +1397,12 @@
   background: var(--accent-gradient);
   border-radius: inherit;
 }
+
+@media (max-width: 600px) {
+  .creator-stats-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .creator-stats-kpi { padding: 10px; }
+  .creator-stats-kpi strong { font-size: 1.3rem; }
+  .creator-stats-kpi-label { font-size: 0.7rem; align-items: flex-start; overflow-wrap: anywhere; hyphens: auto; min-width: 0; }
+  .creator-stats-kpi-label i { flex-shrink: 0; margin-top: 3px; }
+  .creator-stats-chart, .creator-stats-card { padding: 12px; }
+}
