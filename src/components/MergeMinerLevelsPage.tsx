@@ -275,10 +275,6 @@ export default function MergeMinerLevelsPage() {
             return { ...ev, miners, plan: costPlan(miners) };
         })
         .filter(ev => ev.plan.result[topLevel] > 0) : [];
-    const planParts = planSteps.flatMap(s => s.detail.requiredItems
-        .filter(isCostCounted)
-        .map(item => ({ item, count: forgeBatchParts(item.count, s.merges, forgeLevel) })));
-
     // Cost of one level-`to` miner built from 2^(to-from) level-`from` miners
     const comboCost = (from: number, to: number) => {
         let total = 0;
@@ -289,6 +285,29 @@ export default function MergeMinerLevelsPage() {
         }
         return total;
     };
+
+    // Miner image per level: results give levels 2+, the required miner gives the lowest level
+    const minerImages = new Map<number, { fileName: string; imageVersion?: number | null }>();
+    data.forEach(d => {
+        const reqMiner = d.requiredItems.find(item => item.type === 'miners' && item.fileName);
+        if (reqMiner?.fileName && !minerImages.has(d.resultItemLevel)) minerImages.set(d.resultItemLevel, { fileName: reqMiner.fileName, imageVersion: reqMiner.imageVersion });
+        if (d.resultItemFileName) minerImages.set(d.resultItemLevel + 1, { fileName: d.resultItemFileName, imageVersion: d.resultItemImageVersion });
+    });
+    const levelTag = (level: number) => (
+        <span className="level-tag">
+            {minerImages.has(level) && (
+                <CdnImage
+                    type="miner"
+                    itemId={minerImages.get(level)!.fileName.split('.')[0]}
+                    fallbackUrl={getMinerImageUrl(minerImages.get(level)!.fileName, minerImages.get(level)!.imageVersion || undefined)}
+                    alt=""
+                    className="level-tag-miner"
+                />
+            )}
+            {level > 1 && <img src={getLevelIconUrl(level)} alt="" />}
+            Lv.{level}
+        </span>
+    );
 
     return (
         <div className="merge-container">
@@ -402,8 +421,7 @@ export default function MergeMinerLevelsPage() {
                             <div className="owned-inputs">
                                 {fromLevels.map(level => (
                                     <label key={level} className="owned-input">
-                                        <img src={getLevelIconUrl(level)} alt="" onError={(e) => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }} />
-                                        <span>Lv.{level}</span>
+                                        {levelTag(level)}
                                         <input
                                             type="number"
                                             min={0}
@@ -427,19 +445,42 @@ export default function MergeMinerLevelsPage() {
                                     {planSteps.length === 0 ? (
                                         <p className="owned-hint">{t('merge.ownedNothing', 'Birleştirilecek çift yok.')}</p>
                                     ) : (
-                                        <div className="owned-steps">
+                                        <div className="merge-plan">
+                                            <div className="merge-plan-row merge-plan-head">
+                                                <span>{t('merge.planStep', 'Birleştirme')}</span>
+                                                <span>{t('merge.planParts', 'Parçalar')}</span>
+                                                <span className="merge-plan-num">{t('merge.planFee', 'Forge Ücreti')}</span>
+                                                <span className="merge-plan-num">{t('merge.totalCost', 'Toplam')}</span>
+                                            </div>
                                             {planSteps.map(step => (
-                                                <div key={step.detail.id} className="owned-step">
-                                                    <span><strong>{step.merges}×</strong> Lv.{step.detail.resultItemLevel} → Lv.{step.detail.resultItemLevel + 1}</span>
-                                                    <span className="cost-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(step.totalCost)} RLT</span>
+                                                <div key={step.detail.id} className="merge-plan-row">
+                                                    <span className="merge-plan-step">
+                                                        <span className="merge-plan-count">{step.merges}×</span>
+                                                        {levelTag(step.detail.resultItemLevel)}
+                                                        <span className="merge-plan-arrow">→</span>
+                                                        {levelTag(step.detail.resultItemLevel + 1)}
+                                                    </span>
+                                                    <span className="merge-plan-parts">
+                                                        {!step.detail.requiredItems.some(isCostCounted) && '–'}
+                                                        {step.detail.requiredItems.filter(isCostCounted).map((item, idx) => (
+                                                            <span key={idx} className="merge-plan-part">
+                                                                <img src={getMutationComponentImage(item.itemName, item.level) ?? undefined} alt="" />
+                                                                {forgeBatchParts(item.count, step.merges, forgeLevel)}× {getPartDisplayName(item.itemName, item.level)}
+                                                            </span>
+                                                        ))}
+                                                    </span>
+                                                    <span className="merge-plan-num merge-plan-fee"><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(step.feeCost)}</span>
+                                                    <span className="merge-plan-num merge-plan-total"><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(step.totalCost)}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     )}
-                                    <p className="owned-result">
-                                        {t('merge.ownedResult', 'Sonuç')}:{' '}
-                                        {Object.entries(plan.result).filter(([, n]) => n > 0).map(([lv, n]) => `${n}× Lv.${lv}`).join(', ') || '-'}
-                                    </p>
+                                    <div className="merge-plan-result">
+                                        <span className="merge-plan-result-label">{t('merge.ownedResult', 'Sonuç')}</span>
+                                        {Object.entries(plan.result).filter(([, n]) => n > 0).map(([lv, n]) => (
+                                            <span key={lv} className="merge-plan-chip">{n}× {levelTag(Number(lv))}</span>
+                                        ))}
+                                    </div>
                                     <div className="grand-total-stats">
                                         <div className="grand-total-stat">
                                             <span className="stat-label">{t('merge.totalPartsCost', 'Toplam Parça Maliyeti')}</span>
@@ -454,23 +495,6 @@ export default function MergeMinerLevelsPage() {
                                             <span className="stat-val"><img src={rltImg} alt="RLT" width="22" /> {formatRltAmount(planPartsCost + planFeeCost)} RLT</span>
                                         </div>
                                     </div>
-                                    {planParts.length > 0 && (
-                                        <div className="requirements-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px', marginTop: '24px', width: '100%' }}>
-                                            {planParts.map(({ item, count }, idx) => (
-                                                <div key={`pp-${item.itemId}-${idx}`} className="req-item-card">
-                                                    <div className="req-item-img-wrap">
-                                                        <img src={getMutationComponentImage(item.itemName, item.level) ?? undefined} alt={getPartDisplayName(item.itemName, item.level)} className="req-item-img" />
-                                                    </div>
-                                                    <div className="req-item-info">
-                                                        <span className="req-item-name">{getPartDisplayName(item.itemName, item.level)}</span>
-                                                        <div className="req-item-bottom">
-                                                            <span className="req-item-qty">x{count}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                 </>
                             ) : (
                                 <div className="combo-table-wrap">
@@ -478,21 +502,21 @@ export default function MergeMinerLevelsPage() {
                                         <thead>
                                             <tr>
                                                 <th>{t('merge.comboFromTo', 'Başlangıç → Hedef')}</th>
-                                                {fromLevels.map(level => <th key={level}>Lv.{level + 1}</th>)}
+                                                {fromLevels.map(level => <th key={level} className={level + 1 === topLevel ? 'combo-top' : undefined}>{levelTag(level + 1)}</th>)}
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {fromLevels.map(from => (
                                                 <tr key={from}>
-                                                    <th>Lv.{from}</th>
+                                                    <th>{levelTag(from)}</th>
                                                     {fromLevels.map(level => {
                                                         const to = level + 1;
                                                         const cost = to > from ? comboCost(from, to) : null;
                                                         return (
-                                                            <td key={to}>
-                                                                {cost === null ? '–' : (
+                                                            <td key={to} className={cost === null ? 'combo-empty' : to === topLevel ? 'combo-top' : undefined}>
+                                                                {cost === null ? null : (
                                                                     <>
-                                                                        <span className="combo-cost">{formatRltAmount(cost)} RLT</span>
+                                                                        <span className="combo-cost"><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(cost)}</span>
                                                                         <span className="combo-miners">{2 ** (to - from)}× Lv.{from}</span>
                                                                     </>
                                                                 )}

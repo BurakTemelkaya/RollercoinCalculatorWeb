@@ -913,7 +913,10 @@
     "ownedResult": "Result",
     "comboFromTo": "From → To",
     "eventMergeHint": "Cost to reach Lv.{{level}} with the miners from this event",
-    "eventMergeUse": "Show details"
+    "eventMergeUse": "Show details",
+    "planStep": "Merge",
+    "planFee": "Forge Fee",
+    "planParts": "Parts"
   },
   "dailyQuest": {
     "title": "Daily Quest",

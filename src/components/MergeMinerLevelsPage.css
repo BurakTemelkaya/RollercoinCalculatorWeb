@@ -407,16 +407,55 @@
 .owned-input img { width: 20px; height: auto; }
 .owned-input input { width: 56px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-primary, #fff); padding: 4px 6px; font-size: 14px; }
 .owned-clear { background: none; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--text-secondary); padding: 6px 12px; cursor: pointer; }
-.owned-steps { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; margin: 0 auto 12px; }
-.owned-step { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
-.owned-result { text-align: center; color: var(--text-secondary); font-size: 14px; margin: 0 0 16px; }
-.combo-table-wrap { width: 100%; overflow-x: auto; }
-.combo-table { border-collapse: collapse; margin: 0 auto; font-size: 13px; }
-.combo-table th, .combo-table td { padding: 8px 12px; border: 1px solid rgba(255,255,255,0.06); text-align: center; white-space: nowrap; }
-.combo-table thead th, .combo-table tbody th { color: var(--text-secondary); font-weight: 600; }
-.combo-cost { display: block; color: var(--text-primary, #fff); font-weight: 600; }
-.combo-miners { display: block; color: var(--text-secondary); font-size: 11px; }
+.combo-table-wrap { width: 100%; max-width: 760px; margin: 0 auto; overflow-x: auto; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+.combo-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.combo-table th, .combo-table td { padding: 10px 12px; text-align: center; white-space: nowrap; border-top: 1px solid rgba(255,255,255,0.06); }
+.combo-table thead th { border-top: none; background: rgba(255,255,255,0.04); color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+.combo-table thead th:first-child { text-transform: uppercase; letter-spacing: 0.03em; }
+.combo-table tbody th { text-align: left; background: rgba(255,255,255,0.02); }
+.combo-table tbody tr:hover td:not(.combo-empty) { background: rgba(6,182,212,0.06); }
+.combo-table .level-tag { justify-content: center; }
+.combo-table tbody th .level-tag { justify-content: flex-start; }
+.combo-table td.combo-top { background: rgba(250, 204, 21, 0.05); }
+.combo-table td.combo-empty { background: rgba(0,0,0,0.12); }
+.combo-cost { display: inline-flex; align-items: center; gap: 4px; color: var(--text-primary, #fff); font-weight: 700; font-variant-numeric: tabular-nums; }
+.combo-miners { display: block; margin-top: 2px; color: var(--text-secondary); font-size: 11px; }
 .event-merge-card { width: 100%; max-width: 560px; margin: 0 auto 16px; padding: 12px 16px; border: 1px solid rgba(6, 182, 212, 0.35); border-radius: 12px; background: rgba(6, 182, 212, 0.06); text-align: center; }
 .event-merge-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; }
 .event-merge-head a { color: #06b6d4; }
 .event-merge-card .owned-hint { margin-bottom: 10px; }
+
+/* Merge plan (owned miners) */
+.level-tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; }
+.level-tag img { width: 18px; height: auto; }
+.merge-plan { width: 100%; max-width: 760px; margin: 0 auto 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+.merge-plan-row { display: grid; grid-template-columns: 170px 1fr 110px 110px; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.merge-plan-row:nth-child(even) { background: rgba(255,255,255,0.02); }
+.merge-plan-head { border-top: none; background: rgba(255,255,255,0.04); color: var(--text-secondary); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.merge-plan-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.merge-plan-num img { vertical-align: -2px; }
+.merge-plan-fee { color: var(--text-secondary); }
+.merge-plan-total { font-weight: 700; color: var(--text-primary, #fff); }
+.merge-plan-step { display: inline-flex; align-items: center; gap: 6px; }
+.merge-plan-count { min-width: 28px; padding: 2px 6px; border-radius: 6px; background: rgba(6,182,212,0.15); color: #06b6d4; font-weight: 700; text-align: center; font-size: 13px; }
+.merge-plan-arrow { color: var(--text-secondary); }
+.merge-plan-parts { display: flex; flex-wrap: wrap; gap: 6px 12px; color: var(--text-secondary); }
+.merge-plan-part { display: inline-flex; align-items: center; gap: 6px; }
+.merge-plan-part img { width: 22px; height: 22px; object-fit: contain; }
+.merge-plan-result { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 4px 0 20px; }
+.merge-plan-result-label { color: var(--text-secondary); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.merge-plan-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.35); font-size: 14px; font-weight: 700; }
+
+@media (max-width: 640px) {
+    .merge-plan-head { display: none; }
+    .merge-plan-row { grid-template-columns: 1fr auto; grid-template-areas: "step total" "parts parts"; row-gap: 6px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .merge-plan-row:first-of-type + .merge-plan-row { border-top: none; }
+    .merge-plan-step { grid-area: step; }
+    .merge-plan-parts { grid-area: parts; font-size: 13px; }
+    .merge-plan-fee { display: none; }
+    .merge-plan-total { grid-area: total; }
+}
+.level-tag img.level-tag-miner { width: auto; height: 24px; max-width: 48px; object-fit: contain; }
+@media (max-width: 640px) {
+    .level-tag img.level-tag-miner { display: none; }
+}

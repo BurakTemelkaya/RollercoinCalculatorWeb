@@ -914,7 +914,10 @@
     "ownedResult": "Sonuç",
     "comboFromTo": "Başlangıç → Hedef",
     "eventMergeHint": "Etkinlikten gelen minerlarla Lv.{{level}} yapma maliyeti",
-    "eventMergeUse": "Detayları göster"
+    "eventMergeUse": "Detayları göster",
+    "planStep": "Birleştirme",
+    "planFee": "Forge Ücreti",
+    "planParts": "Parçalar"
   },
   "dailyQuest": {
     "title": "Günlük Görev",
