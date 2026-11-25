@@ -905,7 +905,15 @@
       "stepTotalFeeTooltip": "Total fee paid for all merges in this step",
       "total": "Total"
     },
-    "searchAddMiner": "Search / Add Miner"
+    "searchAddMiner": "Search / Add Miner",
+    "ownedTitle": "Miners I Own",
+    "ownedHint": "Enter how many you have of each level to see the cost of merging them. Leave it empty to see every combination.",
+    "ownedClear": "Clear",
+    "ownedNothing": "No pairs to merge.",
+    "ownedResult": "Result",
+    "comboFromTo": "From → To",
+    "eventMergeHint": "Cost to reach Lv.{{level}} with the miners from this event",
+    "eventMergeUse": "Show details"
   },
   "dailyQuest": {
     "title": "Daily Quest",

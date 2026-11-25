@@ -906,7 +906,15 @@
       "stepTotalFeeTooltip": "Bu adımdaki tüm birleştirmeler için ödenen toplam tutar",
       "total": "Toplam"
     },
-    "searchAddMiner": "Madenci Ara / Ekle"
+    "searchAddMiner": "Madenci Ara / Ekle",
+    "ownedTitle": "Elimdeki Minerlar",
+    "ownedHint": "Her seviyeden kaç tane olduğunu girin; bunları birleştirmenin maliyeti hesaplansın. Boş bırakırsanız tüm kombinasyonlar gösterilir.",
+    "ownedClear": "Temizle",
+    "ownedNothing": "Birleştirilecek çift yok.",
+    "ownedResult": "Sonuç",
+    "comboFromTo": "Başlangıç → Hedef",
+    "eventMergeHint": "Etkinlikten gelen minerlarla Lv.{{level}} yapma maliyeti",
+    "eventMergeUse": "Detayları göster"
   },
   "dailyQuest": {
     "title": "Günlük Görev",

@@ -8,6 +8,20 @@ export interface ForgeStep {
 export function forgeBatchParts(baseCount: number, quantity: number, forgeLevel: number): number {
     return Math.round(baseCount * quantity * (1 - (FORGE_DISCOUNTS[forgeLevel] || 0)));
 }
+/** Merges owned miners upward (2 of a level → 1 of the next) until `maxLevel`. Keys are miner levels. */
+export function planOwnedMerges(owned: Record<number, number>, minLevel: number, maxLevel: number) {
+    const merges: Record<number, number> = {};
+    const result: Record<number, number> = {};
+    let carry = 0;
+    for (let level = minLevel; level < maxLevel; level++) {
+        const have = (owned[level] || 0) + carry;
+        merges[level] = Math.floor(have / 2);
+        result[level] = have % 2;
+        carry = merges[level];
+    }
+    result[maxLevel] = (owned[maxLevel] || 0) + carry;
+    return { merges, result };
+}
 export function forgePlan(recipes: ForgeRecipes, start: number, target: number, quantity: number, forgeLevel: number) {
     let required = quantity;
     let totalFees = 0;

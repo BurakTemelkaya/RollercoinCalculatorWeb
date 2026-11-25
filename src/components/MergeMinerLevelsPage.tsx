@@ -3,10 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { fetchMergesByMinerSlug } from '../services/mergeApi';
 import { fetchComponentPrices, type ComponentPrice } from '../services/componentApi';
+import { fetchPuzzleEvent } from '../services/puzzleEventApi';
+import { fetchProgressionEvent } from '../services/progressionEventApi';
+import type { MinerItem } from '../types/progressionEvent';
 import { priceMergePart } from '../utils/marketDepth';
 import MergeMarketTiers from './MergeMarketTiers';
 import type { MergeDetail } from '../types/merge';
-import { forgeBatchParts } from '../utils/forgeAnalysis';
+import { forgeBatchParts, planOwnedMerges } from '../utils/forgeAnalysis';
 import { autoScalePower } from '../utils/powerParser';
 import CdnImage from './CdnImage';
 import MinerStatusBadges from './MinerStatusBadges';
@@ -140,6 +143,8 @@ export default function MergeMinerLevelsPage() {
     const [showLevel1Cost, setShowLevel1Cost] = useState(() => localStorage.getItem('rollercoin_web_show_level1_cost') === 'true');
     useEffect(() => { localStorage.setItem('rollercoin_web_show_level1_cost', String(showLevel1Cost)); }, [showLevel1Cost]);
     const [targetLevel, setTargetLevel] = useState<number | 'all'>('all');
+    // Owned miner counts by level; empty means show the all-combinations table
+    const [owned, setOwned] = useState<Record<number, number>>({});
 
     // Forge Level
     const [forgeLevel, setForgeLevel] = useState<ForgeLevel>(() => {
@@ -199,6 +204,29 @@ export default function MergeMinerLevelsPage() {
         return () => { active = false; };
     }, []);
 
+    // Miner rewards of the latest puzzle and progression events (API levels are 0-based)
+    const [eventMiners, setEventMiners] = useState<{ kind: 'puzzle' | 'event'; name: string; path: string; miners: { name: string; level: number; amount: number }[] }[]>([]);
+    useEffect(() => {
+        let active = true;
+        Promise.allSettled([fetchPuzzleEvent(), fetchProgressionEvent()]).then(([puzzle, progression]) => {
+            if (!active) return;
+            const list: typeof eventMiners = [];
+            if (puzzle.status === 'fulfilled' && puzzle.value.id) {
+                const p = puzzle.value;
+                // Assumes the whole board gets collected, as with level rewards
+                const rewards = [...p.levels.flatMap(l => l.rewards), ...p.board].filter(r => r.type === 'miner' && r.name && r.minerLevel !== null);
+                list.push({ kind: 'puzzle', name: p.name, path: `/${lang}/puzzle/${p.slug ?? p.id}`, miners: rewards.map(r => ({ name: r.name!, level: r.minerLevel!, amount: r.amount })) });
+            }
+            if (progression.status === 'fulfilled') {
+                const e = progression.value;
+                const rewards = e.rewards.filter(r => r.type === 'miner' && r.item).map(r => ({ amount: r.amount, item: r.item as MinerItem }));
+                list.push({ kind: 'event', name: e.name, path: `/${lang}/event/${e.slug ?? e.id}`, miners: rewards.map(r => ({ name: r.item!.name.en, level: r.item!.level, amount: r.amount })) });
+            }
+            setEventMiners(list);
+        });
+        return () => { active = false; };
+    }, [lang]);
+
     type RequiredItem = MergeDetail['requiredItems'][number];
     const findMarket = (item: RequiredItem) => {
         const name = getPartDisplayName(item.itemName, item.level).toLowerCase();
@@ -208,63 +236,59 @@ export default function MergeMinerLevelsPage() {
         priceMergePart(findMarket(item), item.price, quantity, customPartPrices[getPartDisplayName(item.itemName, item.level)]);
     const isCostCounted = (item: RequiredItem) => item.type === 'mutation_components' && (item.level !== 0 || showLevel1Cost);
 
-    const calcLevelCost = (detail: MergeDetail): { partsCost: number, totalCost: number } => {
+    const calcLevelCost = (detail: MergeDetail, merges = 1): { partsCost: number, feeCost: number, totalCost: number } => {
         const partsCost = detail.requiredItems
             .filter(isCostCounted)
-            .reduce((sum, item) => sum + getPartCost(item, forgeBatchParts(item.count, 1, forgeLevel)).total, 0);
-        const feeCost = applyForgeDiscount(detail.amount, forgeLevel);
-        return { partsCost, totalCost: partsCost + feeCost };
+            .reduce((sum, item) => sum + getPartCost(item, forgeBatchParts(item.count, merges, forgeLevel)).total, 0);
+        const feeCost = applyForgeDiscount(detail.amount, forgeLevel) * merges;
+        return { partsCost, feeCost, totalCost: partsCost + feeCost };
     };
 
     const availableLevels = [...new Set(data.map(d => d.resultItemLevel + 1))].sort((a, b) => a - b);
     const filteredData = targetLevel === 'all' ? data : data.filter(d => (d.resultItemLevel + 1) <= targetLevel);
+    // Detail with resultItemLevel r merges two level-r miners into one level r+1
+    const fromLevels = filteredData.map(d => d.resultItemLevel);
+    const topLevel = fromLevels.length ? Math.max(...fromLevels) + 1 : 0;
+    const detailFrom = (level: number) => filteredData.find(d => d.resultItemLevel === level);
 
-    const grandTotalFee = filteredData.reduce((sum, detail) => sum + applyForgeDiscount(detail.amount, forgeLevel), 0);
+    const costPlan = (miners: Record<number, number>) => {
+        const result = planOwnedMerges(miners, Math.min(...fromLevels), topLevel);
+        const steps = filteredData
+            .filter(d => result.merges[d.resultItemLevel] > 0)
+            .map(d => ({ detail: d, merges: result.merges[d.resultItemLevel], ...calcLevelCost(d, result.merges[d.resultItemLevel]) }));
+        return { ...result, steps, partsCost: steps.reduce((sum, s) => sum + s.partsCost, 0), feeCost: steps.reduce((sum, s) => sum + s.feeCost, 0) };
+    };
 
-    const aggregatedItems = new Map<string, any>();
-    
-    filteredData.forEach(detail => {
-        detail.requiredItems.forEach(item => {
-            const isMiner = item.type === 'miners';
-            const isMutationComponent = item.type === 'mutation_components';
-            
-            if (isMutationComponent && item.level === 0 && !showLevel1Cost) {
-                return;
-            }
-            
-            const reqMinerLevel = isMiner ? (item.level > 0 ? item.level : Math.max(0, detail.resultItemLevel - 1)) + 1 : 0;
-            const displayName = isMiner ? `${item.itemName} Level ${reqMinerLevel}` : getPartDisplayName(item.itemName, item.level);
-            const discountedCount = isMutationComponent ? forgeBatchParts(item.count, 1, forgeLevel) : item.count;
-            const key = `${item.itemId}-${reqMinerLevel}`;
-            
-            if (aggregatedItems.has(key)) {
-                aggregatedItems.get(key)!.totalCount += discountedCount;
-            } else {
-                let imgSrc: string | null = null;
-                if (isMiner && item.fileName) {
-                    imgSrc = getMinerImageUrl(item.fileName, item.imageVersion || undefined);
-                } else if (isMutationComponent) {
-                    imgSrc = getMutationComponentImage(item.itemName, item.level);
-                }
-                
-                aggregatedItems.set(key, {
-                    ...item,
-                    displayName,
-                    reqMinerLevel,
-                    imgSrc,
-                    isMiner,
-                    totalCount: discountedCount
-                });
-            }
-        });
-    });
+    const hasOwned = fromLevels.some(level => (owned[level] || 0) > 0);
+    const plan = hasOwned ? costPlan(owned) : null;
+    const planSteps = plan?.steps ?? [];
+    const planPartsCost = plan?.partsCost ?? 0;
+    const planFeeCost = plan?.feeCost ?? 0;
 
-    const grandTotalItems = Array.from(aggregatedItems.values());
-    const totalMiners = grandTotalItems.filter(item => item.isMiner);
-    const totalParts = grandTotalItems.filter(item => !item.isMiner);
-    // Quote the combined quantity once so cheap tiers aren't counted for every level
-    const grandTotalPartsCost = totalParts.reduce((sum, item) => sum + getPartCost(item, item.totalCount).total, 0);
-    const grandTotalCost = grandTotalPartsCost + grandTotalFee;
+    // Latest events that give this miner in enough copies to reach the top level
+    const minerName = data[0]?.resultItemName?.toLowerCase();
+    const eventPlans = fromLevels.length && minerName ? eventMiners
+        .map(ev => {
+            const miners: Record<number, number> = {};
+            ev.miners.filter(m => m.name.toLowerCase() === minerName)
+                .forEach(m => { miners[m.level + 1] = (miners[m.level + 1] || 0) + m.amount; });
+            return { ...ev, miners, plan: costPlan(miners) };
+        })
+        .filter(ev => ev.plan.result[topLevel] > 0) : [];
+    const planParts = planSteps.flatMap(s => s.detail.requiredItems
+        .filter(isCostCounted)
+        .map(item => ({ item, count: forgeBatchParts(item.count, s.merges, forgeLevel) })));
+
+    // Cost of one level-`to` miner built from 2^(to-from) level-`from` miners
+    const comboCost = (from: number, to: number) => {
+        let total = 0;
+        for (let level = from; level < to; level++) {
+            const detail = detailFrom(level);
+            if (!detail) return null;
+            total += calcLevelCost(detail, 2 ** (to - 1 - level)).totalCost;
+        }
+        return total;
+    };
 
     return (
         <div className="merge-container">
@@ -356,6 +380,133 @@ export default function MergeMinerLevelsPage() {
                 </div>
             ) : (
                 <>
+                    {filteredData.length > 0 && (
+                        <div className="miner-levels-grand-total">
+                            <h3 className="grand-total-title">{t('merge.ownedTitle', 'Elimdeki Minerlar')}</h3>
+                            <p className="owned-hint">{t('merge.ownedHint', 'Her seviyeden kaç tane olduğunu girin; bunları birleştirmenin maliyeti hesaplansın. Boş bırakırsanız tüm kombinasyonlar gösterilir.')}</p>
+                            {eventPlans.map(ev => (
+                                <div key={ev.path} className="event-merge-card">
+                                    <div className="event-merge-head">
+                                        <Link to={ev.path}>{ev.kind === 'puzzle' ? 'Puzzle' : 'Event'}: {ev.name}</Link>
+                                        <span className="cost-val highlight"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(ev.plan.partsCost + ev.plan.feeCost)} RLT</span>
+                                    </div>
+                                    <p className="owned-hint">
+                                        {t('merge.eventMergeHint', 'Etkinlikten gelen minerlarla Lv.{{level}} yapma maliyeti', { level: topLevel })}:{' '}
+                                        {Object.entries(ev.miners).map(([lv, n]) => `${n}× Lv.${lv}`).join(', ')}
+                                    </p>
+                                    <button type="button" className="owned-clear" onClick={() => setOwned(ev.miners)}>
+                                        {t('merge.eventMergeUse', 'Detayları göster')}
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="owned-inputs">
+                                {fromLevels.map(level => (
+                                    <label key={level} className="owned-input">
+                                        <img src={getLevelIconUrl(level)} alt="" onError={(e) => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }} />
+                                        <span>Lv.{level}</span>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            inputMode="numeric"
+                                            aria-label={`Level ${level}`}
+                                            value={owned[level] || ''}
+                                            placeholder="0"
+                                            onChange={(e) => setOwned(prev => ({ ...prev, [level]: Math.max(0, parseInt(e.target.value, 10) || 0) }))}
+                                        />
+                                    </label>
+                                ))}
+                                {hasOwned && (
+                                    <button type="button" className="owned-clear" onClick={() => setOwned({})}>
+                                        {t('merge.ownedClear', 'Temizle')}
+                                    </button>
+                                )}
+                            </div>
+
+                            {plan ? (
+                                <>
+                                    {planSteps.length === 0 ? (
+                                        <p className="owned-hint">{t('merge.ownedNothing', 'Birleştirilecek çift yok.')}</p>
+                                    ) : (
+                                        <div className="owned-steps">
+                                            {planSteps.map(step => (
+                                                <div key={step.detail.id} className="owned-step">
+                                                    <span><strong>{step.merges}×</strong> Lv.{step.detail.resultItemLevel} → Lv.{step.detail.resultItemLevel + 1}</span>
+                                                    <span className="cost-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(step.totalCost)} RLT</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <p className="owned-result">
+                                        {t('merge.ownedResult', 'Sonuç')}:{' '}
+                                        {Object.entries(plan.result).filter(([, n]) => n > 0).map(([lv, n]) => `${n}× Lv.${lv}`).join(', ') || '-'}
+                                    </p>
+                                    <div className="grand-total-stats">
+                                        <div className="grand-total-stat">
+                                            <span className="stat-label">{t('merge.totalPartsCost', 'Toplam Parça Maliyeti')}</span>
+                                            <span className="stat-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(planPartsCost)} RLT</span>
+                                        </div>
+                                        <div className="grand-total-stat">
+                                            <span className="stat-label">{t('merge.totalFeeCost', 'Toplam Forge Ücreti')}</span>
+                                            <span className="stat-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(planFeeCost)} RLT</span>
+                                        </div>
+                                        <div className="grand-total-stat highlight">
+                                            <span className="stat-label">{t('merge.finalCost', 'Genel Toplam')}</span>
+                                            <span className="stat-val"><img src={rltImg} alt="RLT" width="22" /> {formatRltAmount(planPartsCost + planFeeCost)} RLT</span>
+                                        </div>
+                                    </div>
+                                    {planParts.length > 0 && (
+                                        <div className="requirements-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px', marginTop: '24px', width: '100%' }}>
+                                            {planParts.map(({ item, count }, idx) => (
+                                                <div key={`pp-${item.itemId}-${idx}`} className="req-item-card">
+                                                    <div className="req-item-img-wrap">
+                                                        <img src={getMutationComponentImage(item.itemName, item.level) ?? undefined} alt={getPartDisplayName(item.itemName, item.level)} className="req-item-img" />
+                                                    </div>
+                                                    <div className="req-item-info">
+                                                        <span className="req-item-name">{getPartDisplayName(item.itemName, item.level)}</span>
+                                                        <div className="req-item-bottom">
+                                                            <span className="req-item-qty">x{count}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="combo-table-wrap">
+                                    <table className="combo-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{t('merge.comboFromTo', 'Başlangıç → Hedef')}</th>
+                                                {fromLevels.map(level => <th key={level}>Lv.{level + 1}</th>)}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {fromLevels.map(from => (
+                                                <tr key={from}>
+                                                    <th>Lv.{from}</th>
+                                                    {fromLevels.map(level => {
+                                                        const to = level + 1;
+                                                        const cost = to > from ? comboCost(from, to) : null;
+                                                        return (
+                                                            <td key={to}>
+                                                                {cost === null ? '–' : (
+                                                                    <>
+                                                                        <span className="combo-cost">{formatRltAmount(cost)} RLT</span>
+                                                                        <span className="combo-miners">{2 ** (to - from)}× Lv.{from}</span>
+                                                                    </>
+                                                                )}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <div className="merge-miner-levels-list">
                         {filteredData.map((detail) => {
                             const { partsCost, totalCost } = calcLevelCost(detail);
@@ -478,97 +629,6 @@ export default function MergeMinerLevelsPage() {
                             );
                         })}
                     </div>
-                    {filteredData.length > 0 && (
-                        <div className="miner-levels-grand-total">
-                            <h3 className="grand-total-title">{t('merge.grandTotal', 'Tüm Seviyelerin Toplam Maliyeti')}</h3>
-                            <div className="grand-total-stats">
-                                <div className="grand-total-stat">
-                                    <span className="stat-label">{t('merge.totalPartsCost', 'Toplam Parça Maliyeti')}</span>
-                                    <span className="stat-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(grandTotalPartsCost)} RLT</span>
-                                </div>
-                                <div className="grand-total-stat">
-                                    <span className="stat-label">{t('merge.totalFeeCost', 'Toplam Forge Ücreti')}</span>
-                                    <span className="stat-val"><img src={rltImg} alt="RLT" width="16" /> {formatRltAmount(grandTotalFee)} RLT</span>
-                                </div>
-                                <div className="grand-total-stat highlight">
-                                    <span className="stat-label">{t('merge.finalCost', 'Genel Toplam')}</span>
-                                    <span className="stat-val"><img src={rltImg} alt="RLT" width="22" /> {formatRltAmount(grandTotalCost)} RLT</span>
-                                </div>
-                                </div>
-                                
-                                {grandTotalItems.length > 0 && (
-                                    <div style={{ marginTop: '32px', width: '100%' }}>
-                                        <h4 className="requirements-title" style={{ textAlign: 'center', marginBottom: '24px' }}>{t('merge.totalRequiredItems', 'Toplam Gerekli Malzemeler')}</h4>
-                                        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-                                            {totalMiners.length > 0 && (
-                                                <div style={{ flex: '1 1 300px' }}>
-                                                    <h5 style={{ color: 'var(--text-secondary)', marginBottom: '12px', fontSize: '15px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>⛏️ {t('merge.miners', 'Madenciler')}</h5>
-                                                    <div className="requirements-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                                                        {totalMiners.map((gItem, idx) => (
-                                                            <div key={`gt-${gItem.itemId}-${idx}`} className="req-item-card">
-                                                                <div className="req-item-img-wrap">
-                                                                    <MinerStatusBadges isCanBeSoldOnMp={gItem.isCanBeSoldOnMp} isInSet={gItem.isInSet} />
-                                                                    {gItem.reqMinerLevel > 1 && (
-                                                                        <img
-                                                                            src={getLevelIconUrl(gItem.reqMinerLevel)}
-                                                                            alt={`Level ${gItem.reqMinerLevel}`}
-                                                                            className="req-item-badge"
-                                                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                                                        />
-                                                                    )}
-                                                                    {gItem.imgSrc ? (
-                                                                        <CdnImage
-                                                                            type="miner"
-                                                                            itemId={gItem.fileName?.split('.')[0] || ''}
-                                                                            fallbackUrl={gItem.imgSrc}
-                                                                            alt={gItem.displayName}
-                                                                            className="req-item-img"
-                                                                        />
-                                                                    ) : (
-                                                                        <span className="req-item-fallback">⛏️</span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="req-item-info">
-                                                                    <span className="req-item-name">{gItem.displayName}</span>
-                                                                    <div className="req-item-bottom">
-                                                                        <span className="req-item-qty">x{gItem.totalCount}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {totalParts.length > 0 && (
-                                                <div style={{ flex: '1 1 300px' }}>
-                                                    <h5 style={{ color: 'var(--text-secondary)', marginBottom: '12px', fontSize: '15px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>🔩 {t('merge.parts', 'Parçalar')}</h5>
-                                                    <div className="requirements-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                                                        {totalParts.map((gItem, idx) => (
-                                                            <div key={`gt-${gItem.itemId}-${idx}`} className="req-item-card">
-                                                                <div className="req-item-img-wrap">
-                                                                    {gItem.imgSrc ? (
-                                                                        <img src={gItem.imgSrc} alt={gItem.displayName} className="req-item-img" />
-                                                                    ) : (
-                                                                        <span className="req-item-fallback">🔩</span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="req-item-info">
-                                                                    <span className="req-item-name">{gItem.displayName}</span>
-                                                                    <div className="req-item-bottom">
-                                                                        <span className="req-item-qty">x{gItem.totalCount}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                    )}
                 </>
             )}
         </div>
