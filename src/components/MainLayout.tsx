@@ -90,9 +90,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Ad-blocker detection & top banner ad loading
   const [adsBlocked, setAdsBlocked] = useState(false);
   const [country, setCountry] = useState<string | null>(null);
+  const [region, setRegion] = useState<string | null>(null);
   const [cleverNoFill, setCleverNoFill] = useState(() => window.__cleverCoreNoFill === true);
   const cleverNoFillTrackedRef = useRef(false);
-  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill);
+  const topAdNetwork = resolveTopAdNetwork(country, cleverNoFill, region);
 
   const trackCleverNoFill = useCallback((reason: string) => {
     if (cleverNoFillTrackedRef.current) return;
@@ -117,9 +118,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 4000);
 
-    fetch('https://get.geojs.io/v1/ip/country.json', { signal: controller.signal })
+    fetch('https://get.geojs.io/v1/ip/geo.json', { signal: controller.signal })
       .then(res => res.json())
-      .then(data => setCountry(data.country || 'UNKNOWN'))
+      .then(data => {
+        setRegion(data.region || null);
+        setCountry(data.country_code || 'UNKNOWN');
+      })
       .catch(() => setCountry('UNKNOWN')) // Blocked, timed out or failed: keep ads enabled.
       .finally(() => window.clearTimeout(timer));
 
