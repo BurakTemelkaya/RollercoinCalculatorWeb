@@ -469,7 +469,7 @@ export default function MergeMinerLevelsPage() {
                                                             </span>
                                                         ))}
                                                     </span>
-                                                    <span className="merge-plan-num merge-plan-fee"><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(step.feeCost)}</span>
+                                                    <span className="merge-plan-num merge-plan-fee"><span className="merge-plan-fee-label">{t('merge.planFee', 'Forge Ücreti')}:</span><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(step.feeCost)}</span>
                                                     <span className="merge-plan-num merge-plan-total"><img src={rltImg} alt="RLT" width="14" /> {formatRltAmount(step.totalCost)}</span>
                                                 </div>
                                             ))}

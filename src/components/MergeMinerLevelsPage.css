@@ -427,35 +427,53 @@
 
 /* Merge plan (owned miners) */
 .level-tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; }
-.level-tag img { width: 18px; height: auto; }
-.merge-plan { width: 100%; max-width: 760px; margin: 0 auto 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
-.merge-plan-row { display: grid; grid-template-columns: 170px 1fr 110px 110px; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.level-tag img { width: 18px; height: auto; flex-shrink: 0; }
+.level-tag img.level-tag-miner { width: auto; height: 24px; max-width: 48px; object-fit: contain; }
+
+/* The table is one grid; each row is a subgrid so every column is sized by its widest cell
+   and the "merge" column can never overflow into "parts" (old fixed 170px track did). */
+.merge-plan { width: 100%; max-width: 900px; margin: 0 auto 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; text-align: left; display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content max-content; }
+.merge-plan-row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; column-gap: 16px; padding: 10px 16px; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+@supports not (grid-template-columns: subgrid) {
+    .merge-plan { display: block; }
+    .merge-plan-row { grid-template-columns: 290px minmax(0, 1fr) 100px 110px; }
+}
+.merge-plan-row > * { min-width: 0; }
 .merge-plan-row:nth-child(even) { background: rgba(255,255,255,0.02); }
 .merge-plan-head { border-top: none; background: rgba(255,255,255,0.04); color: var(--text-secondary); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-.merge-plan-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.merge-plan-num img { vertical-align: -2px; }
+.merge-plan-num { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.merge-plan-num img { flex-shrink: 0; }
 .merge-plan-fee { color: var(--text-secondary); }
+.merge-plan-fee-label { display: none; }
 .merge-plan-total { font-weight: 700; color: var(--text-primary, #fff); }
-.merge-plan-step { display: inline-flex; align-items: center; gap: 6px; }
-.merge-plan-count { min-width: 28px; padding: 2px 6px; border-radius: 6px; background: rgba(6,182,212,0.15); color: #06b6d4; font-weight: 700; text-align: center; font-size: 13px; }
+.merge-plan-step { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.merge-plan-count { flex-shrink: 0; min-width: 28px; padding: 2px 6px; border-radius: 6px; background: rgba(6,182,212,0.15); color: #06b6d4; font-weight: 700; text-align: center; font-size: 13px; }
 .merge-plan-arrow { color: var(--text-secondary); }
 .merge-plan-parts { display: flex; flex-wrap: wrap; gap: 6px 12px; color: var(--text-secondary); }
-.merge-plan-part { display: inline-flex; align-items: center; gap: 6px; }
-.merge-plan-part img { width: 22px; height: 22px; object-fit: contain; }
+.merge-plan-part { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+.merge-plan-part img { flex-shrink: 0; width: 22px; height: 22px; object-fit: contain; }
 .merge-plan-result { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 4px 0 20px; }
 .merge-plan-result-label { color: var(--text-secondary); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
 .merge-plan-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.35); font-size: 14px; font-weight: 700; }
 
-@media (max-width: 640px) {
+.owned-clear:hover { border-color: rgba(6, 182, 212, 0.5); color: var(--text-primary, #fff); }
+.owned-clear:focus-visible, .owned-input input:focus-visible { outline: 2px solid #06b6d4; outline-offset: 2px; }
+
+/* Narrow screens (incl. tablets, where 4 columns no longer fit): stack each row as a card */
+@media (max-width: 860px) {
+    .merge-plan { display: block; }
     .merge-plan-head { display: none; }
-    .merge-plan-row { grid-template-columns: 1fr auto; grid-template-areas: "step total" "parts parts"; row-gap: 6px; border-top: 1px solid rgba(255,255,255,0.06); }
-    .merge-plan-row:first-of-type + .merge-plan-row { border-top: none; }
-    .merge-plan-step { grid-area: step; }
+    .merge-plan-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "step total" "parts fee"; row-gap: 6px; column-gap: 12px; padding: 10px 12px; }
+    .merge-plan-head + .merge-plan-row { border-top: none; }
+    .merge-plan-step { grid-area: step; flex-wrap: wrap; white-space: normal; }
     .merge-plan-parts { grid-area: parts; font-size: 13px; }
-    .merge-plan-fee { display: none; }
+    .merge-plan-fee { grid-area: fee; font-size: 12px; align-self: start; }
+    .merge-plan-fee-label { display: inline; margin-right: 2px; }
     .merge-plan-total { grid-area: total; }
+    .level-tag img.level-tag-miner { height: 20px; max-width: 36px; }
 }
-.level-tag img.level-tag-miner { width: auto; height: 24px; max-width: 48px; object-fit: contain; }
-@media (max-width: 640px) {
+@media (max-width: 480px) {
     .level-tag img.level-tag-miner { display: none; }
+    .miner-levels-grand-total { padding: 16px 12px; }
+    .grand-total-stat { min-width: 0; flex: 1 1 100%; }
 }
