@@ -838,7 +838,18 @@
     "power": "算力",
     "copy": "(复制)",
     "addToRoom": "添加到房间",
-    "searchAddMiner": "搜索 / 添加矿机"
+    "searchAddMiner": "搜索 / 添加矿机",
+    "ownedTitle": "我的矿机",
+    "ownedHint": "输入每个等级拥有的数量，即可查看合成它们的费用。留空则显示所有组合。",
+    "ownedClear": "清除",
+    "ownedNothing": "没有可合成的配对。",
+    "ownedResult": "结果",
+    "comboFromTo": "起始 → 目标",
+    "eventMergeHint": "使用本活动的矿机升到 Lv.{{level}} 的费用",
+    "eventMergeUse": "查看详情",
+    "planStep": "合成",
+    "planFee": "锻造费",
+    "planParts": "零件"
   },
   "dailyQuest": {
     "title": "每日任务",

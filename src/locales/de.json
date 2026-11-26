@@ -844,7 +844,18 @@
       "stepTotalFeeTooltip": "Gesamte gezahlte Gebühr für alle Merges in diesem Schritt",
       "total": "Gesamt"
     },
-    "searchAddMiner": "Miner suchen / hinzufügen"
+    "searchAddMiner": "Miner suchen / hinzufügen",
+    "ownedTitle": "Meine Miner",
+    "ownedHint": "Gib ein, wie viele du von jeder Stufe hast, um die Kosten für das Zusammenführen zu sehen. Leer lassen, um alle Kombinationen zu sehen.",
+    "ownedClear": "Leeren",
+    "ownedNothing": "Keine Paare zum Zusammenführen.",
+    "ownedResult": "Ergebnis",
+    "comboFromTo": "Von → Bis",
+    "eventMergeHint": "Kosten für Lv.{{level}} mit den Minern aus diesem Event",
+    "eventMergeUse": "Details anzeigen",
+    "planStep": "Zusammenführung",
+    "planFee": "Forge-Gebühr",
+    "planParts": "Teile"
   },
   "dailyQuest": {
     "title": "Tägliche Quest",

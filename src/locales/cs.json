@@ -844,7 +844,18 @@
       "stepTotalFeeTooltip": "Celkový poplatek zaplacený za všechny sloučení v tomto kroku",
       "total": "Celkem"
     },
-    "searchAddMiner": "Hledat / Přidat Miner"
+    "searchAddMiner": "Hledat / Přidat Miner",
+    "ownedTitle": "Moje minery",
+    "ownedHint": "Zadejte, kolik kusů od každé úrovně máte, a zobrazí se cena jejich sloučení. Necháte-li pole prázdná, zobrazí se všechny kombinace.",
+    "ownedClear": "Vymazat",
+    "ownedNothing": "Žádné páry ke sloučení.",
+    "ownedResult": "Výsledek",
+    "comboFromTo": "Z → Do",
+    "eventMergeHint": "Cena za dosažení Lv.{{level}} s minery z této události",
+    "eventMergeUse": "Zobrazit podrobnosti",
+    "planStep": "Sloučení",
+    "planFee": "Poplatek za kování",
+    "planParts": "Díly"
   },
   "dailyQuest": {
     "title": "Denní úkol",

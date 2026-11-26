@@ -838,7 +838,18 @@
     "power": "Poder",
     "copy": "(Cópia)",
     "addToRoom": "Adicionar à Sala",
-    "searchAddMiner": "Pesquisar / Adicionar"
+    "searchAddMiner": "Pesquisar / Adicionar",
+    "ownedTitle": "Meus mineradores",
+    "ownedHint": "Informe quantos você tem de cada nível para ver o custo de fundi-los. Deixe em branco para ver todas as combinações.",
+    "ownedClear": "Limpar",
+    "ownedNothing": "Nenhum par para fundir.",
+    "ownedResult": "Resultado",
+    "comboFromTo": "De → Para",
+    "eventMergeHint": "Custo para chegar ao Lv.{{level}} com os mineradores deste evento",
+    "eventMergeUse": "Ver detalhes",
+    "planStep": "Fusão",
+    "planFee": "Taxa da forja",
+    "planParts": "Peças"
   },
   "dailyQuest": {
     "title": "Missão Diária",

@@ -838,7 +838,18 @@
     "power": "Daya",
     "copy": "(Salinan)",
     "addToRoom": "Tambahkan ke Kamar",
-    "searchAddMiner": "Cari / Tambah Miner"
+    "searchAddMiner": "Cari / Tambah Miner",
+    "ownedTitle": "Miner Saya",
+    "ownedHint": "Masukkan jumlah yang Anda miliki di setiap level untuk melihat biaya menggabungkannya. Kosongkan untuk melihat semua kombinasi.",
+    "ownedClear": "Hapus",
+    "ownedNothing": "Tidak ada pasangan untuk digabungkan.",
+    "ownedResult": "Hasil",
+    "comboFromTo": "Dari → Ke",
+    "eventMergeHint": "Biaya mencapai Lv.{{level}} dengan miner dari event ini",
+    "eventMergeUse": "Lihat detail",
+    "planStep": "Penggabungan",
+    "planFee": "Biaya Forge",
+    "planParts": "Bagian"
   },
   "dailyQuest": {
     "title": "Misi Harian",
