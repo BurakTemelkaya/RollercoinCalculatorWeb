@@ -17,6 +17,14 @@ Görünümü etkileyen her değişiklikte (sayfa, bileşen, CSS, modal, menü) m
 
 Sorun varsa commit etmeden önce düzeltin.
 
+## Zorunlu kural: kullanıcı söylemeden push yapmayın
+
+Kullanıcı o değişiklik için açıkça istemedikçe GitHub'a push etmeyin. Önceki bir push onayı sonraki değişiklikler için geçerli değildir: işi bitirin, build alın, sonra push için sorun.
+
+## Zorunlu kural: push sonrası local portları kapatın
+
+GitHub'a her push'tan sonra açtığınız tüm local sunucuları (Vite dev server, API vb.) kapatın ve geliştirme portlarının (5173, 5174, 5175, 5118, 7080) boş olduğunu kontrol edin.
+
 Projenin genel yapısı ve rehber dokümanları daha kolay yönetim ve yapay zeka entegrasyonu için parçalara ayrılmıştır. Aşağıdaki dosyalara giderek ilgili detayları bulabilirsiniz:
 
 1. **[Proje Genel Yapısı ve Kurulum](file:///.agents/ProjectOverview.md)**
