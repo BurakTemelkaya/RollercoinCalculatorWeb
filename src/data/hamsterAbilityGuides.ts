@@ -25,6 +25,7 @@ const ARTICLE_PATHS: Record<string, string> = {
   'jack-o-mine': 'meet-jack-o-mine',
   chillz: 'new-season-roller-vice',
   'bb-smoke': 'bb-smoke',
+  'homie-hamtana': 'meet-homie-hamtana',
 };
 
 export function officialHamsterArticle(slug: string): string | undefined {
@@ -47,7 +48,7 @@ const PASSIVES: Record<string, string> = {
   remote_bonus: 'remoteBonus', remote_power: 'remotePower', rlt_chest: 'rltChest',
   season_xp_chest: 'seasonXpChest', keep_it_going: 'keepGoing',
   rest_relay: 'restRelay', charge_relay: 'chargeRelay', games_boost: 'gamesBoost', skip_rest_chest: 'skipRestChest',
-  speed_up_walk: 'speedUpWalk',
+  speed_up_walk: 'speedUpWalk', rlt_walk: 'rltWalk',
 };
 
 const ULTIMATES: Record<string, string> = {
@@ -60,7 +61,7 @@ const ULTIMATES: Record<string, string> = {
   high_risk_high_reward_x2_rewards_and_xp_x1_5_duration_no_rest_failed_runs_keep_b: 'highRisk',
   converts_expedition_rewards_into_rlt: 'lootConversion', loot_conversion: 'overchargedConversion',
   pirate_luck: 'pirateLuck', hamsters_chest: 'hamstersChest', remote_power: 'remotePowerUltimate',
-  remote_bonus: 'remoteBonusUltimate', extra_loot: 'overchargedLoot',
+  remote_bonus: 'remoteBonusUltimate', extra_loot: 'overchargedLoot', rest_relay: 'overchargedRestRelay',
 };
 
 export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = false): AbilityGuide | undefined {
@@ -88,6 +89,15 @@ export function hamsterAbilityGuide(hamster: Hamster, code: string, ultimate = f
     guide.source = officialHamsterArticle(hamster.slug);
     if (code === 'speed_up_walk') guide.example = 'bbSmokeSpeedUps';
     if (ultimate) guide.description = guide.label = 'overchargedRemotePower';
+  }
+  if (hamster.slug === 'homie-hamtana') {
+    guide.source = officialHamsterArticle(hamster.slug);
+    if (code === 'speed_up_walk') {
+      guide.description = 'speedUpWalkHourly';
+      guide.example = 'hamtanaSpeedUps';
+    }
+    if (code === 'rlt_walk') guide.example = 'hamtanaRltWalk';
+    if (ultimate) guide.example = 'hamtanaRestRelay';
   }
   if (hamster.slug === 'plague-dancer' && ultimate) {
     guide.description = 'plagueChests';

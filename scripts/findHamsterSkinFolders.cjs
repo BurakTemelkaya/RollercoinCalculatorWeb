@@ -22,11 +22,11 @@ for (let dt = -Number(seconds); dt <= Number(seconds); dt++) {
 }
 
 async function exists(id) {
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < 6; attempt++) {
     try {
       const response = await fetch(`https://static.rollercoin.com/static/img/pets/${code}/${id}/idle.png`, { method: 'HEAD', signal: AbortSignal.timeout(20000) });
       return response.status === 200;
-    } catch { /* retry network errors */ }
+    } catch { await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1))); /* back off on network errors */ }
   }
   throw new Error(`${id}: request kept failing`);
 }

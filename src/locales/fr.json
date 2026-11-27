@@ -1264,6 +1264,8 @@
       "remotePowerUltimate": "Puissance à distance",
       "speedUpWalk": "Balade d’accélérateurs",
       "overchargedRemotePower": "Puissance à distance",
+      "rltWalk": "Balade RLT",
+      "overchargedRestRelay": "Relais de repos",
       "overchargedChests": "Multiplicateur de coffres ×3",
       "overchargedConversion": "Conversion du butin"
     },
@@ -1304,9 +1306,15 @@
       "hamstersChest": "La prochaine réussite ajoute un coffre contenant Magic Wool ou un hamster. Un échec consomme l’ultime sans coffre. Recharge : 100 points.",
       "remotePowerUltimate": "Tant que GFeast vit, puissance temporaire des mineurs ×5 sans bonus de salle. Durée originale, inchangée par accélérateurs ou réductions.",
       "speedUpWalk": "Rapporte 1 accélérateur toutes les 2 heures complètes d’une expédition réussie, ou toutes les 4 heures complètes pendant lesquelles BB Smoke est resté en vie lors d’un échec. La durée initiale est arrondie à l’inférieur ; les accélérateurs ne la changent pas et les objets n’affectent pas le rachat.",
-      "overchargedRemotePower": "À 20 / 30 / 42 points de charge, ajoute la puissance des mineurs ×4 / ×5 / ×7 à votre salle tant que BB Smoke est en vie pendant l’expédition. Seul le palier complet le plus élevé compte ; les bonus en pourcentage ne la multiplient pas. Activez avant le départ ; la charge est réinitialisée après l’expédition."
+      "overchargedRemotePower": "À 20 / 30 / 42 points de charge, ajoute la puissance des mineurs ×4 / ×5 / ×7 à votre salle tant que BB Smoke est en vie pendant l’expédition. Seul le palier complet le plus élevé compte ; les bonus en pourcentage ne la multiplient pas. Activez avant le départ ; la charge est réinitialisée après l’expédition.",
+      "rltWalk": "Récupère le montant de RLT affiché pour chaque heure complète d’une expédition réussie. En cas d’échec, la moitié pour les heures complètes survécues par {{name}}, arrondie à l’inférieur. La durée initiale compte ; les accélérateurs et réductions de temps ne la diminuent pas, et le RLT n’affecte pas le rachat.",
+      "speedUpWalkHourly": "Récupère le nombre d’accélérateurs affiché par heure complète d’une expédition réussie (0,5/h = un toutes les 2 heures). En cas d’échec, la moitié pour les heures complètes survécues par {{name}}, arrondie à l’inférieur. La durée initiale compte ; les accélérateurs ne la diminuent pas et les objets n’affectent pas le rachat.",
+      "overchargedRestRelay": "À 24 / 30 / 36 points de charge, chaque heure complète d’expédition réduit le repos restant de tous les hamsters de l’inventaire de 10 / 12 / 16 minutes. Seul le palier complet le plus élevé compte. En cas d’échec, seules les heures complètes avant la défaite comptent. La durée initiale compte ; la récupération au-delà du repos restant est perdue."
     },
     "examples": {
+      "hamtanaRltWalk": "Une expédition réussie de 10 heures au niveau 50 rapporte 5 RLT.",
+      "hamtanaSpeedUps": "Au niveau de base, une expédition réussie de 10 heures rapporte 5 accélérateurs ; accélérée à 5 heures, toujours 5 ; un échec après 8 heures en rapporte 2.",
+      "hamtanaRestRelay": "Une expédition réussie de 10 heures au palier III réduit le repos de chaque hamster jusqu’à 160 minutes.",
       "bbSmokeSpeedUps": "Une expédition réussie de 24 heures rapporte 12 accélérateurs.",
       "jackOLoot": "24 points donnent le palier II : +50% de butin. À 30 points, le palier III donne +75%, et non +150%.",
       "cuscuzRemoteBonus": "Stats de base : (90 + 75 + 90) ×2 % = 510 % de bonus de salle.",

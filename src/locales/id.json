@@ -1278,6 +1278,8 @@
       "remotePowerUltimate": "Daya jarak jauh",
       "speedUpWalk": "Jalan Percepatan",
       "overchargedRemotePower": "Daya jarak jauh",
+      "rltWalk": "Jalan RLT",
+      "overchargedRestRelay": "Relai Istirahat",
       "overchargedChests": "Pengali peti ×3",
       "overchargedConversion": "Konversi jarahan"
     },
@@ -1318,9 +1320,15 @@
       "hamstersChest": "Ekspedisi berhasil berikutnya menambah peti berisi Magic Wool atau hamster. Kegagalan menghabiskan ultimate tanpa peti. Isi ulang: 100 poin.",
       "remotePowerUltimate": "Selama GFeast hidup, menambah daya penambang sementara ×5 tanpa pengali ruangan. Durasi asli tidak berubah oleh percepatan atau pengurangan waktu.",
       "speedUpWalk": "Memberi 1 item percepatan untuk setiap 2 jam penuh Ekspedisi yang berhasil, atau setiap 4 jam penuh BB Smoke bertahan hidup pada Ekspedisi gagal. Memakai durasi asli yang dibulatkan ke bawah; percepatan tidak mengubahnya dan item tidak memengaruhi biaya tebus.",
-      "overchargedRemotePower": "Pada 20 / 30 / 42 poin muatan, menambahkan daya miner ×4 / ×5 / ×7 ke ruangan selama BB Smoke hidup dalam Ekspedisi. Hanya tingkat penuh tertinggi yang berlaku; bonus persentase tidak mengalikannya. Aktifkan sebelum berangkat; muatan direset setelah Ekspedisi."
+      "overchargedRemotePower": "Pada 20 / 30 / 42 poin muatan, menambahkan daya miner ×4 / ×5 / ×7 ke ruangan selama BB Smoke hidup dalam Ekspedisi. Hanya tingkat penuh tertinggi yang berlaku; bonus persentase tidak mengalikannya. Aktifkan sebelum berangkat; muatan direset setelah Ekspedisi.",
+      "rltWalk": "Mengumpulkan RLT sesuai nilai yang tertera untuk setiap jam penuh Ekspedisi yang berhasil. Jika gagal, setengahnya untuk jam penuh {{name}} bertahan hidup, dibulatkan ke bawah. Memakai durasi asli; percepatan dan pengurangan waktu tidak menguranginya, dan RLT tidak memengaruhi biaya tebus.",
+      "speedUpWalkHourly": "Mengumpulkan item percepatan sesuai jumlah yang tertera per jam penuh Ekspedisi yang berhasil (0,5/jam berarti satu tiap 2 jam). Jika gagal, setengahnya untuk jam penuh {{name}} bertahan hidup, dibulatkan ke bawah. Memakai durasi asli; percepatan tidak menguranginya dan item tidak memengaruhi biaya tebus.",
+      "overchargedRestRelay": "Pada 24 / 30 / 36 poin muatan, setiap jam penuh Ekspedisi mengurangi sisa istirahat semua hamster di inventaris sebesar 10 / 12 / 16 menit. Hanya tingkat penuh tertinggi yang berlaku. Jika gagal, hanya jam penuh sebelum kekalahan yang dihitung. Memakai durasi asli; pemulihan yang melebihi sisa istirahat hilang."
     },
     "examples": {
+      "hamtanaRltWalk": "Ekspedisi 10 jam yang berhasil di level 50 memberi 5 RLT.",
+      "hamtanaSpeedUps": "Di level dasar, Ekspedisi 10 jam yang berhasil memberi 5 percepatan; dipercepat menjadi 5 jam tetap 5; gagal setelah 8 jam memberi 2.",
+      "hamtanaRestRelay": "Ekspedisi 10 jam yang berhasil dengan tingkat III memangkas istirahat setiap hamster hingga 160 menit.",
       "bbSmokeSpeedUps": "Ekspedisi 24 jam yang berhasil memberi 12 item percepatan.",
       "jackOLoot": "24 poin membuka tingkat II: +50% loot. Pada 30 poin, tingkat III memberi +75%, bukan +150%.",
       "cuscuzRemoteBonus": "Atribut dasar: (90 + 75 + 90) ×2% = 510% bonus ruangan.",

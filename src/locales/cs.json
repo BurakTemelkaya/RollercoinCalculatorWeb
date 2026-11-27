@@ -1307,6 +1307,8 @@
       "remotePowerUltimate": "Vzdálený výkon",
       "speedUpWalk": "Procházka za zrychleními",
       "overchargedRemotePower": "Vzdálený výkon",
+      "rltWalk": "Procházka za RLT",
+      "overchargedRestRelay": "Štafeta odpočinku",
       "overchargedChests": "Násobitel truhel ×3",
       "overchargedConversion": "Převod kořisti"
     },
@@ -1347,9 +1349,15 @@
       "hamstersChest": "Další úspěšná expedice přidá truhlu s Magic Wool nebo křečkem. Neúspěch spotřebuje schopnost bez truhly. Dobití: 100 bodů.",
       "remotePowerUltimate": "Dokud GFeast žije, přidává dočasný výkon těžařů ×5 bez bonusu místnosti. Trvání dle původní doby, bez vlivu zrychlení a zkrácení.",
       "speedUpWalk": "Za každé 2 celé hodiny úspěšné expedice získá 1 zrychlení, při neúspěchu za každé 4 celé hodiny, kdy BB Smoke zůstal naživu. Počítá se původní délka zaokrouhlená dolů; zrychlení ji nemění a předměty neovlivňují výkup.",
-      "overchargedRemotePower": "Při 20 / 30 / 42 bodech nabití přidá do místnosti výkon minerů ×4 / ×5 / ×7, dokud je BB Smoke v expedici naživu. Platí pouze nejvyšší plně nabitý stupeň; procentní bonusy jej nenásobí. Aktivujte před odchodem; náboj se po expedici vynuluje."
+      "overchargedRemotePower": "Při 20 / 30 / 42 bodech nabití přidá do místnosti výkon minerů ×4 / ×5 / ×7, dokud je BB Smoke v expedici naživu. Platí pouze nejvyšší plně nabitý stupeň; procentní bonusy jej nenásobí. Aktivujte před odchodem; náboj se po expedici vynuluje.",
+      "rltWalk": "Za každou celou hodinu úspěšné expedice získá uvedené množství RLT. Při neúspěchu polovinu za celé hodiny, kdy {{name}} přežil, zaokrouhleno dolů. Počítá se původní délka; zrychlení a zkrácení času ji nesnižují a RLT neovlivňuje výkup.",
+      "speedUpWalkHourly": "Za každou celou hodinu úspěšné expedice získá uvedený počet zrychlení (0,5/h znamená jedno za 2 hodiny). Při neúspěchu polovinu za celé hodiny, kdy {{name}} přežil, zaokrouhleno dolů. Počítá se původní délka; zrychlení ji nesnižují a předměty neovlivňují výkup.",
+      "overchargedRestRelay": "Při 24 / 30 / 36 bodech nabití zkrátí každá celá hodina expedice zbývající odpočinek všech křečků v inventáři o 10 / 12 / 16 minut. Platí pouze nejvyšší plně nabitý stupeň. Při neúspěchu se počítají jen celé hodiny před porážkou. Počítá se původní délka; zotavení nad zbývající odpočinek propadá."
     },
     "examples": {
+      "hamtanaRltWalk": "Úspěšná 10hodinová expedice na úrovni 50 dá 5 RLT.",
+      "hamtanaSpeedUps": "Na základní úrovni dá úspěšná 10hodinová expedice 5 zrychlení; zrychlená na 5 hodin stále 5; neúspěch po 8 hodinách dá 2.",
+      "hamtanaRestRelay": "Úspěšná 10hodinová expedice se stupněm III zkrátí odpočinek každého křečka až o 160 minut.",
       "bbSmokeSpeedUps": "Úspěšná 24hodinová expedice dá 12 zrychlení.",
       "jackOLoot": "24 bodů odemkne stupeň II: +50% kořisti. Při 30 bodech stupeň III dává +75%, nikoli +150%.",
       "cuscuzRemoteBonus": "Základní atributy: (90 + 75 + 90) ×2 % = 510% bonus místnosti.",

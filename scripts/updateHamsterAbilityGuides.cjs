@@ -195,7 +195,82 @@ const descriptions = {
     'Při 20 / 30 / 42 bodech nabití přidá do místnosti výkon minerů ×4 / ×5 / ×7, dokud je BB Smoke v expedici naživu. Platí pouze nejvyšší plně nabitý stupeň; procentní bonusy jej nenásobí. Aktivujte před odchodem; náboj se po expedici vynuluje.',
   ],
 };
+// Homie Hamtana (https://rollercoin.com/blog/meet-homie-hamtana).
+Object.assign(descriptions, {
+  rltWalk: [
+    'Collects the displayed RLT for every full hour of a successful Expedition. A failed Expedition pays half the rate for the full hours {{name}} survived, rounded down. Uses the original duration; Speed-Ups and time reductions don’t lower it, and the RLT doesn’t affect Buyback.',
+    'Başarılı seferin her tam saati için belirtilen miktarda RLT toplar. Başarısız seferde hamsterın hayatta kaldığı tam saatler için yarı oranla verilir ve aşağı yuvarlanır. Orijinal süre kullanılır; hızlandırmalar ve süre azaltmaları ödülü düşürmez, RLT geri alma maliyetini etkilemez.',
+    'Собирает указанное количество RLT за каждый полный час успешной экспедиции. При провале — половина за полные часы, которые {{name}} прожил, с округлением вниз. Берётся исходная длительность; ускорения и сокращение времени её не уменьшают, а RLT не влияет на выкуп.',
+    'Sammelt die angezeigte RLT-Menge für jede volle Stunde einer erfolgreichen Expedition. Bei Fehlschlag gibt es den halben Satz für die vollen Stunden, die {{name}} überlebt hat, abgerundet. Es zählt die ursprüngliche Dauer; Beschleuniger und Zeitverkürzungen senken sie nicht, und das RLT beeinflusst den Rückkauf nicht.',
+    'Reúne el RLT indicado por cada hora completa de una expedición exitosa. Si fracasa, recibe la mitad por las horas completas que {{name}} sobrevivió, redondeando hacia abajo. Usa la duración original; los aceleradores y las reducciones de tiempo no la reducen y el RLT no afecta la recompra.',
+    'Récupère le montant de RLT affiché pour chaque heure complète d’une expédition réussie. En cas d’échec, la moitié pour les heures complètes survécues par {{name}}, arrondie à l’inférieur. La durée initiale compte ; les accélérateurs et réductions de temps ne la diminuent pas, et le RLT n’affecte pas le rachat.',
+    'Coleta o RLT indicado a cada hora completa de uma expedição bem-sucedida. Se fracassar, recebe metade pelas horas completas que {{name}} sobreviveu, arredondando para baixo. Usa a duração original; aceleradores e reduções de tempo não a diminuem, e o RLT não afeta a recompra.',
+    'Mengumpulkan RLT sesuai nilai yang tertera untuk setiap jam penuh Ekspedisi yang berhasil. Jika gagal, setengahnya untuk jam penuh {{name}} bertahan hidup, dibulatkan ke bawah. Memakai durasi asli; percepatan dan pengurangan waktu tidak menguranginya, dan RLT tidak memengaruhi biaya tebus.',
+    '成功探险每满1小时获得所示数量的RLT。探险失败时，按{{name}}存活的完整小时数获得一半，向下取整。按原始时长计算；加速和缩短时间不会减少奖励，RLT也不影响赎回费用。',
+    'Za každou celou hodinu úspěšné expedice získá uvedené množství RLT. Při neúspěchu polovinu za celé hodiny, kdy {{name}} přežil, zaokrouhleno dolů. Počítá se původní délka; zrychlení a zkrácení času ji nesnižují a RLT neovlivňuje výkup.',
+  ],
+  speedUpWalkHourly: [
+    'Collects the displayed number of Speed-Up items per full hour of a successful Expedition (0.5/h means one every 2 hours). A failed Expedition pays half the rate for the full hours {{name}} survived, rounded down. Uses the original duration; Speed-Ups don’t lower it and the items don’t affect Buyback.',
+    'Başarılı seferin her tam saati için belirtilen sayıda hızlandırma eşyası toplar (0,5/sa, 2 saatte bir demektir). Başarısız seferde hamsterın hayatta kaldığı tam saatler için yarı oranla verilir ve aşağı yuvarlanır. Orijinal süre kullanılır; hızlandırmalar bunu düşürmez, eşyalar geri alma maliyetini etkilemez.',
+    'Собирает указанное число ускорений за каждый полный час успешной экспедиции (0,5/ч — одно раз в 2 часа). При провале — половина за полные часы, которые {{name}} прожил, с округлением вниз. Берётся исходная длительность; ускорения её не уменьшают, а предметы не влияют на выкуп.',
+    'Sammelt die angezeigte Anzahl Beschleuniger pro voller Stunde einer erfolgreichen Expedition (0,5/h heißt einer alle 2 Stunden). Bei Fehlschlag gibt es den halben Satz für die vollen Stunden, die {{name}} überlebt hat, abgerundet. Es zählt die ursprüngliche Dauer; Beschleuniger senken sie nicht, und die Gegenstände beeinflussen den Rückkauf nicht.',
+    'Reúne el número indicado de aceleradores por cada hora completa de una expedición exitosa (0,5/h es uno cada 2 horas). Si fracasa, recibe la mitad por las horas completas que {{name}} sobrevivió, redondeando hacia abajo. Usa la duración original; los aceleradores no la reducen y los objetos no afectan la recompra.',
+    'Récupère le nombre d’accélérateurs affiché par heure complète d’une expédition réussie (0,5/h = un toutes les 2 heures). En cas d’échec, la moitié pour les heures complètes survécues par {{name}}, arrondie à l’inférieur. La durée initiale compte ; les accélérateurs ne la diminuent pas et les objets n’affectent pas le rachat.',
+    'Coleta o número indicado de aceleradores por hora completa de uma expedição bem-sucedida (0,5/h é um a cada 2 horas). Se fracassar, recebe metade pelas horas completas que {{name}} sobreviveu, arredondando para baixo. Usa a duração original; aceleradores não a diminuem e os itens não afetam a recompra.',
+    'Mengumpulkan item percepatan sesuai jumlah yang tertera per jam penuh Ekspedisi yang berhasil (0,5/jam berarti satu tiap 2 jam). Jika gagal, setengahnya untuk jam penuh {{name}} bertahan hidup, dibulatkan ke bawah. Memakai durasi asli; percepatan tidak menguranginya dan item tidak memengaruhi biaya tebus.',
+    '成功探险每满1小时获得所示数量的加速道具（0.5/小时即每2小时1个）。探险失败时，按{{name}}存活的完整小时数获得一半，向下取整。按原始时长计算；加速不会减少奖励，这些道具也不影响赎回费用。',
+    'Za každou celou hodinu úspěšné expedice získá uvedený počet zrychlení (0,5/h znamená jedno za 2 hodiny). Při neúspěchu polovinu za celé hodiny, kdy {{name}} přežil, zaokrouhleno dolů. Počítá se původní délka; zrychlení ji nesnižují a předměty neovlivňují výkup.',
+  ],
+  overchargedRestRelay: [
+    'At 24 / 30 / 36 charge points, every full Expedition hour reduces the remaining rest of all hamsters in your inventory by 10 / 12 / 16 minutes. Only the highest completed tier applies. On failure only the full hours before defeat count. Uses the original duration; recovery beyond a hamster’s remaining rest is lost.',
+    '24 / 30 / 36 şarj puanında, seferdeki her tam saat envanterdeki tüm hamsterların kalan dinlenme süresini 10 / 12 / 16 dakika azaltır. Yalnızca tamamlanan en yüksek kademe uygulanır. Başarısız seferde yalnızca yenilgiden önceki tam saatler sayılır. Orijinal süre kullanılır; hamsterın kalan dinlenmesini aşan kısım boşa gider.',
+    'При 24 / 30 / 36 очках заряда каждый полный час экспедиции сокращает оставшийся отдых всех хомяков в инвентаре на 10 / 12 / 16 минут. Действует только высшая заполненная ступень. При провале считаются только полные часы до поражения. Берётся исходная длительность; лишнее восстановление сгорает.',
+    'Bei 24 / 30 / 36 Ladepunkten verkürzt jede volle Expeditionsstunde die restliche Ruhezeit aller Hamster im Inventar um 10 / 12 / 16 Minuten. Nur die höchste vollständige Stufe zählt. Bei Fehlschlag zählen nur volle Stunden vor der Niederlage. Es zählt die ursprüngliche Dauer; Erholung über die restliche Ruhezeit hinaus verfällt.',
+    'Con 24 / 30 / 36 puntos de carga, cada hora completa de expedición reduce el descanso restante de todos los hámsters del inventario en 10 / 12 / 16 minutos. Solo cuenta el nivel completo más alto. Si fracasa, solo cuentan las horas completas antes de la derrota. Usa la duración original; la recuperación que exceda el descanso restante se pierde.',
+    'À 24 / 30 / 36 points de charge, chaque heure complète d’expédition réduit le repos restant de tous les hamsters de l’inventaire de 10 / 12 / 16 minutes. Seul le palier complet le plus élevé compte. En cas d’échec, seules les heures complètes avant la défaite comptent. La durée initiale compte ; la récupération au-delà du repos restant est perdue.',
+    'Com 24 / 30 / 36 pontos de carga, cada hora completa de expedição reduz o descanso restante de todos os hamsters do inventário em 10 / 12 / 16 minutos. Apenas o maior nível completo conta. Se fracassar, contam só as horas completas antes da derrota. Usa a duração original; a recuperação além do descanso restante é perdida.',
+    'Pada 24 / 30 / 36 poin muatan, setiap jam penuh Ekspedisi mengurangi sisa istirahat semua hamster di inventaris sebesar 10 / 12 / 16 menit. Hanya tingkat penuh tertinggi yang berlaku. Jika gagal, hanya jam penuh sebelum kekalahan yang dihitung. Memakai durasi asli; pemulihan yang melebihi sisa istirahat hilang.',
+    '24 / 30 / 36点充能时，探险每满1小时，库存中所有仓鼠的剩余休息时间减少10 / 12 / 16分钟。只采用已充满的最高等级。探险失败时只计算失败前的完整小时。按原始时长计算；超出剩余休息时间的部分作废。',
+    'Při 24 / 30 / 36 bodech nabití zkrátí každá celá hodina expedice zbývající odpočinek všech křečků v inventáři o 10 / 12 / 16 minut. Platí pouze nejvyšší plně nabitý stupeň. Při neúspěchu se počítají jen celé hodiny před porážkou. Počítá se původní délka; zotavení nad zbývající odpočinek propadá.',
+  ],
+});
 const examples = {
+  hamtanaRltWalk: [
+    'A successful 10-hour Expedition at level 50 earns 5 RLT.',
+    'Level 50’de başarılı 10 saatlik sefer 5 RLT kazandırır.',
+    'Успешная 10-часовая экспедиция на 50 уровне даёт 5 RLT.',
+    'Eine erfolgreiche 10-Stunden-Expedition auf Stufe 50 bringt 5 RLT.',
+    'Una expedición exitosa de 10 horas en el nivel 50 otorga 5 RLT.',
+    'Une expédition réussie de 10 heures au niveau 50 rapporte 5 RLT.',
+    'Uma expedição bem-sucedida de 10 horas no nível 50 dá 5 RLT.',
+    'Ekspedisi 10 jam yang berhasil di level 50 memberi 5 RLT.',
+    '50级时成功完成10小时探险可获得5 RLT。',
+    'Úspěšná 10hodinová expedice na úrovni 50 dá 5 RLT.',
+  ],
+  hamtanaSpeedUps: [
+    'At Basic level a successful 10-hour Expedition earns 5 Speed-Ups; finished in 5 hours with Speed-Ups it still earns 5; failing after 8 hours earns 2.',
+    'Temel seviyede başarılı 10 saatlik sefer 5 hızlandırma verir; hızlandırıp 5 saatte bitirseniz de 5 verir; 8 saat sonra başarısız olursa 2 verir.',
+    'На базовом уровне успешная 10-часовая экспедиция даёт 5 ускорений; ускоренная до 5 часов — всё равно 5; провал после 8 часов даёт 2.',
+    'Auf Basisstufe bringt eine erfolgreiche 10-Stunden-Expedition 5 Beschleuniger; auf 5 Stunden beschleunigt ebenfalls 5; ein Fehlschlag nach 8 Stunden bringt 2.',
+    'En nivel básico, una expedición exitosa de 10 horas da 5 aceleradores; acelerada a 5 horas, también 5; un fracaso tras 8 horas da 2.',
+    'Au niveau de base, une expédition réussie de 10 heures rapporte 5 accélérateurs ; accélérée à 5 heures, toujours 5 ; un échec après 8 heures en rapporte 2.',
+    'No nível básico, uma expedição bem-sucedida de 10 horas dá 5 aceleradores; acelerada para 5 horas, ainda 5; um fracasso após 8 horas dá 2.',
+    'Di level dasar, Ekspedisi 10 jam yang berhasil memberi 5 percepatan; dipercepat menjadi 5 jam tetap 5; gagal setelah 8 jam memberi 2.',
+    '基础等级下，成功完成10小时探险获得5个加速道具；加速到5小时完成仍得5个；坚持8小时后失败得2个。',
+    'Na základní úrovni dá úspěšná 10hodinová expedice 5 zrychlení; zrychlená na 5 hodin stále 5; neúspěch po 8 hodinách dá 2.',
+  ],
+  hamtanaRestRelay: [
+    'A successful 10-hour Expedition with Tier III cuts each hamster’s rest by up to 160 minutes.',
+    'Kademe III ile başarılı 10 saatlik sefer her hamsterın dinlenmesini 160 dakikaya kadar kısaltır.',
+    'Успешная 10-часовая экспедиция со ступенью III сокращает отдых каждого хомяка до 160 минут.',
+    'Eine erfolgreiche 10-Stunden-Expedition mit Stufe III verkürzt die Ruhezeit jedes Hamsters um bis zu 160 Minuten.',
+    'Una expedición exitosa de 10 horas con el nivel III reduce el descanso de cada hámster hasta 160 minutos.',
+    'Une expédition réussie de 10 heures au palier III réduit le repos de chaque hamster jusqu’à 160 minutes.',
+    'Uma expedição bem-sucedida de 10 horas com o nível III reduz o descanso de cada hamster em até 160 minutos.',
+    'Ekspedisi 10 jam yang berhasil dengan tingkat III memangkas istirahat setiap hamster hingga 160 menit.',
+    '启用第III级并成功完成10小时探险，每只仓鼠的休息时间最多减少160分钟。',
+    'Úspěšná 10hodinová expedice se stupněm III zkrátí odpočinek každého křečka až o 160 minut.',
+  ],
   bbSmokeSpeedUps: [
     'A successful 24-hour Expedition earns 12 Speed-Up items.',
     'Başarılı 24 saatlik sefer 12 hızlandırma eşyası kazandırır.',
@@ -258,6 +333,9 @@ const labels = {
 };
 labels.speedUpWalk = ['Speed Up Walk', 'Hızlandırma Yürüyüşü', 'Прогулка за ускорениями', 'Beschleuniger-Spaziergang', 'Paseo de aceleradores', 'Balade d’accélérateurs', 'Caminhada de aceleradores', 'Jalan Percepatan', '加速漫步', 'Procházka za zrychleními'];
 labels.overchargedRemotePower = labels.remotePowerUltimate;
+labels.rltWalk = ['RLT Walk', 'RLT Yürüyüşü', 'Прогулка за RLT', 'RLT-Spaziergang', 'Paseo de RLT', 'Balade RLT', 'Caminhada de RLT', 'Jalan RLT', 'RLT漫步', 'Procházka za RLT'];
+// Same names as Captain Jack Pot's Rest Relay builder option in hamsters.json.
+labels.overchargedRestRelay = ['Rest Relay', 'Dinlenme Rölesi', 'Реле отдыха', 'Ruhe-Relais', 'Relé de descanso', 'Relais de repos', 'Relé de descanso', 'Relai Istirahat', '休息中继', 'Štafeta odpočinku'];
 labels.overchargedChests = labels.chestsMultiplier;
 labels.overchargedConversion = labels.lootConversion;
 descriptions.gamesBoost = descriptions.gamesBoost.map(text => text.replace('GFeast', '{{name}}'));

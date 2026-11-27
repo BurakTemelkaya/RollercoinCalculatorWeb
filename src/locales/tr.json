@@ -1364,6 +1364,8 @@
       "remotePowerUltimate": "Uzaktan güç",
       "speedUpWalk": "Hızlandırma Yürüyüşü",
       "overchargedRemotePower": "Uzaktan güç",
+      "rltWalk": "RLT Yürüyüşü",
+      "overchargedRestRelay": "Dinlenme Rölesi",
       "overchargedChests": "Sandık çarpanı ×3",
       "overchargedConversion": "Ganimet dönüşümü"
     },
@@ -1404,9 +1406,15 @@
       "hamstersChest": "Sonraki başarılı sefer, Magic Wool veya hamster içeren ek sandık verir. Başarısızlıkta ulti bu sandığı vermeden tükenir. Şarj: 100 puan.",
       "remotePowerUltimate": "GFeast seferde hayattayken, oda bonusuyla çarpılmayan geçici madenci gücü ×5 ekler. Süre orijinal sefer süresidir; hızlandırma ve süre azaltımı bunu değiştirmez.",
       "speedUpWalk": "Başarılı seferin her 2 tam saati için, başarısız seferde ise BB Smoke’un hayatta kaldığı her 4 tam saat için 1 hızlandırma eşyası kazandırır. Orijinal süre kullanılır ve aşağı yuvarlanır; hızlandırmalar bunu değiştirmez, eşyalar geri alma maliyetini etkilemez.",
-      "overchargedRemotePower": "20 / 30 / 42 şarj puanında, BB Smoke seferde hayattayken odaya madenci gücü ×4 / ×5 / ×7 kadar güç ekler. Yalnızca tamamlanan en yüksek kademe uygulanır; yüzdelik bonuslar bu gücü çarpmaz. Seferden önce etkinleştirilir; şarj sefer sonunda sıfırlanır."
+      "overchargedRemotePower": "20 / 30 / 42 şarj puanında, BB Smoke seferde hayattayken odaya madenci gücü ×4 / ×5 / ×7 kadar güç ekler. Yalnızca tamamlanan en yüksek kademe uygulanır; yüzdelik bonuslar bu gücü çarpmaz. Seferden önce etkinleştirilir; şarj sefer sonunda sıfırlanır.",
+      "rltWalk": "Başarılı seferin her tam saati için belirtilen miktarda RLT toplar. Başarısız seferde hamsterın hayatta kaldığı tam saatler için yarı oranla verilir ve aşağı yuvarlanır. Orijinal süre kullanılır; hızlandırmalar ve süre azaltmaları ödülü düşürmez, RLT geri alma maliyetini etkilemez.",
+      "speedUpWalkHourly": "Başarılı seferin her tam saati için belirtilen sayıda hızlandırma eşyası toplar (0,5/sa, 2 saatte bir demektir). Başarısız seferde hamsterın hayatta kaldığı tam saatler için yarı oranla verilir ve aşağı yuvarlanır. Orijinal süre kullanılır; hızlandırmalar bunu düşürmez, eşyalar geri alma maliyetini etkilemez.",
+      "overchargedRestRelay": "24 / 30 / 36 şarj puanında, seferdeki her tam saat envanterdeki tüm hamsterların kalan dinlenme süresini 10 / 12 / 16 dakika azaltır. Yalnızca tamamlanan en yüksek kademe uygulanır. Başarısız seferde yalnızca yenilgiden önceki tam saatler sayılır. Orijinal süre kullanılır; hamsterın kalan dinlenmesini aşan kısım boşa gider."
     },
     "examples": {
+      "hamtanaRltWalk": "Level 50’de başarılı 10 saatlik sefer 5 RLT kazandırır.",
+      "hamtanaSpeedUps": "Temel seviyede başarılı 10 saatlik sefer 5 hızlandırma verir; hızlandırıp 5 saatte bitirseniz de 5 verir; 8 saat sonra başarısız olursa 2 verir.",
+      "hamtanaRestRelay": "Kademe III ile başarılı 10 saatlik sefer her hamsterın dinlenmesini 160 dakikaya kadar kısaltır.",
       "bbSmokeSpeedUps": "Başarılı 24 saatlik sefer 12 hızlandırma eşyası kazandırır.",
       "jackOLoot": "24 şarj puanında 2. kademe +%50 ekstra ganimet verir. 30 puanda 3. kademe +%75 verir; kademeler toplanıp +%150 olmaz.",
       "cuscuzRemoteBonus": "Temel statlar: (90 + 75 + 90) ×%2 = %510 oda bonusu.",

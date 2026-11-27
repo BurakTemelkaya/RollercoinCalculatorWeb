@@ -206,7 +206,13 @@
 .hamster-debuff-label { background: #b33a55; }
 .hamster-builder-option { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
 .hamster-builder-option img { width: 23px; height: 23px; object-fit: contain; image-rendering: pixelated; }
-.hamster-builder-levels { display: flex; flex-wrap: wrap; gap: 4px 9px; margin-top: 9px; color: var(--text-muted, #a0aec0); font-size: 11px; }
+.hamster-builder-line .hamster-builder-option { font-size: 13px; font-weight: 700; }
+.hamster-builder-levels { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin: 10px 0 0; }
+.hamster-builder-levels > div { min-width: 0; padding: 5px 2px; border-radius: 6px; background: rgba(255, 255, 255, .04); text-align: center; }
+.hamster-builder-levels > div:last-child { background: rgba(139, 92, 246, .16); }
+.hamster-builder-levels dt { color: var(--text-muted, #a0aec0); font-size: 10px; font-weight: 600; }
+.hamster-builder-levels dd { margin: 2px 0 0; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .hamster-builder-levels { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .hamsters-list-title { margin: 30px 0 15px; font-size: 21px; }
 .hamsters-generation { margin-top: 24px; }

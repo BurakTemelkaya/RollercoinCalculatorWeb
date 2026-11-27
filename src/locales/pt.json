@@ -1278,6 +1278,8 @@
       "remotePowerUltimate": "Potência remota",
       "speedUpWalk": "Caminhada de aceleradores",
       "overchargedRemotePower": "Potência remota",
+      "rltWalk": "Caminhada de RLT",
+      "overchargedRestRelay": "Relé de descanso",
       "overchargedChests": "Multiplicador de baús ×3",
       "overchargedConversion": "Conversão de saque"
     },
@@ -1318,9 +1320,15 @@
       "hamstersChest": "A próxima expedição bem-sucedida adiciona baú com Magic Wool ou hamster. Falhar consome a suprema sem baú. Recarga: 100 pontos.",
       "remotePowerUltimate": "Enquanto GFeast vive, adiciona potência temporária ×5 sem bônus da sala. Duração original, sem efeito de aceleradores ou reduções.",
       "speedUpWalk": "Dá 1 acelerador a cada 2 horas completas de uma expedição bem-sucedida, ou a cada 4 horas completas em que BB Smoke ficou vivo numa expedição fracassada. Usa a duração original arredondada para baixo; aceleradores não a alteram e os itens não afetam a recompra.",
-      "overchargedRemotePower": "Com 20 / 30 / 42 pontos de carga, adiciona poder dos mineradores ×4 / ×5 / ×7 à sua sala enquanto BB Smoke estiver vivo na expedição. Apenas o maior nível completo conta; bônus percentuais não o multiplicam. Ative antes de partir; a carga zera após a expedição."
+      "overchargedRemotePower": "Com 20 / 30 / 42 pontos de carga, adiciona poder dos mineradores ×4 / ×5 / ×7 à sua sala enquanto BB Smoke estiver vivo na expedição. Apenas o maior nível completo conta; bônus percentuais não o multiplicam. Ative antes de partir; a carga zera após a expedição.",
+      "rltWalk": "Coleta o RLT indicado a cada hora completa de uma expedição bem-sucedida. Se fracassar, recebe metade pelas horas completas que {{name}} sobreviveu, arredondando para baixo. Usa a duração original; aceleradores e reduções de tempo não a diminuem, e o RLT não afeta a recompra.",
+      "speedUpWalkHourly": "Coleta o número indicado de aceleradores por hora completa de uma expedição bem-sucedida (0,5/h é um a cada 2 horas). Se fracassar, recebe metade pelas horas completas que {{name}} sobreviveu, arredondando para baixo. Usa a duração original; aceleradores não a diminuem e os itens não afetam a recompra.",
+      "overchargedRestRelay": "Com 24 / 30 / 36 pontos de carga, cada hora completa de expedição reduz o descanso restante de todos os hamsters do inventário em 10 / 12 / 16 minutos. Apenas o maior nível completo conta. Se fracassar, contam só as horas completas antes da derrota. Usa a duração original; a recuperação além do descanso restante é perdida."
     },
     "examples": {
+      "hamtanaRltWalk": "Uma expedição bem-sucedida de 10 horas no nível 50 dá 5 RLT.",
+      "hamtanaSpeedUps": "No nível básico, uma expedição bem-sucedida de 10 horas dá 5 aceleradores; acelerada para 5 horas, ainda 5; um fracasso após 8 horas dá 2.",
+      "hamtanaRestRelay": "Uma expedição bem-sucedida de 10 horas com o nível III reduz o descanso de cada hamster em até 160 minutos.",
       "bbSmokeSpeedUps": "Uma expedição bem-sucedida de 24 horas dá 12 aceleradores.",
       "jackOLoot": "24 pontos liberam o nível II: +50% de saque. Com 30 pontos, o nível III dá +75%, não +150%.",
       "cuscuzRemoteBonus": "Atributos base: (90 + 75 + 90) ×2% = 510% de bônus de sala.",

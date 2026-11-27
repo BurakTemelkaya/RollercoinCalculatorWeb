@@ -158,24 +158,29 @@ export default function HamstersPage() {
                 {bestiary?.restHours !== undefined && <span>{t('hamsters.restTime', { hours: bestiary.restHours })}</span>}
                 <a href={officialArticle} target="_blank" rel="noreferrer">{t(bestiary ? 'hamsters.officialBestiary' : 'hamsterAbilityGuide.officialBlog')} ↗</a>
               </div>}
-              <h3 className="hamster-traits-title">{t('hamsterAbilityGuide.passive')}</h3>
-              <div className="hamster-traits">
-                {selected.abilities.map(trait => <HamsterAbility hamster={selected} ability={trait} language={language} key={trait.code} />)}
-                {!selected.abilities.length && !selected.builderSlots.length && <span className="hamster-muted">{t('hamsters.noAbilities')}</span>}
-              </div>
+              {/* Builder hamsters list their passives in the builder below. */}
+              {(selected.abilities.length > 0 || !selected.builderSlots.length) && <>
+                <h3 className="hamster-traits-title">{t('hamsterAbilityGuide.passive')}</h3>
+                <div className="hamster-traits">
+                  {selected.abilities.map(trait => <HamsterAbility hamster={selected} ability={trait} language={language} key={trait.code} />)}
+                  {!selected.abilities.length && <span className="hamster-muted">{t('hamsters.noAbilities')}</span>}
+                </div>
+              </>}
               {selected.builderSlots.length > 0 && (
                 <div className="hamster-builder">
                   <h3>{t('hamsters.builder')}</h3>
                   {selected.builderSlots.map((slot, slotIndex) => (
                     <section className="hamster-builder-slot" key={slotIndex}>
-                      <h4>{t('hamsters.slot', { value: slotIndex + 1 })} · {slot.title[language] || slot.title.en}</h4>
+                      {/* Slot titles that only say "Slot N" would repeat the label. */}
+                      <h4>{[t('hamsters.slot', { value: slotIndex + 1 }), slot.title[language] || slot.title.en].filter((text, index, all) => all.indexOf(text) === index).join(' · ')}</h4>
                       <div className="hamster-builder-builds">
                         {slot.builds.map((build, buildIndex) => (
                           <div className="hamster-builder-build" key={buildIndex}>
                             <strong>{t('hamsters.build', { value: buildIndex + 1 })}</strong>
-                            <div className="hamster-builder-line"><span className="hamster-buff-label">{t('hamsters.buff')}</span><HamsterAbility hamster={selected} ability={build.buff} language={language} builder /></div>
+                            {/* A buff badge only helps when it contrasts with a debuff. */}
+                            <div className="hamster-builder-line">{build.debuff && <span className="hamster-buff-label">{t('hamsters.buff')}</span>}<HamsterAbility hamster={selected} ability={build.buff} language={language} builder /></div>
                             {build.debuff && <div className="hamster-builder-line"><span className="hamster-debuff-label">{t('hamsters.debuff')}</span><HamsterAbility hamster={selected} ability={build.debuff} language={language} builder /></div>}
-                            {build.buff.levels && <div className="hamster-builder-levels">{build.buff.levels.map(item => <span key={item.level}>{item.level === 'basic' ? t('hamsters.basic') : `Lv ${item.level}`}: {item.value}</span>)}</div>}
+                            {build.buff.levels && <dl className="hamster-builder-levels">{build.buff.levels.map(item => <div key={item.level}><dt>{item.level === 'basic' ? t('hamsters.basic') : `Lv ${item.level}`}</dt><dd>{item.value}</dd></div>)}</dl>}
                           </div>
                         ))}
                       </div>

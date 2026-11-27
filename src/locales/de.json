@@ -1316,6 +1316,8 @@
       "remotePowerUltimate": "Fernleistung",
       "speedUpWalk": "Beschleuniger-Spaziergang",
       "overchargedRemotePower": "Fernleistung",
+      "rltWalk": "RLT-Spaziergang",
+      "overchargedRestRelay": "Ruhe-Relais",
       "overchargedChests": "Truhenmultiplikator ×3",
       "overchargedConversion": "Beuteumwandlung"
     },
@@ -1356,9 +1358,15 @@
       "hamstersChest": "Nächste erfolgreiche Expedition: Zusatztruhe mit Magic Wool oder Hamster. Bei Fehlschlag ohne Truhe verbraucht. Aufladen: 100 Punkte.",
       "remotePowerUltimate": "Solange GFeast lebt, temporäre Miner-Leistung ×5 ohne Raum-Multiplikatoren. Dauer nach ursprünglicher Expedition; Beschleuniger und Verkürzungen ändern sie nicht.",
       "speedUpWalk": "Bringt 1 Beschleuniger pro 2 volle Stunden einer erfolgreichen Expedition oder pro 4 volle Stunden, die BB Smoke bei einer gescheiterten überlebt hat. Es zählt die ursprüngliche Dauer, abgerundet; Beschleuniger ändern sie nicht, und die Gegenstände beeinflussen den Rückkauf nicht.",
-      "overchargedRemotePower": "Fügt bei 20 / 30 / 42 Ladepunkten Miner-Leistung ×4 / ×5 / ×7 zum Raum hinzu, solange BB Smoke auf der Expedition lebt. Nur die höchste vollständige Stufe zählt; Prozentboni multiplizieren sie nicht. Vor der Abreise aktivieren; die Ladung wird nach der Expedition zurückgesetzt."
+      "overchargedRemotePower": "Fügt bei 20 / 30 / 42 Ladepunkten Miner-Leistung ×4 / ×5 / ×7 zum Raum hinzu, solange BB Smoke auf der Expedition lebt. Nur die höchste vollständige Stufe zählt; Prozentboni multiplizieren sie nicht. Vor der Abreise aktivieren; die Ladung wird nach der Expedition zurückgesetzt.",
+      "rltWalk": "Sammelt die angezeigte RLT-Menge für jede volle Stunde einer erfolgreichen Expedition. Bei Fehlschlag gibt es den halben Satz für die vollen Stunden, die {{name}} überlebt hat, abgerundet. Es zählt die ursprüngliche Dauer; Beschleuniger und Zeitverkürzungen senken sie nicht, und das RLT beeinflusst den Rückkauf nicht.",
+      "speedUpWalkHourly": "Sammelt die angezeigte Anzahl Beschleuniger pro voller Stunde einer erfolgreichen Expedition (0,5/h heißt einer alle 2 Stunden). Bei Fehlschlag gibt es den halben Satz für die vollen Stunden, die {{name}} überlebt hat, abgerundet. Es zählt die ursprüngliche Dauer; Beschleuniger senken sie nicht, und die Gegenstände beeinflussen den Rückkauf nicht.",
+      "overchargedRestRelay": "Bei 24 / 30 / 36 Ladepunkten verkürzt jede volle Expeditionsstunde die restliche Ruhezeit aller Hamster im Inventar um 10 / 12 / 16 Minuten. Nur die höchste vollständige Stufe zählt. Bei Fehlschlag zählen nur volle Stunden vor der Niederlage. Es zählt die ursprüngliche Dauer; Erholung über die restliche Ruhezeit hinaus verfällt."
     },
     "examples": {
+      "hamtanaRltWalk": "Eine erfolgreiche 10-Stunden-Expedition auf Stufe 50 bringt 5 RLT.",
+      "hamtanaSpeedUps": "Auf Basisstufe bringt eine erfolgreiche 10-Stunden-Expedition 5 Beschleuniger; auf 5 Stunden beschleunigt ebenfalls 5; ein Fehlschlag nach 8 Stunden bringt 2.",
+      "hamtanaRestRelay": "Eine erfolgreiche 10-Stunden-Expedition mit Stufe III verkürzt die Ruhezeit jedes Hamsters um bis zu 160 Minuten.",
       "bbSmokeSpeedUps": "Eine erfolgreiche 24-Stunden-Expedition bringt 12 Beschleuniger.",
       "jackOLoot": "24 Punkte ergeben Stufe II: +50% Beute. Bei 30 Punkten gibt Stufe III +75%, nicht +150%.",
       "cuscuzRemoteBonus": "Grundwerte: (90 + 75 + 90) ×2% = 510% Raumbonus.",

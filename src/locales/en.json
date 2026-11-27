@@ -1363,6 +1363,8 @@
       "remotePowerUltimate": "Remote Power",
       "speedUpWalk": "Speed Up Walk",
       "overchargedRemotePower": "Remote Power",
+      "rltWalk": "RLT Walk",
+      "overchargedRestRelay": "Rest Relay",
       "overchargedChests": "Chests Multiplier ×3",
       "overchargedConversion": "Loot Conversion"
     },
@@ -1403,9 +1405,15 @@
       "hamstersChest": "The next successful Expedition adds a chest containing Magic Wool or a hamster. Failure consumes the Ultimate without that chest. Recharge: 100 points.",
       "remotePowerUltimate": "While GFeast is alive on the Expedition, adds temporary Miner Power ×5 without room bonus multipliers. Duration uses original Expedition time, unaffected by Speed-Ups or time reductions.",
       "speedUpWalk": "Earns 1 Speed-Up item per 2 full hours of a successful Expedition, or per 4 full hours BB Smoke stayed alive on a failed one. Uses the original duration, rounded down; Speed-Ups do not change it and the items do not affect Buyback.",
-      "overchargedRemotePower": "Adds Miner Power ×4 / ×5 / ×7 to your room at 20 / 30 / 42 charge points while BB Smoke is alive on the Expedition. Only the highest completed tier applies; percentage bonuses do not multiply it. Activate before departure; charge resets after the Expedition."
+      "overchargedRemotePower": "Adds Miner Power ×4 / ×5 / ×7 to your room at 20 / 30 / 42 charge points while BB Smoke is alive on the Expedition. Only the highest completed tier applies; percentage bonuses do not multiply it. Activate before departure; charge resets after the Expedition.",
+      "rltWalk": "Collects the displayed RLT for every full hour of a successful Expedition. A failed Expedition pays half the rate for the full hours {{name}} survived, rounded down. Uses the original duration; Speed-Ups and time reductions don’t lower it, and the RLT doesn’t affect Buyback.",
+      "speedUpWalkHourly": "Collects the displayed number of Speed-Up items per full hour of a successful Expedition (0.5/h means one every 2 hours). A failed Expedition pays half the rate for the full hours {{name}} survived, rounded down. Uses the original duration; Speed-Ups don’t lower it and the items don’t affect Buyback.",
+      "overchargedRestRelay": "At 24 / 30 / 36 charge points, every full Expedition hour reduces the remaining rest of all hamsters in your inventory by 10 / 12 / 16 minutes. Only the highest completed tier applies. On failure only the full hours before defeat count. Uses the original duration; recovery beyond a hamster’s remaining rest is lost."
     },
     "examples": {
+      "hamtanaRltWalk": "A successful 10-hour Expedition at level 50 earns 5 RLT.",
+      "hamtanaSpeedUps": "At Basic level a successful 10-hour Expedition earns 5 Speed-Ups; finished in 5 hours with Speed-Ups it still earns 5; failing after 8 hours earns 2.",
+      "hamtanaRestRelay": "A successful 10-hour Expedition with Tier III cuts each hamster’s rest by up to 160 minutes.",
       "bbSmokeSpeedUps": "A successful 24-hour Expedition earns 12 Speed-Up items.",
       "jackOLoot": "24 charge points unlock Tier II: +50% Extra Loot. Wait for 30 points to use Tier III: +75%, rather than +150%.",
       "cuscuzRemoteBonus": "Base stats: (90 + 75 + 90) ×2% = 510% room bonus.",

@@ -12680,5 +12680,695 @@
       }
     ],
     "animationsPending": false
+  },
+  {
+    "slug": "homie-hamtana",
+    "name": "Homie Hamtana",
+    "generation": 3,
+    "order": 36,
+    "stats": {
+      "health": 65,
+      "strength": 85,
+      "luck": 85
+    },
+    "abilities": [],
+    "builderSlots": [
+      {
+        "title": {
+          "en": "Slot 1",
+          "tr": "Yuva 1",
+          "ru": "Слот 1",
+          "de": "Platz 1",
+          "es": "Ranura 1",
+          "fr": "Emplacement 1",
+          "pt": "Espaço 1",
+          "id": "Slot 1",
+          "zh": "槽位 1",
+          "cs": "Slot 1"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "rlt_walk",
+              "name": {
+                "en": "RLT Walk",
+                "tr": "RLT Yürüyüşü",
+                "ru": "Прогулка за RLT",
+                "de": "RLT-Spaziergang",
+                "es": "Paseo de RLT",
+                "fr": "Balade RLT",
+                "pt": "Caminhada de RLT",
+                "id": "Jalan RLT",
+                "zh": "RLT漫步",
+                "cs": "Procházka za RLT"
+              },
+              "icon": "rollercoin/hamsters/icons/rlt_chest.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "0.15/h"
+                },
+                {
+                  "level": 10,
+                  "value": "0.2/h"
+                },
+                {
+                  "level": 20,
+                  "value": "0.25/h"
+                },
+                {
+                  "level": 30,
+                  "value": "0.3/h"
+                },
+                {
+                  "level": 40,
+                  "value": "0.35/h"
+                },
+                {
+                  "level": 50,
+                  "value": "0.5/h"
+                }
+              ]
+            },
+            "debuff": null
+          },
+          {
+            "buff": {
+              "code": "speed_up_walk",
+              "name": {
+                "en": "Speed Up Walk",
+                "tr": "Hızlandırma Yürüyüşü",
+                "ru": "Прогулка за ускорениями",
+                "de": "Beschleuniger-Spaziergang",
+                "es": "Paseo de aceleradores",
+                "fr": "Balade d’accélérateurs",
+                "pt": "Caminhada de aceleradores",
+                "id": "Jalan Percepatan",
+                "zh": "加速漫步",
+                "cs": "Procházka za zrychleními"
+              },
+              "icon": "rollercoin/hamsters/icons/speed_percent.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "0.5/h"
+                },
+                {
+                  "level": 10,
+                  "value": "0.6/h"
+                },
+                {
+                  "level": 20,
+                  "value": "0.7/h"
+                },
+                {
+                  "level": 30,
+                  "value": "0.8/h"
+                },
+                {
+                  "level": 40,
+                  "value": "0.9/h"
+                },
+                {
+                  "level": 50,
+                  "value": "1/h"
+                }
+              ]
+            },
+            "debuff": null
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Slot 2",
+          "tr": "Yuva 2",
+          "ru": "Слот 2",
+          "de": "Platz 2",
+          "es": "Ranura 2",
+          "fr": "Emplacement 2",
+          "pt": "Espaço 2",
+          "id": "Slot 2",
+          "zh": "槽位 2",
+          "cs": "Slot 2"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "survival",
+              "name": {
+                "en": "Survival",
+                "tr": "Hayatta kalma",
+                "ru": "Выживание",
+                "de": "Überleben",
+                "es": "Supervivencia",
+                "fr": "Survie",
+                "pt": "Sobrevivência",
+                "id": "Bertahan Hidup",
+                "zh": "生存率",
+                "cs": "Přežití"
+              },
+              "icon": "rollercoin/hamsters/icons/survive_percent.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "+3%"
+                },
+                {
+                  "level": 10,
+                  "value": "+4%"
+                },
+                {
+                  "level": 20,
+                  "value": "+5%"
+                },
+                {
+                  "level": 30,
+                  "value": "+6%"
+                },
+                {
+                  "level": 40,
+                  "value": "+7%"
+                },
+                {
+                  "level": 50,
+                  "value": "+8%"
+                }
+              ]
+            },
+            "debuff": null
+          },
+          {
+            "buff": {
+              "code": "buyback_discount",
+              "name": {
+                "en": "Buyback Discount",
+                "tr": "Geri alım indirimi",
+                "ru": "Скидка на выкуп",
+                "de": "Rückkauf-Rabatt",
+                "es": "Descuento de recompra",
+                "fr": "Réduction de rachat",
+                "pt": "Desconto de recompra",
+                "id": "Diskon Beli Kembali",
+                "zh": "回购折扣",
+                "cs": "Sleva na zpětný odkup"
+              },
+              "icon": "rollercoin/hamsters/icons/buyback_discount.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "-25%"
+                },
+                {
+                  "level": 10,
+                  "value": "-30%"
+                },
+                {
+                  "level": 20,
+                  "value": "-35%"
+                },
+                {
+                  "level": 30,
+                  "value": "-40%"
+                },
+                {
+                  "level": 40,
+                  "value": "-50%"
+                },
+                {
+                  "level": 50,
+                  "value": "-60%"
+                }
+              ]
+            },
+            "debuff": null
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Slot 3",
+          "tr": "Yuva 3",
+          "ru": "Слот 3",
+          "de": "Platz 3",
+          "es": "Ranura 3",
+          "fr": "Emplacement 3",
+          "pt": "Espaço 3",
+          "id": "Slot 3",
+          "zh": "槽位 3",
+          "cs": "Slot 3"
+        },
+        "builds": [
+          {
+            "buff": {
+              "code": "expedition_time",
+              "name": {
+                "en": "Expedition Time",
+                "tr": "Keşif süresi",
+                "ru": "Время экспедиции",
+                "de": "Expeditionszeit",
+                "es": "Tiempo de expedición",
+                "fr": "Temps d'expédition",
+                "pt": "Tempo de expedição",
+                "id": "Waktu Ekspedisi",
+                "zh": "探险时间",
+                "cs": "Doba expedice"
+              },
+              "icon": "rollercoin/hamsters/icons/speed_percent.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "-10%"
+                },
+                {
+                  "level": 10,
+                  "value": "-20%"
+                },
+                {
+                  "level": 20,
+                  "value": "-30%"
+                },
+                {
+                  "level": 30,
+                  "value": "-40%"
+                },
+                {
+                  "level": 40,
+                  "value": "-50%"
+                },
+                {
+                  "level": 50,
+                  "value": "-60%"
+                }
+              ]
+            },
+            "debuff": null
+          },
+          {
+            "buff": {
+              "code": "relax_time",
+              "name": {
+                "en": "Relax Time",
+                "tr": "Dinlenme süresi",
+                "ru": "Время отдыха",
+                "de": "Ruhezeit",
+                "es": "Tiempo de descanso",
+                "fr": "Temps de repos",
+                "pt": "Tempo de descanso",
+                "id": "Waktu Istirahat",
+                "zh": "休息时间",
+                "cs": "Doba odpočinku"
+              },
+              "icon": "rollercoin/hamsters/icons/cooldown_percent.webp",
+              "levels": [
+                {
+                  "level": "basic",
+                  "value": "-7.5%"
+                },
+                {
+                  "level": 10,
+                  "value": "-15%"
+                },
+                {
+                  "level": 20,
+                  "value": "-22.5%"
+                },
+                {
+                  "level": 30,
+                  "value": "-30%"
+                },
+                {
+                  "level": 40,
+                  "value": "-37.5%"
+                },
+                {
+                  "level": 50,
+                  "value": "-45%"
+                }
+              ]
+            },
+            "debuff": null
+          }
+        ]
+      }
+    ],
+    "ultimate": {
+      "code": "rest_relay",
+      "text": {
+        "en": "Rest Relay",
+        "tr": "Dinlenme Rölesi",
+        "ru": "Реле отдыха",
+        "de": "Ruhe-Relais",
+        "es": "Relé de descanso",
+        "fr": "Relais de repos",
+        "pt": "Relé de descanso",
+        "id": "Relai Istirahat",
+        "zh": "休息中继",
+        "cs": "Štafeta odpočinku"
+      },
+      "icon": "rollercoin/hamsters/icons/rest_relay.webp"
+    },
+    "ultimateChargePoints": 24,
+    "ultimateTiers": [
+      {
+        "tier": 1,
+        "chargeRequired": 24,
+        "text": {
+          "en": "-10 min/h",
+          "tr": "-10 min/h",
+          "ru": "-10 min/h",
+          "de": "-10 min/h",
+          "es": "-10 min/h",
+          "fr": "-10 min/h",
+          "pt": "-10 min/h",
+          "id": "-10 min/h",
+          "zh": "-10 min/h",
+          "cs": "-10 min/h"
+        }
+      },
+      {
+        "tier": 2,
+        "chargeRequired": 30,
+        "text": {
+          "en": "-12 min/h",
+          "tr": "-12 min/h",
+          "ru": "-12 min/h",
+          "de": "-12 min/h",
+          "es": "-12 min/h",
+          "fr": "-12 min/h",
+          "pt": "-12 min/h",
+          "id": "-12 min/h",
+          "zh": "-12 min/h",
+          "cs": "-12 min/h"
+        }
+      },
+      {
+        "tier": 3,
+        "chargeRequired": 36,
+        "text": {
+          "en": "-16 min/h",
+          "tr": "-16 min/h",
+          "ru": "-16 min/h",
+          "de": "-16 min/h",
+          "es": "-16 min/h",
+          "fr": "-16 min/h",
+          "pt": "-16 min/h",
+          "id": "-16 min/h",
+          "zh": "-16 min/h",
+          "cs": "-16 min/h"
+        }
+      }
+    ],
+    "skins": [
+      {
+        "level": 1,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl01/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl01/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 10,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl10/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl10/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 20,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl20/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl20/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 30,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl30/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl30/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 40,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl40/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl40/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      },
+      {
+        "level": 50,
+        "walk": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_walk.png",
+        "frames": 8,
+        "jump": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_jump.png",
+        "jumpFrames": 7,
+        "frameWidth": 128,
+        "frameHeight": 128,
+        "idle": "rollercoin/hamsters/pets/homie-hamtana/lvl50/idle.png",
+        "animations": {
+          "walk": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_walk.png",
+            "frames": 8,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "jump": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_jump.png",
+            "frames": 7,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "tap_reaction": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_tap_reaction.png",
+            "frames": 10,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "go_sleep": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_go_sleep.png",
+            "frames": 24,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "take_chest": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_take_chest.png",
+            "frames": 9,
+            "frameWidth": 128,
+            "frameHeight": 128
+          },
+          "win_loop": {
+            "path": "rollercoin/hamsters/pets/homie-hamtana/lvl50/sprite_win_loop.png",
+            "frames": 6,
+            "frameWidth": 128,
+            "frameHeight": 128
+          }
+        }
+      }
+    ],
+    "animationsPending": false
   }
 ]
