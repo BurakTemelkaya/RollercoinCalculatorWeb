@@ -6,16 +6,18 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApiError } from '../../services/apiClient';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import './AuthPages.css';
+import { clubAuthReturn } from '../../features/club/model';
 
 export default function RegisterPage() {
   const { lang } = useParams<{ lang: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { register } = useAuth();
 
@@ -58,7 +60,7 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register({ name: name.trim(), email: email.trim(), password }, turnstileToken);
-      navigate(`/${lang || 'en'}`, { replace: true });
+      navigate(clubAuthReturn(location.search, lang || 'en'), { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.isRateLimit) {
@@ -233,7 +235,7 @@ export default function RegisterPage() {
 
         <div className="auth-footer">
           <span>{t('auth.hasAccount')}</span>
-          <Link to={`/${lang || 'en'}/login`}>{t('auth.login')}</Link>
+          <Link to={`/${lang || 'en'}/login${clubAuthReturn(location.search, lang || 'en').endsWith('/v2/club') ? location.search : ''}`}>{t('auth.login')}</Link>
         </div>
       </div>
     </div>

@@ -1,0 +1,14 @@
+# Publisher publishing integration (frontend handoff)
+
+Current UI: Sponsor Merkezi is public. PublisherWorkspace uses the existing AuthContext. Only an authenticated Publisher role or Admin gets the editing UI. Development-only layout preview never modifies AuthContext, JWT roles or shared sponsor data. Its form creates only an in-memory card preview; it does not publish, contact users, or write to the Gold store.
+
+Required backend policy: Admin grants/revokes Publisher. A publisher owns their promotions. On creation/update by a verified Publisher, publish to the publisher directory automatically without a second content-approval step. The frontend must never supply authoritative owner, role, tier or approval status. Server checks JWT identity and current role for every write; enforce ownership on edit/delete. Revocation must disable new writes and follow the agreed visibility policy.
+
+Gold slots: independent sponsorship entitlement assigned by Admin; Publisher alone cannot create/upgrade Gold campaigns. Homepage OfficialSponsor uses tier=gold; public center lists all eligible sponsors. Publish only date-eligible active campaigns. Existing sponsor admin remains Admin-only.
+
+Backend endpoints, persistence, rate limits and application review must be implemented by the backend owner. No migration or shared publish API was invented in this frontend repository. Reuse existing identity; no second login. Keep account/UI previews out of production by import.meta.env.DEV.
+`n## Title applications UI`nPublisherTitles shows account membership, Publisher access and separate official sponsorship. Applications are in-memory drafts only: no submission endpoint or role creation is fabricated. Existing Admin user role assignment remains the sole integrated grant path. Backend owner must add authenticated application create/list/review, audit decisions and deduplicate pending requests. Never accept roles or sponsorship entitlements from application payloads.
+
+Paid title policy: application -> pending payment verification -> pending administrator approval -> approved/rejected. Neither browser state nor payment alone grants Publisher. Only the authenticated administrator decision may grant the server role after verified payment. Implement idempotent payment verification and audited approval/revocation on the backend; current form remains an unsent local draft.
+
+Area separation: /v2/sponsorluk is public application/packages; /v2/yayincilar is the public advertising directory; /v2/sponsor-merkezi is hidden from ordinary users and gated to authenticated Admin, Publisher or Sponsor roles. Backend must apply identical authorization and ownership to every media upload and campaign operation; UI gating is not server security. Media storage/upload endpoints remain unimplemented. Club member identity has a separate ?view=card screen from profile/settings; DEV preview does not grant roles.
